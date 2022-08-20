@@ -18,7 +18,10 @@
   <link href="{{ asset('theme/assets/sweetalert2/dist/sweetalert2.css') }}" rel="stylesheet">
 
 </head>
-<body class="hold-transition sidebar-mini">
+{{-- <body class="hold-transition sidebar-mini"> --}}
+  {{-- <body class="sidebar-mini layout-fixed hold-transition"> --}}
+    <body class="sidebar-mini layout-fixed">
+      
 <!-- Site wrapper -->
 <div class="wrapper">
   <!-- Navbar -->
