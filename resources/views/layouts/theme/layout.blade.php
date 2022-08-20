@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>AdminLTE 3 | Blank Page</title>
 
   <!-- Google Font: Source Sans Pro -->
@@ -11,6 +12,11 @@
   <link rel="stylesheet" href="{{asset('theme/plugins/fontawesome-free/css/all.min.css')}}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{asset('theme/dist/css/adminlte.min.css')}}">
+
+  <link href="{{ asset('kendo/styles/kendo.common.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('kendo/styles/kendo.moonlight.min.css') }}" rel="stylesheet"> 
+  <link href="{{ asset('theme/assets/sweetalert2/dist/sweetalert2.css') }}" rel="stylesheet">
+
 </head>
 <body class="hold-transition sidebar-mini">
 <!-- Site wrapper -->
@@ -174,7 +180,7 @@
       </div>
 
       <!-- SidebarSearch Form -->
-      <div class="form-inline">
+      {{-- <div class="form-inline">
         <div class="input-group" data-widget="sidebar-search">
           <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
           <div class="input-group-append">
@@ -183,7 +189,7 @@
             </button>
           </div>
         </div>
-      </div>
+      </div> --}}
 
       <!-- Sidebar Menu -->
       <nav class="mt-2">
@@ -501,7 +507,7 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item">
+          {{-- <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-book"></i>
               <p>
@@ -571,8 +577,8 @@
                 </a>
               </li>
             </ul>
-          </li>
-          <li class="nav-item menu-open">
+          </li> --}}
+          {{-- <li class="nav-item menu-open">
             <a href="#" class="nav-link active">
               <i class="nav-icon far fa-plus-square"></i>
               <p>
@@ -700,8 +706,8 @@
                 </a>
               </li>
             </ul>
-          </li>
-          <li class="nav-item">
+          </li> --}}
+          {{-- <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-search"></i>
               <p>
@@ -820,7 +826,7 @@
               <i class="nav-icon far fa-circle text-info"></i>
               <p>Informational</p>
             </a>
-          </li>
+          </li> --}}
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
@@ -835,13 +841,13 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h4>Blank Page</h4>
+            @yield('title')
           </div>
           <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
+            {{-- <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
               <li class="breadcrumb-item active">Blank Page</li>
-            </ol>
+            </ol> --}}
           </div>
         </div>
       </div><!-- /.container-fluid -->
@@ -849,19 +855,18 @@
 
     <!-- Main content -->
     <section class="content">
-
-
+      @yield('content')
     </section>
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
 
-  <footer class="main-footer">
+  {{-- <footer class="main-footer">
     <div class="float-right d-none d-sm-block">
       <b>Version</b> 3.2.0
     </div>
     <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
-  </footer>
+  </footer> --}}
 
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
@@ -877,7 +882,25 @@
 <script src="{{ asset('theme/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <!-- AdminLTE App -->
 <script src="{{ asset('theme/dist/js/adminlte.min.js') }}"></script>
+
+<script src="{{ asset('kendo/js/kendo.all.min.js') }}"></script>
+<script src="{{ asset('kendo/pdf/pdf.js') }}"></script>
+<script src="{{ asset('kendo/pdf/pdf.worker.js') }}"></script>
+<script src="{{ asset('theme/assets/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
+
+<script>
+   $(document).ready(function(){
+               $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+    });
+</script>
+
+@yield('jquery')
+
 <!-- AdminLTE for demo purposes -->
-<script src="{{ asset('theme/dist/js/demo.js') }}"></script>
+{{-- <script src="{{ asset('theme/dist/js/demo.js') }}"></script> --}}
 </body>
 </html>
