@@ -22,7 +22,7 @@ if($prefix!=""){
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>AdminLTE 3 | Blank Page</title>
+  <title>JL Regner - Payroll System</title>
 
   <!-- Google Font: Source Sans Pro -->
   <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"> -->
@@ -185,7 +185,8 @@ if($prefix!=""){
     <!-- Brand Logo -->
     <a href="../../index3.html" class="brand-link">
       <img src="{{ asset('theme/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">AdminLTE 3</span>
+      <!-- <div style="height:48px;width:48px;background-color:yellow;color:blue;display:inline-block;border-radius:50%;text-align:center;vertical-align:middle"><b>JLR</b></div> -->
+      <span class="brand-text font-weight-light">JL Regner</span>
     </a>
 
     <!-- Sidebar -->
@@ -196,7 +197,7 @@ if($prefix!=""){
           <img src="{{ asset('theme/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Alexander Pierce</a>
+          <a href="#" class="d-block">{{ $user->name }}</a>
         </div>
       </div>
 
@@ -284,33 +285,32 @@ if($prefix!=""){
                 <li class="nav-item">
                   <a href="{{ url($sub->sub_menu_link) }}" class="nav-link {{ ($prefix==$sub->sub_menu_link) ? 'active' : '' }}">
                    
-                    <i class="{{ $sub->sub_menu_icon }} nav-icon"></i>
+                  -&nbsp;&nbsp;&nbsp;&nbsp;<i class="{{ $sub->sub_menu_icon }} nav-icon"></i>
                     <p>{{ $sub->sub_menu_desc }}</p>
                   </a>
                 </li>
               @endforeach
-              {{-- <li class="nav-item">
-                <a href="../../index.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Dashboard v1</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="../../index2.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Dashboard v2</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="../../index3.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Dashboard v3</p>
-                </a>
-              </li> --}}
             </ul>
           </li>
           @endforeach
-   
+                
+          <li class="nav-item ">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-user-cog"></i>
+              <p>
+                Account
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                  -&nbsp;&nbsp;&nbsp;&nbsp;<i class="fas fa-power-off nav-icon"></i>
+                    <p> Logout</p>
+                  </a>
+                </li>
+            </ul>
+          </li>
           
 
          {{-- <li class="nav-item">

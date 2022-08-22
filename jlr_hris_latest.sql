@@ -42,10 +42,13 @@ CREATE TABLE `main_menu` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `menu_desc` varchar(32) DEFAULT NULL,
   `menu_icon` varchar(24) DEFAULT NULL,
+  `menu_link` varchar(32) DEFAULT NULL,
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `main_menu` */
+
+insert  into `main_menu`(`id`,`menu_desc`,`menu_icon`,`menu_link`) values (1,'Timekeeping','fas fa-user-clock','timekeeping'),(2,'Employee File','fas fa-user-cog','employee-files'),(3,'Payroll Transaction','fas fa-calculator','payroll-transaction');
 
 /*Table structure for table `migrations` */
 
@@ -84,10 +87,28 @@ CREATE TABLE `payroll_period` (
   `date_from` date DEFAULT NULL,
   `date_to` date DEFAULT NULL,
   `date_release` date DEFAULT NULL,
+  `man_hours` int(11) DEFAULT NULL,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4;
+
+/*Data for the table `payroll_period` */
+
+insert  into `payroll_period`(`id`,`date_from`,`date_to`,`date_release`,`man_hours`) values (1,'2022-08-01','2022-08-15','2022-08-20',1),(2,'2022-08-20','2022-08-20','2022-08-18',2),(3,'2022-08-20','2022-08-20','2022-08-20',3),(4,'2022-08-20','2022-08-20','2022-08-20',4),(5,'2022-08-20','2022-08-20','2022-08-20',5),(6,'2022-08-20','2022-08-20','2022-08-20',6),(7,'2022-08-20','2022-08-20','2022-08-20',7),(8,'2022-08-20','2022-08-20','2022-08-20',8),(9,'2022-08-20','2022-08-20','2022-08-20',9),(10,'2022-08-20','2022-08-20','2022-08-20',10),(11,'2022-08-20','2022-08-20','2022-08-20',11),(12,'2022-08-20','2022-08-20','2022-08-20',12),(13,'2022-08-20','2022-08-20','2022-08-20',13),(14,'2022-08-20','2022-08-20','2022-08-19',14),(15,'2022-08-20','2022-08-20','2022-08-20',15),(16,'2022-08-20','2022-08-20','2022-08-20',20),(17,'2022-08-20','2022-08-04','2022-08-20',17),(18,'2022-08-22','2022-08-22','2022-08-22',99);
+
+/*Table structure for table `payroll_period_weekly` */
+
+DROP TABLE IF EXISTS `payroll_period_weekly`;
+
+CREATE TABLE `payroll_period_weekly` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `date_from` date DEFAULT NULL,
+  `date_to` date DEFAULT NULL,
+  `date_release` date DEFAULT NULL,
+  `man_hours` int(11) DEFAULT NULL,
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-/*Data for the table `payroll_period` */
+/*Data for the table `payroll_period_weekly` */
 
 /*Table structure for table `personal_access_tokens` */
 
@@ -116,14 +137,31 @@ DROP TABLE IF EXISTS `sub_menu`;
 
 CREATE TABLE `sub_menu` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `sub_menu_name` varchar(32) DEFAULT NULL,
+  `sub_menu_desc` varchar(32) DEFAULT NULL,
   `sub_menu_main` int(11) DEFAULT NULL,
-  `sub_menu_link` varchar(24) DEFAULT NULL,
+  `sub_menu_link` varchar(64) DEFAULT NULL,
   `sub_menu_icon` varchar(24) DEFAULT NULL,
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `sub_menu` */
+
+insert  into `sub_menu`(`id`,`sub_menu_desc`,`sub_menu_main`,`sub_menu_link`,`sub_menu_icon`) values (1,'Payroll Period - Semi',1,'timekeeping/payroll-period','fas fa-calendar-alt'),(2,'Payroll Period - Weekly',1,'timekeeping/payroll-period-weekly','fas fa-calendar-week'),(3,'Emp. Master Data',2,'employee-files/employee-master-data','fas fa-list-ul'),(4,'Holidays',1,'timekeeping/holidays','fas fa-calendar-check'),(5,'Leaves / Absences',1,'timekeeping/leaves-absences','fas fa-plane-departure'),(6,'Divisions / Departments',2,'employee-files/divisions-departments','fas fa-project-diagram'),(7,'Job Titles',2,'employee-files/job-titles','fas fa-user-tag'),(8,'Payroll Register',3,'payroll-transaction/payroll-register','fas fa-file-csv'),(9,'Payslip',3,'payroll-transaction/payslip','fas fa-money-check-alt'),(10,'Bank Transmittal',3,'payroll-transaction/bank-transmittal','fas fa-credit-card');
+
+/*Table structure for table `user_rights` */
+
+DROP TABLE IF EXISTS `user_rights`;
+
+CREATE TABLE `user_rights` (
+  `line_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `sub_menu_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`line_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8mb4;
+
+/*Data for the table `user_rights` */
+
+insert  into `user_rights`(`line_id`,`user_id`,`sub_menu_id`) values (46,1,2),(47,1,3),(48,1,1),(50,2,1),(51,2,2),(53,2,3),(54,3,1),(55,3,2),(56,3,3),(57,1,4),(58,1,5),(59,1,6),(60,1,7),(61,1,8),(62,1,9),(63,1,10);
 
 /*Table structure for table `users` */
 
@@ -140,11 +178,11 @@ CREATE TABLE `users` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `users` */
 
-insert  into `users`(`id`,`name`,`email`,`email_verified_at`,`password`,`remember_token`,`created_at`,`updated_at`) values (1,'Elmer Costillas','elmer.costillas@jlr.com',NULL,'$2y$10$3IKUx138HNtav1gRYf9ItuOb4BDoHdzvlOyzLLf9R7OEYndX5yynG',NULL,'2022-08-19 13:06:14','2022-08-19 13:06:14');
+insert  into `users`(`id`,`name`,`email`,`email_verified_at`,`password`,`remember_token`,`created_at`,`updated_at`) values (1,'Elmer Costillas','elmer.costillas@jlr.com',NULL,'$2y$10$3IKUx138HNtav1gRYf9ItuOb4BDoHdzvlOyzLLf9R7OEYndX5yynG',NULL,'2022-08-19 13:06:14','2022-08-19 13:06:14'),(2,'Genevive Naparate','genevive.naparate@jlr.com',NULL,'$2y$10$9aWkLwUzw3RU8q4dCFvXde9Mfx.0HeaA1X9uKaxd3UC4Sf02gKwsC',NULL,'2022-08-22 05:34:32','2022-08-22 05:34:32'),(3,'Angelie Abejo','angelie.abejo@jlr.com',NULL,'$2y$10$rwnBy6SaQyvEstn7qyXGD.1vJDL.E631853B3KMPkwfj4Fh98S/gu',NULL,'2022-08-22 05:33:55','2022-08-22 05:33:55');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
