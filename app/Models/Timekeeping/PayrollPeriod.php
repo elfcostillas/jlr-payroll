@@ -16,7 +16,8 @@ class PayrollPeriod extends Model
     protected $fillable = [
         'date_from',
         'date_to',
-        'date_release'
+        'date_release',
+        'man_hours'
     ];
 
     //protected $connection = 'sqlite';

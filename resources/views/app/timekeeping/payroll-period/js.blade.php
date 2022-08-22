@@ -19,6 +19,7 @@
                                 type : 'post',
                                 dataType : 'json',
                                 complete : function(e){
+                                    swal_success(e);
                                     viewModel.ds.maingrid.read();
                                 }
                             },
@@ -27,6 +28,7 @@
                                 type : 'post',
                                 dataType : 'json',
                                 complete : function(e){
+                                    swal_success(e);
                                     viewModel.ds.maingrid.read();
                                 }
                             },
@@ -52,6 +54,7 @@
                                     date_from : { type : 'date' },
                                     date_to: { type : 'date' },
                                     date_release: { type : 'date' },
+                                    man_hours: { type : 'number' },
                                 }
                             }
                         }
@@ -92,6 +95,12 @@
                         title : "Release Date",
                         field : "date_release",
                         template : "#= (data.date_release) ? kendo.toString(data.date_release,'MM/dd/yyyy') : ''  #",
+                        width : 120,    
+                    },
+                    {
+                        title : "Man Hours",
+                        field : "man_hours",
+                        //template : "#=  : ''  #",
                         width : 120,    
                     },
                     {

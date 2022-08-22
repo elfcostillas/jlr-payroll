@@ -1,3 +1,21 @@
+<?php
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+
+$user = Auth::user();
+
+$prefix = Request::route()->getPrefix();
+
+$mmain ="";
+$sub = "";
+
+if($prefix!=""){
+  list($mmain,$sub) = explode('/',$prefix);
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -204,11 +222,74 @@
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Dashboard
+                {{-- <i class="right fas fa-angle-left"></i> --}}
+              </p>
+            </a>
+           
+          </li>
+
+          @php
+       
+          $main = DB::table('main_menu')->distinct()
+              ->select('main_menu.id','main_menu.menu_desc','main_menu.menu_icon','main_menu.menu_link')
+              ->join('sub_menu','sub_menu_main','=','main_menu.id')
+              ->join('user_rights','sub_menu.id','=','sub_menu_id')
+              ->where('user_rights.user_id',$user->id)
+              ->get();
+
+              foreach($main as $mmodule){
+                $sub = DB::table('main_menu')
+                ->select('sub_menu.id',
+                  'sub_menu.sub_menu_desc',
+                  'sub_menu.sub_menu_link',
+                  'sub_menu.sub_menu_icon')
+                ->join('sub_menu','sub_menu_main','=','main_menu.id')
+                ->join('user_rights','sub_menu.id','=','sub_menu_id')
+                ->where('user_rights.user_id',$user->id)
+                ->where('sub_menu_main',$mmodule->id)
+                ->get();
+
+                $mmodule->sub = $sub;
+              }
+
+            
+              // foreach($main as $m){
+              //       $sub = DB::table('user_rights')
+              //       ->select('sub_menu.menu_desc','sub_menu.menu_url')
+              //       ->join('sub_menu','sub_menu_id','=','sub_menu.line_id')
+              //       ->join('main_menu','main_id','=','main_menu.line_id')
+              //       ->where('user_rights.user_id',$user->id)
+              //       ->where('sub_menu.main_id',$m->line_id)
+              //       ->get();
+                    
+              //       $m->sub = $sub;
+
+              //   }
+
+          @endphp
+
+          
+          @foreach($main as $m)
+          <li class="nav-item {{ ($mmain==$m->menu_link) ? 'menu-is-opening menu-open' : '' }}">
+            <a href="#" class="nav-link">
+              <i class="nav-icon {{$m->menu_icon}}"></i>
+              <p>
+                {{ $m->menu_desc }}
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
+
+              @foreach($m->sub as $sub)
+                <li class="nav-item">
+                  <a href="{{ url($sub->sub_menu_link) }}" class="nav-link {{ ($prefix==$sub->sub_menu_link) ? 'active' : '' }}">
+                   
+                    <i class="{{ $sub->sub_menu_icon }} nav-icon"></i>
+                    <p>{{ $sub->sub_menu_desc }}</p>
+                  </a>
+                </li>
+              @endforeach
+              {{-- <li class="nav-item">
                 <a href="../../index.html" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Dashboard v1</p>
@@ -225,10 +306,14 @@
                   <i class="far fa-circle nav-icon"></i>
                   <p>Dashboard v3</p>
                 </a>
-              </li>
+              </li> --}}
             </ul>
           </li>
-          <li class="nav-item">
+          @endforeach
+   
+          
+
+         {{-- <li class="nav-item">
             <a href="../widgets.html" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
@@ -510,7 +595,7 @@
               </li>
             </ul>
           </li>
-          {{-- <li class="nav-item">
+           <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-book"></i>
               <p>
@@ -890,7 +975,7 @@
 <script src="{{ asset('kendo/pdf/pdf.js') }}"></script>
 <script src="{{ asset('kendo/pdf/pdf.worker.js') }}"></script>
 <script src="{{ asset('theme/assets/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
-
+<script src="{{ asset('js/custom.js') }}"></script>
 <script>
    $(document).ready(function(){
                $.ajaxSetup({

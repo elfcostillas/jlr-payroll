@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Timekeeping\PayrollPeriodController;
+use App\Http\Controllers\Admin\UserRightsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,20 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::post('create',[PayrollPeriodController::class,'create']);
         Route::post('update',[PayrollPeriodController::class,'update']);
     });
+    
+});
+
+
+Route::middleware('auth')->prefix('admin')->group(function(){
+    Route::get('/',[UserRightsController::class,'index']);
+    Route::get('user-list',[UserRightsController::class,'showAllUsers']);
+    Route::get('show-user-rights/{id}',[UserRightsController::class,'showUserRights']);
+
+    Route::post('rights-create',[UserRightsController::class,'createRights']);
+    Route::post('rights-destroy',[UserRightsController::class,'destroyRights']);
+    Route::post('userrights',[UserRightsController::class,'userRights']);
+    
+    
     
 });
 
