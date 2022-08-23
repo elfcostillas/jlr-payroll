@@ -1,22 +1,21 @@
 <?php
 
-namespace App\Models\Timekeeping;
+namespace App\Models\EmployeeFile;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Holiday extends Model
+class Department extends Model
 {
     use HasFactory;
 
-    protected $table = 'holidays';
+    protected $table = 'departments';
     protected $primaryKey = 'id';
     public $timestamps = false;
 
     protected $fillable = [
-        'holiday_date',
-        'holiday_remarks',
-        'holiday_type',
+        'dept_div_id',
+        'dept_code',
+        'dept_name'
     ];
-
 }

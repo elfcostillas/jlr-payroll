@@ -53,23 +53,35 @@ class HolidayController extends Controller
 
     public function create(Request $request)
     {
+        $result = $this->mapper->insertValid($request->all());
 
+        if(is_object($result)){
+			return response()->json($result)->setStatusCode(500, 'Error');
+		}
+
+        return response()->json($result);
     }
 
     public function update(Request $request)
     {
+        $result = $this->mapper->updateValid($request->all());
 
+        if(is_object($result)){
+			return response()->json($result)->setStatusCode(500, 'Error');
+		}
+
+        return response()->json($result);
     }
 
     public function  showLocation(Request $request)
     {
         $result = $this->location->showHolidayLocations($request->holiday_id);
 
-        return response()-json($result);
+        return response()->json(['locations'=>$result]);
     }
     public function  createLocation(Request $request)
     {
-        $result = $this->mapper->insertValid($request->all());
+        $result = $this->location->insertValid($request->all());
 
         if(is_object($result)){
 			return response()->json($result)->setStatusCode(500, 'Error');
@@ -79,11 +91,18 @@ class HolidayController extends Controller
     }
     public function  destroyLocation(Request $request)
     {
-        $result = $this->mapper->updateValid($request->all());
+        $result = $this->location->updateValid($request->all());
 
         if(is_object($result)){
 			return response()->json($result)->setStatusCode(500, 'Error');
 		}
+
+        return response()->json($result);
+    }
+
+    public function getHolidayTypes()
+    {
+        $result = $this->mapper->getHolidayTypes();
 
         return response()->json($result);
     }

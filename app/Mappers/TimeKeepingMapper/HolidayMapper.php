@@ -11,7 +11,13 @@ class HolidayMapper extends AbstractMapper {
 
 	protected $modelClassName = 'App\Models\Timekeeping\Holiday';
     protected $rules = [
-    	
+        'holiday_date' => 'required|sometimes|unique:holidays',
+        'holiday_remarks' => 'required|sometimes',
+        'holiday_type' => 'required|sometimes|gt:0',
+    ];
+
+    protected $messages = [
+        'holiday_type.gt' => 'Please select holiday type'
     ];
 
     public function list($filter)
@@ -54,6 +60,5 @@ class HolidayMapper extends AbstractMapper {
         $result = $this->model->select('id','location_name')->from('locations');
         return $result->get();
     }
-
 
 }

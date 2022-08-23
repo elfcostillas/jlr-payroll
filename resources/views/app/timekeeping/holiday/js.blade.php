@@ -3,6 +3,7 @@
         $(document).ready(function(){
 
             var viewModel = kendo.observable({ 
+                holiday_id : null,
                 location : [],
                 ds : {
                     maingrid : new kendo.data.DataSource({
@@ -19,9 +20,14 @@
                                 url : 'holiday/create',
                                 type : 'post',
                                 dataType : 'json',
-                                complete : function(e){
-                                    swal_success(e);
-                                    viewModel.ds.maingrid.read();
+                                complete : function(e,status){
+                                    if(status=='error'){
+                                        swal_error(e);
+                                    }else {
+                                        swal_success(e);
+                                        viewModel.ds.maingrid.read();
+                                    }
+                                   
                                 }
                             },
                             update : {
@@ -29,8 +35,12 @@
                                 type : 'post',
                                 dataType : 'json',
                                 complete : function(e){
-                                    swal_success(e);
-                                    viewModel.ds.maingrid.read();
+                                    if(status=='error'){
+                                        swal_error(e);
+                                    }else {
+                                        swal_success(e);
+                                        viewModel.ds.maingrid.read();
+                                    }
                                 }
                             },
                             parameterMap: function (data, type) {
@@ -70,6 +80,7 @@
                         var data = this.dataItem(tr);
                         
                         viewModel.functions.showPOP(data);
+                        viewModel.set('holiday_id',data.id);
 
                         $.ajax({
                             url:'holiday/read-locations',
@@ -78,15 +89,15 @@
                             dataType:"json",
                             success: function(data){
                             
-                                let user_rights = data['rights'];  
+                                let location = data['locations'];  
                             
                                 let h = [];
                                 
-                                user_rights.forEach(function(item,index){
-                                    h.push(item.sub_menu_id.toString());
+                                location.forEach(function(item,index){
+                                    h.push(item.location_id.toString());
                                 });
 
-                                viewModel.set('rights',h);
+                                viewModel.set('location',h);
 
                                 //console.log(viewModel.rights);
                             }	
@@ -145,7 +156,10 @@
                     },
                     {
                         title : "Type",
-                        field : "type_description",
+                        //field : "type_description",
+                        field : "holiday_type",
+                        template : "#: type_description #",
+                        editor : holidayTypeEditor,
                         width : 160,    
                     },
                     {
@@ -163,15 +177,34 @@
             $('input:checkbox.urights').click(function(){
 			var url = '';
                 if($(this).prop('checked')){
-                    url = 'holidays/location-create';
+                    url = 'holiday/location-create';
                 }else{
-                    url = 'holidays/location-destroy';
+                    url = 'holiday/location-destroy';
                 }
                 if($("#userid").val()!=""){
-                    $.post(url,{ user_id : viewModel.user_id, rights_id : this.value  },function(data){	});
+                    $.post(url,{ holiday_id : viewModel.holiday_id, location_id : this.value  },function(data){	});
                 }
                 
             });
+
+            function holidayTypeEditor(container, options)
+            {
+                $('<input name="' + options.field + '"/>')
+                .appendTo(container)
+                .kendoDropDownList({
+                //.kendoComboBox({
+                    //autoBind: false,
+                    autoWidth: true,
+                    dataTextField: "type_description",
+                    dataValueField: "id",
+                    dataSource: {
+                        //type: "json",
+                        transport: {
+                            read: 'holiday/types'
+                        }
+                    }
+                });
+            }
 
             kendo.bind($("#viewModel"),viewModel);
 

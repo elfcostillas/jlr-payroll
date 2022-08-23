@@ -11,6 +11,10 @@ use App\Http\Controllers\Timekeeping\PayrollPeriodController;
 
 use App\Http\Controllers\Settings\LocationController;
 
+use App\Http\Controllers\EmployeeFile\DivisionController;
+use App\Http\Controllers\EmployeeFile\EmployeeController;
+use App\Http\Controllers\EmployeeFile\DepartmentController;
+use App\Http\Controllers\EmployeeFile\JobTitleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +55,7 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
     Route::prefix('holiday')->group(function(){
         Route::get('/',[HolidayController::class,'index']);
         Route::get('list',[HolidayController::class,'list']);
+        Route::get('types',[HolidayController::class,'getHolidayTypes']);
         Route::post('create',[HolidayController::class,'create']);
         Route::post('update',[HolidayController::class,'update']);
         Route::post('read-locations',[HolidayController::class,'showLocation']);
@@ -61,6 +66,20 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
     
 });
 
+//divisions-departments
+Route::middleware('auth')->prefix('employee-files')->group(function(){
+    Route::prefix('divisions-departments')->group(function(){ 
+        Route::get('/',[DivisionController::class,'index']);
+        Route::get('division/list',[DivisionController::class,'list']);
+        Route::post('division/create',[DivisionController::class,'create']);
+        Route::post('division/update',[DivisionController::class,'update']);
+        Route::get('division/get-divisions',[DivisionController::class,'getDivisions']);
+
+        Route::get('department/list',[DepartmentController::class,'list']);
+        Route::post('department/create',[DepartmentController::class,'create']);
+        Route::post('department/update',[DepartmentController::class,'update']);
+    });
+});
 
 Route::middleware('auth')->prefix('admin')->group(function(){
     Route::get('/',[UserRightsController::class,'index']);
@@ -70,7 +89,7 @@ Route::middleware('auth')->prefix('admin')->group(function(){
     Route::post('rights-create',[UserRightsController::class,'createRights']);
     Route::post('rights-destroy',[UserRightsController::class,'destroyRights']);
     Route::post('userrights',[UserRightsController::class,'userRights']);
-    
+
 });
 
 Route::middleware('auth')->prefix('settings')->group(function(){

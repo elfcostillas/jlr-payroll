@@ -42,10 +42,10 @@ class HolidayLocationMapper extends AbstractMapper {
         return $result->get();
     }
 
-    public function showHolidayLocations()
+    public function showHolidayLocations($id)
     {
        
-
+        $result = $this->model->select('id','holiday_id','location_id')->where('holiday_id',$id);
         return $result->get();
     }
 
