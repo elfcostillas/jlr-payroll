@@ -1,25 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\Timekeeping;
+namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Mappers\TimeKeepingMapper\PayrollPeriodWeeklyMapper;
+use App\Mappers\SettingsMapper\LocationMapper;
 
-class PayrollPeriodWeeklyController extends Controller
-{ 
+class LocationController extends Controller
+{
     //
     private $mapper;
 
-    public function __construct(PayrollPeriodWeeklyMapper $mapper)
+    public function __construct(LocationMapper $mapper)
     {
         $this->mapper = $mapper;
     }
 
     public function index()
     {
-        
-        return view('app.timekeeping.payroll-period-weekly.index');
+        return view('app.settings.locations.index');
     }
 
     public function list(Request $request)
