@@ -1,0 +1,167 @@
+@extends('layouts.theme.layout')
+
+<style>
+    #viewModel {
+        font-size:10pt !important;
+    }
+
+    .k-master-row {
+        color : white !important;
+        
+    }
+
+    .k-column-title,.k-master-row 
+    {
+        font-size:10pt !important;
+    } 
+
+    .k-command-cell {
+        text-align: right !important;
+    }
+    
+    .k-pager-info {
+        display : block !important;
+    }
+
+    /* .card-body {
+        color : black !important;
+    } */
+
+    .formTable {
+        font-size: 10pt;
+        color : white;
+        table-layout: fixed;
+        background-color: #6c757d; /*6c757d*/
+    }
+
+    .divHeader {
+        background-color: #6c757d;
+        padding : 8px;
+        font-size : 12pt !important;
+    }
+
+    table.formTable  tr  td {
+        padding : 4px;
+    }
+
+    #toolbar {
+        font-size:10pt !important;
+        background-color:  #6c757d !important;
+    }
+
+    .require {
+        font-size : 8pt;
+        color : #ffae42;
+        white-space: nowrap;
+    }
+
+    
+</style>
+@section('title')
+    <h4> Employee Data <h4>
+@endsection
+@section('content')
+    <div class="container">
+        <div id="viewModel" >
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-secondary">
+                        <div class="card-header"> </div>
+                        <div class="card-body"> 
+                            <div id="maingrid"></div>   
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="pop" style="display:none;background-color:#212529;"><!--f8f9fa  #343a40 #212529 2d3035-->
+                <div id="toolbar"></div>
+                <div class="card card-secondary mt-1">
+                    <div class="card-header"> Basic Information </div>
+                    <input type="hidden" id="id" data-bind="form.model.id" >
+                    <div class="card-body">
+                        <table class="formTable" border=0 style="width:100%">
+                            <tr>
+                                <td colspan=2>Firstname <span class="require">*Required </span></td>
+                                <td colspan=2>Lastname <span class="require">*Required </span></td>
+                                <td colspan=2>Middlename</td>
+                                <td>Suffix(Jr/Sr.)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan=2><input type="text" id="firstname" data-bind="form.model.firstname"></td>
+                                <td colspan=2><input type="text" id="lastname" data-bind="form.model.lastname"></td>
+                                <td colspan=2><input type="text" id="middlename" data-bind="form.model.middlename"></td>
+                                <td colspan=2><input type="text" id="suffixname" data-bind="form.model.suffixname"></td>
+                            </tr>
+                            <tr>
+                                <td colspan=4>Address (Primary)</td>
+                                <td colspan=4>Address (Secondary)</td>
+                            </tr>
+                            <tr>
+                                <td colspan=4><input type="text" id="primary_addr" data-bind="form.model.firstname"></td>
+                                <td colspan=4><input type="text" id="secondary_addr" data-bind="form.model.firstname"></td>
+                            </tr>
+                            <tr>
+                                <td>Gender</td>
+                                <td></td>
+                                <td>Birtdate</td>
+                                <td></td>
+                                <td>Civil Status</td>
+                                <td></td>
+                                <td>Phone No.</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan=2><input type="text" id="gender" data-bind="form.model.gender"></td>
+                                <td colspan=2><input type="text" id="birthdate" data-bind="form.model.birthdate"></td>
+                                <td colspan=2><input type="text" id="civil_status" data-bind="form.model.civil_status"></td>
+                                <td colspan=2><input type="text" id="contact_no" data-bind="form.model.contact_no"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card card-secondary mt-1">
+                    <div class="card-header"> Government ID & Deductions </div>
+                    <div class="card-body">
+                        <table class="formTable" border=0 style="width:100%">
+                            <tr>
+                                <td>SSS No</td>
+                                <td>Deduct SSS</td>
+                                <td>PHIC</td>
+                                <td>Deduct PHIC</td>
+                                <td>HDMF</td>
+                                <td>HDMF Contri.</td>
+                                <td>T.I.N.</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" id="sss_no" data-bind="form.model.sss_no"></td>
+                                <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" id="deduct_sss"></div></div></td>
+                                <td><input type="text" id="phic_no" data-bind="form.model.phic_no"></td>
+                                <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" id="deduct_phic"></div></div></td>
+                                <td><input type="text" id="hdmf_no" data-bind="form.model.hdmf_no"></td>
+                                <td><input type="text" id="hdmf_contri" data-bind="form.model.hdmf_contri"></td>
+                                <td><input type="text" id="tin_no" data-bind="form.model.tin_no"></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-2">
+                        <div class="card card-secondary">
+                            <div class="card-header">Biometric ID</div>
+                            <div class="card-body">
+                                <input class="formTable" type="text" id="biometric_id" data-bind="form.model.biometric_id">
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+@endsection
+
+@include('app.employee-file.employee-master-data.js')

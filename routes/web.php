@@ -68,6 +68,15 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
 
 //divisions-departments
 Route::middleware('auth')->prefix('employee-files')->group(function(){
+
+    Route::prefix('employee-master-data')->group(function(){ 
+        Route::get('/',[EmployeeController::class,'index']);
+        Route::get('read/{id}',[EmployeeController::class,'readById']);
+        Route::get('list',[EmployeeController::class,'list']);
+        Route::post('create',[EmployeeController::class,'create']);
+        Route::post('update',[EmployeeController::class,'update']);
+    });
+
     Route::prefix('divisions-departments')->group(function(){ 
         Route::get('/',[DivisionController::class,'index']);
         Route::get('division/list',[DivisionController::class,'list']);
@@ -78,6 +87,14 @@ Route::middleware('auth')->prefix('employee-files')->group(function(){
         Route::get('department/list',[DepartmentController::class,'list']);
         Route::post('department/create',[DepartmentController::class,'create']);
         Route::post('department/update',[DepartmentController::class,'update']);
+    });
+
+    Route::prefix('job-title')->group(function(){ 
+        Route::get('/',[JobTitleController::class,'index']);
+        Route::get('list',[JobTitleController::class,'list']);
+        Route::post('create',[JobTitleController::class,'create']);
+        Route::post('update',[JobTitleController::class,'update']);
+        Route::get('get-departments',[JobTitleController::class,'getDepartments']);
     });
 });
 

@@ -12,10 +12,10 @@ class DepartmentMapper extends AbstractMapper {
 	protected $modelClassName = 'App\Models\EmployeeFile\Department';
     protected $rules = [
 		'dept_div_id' => 'required|sometimes|gt:0',
-        'dept_code' =>'required|sometimes|unique:departments',
-        'dept_name' =>'required|sometimes|unique:departments',
+        'dept_code' =>'required|sometimes',
+        'dept_name' =>'required|sometimes',
     ];
-
+//|unique:departments
 	protected $messages = [
         'dept_div_id.gt' => 'Please select a division.'
     ];
