@@ -36,3 +36,19 @@ function swal_error(e){
 		footer: '<a href>Why do I have this issue?</a>'
 	  });
   }
+
+  function read(url,viewModel){
+	$.get(url,function(data){
+						  
+	})
+	.done(function(e) {
+		$.each(e,function(index,value){
+			viewModel.form.model.set(index,value);
+		});
+		viewModel.callBack();
+	})
+	.fail(function(e) {
+		
+	});
+  }
+  

@@ -36,20 +36,39 @@ class EmployeeController extends Controller
         return response()->json($result);
     }
 
-    public function create(Request $request)
+    // public function create(Request $request)
+    // {
+    //     $result = $this->mapper->insertValid($request->all());
+
+    //     if(is_object($result)){
+	// 		return response()->json($result)->setStatusCode(500, 'Error');
+	// 	}
+
+    //     return response()->json($result);
+    // }
+
+    // public function update(Request $request)
+    // {
+    //     $result = $this->mapper->updateValid($request->all());
+
+    //     if(is_object($result)){
+	// 		return response()->json($result)->setStatusCode(500, 'Error');
+	// 	}
+
+    //     return response()->json($result);
+    // }
+
+    public function save(Request $request)
     {
-        $result = $this->mapper->insertValid($request->all());
+        $data = json_decode($request->data);
 
-        if(is_object($result)){
-			return response()->json($result)->setStatusCode(500, 'Error');
-		}
+        $data_arr = (array) $data;
 
-        return response()->json($result);
-    }
-
-    public function update(Request $request)
-    {
-        $result = $this->mapper->updateValid($request->all());
+        if($data_arr['id']==null){
+            $result = $this->mapper->insertValid($data_arr);
+        }else{
+            $result = $this->mapper->updateValid($data_arr);
+        }
 
         if(is_object($result)){
 			return response()->json($result)->setStatusCode(500, 'Error');
@@ -61,9 +80,23 @@ class EmployeeController extends Controller
 
     public function readById(Request $request)
     {
-
+        $result = $this->mapper->header($request->id);
+        return response()->json($result);
     }
 
    
 
 }
+
+
+/*
+$data = json_decode($request->data);
+    $user = Auth::user();
+    //dd(date_format(Carbon::createFromFormat('m/d/Y',$data->po_date),'Y-m-d'));
+    $data->po_date = date_format(Carbon::createFromFormat('m/d/Y',$data->po_date),'Y-m-d');
+    $data = (array) $data;
+
+    if(is_object($data['po_supplier'])){
+        $data['po_supplier']=$data['po_supplier']->contact_id;
+    }
+    */

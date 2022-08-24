@@ -73,8 +73,10 @@ Route::middleware('auth')->prefix('employee-files')->group(function(){
         Route::get('/',[EmployeeController::class,'index']);
         Route::get('read/{id}',[EmployeeController::class,'readById']);
         Route::get('list',[EmployeeController::class,'list']);
-        Route::post('create',[EmployeeController::class,'create']);
-        Route::post('update',[EmployeeController::class,'update']);
+        //Route::post('create',[EmployeeController::class,'create']);
+        //Route::post('update',[EmployeeController::class,'update']);
+        Route::post('save',[EmployeeController::class,'save']);
+        
     });
 
     Route::prefix('divisions-departments')->group(function(){ 

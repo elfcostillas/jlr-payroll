@@ -16,6 +16,25 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/`jlr_hris` /*!40100 DEFAULT CHARACTER SE
 
 USE `jlr_hris`;
 
+/*Table structure for table `civil_status` */
+
+DROP TABLE IF EXISTS `civil_status`;
+
+CREATE TABLE `civil_status` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `stat_code` varchar(3) DEFAULT NULL,
+  `stat_desc` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+
+/*Data for the table `civil_status` */
+
+insert  into `civil_status`(`id`,`stat_code`,`stat_desc`) values 
+(1,'SIN','Sinlge'),
+(2,'MAR','Married'),
+(3,'DIV','Divorced'),
+(4,'WID','Widowed');
+
 /*Table structure for table `departments` */
 
 DROP TABLE IF EXISTS `departments`;
@@ -27,15 +46,22 @@ CREATE TABLE `departments` (
   `dept_name` text,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `departments` */
 
 insert  into `departments`(`id`,`dept_div_id`,`dept_code`,`dept_name`) values 
-(1,1,'HRD','Human Resources Department'),
-(2,1,'IT','Information Technology'),
-(3,1,'PWD','Purchasing and Warehousing Department'),
-(4,1,'SMD','Sales and Marketing Department');
+(1,1,'Aggregates','Aggregates'),
+(2,1,'Quarry','Quarry'),
+(3,1,'RMD','RMD'),
+(4,2,'Service','Service'),
+(5,2,'QA','QA'),
+(6,2,'RMD','RMD'),
+(7,3,'FID','Finance'),
+(8,3,'HR','Human Resource'),
+(9,3,'IT','Information Technology'),
+(10,3,'P/W','Purchasing and Warehouse'),
+(11,3,'SMD','Sales and Marketing');
 
 /*Table structure for table `divisions` */
 
@@ -47,16 +73,50 @@ CREATE TABLE `divisions` (
   `div_name` text,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `divisions` */
 
 insert  into `divisions`(`id`,`div_code`,`div_name`) values 
-(1,'SSDiv','Shared Services'),
+(1,'QAD','Quarry and Aggregates'),
 (2,'RMC','Ready Mix Concrete'),
-(3,'QA','Quality Assurance'),
-(4,'QAD','Quarry and Aggregates'),
-(5,'RMD','Repair and Maintenance');
+(3,'SSDiv','Shared Services');
+
+/*Table structure for table `employees` */
+
+DROP TABLE IF EXISTS `employees`;
+
+CREATE TABLE `employees` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `firstname` varchar(64) DEFAULT NULL,
+  `lastname` varchar(64) DEFAULT NULL,
+  `middlename` varchar(64) DEFAULT NULL,
+  `suffixname` varchar(6) DEFAULT NULL,
+  `biometric_id` int(11) DEFAULT NULL,
+  `primary_addr` text,
+  `secondary_addr` text,
+  `remarks` text,
+  `sss_no` varchar(24) DEFAULT NULL,
+  `deduct_sss` enum('Y','N') DEFAULT 'N',
+  `tin_no` varchar(16) DEFAULT NULL,
+  `phic_no` varchar(24) DEFAULT NULL,
+  `deduct_phic` enum('Y','N') DEFAULT 'N',
+  `hdmf_no` varchar(24) DEFAULT NULL,
+  `deduct_hdmf` enum('Y','N') DEFAULT 'N',
+  `hdmf_contri` decimal(24,2) DEFAULT '0.00',
+  `civil_status` int(11) DEFAULT NULL,
+  `gender` varchar(6) DEFAULT NULL,
+  `birthdate` date DEFAULT NULL,
+  `employee_stat` int(11) DEFAULT NULL,
+  `bank_acct` varchar(10) DEFAULT NULL,
+  `basic_salary` decimal(24,2) DEFAULT '0.00',
+  `is_daily` enum('Y','N') DEFAULT 'N',
+  `exit_status` int(11) DEFAULT '1',
+  `contact_no` varchar(32) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+/*Data for the table `employees` */
 
 /*Table structure for table `failed_jobs` */
 
@@ -132,7 +192,21 @@ CREATE TABLE `holidays` (
 
 insert  into `holidays`(`id`,`holiday_date`,`holiday_remarks`,`holiday_type`) values 
 (1,'2022-08-23','1231231231','0'),
-(2,'2022-08-06','sdsdfsdfsdf','2');
+(2,'2022-08-06','sdsdfsdfsdf','4');
+
+/*Table structure for table `job_titles` */
+
+DROP TABLE IF EXISTS `job_titles`;
+
+CREATE TABLE `job_titles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `dept_id` int(11) DEFAULT NULL,
+  `job_title_code` varchar(6) DEFAULT NULL,
+  `job_title_name` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+/*Data for the table `job_titles` */
 
 /*Table structure for table `locations` */
 
@@ -149,9 +223,9 @@ CREATE TABLE `locations` (
 /*Data for the table `locations` */
 
 insert  into `locations`(`id`,`location_name`,`location_address`) values 
-(1,'Tingub','JLR Compound B. Suico Street Tingub Mandaue City, Cebu'),
-(2,'Talisay','Sombria,Lawaan II,Talisay City, Cebu'),
-(3,'Naga','Cogon Naga, Cebu');
+(1,'BPN','JLR Compound B. Suico Street Tingub Mandaue City, Cebu'),
+(2,'BPS','Sombria,Lawaan II,Talisay City, Cebu'),
+(3,'QAD','Cogon Naga, Cebu');
 
 /*Table structure for table `main_menu` */
 
@@ -218,7 +292,7 @@ CREATE TABLE `payroll_period` (
   `man_hours` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `payroll_period` */
 
@@ -240,7 +314,8 @@ insert  into `payroll_period`(`id`,`date_from`,`date_to`,`date_release`,`man_hou
 (15,'2022-08-20','2022-08-20','2022-08-20',15),
 (16,'2022-08-20','2022-08-20','2022-08-20',20),
 (17,'2022-08-20','2022-08-04','2022-08-20',17),
-(18,'2022-08-22','2022-08-22','2022-08-22',99);
+(18,'2022-08-22','2022-08-22','2022-08-22',99),
+(19,'2022-08-16','2022-08-31','2022-08-24',112);
 
 /*Table structure for table `payroll_period_weekly` */
 
@@ -307,7 +382,7 @@ insert  into `sub_menu`(`id`,`sub_menu_desc`,`sub_menu_main`,`sub_menu_link`,`su
 (4,'Holidays',1,'timekeeping/holiday','fas fa-calendar-check'),
 (5,'Leaves / Absences',1,'timekeeping/leaves-absences','fas fa-plane-departure'),
 (6,'Divisions / Departments',2,'employee-files/divisions-departments','fas fa-project-diagram'),
-(7,'Job Titles',2,'employee-files/job-titles','fas fa-user-tag'),
+(7,'Job Titles',2,'employee-files/job-title','fas fa-user-tag'),
 (8,'Payroll Register',3,'payroll-transaction/payroll-register','fas fa-file-csv'),
 (9,'Payslip',3,'payroll-transaction/payslip','fas fa-money-check-alt'),
 (10,'Bank Transmittal',3,'payroll-transaction/bank-transmittal','fas fa-credit-card'),
@@ -323,7 +398,7 @@ CREATE TABLE `user_rights` (
   `sub_menu_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`line_id`),
   KEY `userRightsIndex` (`user_id`,`sub_menu_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=92 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `user_rights` */
 
@@ -360,7 +435,18 @@ insert  into `user_rights`(`line_id`,`user_id`,`sub_menu_id`) values
 (80,3,8),
 (79,3,9),
 (78,3,10),
-(77,3,11);
+(77,3,11),
+(81,4,1),
+(82,4,2),
+(85,4,3),
+(83,4,4),
+(84,4,5),
+(86,4,6),
+(87,4,7),
+(88,4,8),
+(89,4,9),
+(90,4,10),
+(91,4,11);
 
 /*Table structure for table `users` */
 
@@ -377,14 +463,15 @@ CREATE TABLE `users` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `users` */
 
 insert  into `users`(`id`,`name`,`email`,`email_verified_at`,`password`,`remember_token`,`created_at`,`updated_at`) values 
 (1,'Elmer Costillas','elmer.costillas@jlr.com',NULL,'$2y$10$3IKUx138HNtav1gRYf9ItuOb4BDoHdzvlOyzLLf9R7OEYndX5yynG',NULL,'2022-08-19 13:06:14','2022-08-19 13:06:14'),
 (2,'Genevive Naparate','genevive.naparate@jlr.com',NULL,'$2y$10$9aWkLwUzw3RU8q4dCFvXde9Mfx.0HeaA1X9uKaxd3UC4Sf02gKwsC',NULL,'2022-08-22 05:34:32','2022-08-22 05:34:32'),
-(3,'Angelie Abejo','angelie.abejo@jlr.com',NULL,'$2y$10$rwnBy6SaQyvEstn7qyXGD.1vJDL.E631853B3KMPkwfj4Fh98S/gu',NULL,'2022-08-22 05:33:55','2022-08-22 05:33:55');
+(3,'Angelie Abejo','angelie.abejo@jlr.com',NULL,'$2y$10$rwnBy6SaQyvEstn7qyXGD.1vJDL.E631853B3KMPkwfj4Fh98S/gu',NULL,'2022-08-22 05:33:55','2022-08-22 05:33:55'),
+(4,'Herbert Banaston Camasura','herbert.camasura@jlr.com',NULL,'$2y$10$yBuUMfM1GsL67qjqGUjmV.c5pnhKGcHDWSNGD.7k4bFlb3FEPqDfC',NULL,'2022-08-23 22:35:50','2022-08-23 22:35:50');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

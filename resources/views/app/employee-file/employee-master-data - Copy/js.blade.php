@@ -18,35 +18,6 @@
                     { text: "Widowed", value: 4 },
                 ];
 
-            let obj = {
-                    id : null,
-                    firstname: null,
-                    lastname: null,
-                    middlename: null,
-                    suffixname: null,
-                    biometric_id: null,
-                    primary_addr: null,
-                    secondary_addr: null,
-                    remarks: null,
-                    sss_no: null,
-                    deduct_sss: null,
-                    tin_no: null,
-                    phic_no: null,
-                    deduct_phic: null,
-                    hdmf_no: null,
-                    deduct_hdmf: null,
-                    hdmf_contri: null,
-                    civil_status: null,
-                    gender: null,
-                    birthdate: null,
-                    employee_stat: null,
-                    bank_acct: null,
-                    basic_salary: null,
-                    is_daily: null,
-                    exit_status: null,
-                    contact_no: null,
-            };
-
             var viewModel = kendo.observable({ 
                 form : {
                     model : {
@@ -75,7 +46,6 @@
                         basic_salary: null,
                         is_daily: null,
                         exit_status: null,
-                        contact_no : null,
                     },
                   
                 },
@@ -117,53 +87,15 @@
 
                     },
                     createEmployee : function(e){
-                        viewModel.buttonHandler.clear();
                         viewModel.functions.showPOP();
                     },
-                    save : async function(e){
-
-                        await viewModel.functions.reAssignValues();
-                        
+                    save :  function(e){
+                      
                         var json_data = JSON.stringify(viewModel.form.model);
-                        
-                        $.post('employee-master-data/save',{
-                            data : json_data
-                        },function(data,staus){
-                            swal_success(data);
-                            viewModel.ds.maingrid.read();
-                            //viewModel.maingrid.formReload(data);
-                        })
-                        .fail(function(data){
-                           swal_error(data);
-                           
-                        }).always(function() {
-                            //viewModel.maingrid.ds.read();
-                        });
+
+                        console.log(json_data);
 
                        
-                    },
-                    view : function(e){
-                        e.preventDefault(); 
-
-                        viewModel.functions.showPOP();
-                       
-                        var tr = $(e.target).closest("tr");
-                        var data = this.dataItem(tr);
-
-                        let url  = `employee-master-data/read/${data.id}`;
-                        read(url,viewModel);
-                        //console.log(data);
-
-                    }, 
-                    clear : function(e){
-                        //$.each(viewModel.form.model,function(index,value));
-                        for (var key in obj) {
-                            //console.log(key); //console.log(key + " -> " + p[key]);
-                            viewModel.form.model.set(key,null);
-                        }
-
-                        viewModel.form.model.set('civil_status',1)
-                        viewModel.form.model.set('gender','M')
                     }
                 },
                 functions : {
@@ -190,17 +122,6 @@
                         }).data("kendoWindow").center().open();
                         
                     },
-                    reAssignValues : function(){
-                        viewModel.form.model.set('gender',$('#gender').data('kendoDropDownList').value());
-                        viewModel.form.model.set('birthdate',kendo.toString($('#birthdate').data('kendoDatePicker').value(),'yyyy-MM-dd'));
-                        viewModel.form.model.set('civil_status',$('#civil_status').data('kendoDropDownList').value());
-                    },
-                   
-
-                },
-                callBack : function()
-                {
-
                 }
             });
 
@@ -224,33 +145,32 @@
                         title : "Bio ID",
                         field : "biometric_id",
                        
-                        width : 90,    
+                        width : 80,    
                     },
                     {
                         title : "Last Name",
                         field : "lastname",
-                        width : 140,    
+                        width : 130,    
                     },
                     {
                         title : "First Name",
                         field : "firstname",
-                        width : 140,  
+                        width : 120,  
                     },
                     {
                         title : "Middle Name",
                         field : "middlename",
-                        width : 140,  
+                        width : 120,  
                     },
                     {
                         title : "Jr,Sr,II,III",
                         field : "suffixname",
-                        width : 90,  
+                        width : 60,  
                     },
                     {
-                        command: { text : 'View',icon : 'edit' ,click : viewModel.buttonHandler.view },
-                        attributes : { style : 'font-size:10pt !important;'} 
+                        command : ['edit'],
+                        width : 90,    
                     },
-                  
                 ]
             });
 
@@ -269,7 +189,7 @@
                 dataTextField: "text",
                 dataValueField: "value",
                 dataSource: genderOptions,
-                index: 1,
+                index: 0,
                 //change: onChange
             });
 
@@ -281,7 +201,7 @@
                 dataTextField: "text",
                 dataValueField: "value",
                 dataSource: civilStatusOptions,
-                index: 1,
+                index: 0,
                 //change: onChange
             });
 
@@ -299,7 +219,6 @@
             var activeToolbar = $("#toolbar").kendoToolBar({
                 items : [
                     { id : 'saveBtn', type: "button", text: "Save", icon: 'save', click : viewModel.buttonHandler.save },
-                    { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
                 ]
             });
             

@@ -55,6 +55,10 @@
         white-space: nowrap;
     }
 
+    .k-button-text {
+        font-size : 10pt !important;
+    }
+
     
 </style>
 @section('title')
@@ -77,29 +81,29 @@
                 <div id="toolbar"></div>
                 <div class="card card-secondary mt-1">
                     <div class="card-header"> Basic Information </div>
-                    <input type="hidden" id="id" data-bind="value:form.model.id" >
+                    <input type="hidden" id="id" data-bind="form.model.id" >
                     <div class="card-body">
                         <table class="formTable" border=0 style="width:100%">
                             <tr>
                                 <td colspan=2>Firstname <span class="require">*Required </span></td>
                                 <td colspan=2>Lastname <span class="require">*Required </span></td>
                                 <td colspan=2>Middlename</td>
-                                <td>Suffix(Jr/Sr.)</td>
+                                <td>Suffix(Jr,Sr,II,III)</td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td colspan=2><input type="text" id="firstname" data-bind="value:form.model.firstname"></td>
-                                <td colspan=2><input type="text" id="lastname" data-bind="value:form.model.lastname"></td>
-                                <td colspan=2><input type="text" id="middlename" data-bind="value:form.model.middlename"></td>
-                                <td colspan=2><input type="text" id="suffixname" data-bind="value:form.model.suffixname"></td>
+                                <td colspan=2><input type="text" id="firstname" data-bind="form.model.firstname"></td>
+                                <td colspan=2><input type="text" id="lastname" data-bind="form.model.lastname"></td>
+                                <td colspan=2><input type="text" id="middlename" data-bind="form.model.middlename"></td>
+                                <td colspan=2><input type="text" id="suffixname" data-bind="form.model.suffixname"></td>
                             </tr>
                             <tr>
                                 <td colspan=4>Address (Primary)</td>
                                 <td colspan=4>Address (Secondary)</td>
                             </tr>
                             <tr>
-                                <td colspan=4><input type="text" id="primary_addr" data-bind="value:form.model.primary_addr"></td>
-                                <td colspan=4><input type="text" id="secondary_addr" data-bind="value:form.model.secondary_addr"></td>
+                                <td colspan=4><input type="text" id="primary_addr" data-bind="form.model.firstname"></td>
+                                <td colspan=4><input type="text" id="secondary_addr" data-bind="form.model.firstname"></td>
                             </tr>
                             <tr>
                                 <td>Gender</td>
@@ -112,10 +116,10 @@
                                 <td></td>
                             </tr>
                             <tr>
-                                <td colspan=2><input type="text" id="gender" data-bind="value:form.model.gender"></td>
-                                <td colspan=2><input type="text" id="birthdate" data-bind="value:form.model.birthdate"></td>
-                                <td colspan=2><input type="text" id="civil_status" data-bind="value:form.model.civil_status"></td>
-                                <td colspan=2><input type="text" id="contact_no" data-bind="value:form.model.contact_no"></td>
+                                <td colspan=2><input type="text" id="gender" data-bind="form.model.gender"></td>
+                                <td colspan=2><input type="text" id="birthdate" data-bind="form.model.birthdate"></td>
+                                <td colspan=2><input type="text" id="civil_status" data-bind="form.model.civil_status"></td>
+                                <td colspan=2><input type="text" id="contact_no" data-bind="form.model.contact_no"></td>
                             </tr>
                         </table>
                     </div>
@@ -136,13 +140,13 @@
                                 <td></td>
                             </tr>
                             <tr>
-                                <td><input type="text" id="sss_no" data-bind="value:form.model.sss_no"></td>
+                                <td><input type="text" id="sss_no" data-bind="form.model.sss_no"></td>
                                 <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" id="deduct_sss"></div></div></td>
-                                <td><input type="text" id="phic_no" data-bind="value:form.model.phic_no"></td>
+                                <td><input type="text" id="phic_no" data-bind="form.model.phic_no"></td>
                                 <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" id="deduct_phic"></div></div></td>
-                                <td><input type="text" id="hdmf_no" data-bind="value:form.model.hdmf_no"></td>
-                                <td><input type="text" id="hdmf_contri" data-bind="value:form.model.hdmf_contri"></td>
-                                <td><input type="text" id="tin_no" data-bind="value:form.model.tin_no"></td>
+                                <td><input type="text" id="hdmf_no" data-bind="form.model.hdmf_no"></td>
+                                <td><input type="text" id="hdmf_contri" data-bind="form.model.hdmf_contri"></td>
+                                <td><input type="text" id="tin_no" data-bind="form.model.tin_no"></td>
                                 <td></td>
                             </tr>
                         </table>
@@ -153,7 +157,7 @@
                         <div class="card card-secondary">
                             <div class="card-header">Biometric ID</div>
                             <div class="card-body">
-                                <input class="formTable" type="text" id="biometric_id" data-bind="value:form.model.biometric_id">
+                                <input class="formTable" type="text" id="biometric_id" data-bind="form.model.biometric_id">
                             </div>
                         </div>    
                     </div>

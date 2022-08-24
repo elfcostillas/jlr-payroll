@@ -35,6 +35,11 @@ if($prefix!=""){
   <link href="{{ asset('kendo/styles/kendo.moonlight.min.css') }}" rel="stylesheet"> 
   <link href="{{ asset('theme/assets/sweetalert2/dist/sweetalert2.css') }}" rel="stylesheet">
 
+  <style>
+    .swal2-container {
+        z-index : 99999 !important;
+    }
+  </style>
 </head>
 {{-- <body class="hold-transition sidebar-mini"> --}}
   {{-- <body class="sidebar-mini layout-fixed hold-transition"> --}}

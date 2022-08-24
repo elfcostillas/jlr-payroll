@@ -14,8 +14,8 @@ class EmployeeMapper extends AbstractMapper {
     	'firstname' => 'required|sometimes',
 		'lastname' => 'required|sometimes',
 		'middlename' => 'required|sometimes',
-		'suffixname' => 'required|sometimes',
-		'biometric_id' => 'required|sometimes|unique',
+		//'suffixname' => 'required|sometimes',
+		'biometric_id' => 'required|sometimes|unique:employees',
 		// primary_addr
 		// secondary_addr
 		// remarks
@@ -36,6 +36,10 @@ class EmployeeMapper extends AbstractMapper {
 		// is_daily
 		// exit_status
     ];
+
+	public function header($id){
+		return $this->model->find($id);
+    }
 
     public function list($filter)
     {

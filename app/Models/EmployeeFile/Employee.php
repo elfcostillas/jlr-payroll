@@ -8,4 +8,37 @@ use Illuminate\Database\Eloquent\Model;
 class Employee extends Model
 {
     use HasFactory;
+
+    
+    protected $table = 'employees';
+    protected $primaryKey = 'id';
+    public $timestamps = false;
+    protected $fillable = [
+        'firstname',
+        'lastname',
+        'middlename',
+        'suffixname',
+        'biometric_id',
+        'primary_addr',
+        'secondary_addr',
+        'remarks',
+        'sss_no',
+        'deduct_sss',
+        'tin_no',
+        'phic_no',
+        'deduct_phic',
+        'hdmf_no',
+        'deduct_hdmf',
+        'hdmf_contri',
+        'civil_status',
+        'gender',
+        'birthdate',
+        'employee_stat',
+        'bank_acct',
+        'basic_salary',
+        'is_daily',
+        'exit_status',
+        'contact_no',
+    ];
+
 }
