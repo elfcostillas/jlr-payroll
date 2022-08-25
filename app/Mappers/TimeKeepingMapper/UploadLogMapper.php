@@ -15,5 +15,11 @@ class UploadLogMapper extends AbstractMapper {
     	
     ];
 
+    public function insertDB($logs)
+    {
+       
+        $result = DB::table('edtr_raw')->insertOrIgnore($logs);
+    }
+
 
 }

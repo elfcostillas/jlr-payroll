@@ -16,9 +16,11 @@ use Illuminate\Support\Facades\Auth;
 class UploadLogController extends Controller
 {
     //
-    public function __construct()
-    {
+	private $mapper;
 
+    public function __construct(UploadLogMapper $mapper)
+    {
+		$this->mapper = $mapper;
     }
 
     public function index()
@@ -40,11 +42,14 @@ class UploadLogController extends Controller
         foreach($content as $line)
         {
             $data = preg_split("/\s+/", trim($line));
-            var_dump($data);
-            
-            //array_push($log,['punch_date'=> $data[''],'punch_time' => $data[''], 'biometric_id' => $data[''] ]);
+			if(count($data)==4){
+				$date = date_format(Carbon::createFromFormat('m/d/Y',$data[1]),'Y-m-d');
+				array_push($logs,['punch_date'=> $date,'punch_time' => $data[2], 'biometric_id' => $data[0],'cstate' => $data[3] ]);
+			}
         }
 
+		$this->mapper->insertDB($logs);
+		
         return true;
     }
 }
