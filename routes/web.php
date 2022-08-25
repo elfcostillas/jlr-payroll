@@ -17,6 +17,7 @@ use App\Http\Controllers\EmployeeFile\EmployeeController;
 use App\Http\Controllers\EmployeeFile\DepartmentController;
 use App\Http\Controllers\EmployeeFile\JobTitleController;
 use App\Http\Controllers\Reports\EmployeeReportController;
+use Carbon\CarbonPeriod;
 
 
 
@@ -143,6 +144,17 @@ Route::middleware('auth')->prefix('reports')->group(function(){
 });
 
 Route::post('logout',[AuthenticatedSessionController::class,'logout'])->middleware('auth');
+
+Route::get('test',function(){
+    
+    $period = CarbonPeriod::create('2018-06-14','2018-06-20');
+
+    // Iterate over the period
+    foreach ($period as $date) {
+        echo $date->format('Y-m-d')."<br>"; 
+    }
+});
+
 
 
 require __DIR__.'/auth.php';

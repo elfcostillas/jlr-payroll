@@ -11,7 +11,9 @@ class PayrollPeriodMapper extends AbstractMapper {
 
 	protected $modelClassName = 'App\Models\Timekeeping\PayrollPeriod';
     protected $rules = [
-    	
+    	'date_from' => 'required|sometimes',
+		'date_to' => 'required|sometimes',
+		'man_hours' => 'required|sometimes',
     ];
 
     public function list($filter)
@@ -39,3 +41,29 @@ class PayrollPeriodMapper extends AbstractMapper {
 
 
 }
+ 
+
+/*    public function emptoprocess($period_id){
+    	$result = $this->model->select('edtr_empid')
+    						  ->from('hris_edtr as a')
+    						  ->join('hris_payperiod as b',function($join){
+    						  	$join->whereRaw('a.edtr_date between b.payperiod_start and b.payperiod_end');
+    						  })
+                  ->join('hris_employee_workinfo','hris_employee_workinfo.line_id','=','edtr_empid')
+    						  ->where('b.payperiod_id','=',(int)$period_id)
+                  ->where('employee_exitstatus','ACT')
+                  ->groupBy('edtr_empid')
+                  ->havingRaw('sum(edtr_hrs) > ?', [0])
+    						  ->distinct();
+
+    	return $result->get();
+    }
+	
+	$period = CarbonPeriod::create('2018-06-14', '2018-06-20');
+
+// Iterate over the period
+foreach ($period as $date) {
+    echo $date->format('Y-m-d');
+}
+*/
+

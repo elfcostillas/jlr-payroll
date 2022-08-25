@@ -18,18 +18,26 @@
                                 url : 'payroll-period/create',
                                 type : 'post',
                                 dataType : 'json',
-                                complete : function(e){
-                                    swal_success(e);
-                                    viewModel.ds.maingrid.read();
+                                complete : function(e,status){
+                                    if(status=='error'){
+                                        swal_error(e);
+                                    }else {
+                                        swal_success(e);
+                                        viewModel.ds.maingrid.read();
+                                    }
                                 }
                             },
                             update : {
                                 url : 'payroll-period/update',
                                 type : 'post',
                                 dataType : 'json',
-                                complete : function(e){
-                                    swal_success(e);
-                                    viewModel.ds.maingrid.read();
+                                complete : function(e,status){
+                                    if(status=='error'){
+                                        swal_error(e);
+                                    }else {
+                                        swal_success(e);
+                                        viewModel.ds.maingrid.read();
+                                    }
                                 }
                             },
                             parameterMap: function (data, type) {
@@ -91,12 +99,7 @@
                         template : "#= (data.date_to) ? kendo.toString(data.date_to,'MM/dd/yyyy') : ''  #",
                         width : 120,    
                     },
-                    {
-                        title : "Release Date",
-                        field : "date_release",
-                        template : "#= (data.date_release) ? kendo.toString(data.date_release,'MM/dd/yyyy') : ''  #",
-                        width : 120,    
-                    },
+                  
                     {
                         title : "Man Hours",
                         field : "man_hours",

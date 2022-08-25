@@ -47,11 +47,16 @@ class UploadLogController extends Controller
 				array_push($logs,['punch_date'=> $date,'punch_time' => $data[2], 'biometric_id' => $data[0],'cstate' => $data[3] ]);
 			}
         }
-
-		$this->mapper->insertDB($logs);
 		
-        return true;
+		$result = $this->mapper->insertDB($logs);
+		
+        if(is_object($result)){
+			return response()->json($result)->setStatusCode(500, 'Error');
+		}
+
+        return response()->json($result);
     }
+
 }
 
 /*
@@ -94,4 +99,12 @@ public function dtrupload(Request $request){
 
 		return response()->json($content);
      	// return view('uploader.index'); 
-	}*/
+	}
+	
+	SELECT DISTINCT biometric_id 
+FROM payroll_period 
+INNER JOIN edtr_raw ON  edtr_raw.punch_date BETWEEN payroll_period.date_from AND payroll_period.date_to
+WHERE payroll_period.id =1;
+
+
+*/

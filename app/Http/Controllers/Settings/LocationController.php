@@ -57,4 +57,10 @@ class LocationController extends Controller
 
         return response()->json($result);
     }
+
+    public function listOption(Request $request)
+    {
+        $result = $this->mapper->getLocations();
+        return response()->json($result);
+    }
 }

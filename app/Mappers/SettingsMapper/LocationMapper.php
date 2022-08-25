@@ -37,5 +37,12 @@ class LocationMapper extends AbstractMapper {
         return $result->get();
     }
 
+	public function getLocations()
+	{
+		$result = $this->model->select('id','location_name');
+		return $result->get();
+	}
+
+
 
 }

@@ -162,7 +162,7 @@
                                 </tr>
                                 <tr>
                                     <td colspan="1"><input class="formTable" type="text" id="biometric_id" data-bind="value:form.model.biometric_id"></td>
-                                    <td></td>
+                                    <td><input type="text" id="location_id" data-bind="value:form.model.location_id"></td>
                                     <td colspan=2><input type="text" id="division_id" data-bind="value:form.model.division_id"></td>
                                     <td colspan=2><input type="text" id="dept_id" data-bind="value:form.model.dept_id"></td>
                                     <td colspan=2></td>

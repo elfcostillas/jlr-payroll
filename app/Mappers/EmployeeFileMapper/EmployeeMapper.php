@@ -16,6 +16,9 @@ class EmployeeMapper extends AbstractMapper {
 		'middlename' => 'required|sometimes',
 		//'suffixname' => 'required|sometimes',
 		'biometric_id' => 'required|sometimes|unique:employees',
+		'division_id' => 'required|sometimes',
+		'dept_id' => 'required|sometimes|gt:0',
+		'location_id' => 'required|sometimes|gt:0',
 		// primary_addr
 		// secondary_addr
 		// remarks
@@ -36,6 +39,11 @@ class EmployeeMapper extends AbstractMapper {
 		// is_daily
 		// exit_status
     ];
+
+	protected $messages = [
+		'dept_id.gt' => 'Department field is required.',
+		'location_id.gt' => 'Assigned Location field is required.'
+	];
 
 	public function header($id){
 		return $this->model->find($id);

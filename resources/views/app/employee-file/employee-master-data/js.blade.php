@@ -47,6 +47,7 @@
                     contact_no : null,
                     division_id: null,
                     dept_id: null,
+                    location_id: null,
             };
 
             var viewModel = kendo.observable({ 
@@ -80,6 +81,7 @@
                         contact_no : null,
                         division_id: null,
                         dept_id: null,
+                        location_id: null,
                     },
                   
                 },
@@ -158,6 +160,27 @@
                             }
                         }
                     }),
+                    location : new kendo.data.DataSource({
+                        transport : {
+                            read : {
+                                url : '../settings/locations/get-locations',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },
+                        },
+                        schema : {
+                            model : {
+                                id : 'id',
+                                fields : {
+                                    div_code : { type : 'string' },
+                                    div_name : { type : 'string' },
+                                }
+                            }
+                        }
+                    }),
                     
                 },
                 buttonHandler : {  
@@ -212,8 +235,10 @@
                             viewModel.form.model.set(key,null);
                         }
 
-                        viewModel.form.model.set('civil_status',1)
-                        viewModel.form.model.set('gender','M')
+                        viewModel.form.model.set('civil_status',1);
+                        viewModel.form.model.set('gender','M');
+                        viewModel.form.model.set('location_id',1);
+                        viewModel.form.model.set('division_id',1);
                     }
                 },
                 functions : {
@@ -246,6 +271,7 @@
                         viewModel.form.model.set('civil_status',$('#civil_status').data('kendoDropDownList').value());
                         viewModel.form.model.set('division_id',$('#division_id').data('kendoDropDownList').value());
                         viewModel.form.model.set('dept_id',($('#dept_id').data('kendoDropDownList').value()!='') ? $('#dept_id').data('kendoDropDownList').value() : 0 );
+                        viewModel.form.model.set('location_id',($('#location_id').data('kendoDropDownList').value()!='') ? $('#location_id').data('kendoDropDownList').value() : 0 );
                     },
                     prepareForm : function(data)
                     {
@@ -392,6 +418,17 @@
                         $('#dept_id').data('kendoDropDownList').value(viewModel.form.model.dept_id);
                     }
                     
+                }
+                //change: onChange
+            });
+
+            $("#location_id").kendoDropDownList({
+                dataTextField: "location_name",
+                dataValueField: "id",
+                dataSource: viewModel.ds.location,
+                index: 1,
+                dataBound : function(e){
+                  
                 }
                 //change: onChange
             });
