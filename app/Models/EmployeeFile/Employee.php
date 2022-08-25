@@ -39,6 +39,8 @@ class Employee extends Model
         'is_daily',
         'exit_status',
         'contact_no',
+        'division_id',
+        'dept_id'
     ];
 
 }

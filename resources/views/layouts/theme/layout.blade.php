@@ -190,7 +190,7 @@ if($prefix!=""){
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="../../index3.html" class="brand-link">
-      <img src="{{ asset('theme/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+      <img src="{{ asset('images/jlr_topheader.jpg') }}" alt="JLR Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
       <!-- <div style="height:48px;width:48px;background-color:yellow;color:blue;display:inline-block;border-radius:50%;text-align:center;vertical-align:middle"><b>JLR</b></div> -->
       <span class="brand-text font-weight-light">JL Regner</span>
     </a>

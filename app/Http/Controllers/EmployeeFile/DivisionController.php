@@ -64,5 +64,11 @@ class DivisionController extends Controller
         return response()->json($result);
     }
 
+    public function listOption()
+    {
+        $result = $this->mapper->getAll();
+        return response()->json($result);
+    }
+
 
 }

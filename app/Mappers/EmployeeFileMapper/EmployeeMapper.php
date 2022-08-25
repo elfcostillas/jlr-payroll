@@ -43,7 +43,9 @@ class EmployeeMapper extends AbstractMapper {
 
     public function list($filter)
     {
-        $result = $this->model->select();
+        $result = $this->model->select(DB::raw('employees.*,dept_code,div_code'))
+		->leftJoin('departments','departments.id','=','dept_id')
+		->leftJoin('divisions','divisions.id','=','division_id');
 
         if($filter['filter']!=null){
 			foreach($filter['filter']['filters'] as $f)
@@ -66,6 +68,20 @@ class EmployeeMapper extends AbstractMapper {
 
         return $result->get();
     }
+
+	public function generateReport($filter)
+	{
+		$result = $this->model->select(DB::raw('employees.*,dept_code,div_code'))
+		->leftJoin('departments','departments.id','=','dept_id')
+		->leftJoin('divisions','divisions.id','=','division_id')
+		->leftJoin('civil_status','employees.civil_status','=','civil_status.id');
+
+		if($filter['division']!=0){
+			$result = $result->where('division_id',$filter['division']);
+		}
+
+		return $result->get();
+	}
 
 
 }

@@ -44,7 +44,9 @@
                     basic_salary: null,
                     is_daily: null,
                     exit_status: null,
-                    contact_no: null,
+                    contact_no : null,
+                    division_id: null,
+                    dept_id: null,
             };
 
             var viewModel = kendo.observable({ 
@@ -76,6 +78,8 @@
                         is_daily: null,
                         exit_status: null,
                         contact_no : null,
+                        division_id: null,
+                        dept_id: null,
                     },
                   
                 },
@@ -106,10 +110,55 @@
                                     firstname : { type : 'string' },
                                     middlename : { type : 'string' },
                                     primary_addr : { type : 'string' },
+                                    division_id: { type : 'number' },
+                                    dept_id: { type : 'number' },
                                 }
                             }
                         }
                     }),
+                    division : new kendo.data.DataSource({
+                        transport : {
+                            read : {
+                                url : 'divisions-departments/division/get-divisions',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },
+                        },
+                        schema : {
+                            model : {
+                                id : 'id',
+                                fields : {
+                                    div_code : { type : 'string' },
+                                    div_name : { type : 'string' },
+                                }
+                            }
+                        }
+                    }),
+                    department : new kendo.data.DataSource({
+                        transport : {
+                            read : {
+                                url : 'divisions-departments/department/list-option/0',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },
+                        },
+                        schema : {
+                            model : {
+                                id : 'id',
+                                fields : {
+                                    div_code : { type : 'string' },
+                                    div_name : { type : 'string' },
+                                }
+                            }
+                        }
+                    }),
+                    
                 },
                 buttonHandler : {  
                    
@@ -142,7 +191,7 @@
 
                        
                     },
-                    view : function(e){
+                    view : async function(e){
                         e.preventDefault(); 
 
                         viewModel.functions.showPOP();
@@ -151,6 +200,7 @@
                         var data = this.dataItem(tr);
 
                         let url  = `employee-master-data/read/${data.id}`;
+                        await viewModel.functions.prepareForm(data);
                         read(url,viewModel);
                         //console.log(data);
 
@@ -194,7 +244,16 @@
                         viewModel.form.model.set('gender',$('#gender').data('kendoDropDownList').value());
                         viewModel.form.model.set('birthdate',kendo.toString($('#birthdate').data('kendoDatePicker').value(),'yyyy-MM-dd'));
                         viewModel.form.model.set('civil_status',$('#civil_status').data('kendoDropDownList').value());
+                        viewModel.form.model.set('division_id',$('#division_id').data('kendoDropDownList').value());
+                        viewModel.form.model.set('dept_id',($('#dept_id').data('kendoDropDownList').value()!='') ? $('#dept_id').data('kendoDropDownList').value() : 0 );
                     },
+                    prepareForm : function(data)
+                    {
+                       
+                        let deptUrl = `divisions-departments/department/list-option/${data.division_id}`;
+                        viewModel.ds.department.transport.options.read.url = deptUrl;
+                        viewModel.ds.department.read();
+                    }
                    
 
                 },
@@ -211,7 +270,14 @@
                     buttonCount : 5
                 },
                 noRecords: true,
-                filterable : true,
+                filterable : {
+                    extra: false,
+                    operators: {
+                        string: {
+                            contains : "Contains"
+                        }
+                    }
+                },
                 sortable : true,
                 height : 550,
                 scrollable: true,
@@ -245,6 +311,16 @@
                         title : "Jr,Sr,II,III",
                         field : "suffixname",
                         width : 90,  
+                    },
+                    {
+                        title : "Division",
+                        field : "div_code",
+                        //width : 90,  
+                    },
+                    {
+                        title : "Department",
+                        field : "dept_code",
+                        //width : 90,  
                     },
                     {
                         command: { text : 'View',icon : 'edit' ,click : viewModel.buttonHandler.view },
@@ -285,6 +361,42 @@
                 //change: onChange
             });
 
+            $("#civil_status").kendoDropDownList({
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: civilStatusOptions,
+                index: 1,
+                //change: onChange
+            });
+
+            $("#division_id").kendoDropDownList({
+                dataTextField: "div_name",
+                dataValueField: "id",
+                dataSource: viewModel.ds.division,
+                index: 1,
+                change: function(e){
+                    let selected = e.sender.dataItem();
+                    let deptUrl = `divisions-departments/department/list-option/${selected.id}`;
+                    viewModel.ds.department.transport.options.read.url = deptUrl;
+                    viewModel.ds.department.read();
+                }
+            });
+
+            $("#dept_id").kendoDropDownList({
+                dataTextField: "dept_name",
+                dataValueField: "id",
+                dataSource: viewModel.ds.department,
+                index: 1,
+                dataBound : function(e){
+                    if(viewModel.form.model.dept_id!=null){
+                        $('#dept_id').data('kendoDropDownList').value(viewModel.form.model.dept_id);
+                    }
+                    
+                }
+                //change: onChange
+            });
+
+            
             $("#contact_no").kendoTextBox({ });
 
             $("#sss_no").kendoTextBox({ });

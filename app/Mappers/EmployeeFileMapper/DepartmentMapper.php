@@ -49,5 +49,14 @@ class DepartmentMapper extends AbstractMapper {
         return $result->get();
     }
 
+	public function getDept($div_id)
+	{
+		//SELECT id,dept_name FROM departments WHERE dept_div_id =1 
+
+		$result = $this->model->select('id','dept_name')->where('dept_div_id',$div_id);
+
+		return $result->get();
+	}
+
 
 }

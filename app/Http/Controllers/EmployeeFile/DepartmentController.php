@@ -58,4 +58,10 @@ class DepartmentController extends Controller
         return response()->json($result);
     }
 
+    public function listOption(Request $request)
+    {
+        $result = $this->mapper->getDept($request->div_id);
+        return response()->json($result);
+    }
+
 }

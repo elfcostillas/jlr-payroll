@@ -142,23 +142,35 @@
                                 <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" id="deduct_phic"></div></div></td>
                                 <td><input type="text" id="hdmf_no" data-bind="value:form.model.hdmf_no"></td>
                                 <td><input type="text" id="hdmf_contri" data-bind="value:form.model.hdmf_contri"></td>
-                                <td><input type="text" id="tin_no" data-bind="value:form.model.tin_no"></td>
-                                <td></td>
+                                <td colspan=2><input type="text" id="tin_no" data-bind="value:form.model.tin_no"></td>
+                               
                             </tr>
                         </table>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-2">
-                        <div class="card card-secondary">
-                            <div class="card-header">Biometric ID</div>
-                            <div class="card-body">
-                                <input class="formTable" type="text" id="biometric_id" data-bind="value:form.model.biometric_id">
-                            </div>
-                        </div>    
-                    </div>
-                </div>
                 
+                <div class="card card-secondary">
+                    <div class="card-header"> Employee Information </div>
+                        <div class="card-body">
+                            <table class="formTable" border=0 style="width:100%">
+                                <tr>
+                                    <td>Biometric ID</td>
+                                    <td>Location</td>
+                                    <td colspan=2>Division</td>
+                                    <td colspan=2>Department</td>
+                                    <td colspan=2>Job Title</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1"><input class="formTable" type="text" id="biometric_id" data-bind="value:form.model.biometric_id"></td>
+                                    <td></td>
+                                    <td colspan=2><input type="text" id="division_id" data-bind="value:form.model.division_id"></td>
+                                    <td colspan=2><input type="text" id="dept_id" data-bind="value:form.model.dept_id"></td>
+                                    <td colspan=2></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>    
             </div>
         </div>
     </div>

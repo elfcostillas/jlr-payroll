@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Timekeeping\PayrollPeriodWeeklyController;
 use App\Http\Controllers\Timekeeping\HolidayController;
 use App\Http\Controllers\Timekeeping\PayrollPeriodController;
+use App\Http\Controllers\Timekeeping\UploadLogController;
 
 use App\Http\Controllers\Settings\LocationController;
 
@@ -15,6 +16,9 @@ use App\Http\Controllers\EmployeeFile\DivisionController;
 use App\Http\Controllers\EmployeeFile\EmployeeController;
 use App\Http\Controllers\EmployeeFile\DepartmentController;
 use App\Http\Controllers\EmployeeFile\JobTitleController;
+use App\Http\Controllers\Reports\EmployeeReportController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +67,11 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::post('location-destroy',[HolidayController::class,'destroyLocation']);
     
     });
+
+    Route::prefix('upload-log')->group(function(){
+        Route::get('/',[UploadLogController::class,'index']);
+        Route::post('upload',[UploadLogController::class,'upload']);
+    });
     
 });
 
@@ -89,6 +98,9 @@ Route::middleware('auth')->prefix('employee-files')->group(function(){
         Route::get('department/list',[DepartmentController::class,'list']);
         Route::post('department/create',[DepartmentController::class,'create']);
         Route::post('department/update',[DepartmentController::class,'update']);
+        
+        Route::get('department/list-option/{div_id}',[DepartmentController::class,'listOption']);
+
     });
 
     Route::prefix('job-title')->group(function(){ 
@@ -118,6 +130,15 @@ Route::middleware('auth')->prefix('settings')->group(function(){
         Route::get('list',[LocationController::class,'list']);
         Route::post('create',[LocationController::class,'create']);
         Route::post('update',[LocationController::class,'update']);
+        Route::get('get-locations',[LocationController::class,'listOption']);
+    });
+});
+
+Route::middleware('auth')->prefix('reports')->group(function(){
+    //Route::get('locations',[LocationController::class,'index']);
+    Route::prefix('employee-report')->group(function(){
+        Route::get('/',[EmployeeReportController::class,'index']);
+        Route::get('generate',[EmployeeReportController::class,'generate']);
     });
 });
 
