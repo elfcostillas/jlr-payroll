@@ -75,6 +75,10 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
 
     Route::prefix('manage-dtr-weekly')->middleware('access:timekeeping/manage-dtr-weekly')->group(function(){
         Route::get('/',[ManageDTRWeeklyController::class,'index']);
+        Route::post('prepare',[ManageDTRWeeklyController::class,'prepareDTR']);
+        Route::get('get-employee-list/{period_id}',[ManageDTRWeeklyController::class,'getEmployeeList']);
+        Route::get('get-employee-raw-logs/{period_id}/{biometric_id}',[ManageDTRWeeklyController::class,'getEmployeeRawLogs']);
+        
     });
 
     Route::prefix('manage-dtr')->middleware('access:timekeeping/manage-dtr')->group(function(){

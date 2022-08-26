@@ -84,9 +84,19 @@
                         </div>
                     </div>
                 </div>
+                <div id="pop" style="display:none;">
+                   <table style="width:100%">
+                        <tr>
+                            <td></td>
+                            <td style="width:200px;background-color: #f8f9fa;">
+                                <div id="raw-logs">
+                            </td>
+                        </tr>
+                   </table>
+                </div>
             </div>
         </div>
     </div>
-@endsection
+@endsection </div>
 
 @include('app.timekeeping.manage-dtr-weekly.js')
