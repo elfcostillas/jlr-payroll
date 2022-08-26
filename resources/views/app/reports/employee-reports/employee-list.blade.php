@@ -18,6 +18,9 @@
         <td>TIN no</td>
         <td>PHIC No</td>
         <td>HDMF No</td>
+        <td>Employment Status</td>
+        <td>Status</td>
+        <td>Employee Type</td>
     </tr>
     
     @foreach($data as $emp)
@@ -40,6 +43,9 @@
             <td>{{ $emp->tin_no }}  </td>
             <td>{{ $emp->phic_no }}  </td>
             <td>{{ $emp->hdmf_no }}  </td>
+            <td>{{ $emp->estatus_desc }}  </td>
+            <td>{{ $emp->status_desc }}  </td>
+            <td>{{ $emp->pay_description }}  </td>
         </tr>
     @endforeach
 </table>

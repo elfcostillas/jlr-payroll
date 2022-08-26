@@ -167,6 +167,18 @@
                                     <td colspan=2><input type="text" id="dept_id" data-bind="value:form.model.dept_id"></td>
                                     <td colspan=2></td>
                                 </tr>
+                                <tr>
+                                    <td colspan=2>Employment Status</td>
+                                    <td colspan=2>Exit Status</td>
+                                    <td colspan=2>Employee Type</td>
+                                    <td colspan=2></td>
+                                </tr>
+                                <tr>
+                                    <td colspan=2><input type="text" id="employee_stat" data-bind="value:form.model.employee_stat"></td>
+                                    <td colspan=2><input type="text" id="exit_status" data-bind="value:form.model.exit_status"></td>
+                                    <td colspan=2><input type="text" id="pay_type" data-bind="value:form.model.pay_type"></td>
+                                    <td colspan=2></td>
+                                </tr>
                             </table>
                         </div>
                     </div>

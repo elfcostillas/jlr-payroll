@@ -14,33 +14,7 @@
                                     
                                 }
                             },
-                            create : {
-                                url : 'payroll-period-weekly/create',
-                                type : 'post',
-                                dataType : 'json',
-                                complete : function(e){
-                                    swal_success(e);
-                                    viewModel.ds.maingrid.read();
-                                }
-                            },
-                            update : {
-                                url : 'payroll-period-weekly/update',
-                                type : 'post',
-                                dataType : 'json',
-                                complete : function(e){
-                                    swal_success(e);
-                                    viewModel.ds.maingrid.read();
-                                }
-                            },
-                            parameterMap: function (data, type) {
-                                if(type=='create' || type=='update'){
-                                    data.date_from = kendo.toString(data.date_from,'yyyy-MM-dd');
-                                    data.date_to = kendo.toString(data.date_to,'yyyy-MM-dd');
-                                    data.date_release = kendo.toString(data.date_release,'yyyy-MM-dd');
-                                }
-
-                                return data;
-                            }
+                           
                         },
                         pageSize :11,
                         serverPaging : true,
@@ -60,8 +34,13 @@
                         }
                     }),
                 },
-                toolbarHandler : {
+                buttonHandler : {
+                    prepare : function(e){
+                        let tr = $(e.target).closest("tr");
+                        let data = this.dataItem(tr);
 
+                        console.log(data.id);
+                    }
                 }
             });
 
@@ -76,8 +55,7 @@
                 sortable : true,
                 height : 550,
                 scrollable: true,
-                toolbar : [{ name :'create',text:'Add Payroll Period'}],
-                editable : "inline",
+                selectable : true,
                 columns : [
                     {
                         title : "ID",
@@ -88,29 +66,90 @@
                         title : "Start Date",
                         field : "date_from",
                         template : "#= (data.date_from) ? kendo.toString(data.date_from,'MM/dd/yyyy') : ''  #",
-                        //width : 120,    
+                        
                     },
                     {
                         title : "End Date",
                         field : "date_to",
                         template : "#= (data.date_to) ? kendo.toString(data.date_to,'MM/dd/yyyy') : ''  #",
-                        //width : 120,    
+                        
                     },
                     {
                         title : "Man Hours",
                         field : "man_hours",
                         //template : "#=  : ''  #",
-                        width : 120,    
+                        width : 110,    
                     },
                     {
-                        command : ['edit'],
-                        width : 170,    
+                        command: { text : 'Prepare',click : viewModel.buttonHandler.prepare , },
+                        attributes : { style : 'font-size:10pt !important;'},
+                        width : 85
                     },
                   
-                ]
+                ],
+                change : function(e){
+                    var grid = $("#maingrid").data("kendoGrid");
+                    var selectedItem = grid.dataItem(grid.select());
+
+                    console.log(selectedItem.id);
+
+                }
+            });
+
+            $("#subgrid").kendoGrid({
+                dataSource : viewModel.ds.maingrid,
+                pageable : {
+                    refresh : true,
+                    buttonCount : 5
+                },
+                noRecords: true,
+                filterable : true,
+                sortable : true,
+                height : 550,
+                scrollable: true,
+                selectable : true,
+                columns : [
+                    {
+                        title : "ID",
+                        field : "id",
+                        width : 80,    
+                    },
+                    {
+                        title : "Start Date",
+                        field : "date_from",
+                        template : "#= (data.date_from) ? kendo.toString(data.date_from,'MM/dd/yyyy') : ''  #",
+                        
+                    },
+                    {
+                        title : "End Date",
+                        field : "date_to",
+                        template : "#= (data.date_to) ? kendo.toString(data.date_to,'MM/dd/yyyy') : ''  #",
+                        
+                    },
+                    {
+                        title : "Man Hours",
+                        field : "man_hours",
+                        //template : "#=  : ''  #",
+                        width : 110,    
+                    },
+                    {
+                        command: { text : 'Prepare',click : viewModel.buttonHandler.prepare , },
+                        attributes : { style : 'font-size:10pt !important;'},
+                        width : 85
+                    },
+                  
+                ],
+                change : function(e){
+                    var grid = $("#maingrid").data("kendoGrid");
+                    var selectedItem = grid.dataItem(grid.select());
+
+                    console.log(selectedItem.id);
+
+                }
             });
 
             kendo.bind($("#viewModel"),viewModel);
+           
 
         });
     </script>

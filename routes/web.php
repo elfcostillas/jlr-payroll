@@ -9,6 +9,8 @@ use App\Http\Controllers\Timekeeping\PayrollPeriodWeeklyController;
 use App\Http\Controllers\Timekeeping\HolidayController;
 use App\Http\Controllers\Timekeeping\PayrollPeriodController;
 use App\Http\Controllers\Timekeeping\UploadLogController;
+use App\Http\Controllers\Timekeeping\ManageDTRWeeklyController;
+use App\Http\Controllers\Timekeeping\ManageDTRController;
 
 use App\Http\Controllers\Settings\LocationController;
 
@@ -43,7 +45,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 Route::middleware('auth')->prefix('timekeeping')->group(function(){
-    Route::prefix('payroll-period')->group(function(){
+    Route::prefix('payroll-period')->middleware('access:timekeeping/payroll-period')->group(function(){
         Route::get('/',[PayrollPeriodController::class,'index']);
         Route::get('list',[PayrollPeriodController::class,'list']);
         Route::post('create',[PayrollPeriodController::class,'create']);
@@ -67,6 +69,16 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::post('location-create',[HolidayController::class,'createLocation']);
         Route::post('location-destroy',[HolidayController::class,'destroyLocation']);
     
+    });
+
+    //timekeeping/manage-dtr-weekly
+
+    Route::prefix('manage-dtr-weekly')->middleware('access:timekeeping/manage-dtr-weekly')->group(function(){
+        Route::get('/',[ManageDTRWeeklyController::class,'index']);
+    });
+
+    Route::prefix('manage-dtr')->middleware('access:timekeeping/manage-dtr')->group(function(){
+        Route::get('/',[ManageDTRController::class,'index']);
     });
 
     Route::prefix('upload-log')->group(function(){
@@ -154,6 +166,16 @@ Route::get('test',function(){
         echo $date->format('Y-m-d')."<br>"; 
     }
 });
+
+Route::get('test2',function(){
+    
+    $period = CarbonPeriod::create('2018-06-14','2018-06-20');
+
+    // Iterate over the period
+    foreach ($period as $date) {
+        echo $date->format('Y-m-d')."<br>"; 
+    }
+})->middleware('access:employee-report');
 
 
 

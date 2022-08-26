@@ -6,6 +6,10 @@
     <script>
         $(document).ready(function(){
 
+            let emp_stat =<?php echo json_encode($emp_stat) ?>;
+            let exit_stat =<?php echo json_encode($exit_stat) ?>;
+            let pay_type =<?php echo json_encode($pay_type) ?>;
+
             let genderOptions = [
                     { text: "Male", value: "M" },
                     { text: "Female", value: "F" },
@@ -48,6 +52,7 @@
                     division_id: null,
                     dept_id: null,
                     location_id: null,
+                    pay_type: null,
             };
 
             var viewModel = kendo.observable({ 
@@ -82,6 +87,7 @@
                         division_id: null,
                         dept_id: null,
                         location_id: null,
+                        pay_type: null,
                     },
                   
                 },
@@ -239,6 +245,10 @@
                         viewModel.form.model.set('gender','M');
                         viewModel.form.model.set('location_id',1);
                         viewModel.form.model.set('division_id',1);
+
+                        viewModel.form.model.set('employee_stat',1);
+                        viewModel.form.model.set('exit_status',1);
+                        viewModel.form.model.set('pay_type',1);
                     }
                 },
                 functions : {
@@ -272,6 +282,11 @@
                         viewModel.form.model.set('division_id',$('#division_id').data('kendoDropDownList').value());
                         viewModel.form.model.set('dept_id',($('#dept_id').data('kendoDropDownList').value()!='') ? $('#dept_id').data('kendoDropDownList').value() : 0 );
                         viewModel.form.model.set('location_id',($('#location_id').data('kendoDropDownList').value()!='') ? $('#location_id').data('kendoDropDownList').value() : 0 );
+
+                        viewModel.form.model.set('employee_stat',($('#employee_stat').data('kendoDropDownList').value()!='') ? $('#employee_stat').data('kendoDropDownList').value() : 0 );
+                        viewModel.form.model.set('exit_status',($('#exit_status').data('kendoDropDownList').value()!='') ? $('#exit_status').data('kendoDropDownList').value() : 0 );
+                        viewModel.form.model.set('pay_type',($('#pay_type').data('kendoDropDownList').value()!='') ? $('#pay_type').data('kendoDropDownList').value() : 0 );
+                    
                     },
                     prepareForm : function(data)
                     {
@@ -321,17 +336,17 @@
                     {
                         title : "Last Name",
                         field : "lastname",
-                        width : 140,    
+                        width : 130,    
                     },
                     {
                         title : "First Name",
                         field : "firstname",
-                        width : 140,  
+                        width : 130,  
                     },
                     {
                         title : "Middle Name",
                         field : "middlename",
-                        width : 140,  
+                        width : 130,  
                     },
                     {
                         title : "Jr,Sr,II,III",
@@ -348,9 +363,29 @@
                         field : "dept_code",
                         //width : 90,  
                     },
+                    // {
+                    //     title : "Emp Status",
+                    //     field : "estatus_desc",
+                    //     width : 100,  
+                    // }, 
+                    {
+                        title : "Emp Type",
+                        field : "pay_description",
+                        width : 100,  
+                    },
+                    {
+                        title : "Status",
+                        field : "exit_status",
+                        template : "#: status_desc #",
+                        width : 80,  
+                        filterable: {
+                            ui: statusFilter
+                        }
+                    },
                     {
                         command: { text : 'View',icon : 'edit' ,click : viewModel.buttonHandler.view },
-                        attributes : { style : 'font-size:10pt !important;'} 
+                        attributes : { style : 'font-size:10pt !important;'},
+                        width : 85
                     },
                   
                 ]
@@ -433,7 +468,40 @@
                 //change: onChange
             });
 
+            $("#employee_stat").kendoDropDownList({
+                dataTextField: "estatus_desc",
+                dataValueField: "id",
+                dataSource: emp_stat,
+                index: 1,
+                dataBound : function(e){
+                  
+                }
+                
+            });
+
+            $("#exit_status").kendoDropDownList({
+                dataTextField: "status_desc",
+                dataValueField: "id",
+                dataSource: exit_stat,
+                index: 1,
+                dataBound : function(e){
+                  
+                }
+                //change: onChange
+            });
+
+            $("#pay_type").kendoDropDownList({
+                dataTextField: "pay_description",
+                dataValueField: "id",
+                dataSource: pay_type,
+                index: 1,
+                dataBound : function(e){
+                  
+                }
+                //change: onChange
+            });
             
+
             $("#contact_no").kendoTextBox({ });
 
             $("#sss_no").kendoTextBox({ });
@@ -451,6 +519,15 @@
                     { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
                 ]
             });
+
+            function statusFilter(element) {
+                element.kendoDropDownList({
+                dataSource: exit_stat,
+                dataTextField: "status_desc",
+                dataValueField: "id",
+                //optionLabel: "--Select Value--"
+            });
+            }
             
             kendo.bind($("#viewModel"),viewModel);
 

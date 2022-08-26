@@ -33,6 +33,7 @@ class UploadLogController extends Controller
         $file = $request->file('files');
         
         $logs = [];
+        $dtr = [];
 
         $path = Storage::disk('local')->put('uploads',$file);
        
@@ -45,14 +46,18 @@ class UploadLogController extends Controller
 			if(count($data)==4){
 				$date = date_format(Carbon::createFromFormat('m/d/Y',$data[1]),'Y-m-d');
 				array_push($logs,['punch_date'=> $date,'punch_time' => $data[2], 'biometric_id' => $data[0],'cstate' => $data[3] ]);
+                //array_push($dtr,['dtr_date' => $date,'bio_metric_id' => $data[0]]);
 			}
         }
 		
 		$result = $this->mapper->insertDB($logs);
+        //$result2 = $this->edtr->insertDB($dtr);
 		
         if(is_object($result)){
 			return response()->json($result)->setStatusCode(500, 'Error');
 		}
+
+
 
         return response()->json($result);
     }

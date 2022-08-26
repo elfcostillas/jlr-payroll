@@ -18,7 +18,10 @@ class EmployeeController extends Controller
 
     public function index()
     {
-        return view('app.employee-file.employee-master-data.index');
+        $emp_stat = $this->mapper->getEmploymentStat();
+        $exit_stat = $this->mapper->getExitStat();
+        $pay_type = $this->mapper->getPayTypes();
+        return view('app.employee-file.employee-master-data.index',['emp_stat'=>$emp_stat, 'exit_stat'=>$exit_stat, 'pay_type'=>$pay_type]);
     }
 
     public function list(Request $request)
@@ -83,6 +86,18 @@ class EmployeeController extends Controller
         $result = $this->mapper->header($request->id);
         return response()->json($result);
     }
+
+    // public function getEmploymentStat()
+    // {
+    //     $result = $this->mapper->getEmploymentStat();
+    //     return response()->json($result);
+    // }
+
+    // public function getExitStat()
+    // {
+    //     $result = $this->mapper->getExitStat();
+    //     return response()->json($result);
+    // }
 
    
 

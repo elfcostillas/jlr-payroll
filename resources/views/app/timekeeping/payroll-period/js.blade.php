@@ -88,16 +88,21 @@
                 editable : "inline",
                 columns : [
                     {
+                        title : "ID",
+                        field : "id",
+                        width : 80,    
+                    },
+                    {
                         title : "Start Date",
                         field : "date_from",
                         template : "#= (data.date_from) ? kendo.toString(data.date_from,'MM/dd/yyyy') : ''  #",
-                        width : 120,    
+                        //width : 120,    
                     },
                     {
                         title : "End Date",
                         field : "date_to",
                         template : "#= (data.date_to) ? kendo.toString(data.date_to,'MM/dd/yyyy') : ''  #",
-                        width : 120,    
+                        //width : 120,    
                     },
                   
                     {

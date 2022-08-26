@@ -40,7 +40,9 @@ class Employee extends Model
         'exit_status',
         'contact_no',
         'division_id',
-        'dept_id'
+        'dept_id',
+        'location_id',
+        'pay_type',
     ];
 
 }
