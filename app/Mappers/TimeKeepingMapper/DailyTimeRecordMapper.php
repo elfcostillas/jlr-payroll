@@ -105,6 +105,31 @@ class DailyTimeRecordMapper extends AbstractMapper {
         return $result->get();
     }
 
+    public function getweeklyDTR($biometric_id,$period_id)
+    {
+        $result = $this->model->select(DB::raw("edtr.id,biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,under_time,over_time,night_diff,schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc"))
+        ->from('edtr')
+        ->where('biometric_id',$biometric_id)
+        ->join('payroll_period_weekly',function($join){
+            $join->whereRaw('dtr_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
+        })
+        ->leftJoin('work_schedules','schedule_id','=','work_schedules.id')
+        ->where('payroll_period_weekly.id',$period_id)
+        ->orderBy('dtr_date');
+
+        return $result->get();
+    }
+
+    public function getSchedules()
+    {
+        //SELECT CONCAT(time_in,'-',time_out) AS schedule_desc FROM work_schedules
+        $result = $this->model->select(DB::raw("id as schedule_id,CONCAT(time_in,'-',time_out) AS schedule_desc"))
+                    ->from('work_schedules')
+                    ->orderBy('time_in');
+
+        return $result->get();
+    }
+
    
 
 }

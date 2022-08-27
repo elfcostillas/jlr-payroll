@@ -59,6 +59,14 @@
         color : #ffae42 !important;
     }
 
+    #dtrgrid {
+        font-size:10pt;
+    }
+
+    .k-icon, .k-button-text {
+        font-size : 9pt !important;
+    }
+
     
 </style>
 @section('title')
@@ -87,8 +95,10 @@
                 <div id="pop" style="display:none;">
                    <table style="width:100%">
                         <tr>
-                            <td></td>
-                            <td style="width:200px;background-color: #f8f9fa;">
+                            <td>
+                                <div id="dtrgrid"></div>
+                            </td>
+                            <td style="width:170px;background-color: #f8f9fa;">
                                 <div id="raw-logs">
                             </td>
                         </tr>

@@ -18,6 +18,7 @@ class ManageDTRWeeklyController extends Controller
 
     public function index()
     {
+        
         return view('app.timekeeping.manage-dtr-weekly.index');
 
     }
@@ -54,6 +55,21 @@ class ManageDTRWeeklyController extends Controller
         return view('app.timekeeping.manage-dtr-weekly.raw-logs',['logs' => $result]);
         //return response()->json($result);
     }
+
+    public function getweeklyDTR(Request $request)
+    {
+        $biometric_id = $request->biometric_id;
+        $period_id = $request->period_id;
+
+        $result = $this->mapper->getweeklyDTR($biometric_id,$period_id);
+        return response()->json($result);
+    }
+    public function getSchedules()
+    {
+        $result = $this->mapper->getSchedules();
+        return response()->json($result);
+    }
+    
 }
 
 /*

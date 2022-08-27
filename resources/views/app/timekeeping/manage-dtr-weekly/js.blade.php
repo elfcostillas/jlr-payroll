@@ -1,4 +1,9 @@
 @section('jquery')
+<script type="text/x-kendo-template" id="logDrawer">
+    <button class="k-grid-save-changes k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="events: { click: buttonHandler.drawLogs }">
+        </span>&nbsp; Draw Logs
+    </button>
+</script>	
     <script>
         $(document).ready(function(){
 
@@ -15,6 +20,7 @@
                                     
                                 }
                             },
+                           
                            
                         },
                         pageSize :11,
@@ -61,10 +67,55 @@
                             }
                         }
                     }),
-                    rawlogs :  new kendo.data.DataSource({
+                    dtrgrid :  new kendo.data.DataSource({
                         transport : {
                             read : {
-                                url : 'manage-dtr-weekly/get-employee-raw-logs',
+                                url : 'manage-dtr-weekly/get-employee-dtr-logs/0/0',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },
+                            update : {
+                                url : '',
+                                type : 'post',
+                                dataType : 'json',
+                                complete : function (e){
+
+                                }
+                            }
+                           
+                        },
+                        batch: true,
+                        //autoSync: true,
+                        pageSize :14,
+                        schema : {
+                            // data : "data",
+                            // total : "total",
+                            model : {
+                                id : 'id',
+                                fields : {
+                                    biometric_id : { type:'number',editable : false  },
+                                    day_name : { type:'string',editable : false  },
+                                    dtr_date : { type:'date',editable : false  },
+                                    time_in : { type:'string', },
+                                    time_out : { type:'string', },
+                                    late : { type:'number', },
+                                    late_eq : { type:'number', },
+                                    under_time : { type:'number', },
+                                    over_time : { type:'number', },
+                                    night_diff : { type:'number', },
+                                    schedule_id : { type:'number', },
+                                    schedule_desc : { type: 'string' }
+                                }
+                            }
+                        }
+                    }),
+                    sched : new kendo.data.DataSource({
+                        transport : {
+                            read : {
+                                url : 'manage-dtr-weekly/get-employee-schedules',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -73,19 +124,16 @@
                             },
                            
                         },
-                        pageSize :12,
                         schema : {
-                            // data : "data",
-                            // total : "total",
-                            // model : {
-                            //     id : 'id',
-                            //     fields : {
-                            //         biometric_id : { type : 'number',editable : false },
-                            //         empname : { type: 'string'}
-                            //     }
-                            // }
+                            model : {
+                                id : 'schedule_id',
+                                fields : {
+                                    schedule_id : { type:'number',  },
+                                    schedule_desc : { type:'string',  },
+                                }
+                            }
                         }
-                    }),
+                    })
                 },
                 buttonHandler : {
                     prepare : function(e){
@@ -109,14 +157,25 @@
                             // viewModel.ds.rawlogs.transport.options.read.url = rawLogsUrl;
                             // viewModel.ds.rawlogs.read();
                             $.get(rawLogsUrl,function(data){
-                                console.log(data);
+                              
                                 $("#raw-logs").html(data);
                             });
+
+
+                            let dtrUrl = `manage-dtr-weekly/get-employee-dtr-logs/${viewModel.selectedPeriod.id}/${data.biometric_id}`;
+                            viewModel.ds.dtrgrid.transport.options.read.url = dtrUrl;
+                            viewModel.ds.dtrgrid.read();
+
+
                         }
                         
                     },
                     closePop : function(){
 
+                    },
+                    drawLogs : function()
+                    {
+                        alert();
                     }
                 },
                 functions : {
@@ -126,7 +185,7 @@
                         
                         myWindow.kendoWindow({
                             width: "1124", //1124 - 1152
-                            height: "610",
+                            height: "410",
                             //title: "Employee Information",
                             visible: false,
                             animation: false,
@@ -136,7 +195,7 @@
                                 "Maximize",
                                 "Close"
                             ],
-                            close: viewModel.buttonHandler.closePop,
+                            close : viewModel.buttonHandler.closePop,
                             position : {
                                 top : 0
                             }
@@ -236,37 +295,166 @@
                 
             });
 
-            // $("#raw-logs").kendoGrid({
-            //     dataSource : viewModel.ds.rawlogs,
-            //     pageable : {
-            //         refresh : true,
-            //         buttonCount : 5
-            //     },
-            //     noRecords: true,
-            //     filterable : true,
-            //     sortable : true,
-            //     height : 550,
-            //     scrollable: true,
-            //     selectable : true,
-            //     columns : [
-            //         {
-            //             title : "Date",
-            //             field : "punch_date",
-            //             width : 80,    
-            //         },
-            //         {
-            //             title : "Time",
-            //             field : "punch_time",
-                        
-            //         },
-            //         {
-            //             title : "State",
-            //             field : "cstate",
-            //         }
+            $("#dtrgrid").kendoGrid({
+                dataSource : viewModel.ds.dtrgrid,
+                pageable : {
+                    refresh : true,
+                    buttonCount : 5
+                },
+                noRecords: true,
+                filterable : true,
+                editable: true,
+                //height : 550,
+                scrollable: true,
+                selectable : true,
+                toolbar : [
+                    {
+                        name : 'save'
+                    },
+                    {
+                        name : 'cancel'
+                    },
+                    {
+                       template : kendo.template($("#logDrawer").html())
+                    }
+                ],
+                columns : [
+                    {
+                        title : "Day",
+                        field : "day_name",
+                        width : 60,
+                         attributes: {
+                            style: "font-size: 9pt"
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt"
+                        } 
+                    },
+                    {
+                        title : "Date",
+                        field : "dtr_date",
+                        template : "#= (data.dtr_date) ? kendo.toString(data.dtr_date,'MM/dd/yyyy') : ''  #",
+                        width : 90,
+                         attributes: {
+                            style: "font-size: 9pt"
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt"
+                        }    
+                    },
+                    {
+                        title : "Schedule",
+                        field : "schedule_id",
+                        //template : "#= (schedule_desc) ? schedule_desc : data.schedule_desc #",
+                        template : "#if(data.schedule_desc==null){# #=data.schedule_id # #} else {#  #=data.schedule_desc# #}#",
+                        //template : "#= schedule_desc #",
+                        //template : "#= if(data.schedule_desc==null) #"
+                       
+                        width : 100,
+                         attributes: {
+                            style: "font-size: 9pt"
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt"
+                        },
+                        editor : scheduleEditor 
+                    },
+                    {
+                        title : "Time In",
+                        field : "time_in",
+                        width : 90,
+                         attributes: {
+                            style: "font-size: 9pt"
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt"
+                        }    
+                    },
+                    {
+                        title : "Time Out",
+                        field : "time_out",
+                        width : 90,
+                         attributes: {
+                            style: "font-size: 9pt"
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt"
+                        }    
+                    },
+                    {
+                        title : "Late",
+                        field : "late_eq",
+                        width : 90,
+                         attributes: {
+                            style: "font-size: 9pt"
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt"
+                        }    
+                    },
+                    {
+                        title : "OT",
+                        field : "over_time",
+                        width : 90,
+                         attributes: {
+                            style: "font-size: 9pt"
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt"
+                        }    
+                    },
+                    {
+                        title : "UT",
+                        field : "over_time",
+                        width : 90,
+                         attributes: {
+                            style: "font-size: 9pt"
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt"
+                        }    
+                    },
+                    {
+                        title : "Night Diff",
+                        field : "night_diff",
+                        width : 90,    
+                        attributes: {
+                            style: "font-size: 9pt"
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt"
+                        }
+                    }
                   
-            //     ],
+                ],
                 
-            // }); 
+            }); 
+
+            function scheduleEditor(container, options)
+            {
+                $('<input name="' + options.field + '"/>')
+                .appendTo(container)
+                .kendoDropDownList({
+                //.kendoComboBox({
+                    //autoBind: false,
+                    autoWidth: true,
+                    dataTextField: "schedule_desc",
+                    dataValueField: "schedule_id",
+                    dataSource: viewModel.ds.sched,
+                    change : function(e)
+                    {
+                        let grid = $("#dtrgrid").data("kendoGrid");
+                        let selectedRow = grid.dataItem(grid.select());
+                        //console.log(e.sender);
+                        //console.log(e.sender.text());
+                        //console.log(selectedRow.set("schedule_desc"));
+                        selectedRow.set("schedule_desc",e.sender.text());
+
+                        
+                    }
+                    
+                });
+            }
 
             kendo.bind($("#viewModel"),viewModel);
            
