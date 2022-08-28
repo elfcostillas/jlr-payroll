@@ -88,10 +88,13 @@ class ManageDTRWeeklyController extends Controller
         $biometric_id = $request->biometric_id;
         $period_id = $request->period_id;
 
-        $rawlogs = $this->mapper->getRawLogs($biometric_id,$period_id);
+        //$rawlogs = $this->mapper->getRawLogs($biometric_id,$period_id);
        
-        $this->mapper->mapRawLogs($rawlogs);
-
+        //$this->mapper->mapRawLogs($rawlogs);
+       
+        $dtr = $this->mapper->getweeklyDTR($biometric_id,$period_id);
+        $this->mapper->mapRawLogs2($dtr);
+        
         return response()->json(true);
     }
     

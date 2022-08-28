@@ -8,7 +8,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Carbon\CarbonPeriod;
 
-
 class DailyTimeRecordMapper extends AbstractMapper {
 
 	protected $modelClassName = 'App\Models\Timekeeping\DailyTimeRecord';
@@ -130,23 +129,34 @@ class DailyTimeRecordMapper extends AbstractMapper {
         return $result->get();
     }
 
+    // public function mapRawLogs($rawlogs)
+    // {
+    //     foreach($rawlogs as $logs)
+    //     {
+     
+    //         switch($logs->cstate){
+    //             case 'C/In';
+    //                 $this->model->where([
+    //                         ['biometric_id',$logs->biometric_id],
+    //                         ['dtr_date',$logs->punch_date],
+    //                     ])->update(['time_in' => $logs->punch_time]);
+    //             break;
+
+    //             case 'C/Out';
+    //                     $this->model->where([
+    //                         ['biometric_id',$logs->biometric_id],
+    //                         ['dtr_date',$logs->punch_date],
+    //                     ])->update(['time_out' => $logs->punch_time]);
+    //             break;
+    //         }
+    //     }
+    // }
+
     public function mapRawLogs($rawlogs)
     {
         foreach($rawlogs as $logs)
         {
-        //    $dtr[$logs->punch_date][$logs->biometric_id] = [
-        //         // 'biometric_id'=>null,
-        //         // 'dtr_date'=>null,
-        //         'time_in' =>null,
-        //         'time_out' =>null, 
-        //    ];
-            // $dtr = $this->model->select()->where([
-            //     ['biometric_id',$logs->biometric_id],
-            //     ['dtr_date',$logs->punch_date],
-            // ])
-            // ->first();
-
-            // dd($dtr);
+     
             switch($logs->cstate){
                 case 'C/In';
                     $this->model->where([
@@ -165,11 +175,99 @@ class DailyTimeRecordMapper extends AbstractMapper {
         }
     }
 
+    public function mapRawLogs2($dtr_log)
+    {
+        foreach($dtr_log as $dtr){
+            if($dtr->schedule_id>=5){
+                $in =  $this->model->select()
+                ->from('edtr_raw')
+                ->where([
+                    ['punch_date',$dtr->dtr_date],
+                    ['biometric_id',$dtr->biometric_id],
+                    ['cstate','C/In']
+                ])
+                ->orderBy('punch_time')
+                ->first();
+
+                $nextDay = Carbon::createFromFormat('Y-m-d',$dtr->dtr_date)->addDay(); //addDays(n days) // subDay // subDays(n days)
+
+                $out =  $this->model->select()
+                ->from('edtr_raw')
+                ->where([
+                    ['punch_date',$nextDay->format('Y-m-d')],
+                    ['biometric_id',$dtr->biometric_id],
+                    ['cstate','C/Out']
+                ])
+                ->orderBy('punch_time')
+                ->first();
+                
+            }else{
+                $in =  $this->model->select()
+                ->from('edtr_raw')
+                ->where([
+                    ['punch_date',$dtr->dtr_date],
+                    ['biometric_id',$dtr->biometric_id],
+                    ['cstate','C/In']
+                ])
+                ->orderBy('punch_time')
+                ->first();
+                
+                $out =  $this->model->select()
+                ->from('edtr_raw')
+                ->where([
+                    ['punch_date',$dtr->dtr_date],
+                    ['biometric_id',$dtr->biometric_id],
+                    ['cstate','C/Out']
+                ])
+                ->orderBy('punch_time')
+                ->first();
+
+            }
+
+            $dtr->time_in = ($in) ? $in->punch_time : null;    
+            $dtr->time_out = ($out) ? $out->punch_time : null;  
+
+            $this->updateValid($dtr->toArray());
+        }       
+    }
+
    
 
 }
 
 /*
+SELECT punch_time,cstate FROM edtr_raw 
+WHERE punch_date = '2022-08-01'
+AND biometric_id = 871
+AND cstate = 'C/In'
+ORDER BY punch_time LIMIT 1
+
+
+
+SELECT punch_time,cstate FROM edtr_raw
+LEFT JOIN edtr ON dtr_date = punch_date  
+LEFT JOIN work_schedules ON edtr.schedule_id = work_schedules.id
+WHERE punch_date = '2022-08-01'
+AND edtr_raw.biometric_id = 871
+AND TIME_TO_SEC(punch_time) < TIME_TO_SEC(work_schedules.time_in)
+AND cstate = 'C/In'
+ORDER BY punch_time LIMIT 1
+
+
+
+   //    $dtr[$logs->punch_date][$logs->biometric_id] = [
+        //         // 'biometric_id'=>null,
+        //         // 'dtr_date'=>null,
+        //         'time_in' =>null,
+        //         'time_out' =>null, 
+        //    ];
+            // $dtr = $this->model->select()->where([
+            //     ['biometric_id',$logs->biometric_id],
+            //     ['dtr_date',$logs->punch_date],
+            // ])
+            // ->first();
+
+            // dd($dtr);
 
 
  $empWithPunch = $this->model->select(DB::raw("employees.id,employees.biometric_id,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) as empname"))->from('employees')
