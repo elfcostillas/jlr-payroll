@@ -286,6 +286,9 @@
                         viewModel.form.model.set('employee_stat',($('#employee_stat').data('kendoDropDownList').value()!='') ? $('#employee_stat').data('kendoDropDownList').value() : 0 );
                         viewModel.form.model.set('exit_status',($('#exit_status').data('kendoDropDownList').value()!='') ? $('#exit_status').data('kendoDropDownList').value() : 0 );
                         viewModel.form.model.set('pay_type',($('#pay_type').data('kendoDropDownList').value()!='') ? $('#pay_type').data('kendoDropDownList').value() : 0 );
+                        viewModel.form.model.set('deduct_sss',(viewModel.form.model.deduct_sss) ? 'Y':'N');
+                        viewModel.form.model.set('deduct_phic',(viewModel.form.model.deduct_phic) ? 'Y':'N');
+                        //viewModel.form.model.set('deduct_sss',(viewModel.form.model.deduct_sss) ? 'Y':'N');
                     
                     },
                     prepareForm : function(data)
@@ -300,7 +303,9 @@
                 },
                 callBack : function()
                 {
-
+                  
+                    viewModel.form.model.set('deduct_sss',(viewModel.form.model.deduct_sss=='Y') ? true:false);
+                    viewModel.form.model.set('deduct_phic',(viewModel.form.model.deduct_phic=='Y') ? true:false);
                 }
             });
 

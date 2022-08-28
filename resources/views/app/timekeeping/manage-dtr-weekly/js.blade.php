@@ -160,6 +160,11 @@
                     manage : function(e){
                         let tr = $(e.target).closest("tr");
                         let data = this.dataItem(tr);
+                        
+                        let grid = $("#subgrid").data("kendoGrid");
+                        let row = grid.table.find("[data-uid=" + data.uid + "]");
+                        grid.select(row)
+
                         if(viewModel.selectedPeriod!=null)
                         {
                             viewModel.functions.showPop(data);
@@ -230,7 +235,14 @@
                     buttonCount : 5
                 },
                 noRecords: true,
-                filterable : true,
+                filterable : {
+                    extra: false,
+                    operators: {
+                        string: {
+                            contains : "Contains"
+                        }
+                    }
+                },
                 sortable : true,
                 height : 550,
                 scrollable: true,
@@ -287,7 +299,14 @@
                     buttonCount : 5
                 },
                 noRecords: true,
-                filterable : true,
+                filterable : {
+                    extra: false,
+                    operators: {
+                        string: {
+                            contains : "Contains"
+                        }
+                    }
+                },
                 sortable : true,
                 height : 550,
                 scrollable: true,
@@ -320,7 +339,7 @@
                     buttonCount : 5
                 },
                 noRecords: true,
-                filterable : true,
+                //filterable : true,
                 editable: true,
                 //height : 550,
                 scrollable: true,
