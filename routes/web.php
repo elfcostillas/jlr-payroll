@@ -82,6 +82,9 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         
         Route::get('get-employee-schedules',[ManageDTRWeeklyController::class,'getSchedules']);
         
+        Route::post('update-dtr',[ManageDTRWeeklyController::class,'updateDTR']);
+        Route::post('draw-logs',[ManageDTRWeeklyController::class,'drawLogs']);
+        
     });
 
     Route::prefix('manage-dtr')->middleware('access:timekeeping/manage-dtr')->group(function(){

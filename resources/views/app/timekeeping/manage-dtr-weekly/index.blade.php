@@ -67,7 +67,11 @@
         font-size : 9pt !important;
     }
 
-    
+    .k-window-title {
+        font-size : 10pt !important;
+    }
+
+
 </style>
 @section('title')
     <h4> Manage DTR - Weekly <h4>

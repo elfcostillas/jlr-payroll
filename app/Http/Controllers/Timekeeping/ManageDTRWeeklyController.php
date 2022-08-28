@@ -69,6 +69,31 @@ class ManageDTRWeeklyController extends Controller
         $result = $this->mapper->getSchedules();
         return response()->json($result);
     }
+
+    public function updateDTR(Request $request)
+    {
+        $logs = $request->models;
+        foreach($logs as $log){
+            $result = $this->mapper->updateValid($log);
+            if(is_object($result)){
+                return response()->json($result)->setStatusCode(500, 'Error');
+            }
+           
+        }
+        return response()->json($result);
+    }
+
+    public function drawLogs(Request $request)
+    {
+        $biometric_id = $request->biometric_id;
+        $period_id = $request->period_id;
+
+        $rawlogs = $this->mapper->getRawLogs($biometric_id,$period_id);
+       
+        $this->mapper->mapRawLogs($rawlogs);
+
+        return response()->json(true);
+    }
     
 }
 

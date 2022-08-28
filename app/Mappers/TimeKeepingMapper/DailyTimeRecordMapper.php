@@ -90,7 +90,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
 
     public function getRawLogs($biometric_id,$period_id)
     {
-        $result = $this->model->select('punch_date','punch_time','cstate')
+        $result = $this->model->select('biometric_id','punch_date','punch_time','cstate')
                     ->from('edtr_raw')
                     ->where('biometric_id',$biometric_id)
                     ->join('payroll_period_weekly',function($join){
@@ -128,6 +128,41 @@ class DailyTimeRecordMapper extends AbstractMapper {
                     ->orderBy('time_in');
 
         return $result->get();
+    }
+
+    public function mapRawLogs($rawlogs)
+    {
+        foreach($rawlogs as $logs)
+        {
+        //    $dtr[$logs->punch_date][$logs->biometric_id] = [
+        //         // 'biometric_id'=>null,
+        //         // 'dtr_date'=>null,
+        //         'time_in' =>null,
+        //         'time_out' =>null, 
+        //    ];
+            // $dtr = $this->model->select()->where([
+            //     ['biometric_id',$logs->biometric_id],
+            //     ['dtr_date',$logs->punch_date],
+            // ])
+            // ->first();
+
+            // dd($dtr);
+            switch($logs->cstate){
+                case 'C/In';
+                    $this->model->where([
+                            ['biometric_id',$logs->biometric_id],
+                            ['dtr_date',$logs->punch_date],
+                        ])->update(['time_in' => $logs->punch_time]);
+                break;
+
+                case 'C/Out';
+                        $this->model->where([
+                            ['biometric_id',$logs->biometric_id],
+                            ['dtr_date',$logs->punch_date],
+                        ])->update(['time_out' => $logs->punch_time]);
+                break;
+            }
+        }
     }
 
    

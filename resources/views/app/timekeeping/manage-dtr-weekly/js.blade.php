@@ -9,6 +9,7 @@
 
             var viewModel = kendo.observable({ 
                 selectedPeriod : null,
+                selectedEmployee : null,
                 ds : {
                     maingrid : new kendo.data.DataSource({
                         transport : {
@@ -78,12 +79,22 @@
                                 }
                             },
                             update : {
-                                url : '',
+                                url : 'manage-dtr-weekly/update-dtr',
                                 type : 'post',
                                 dataType : 'json',
                                 complete : function (e){
 
                                 }
+                            },
+                            parameterMap : function(data,type)
+                            {
+                                console.log(type);
+                                if(type=='update'){
+                                    $.each(data.models,function(index,value){
+                                        value.dtr_date =  kendo.toString(value.dtr_date,'yyyy-MM-dd')
+                                    });
+                                }
+                                return data;
                             }
                            
                         },
@@ -152,6 +163,7 @@
                         if(viewModel.selectedPeriod!=null)
                         {
                             viewModel.functions.showPop(data);
+                            viewModel.set('selectedEmployee',data.biometric_id);
 
                             let rawLogsUrl = `manage-dtr-weekly/get-employee-raw-logs/${viewModel.selectedPeriod.id}/${data.biometric_id}`;
                             // viewModel.ds.rawlogs.transport.options.read.url = rawLogsUrl;
@@ -175,7 +187,13 @@
                     },
                     drawLogs : function()
                     {
-                        alert();
+                        
+                        $.post('manage-dtr-weekly/draw-logs',{
+                            period_id : viewModel.selectedPeriod.id,
+                            biometric_id : viewModel.selectedEmployee
+                        },function(){
+                            viewModel.ds.dtrgrid.read();
+                        });
                     }
                 },
                 functions : {
@@ -199,7 +217,7 @@
                             position : {
                                 top : 0
                             }
-                        }).data("kendoWindow").center().open().title('Manage DTR : '+data.empname);
+                        }).data("kendoWindow").center().open().title('Manage DTR : '+data.empname + ' - ' +data.biometric_id  ) ;
                     }
 
                 }
@@ -336,26 +354,30 @@
                         template : "#= (data.dtr_date) ? kendo.toString(data.dtr_date,'MM/dd/yyyy') : ''  #",
                         width : 90,
                          attributes: {
-                            style: "font-size: 9pt"
+                            style: "font-size: 9pt;text-align:center",
+                            
                         },
                         headerAttributes: {
-                            style: "font-size: 9pt"
+                            style: "font-size: 9pt;text-align:center",
+                            
                         }    
                     },
                     {
                         title : "Schedule",
                         field : "schedule_id",
                         //template : "#= (schedule_desc) ? schedule_desc : data.schedule_desc #",
-                        template : "#if(data.schedule_desc==null){# #=data.schedule_id # #} else {#  #=data.schedule_desc# #}#",
-                        //template : "#= schedule_desc #",
+                        template : "#if(data.schedule_desc==null){# #} else {#  #=data.schedule_desc# #}#",
+                        //template : "#= schedule_desc #",  #=data.schedule_id #
                         //template : "#= if(data.schedule_desc==null) #"
                        
                         width : 100,
                          attributes: {
-                            style: "font-size: 9pt"
+                            style: "font-size: 9pt;text-align:center",
+                            
                         },
                         headerAttributes: {
-                            style: "font-size: 9pt"
+                            style: "font-size: 9pt;text-align:center",
+                            
                         },
                         editor : scheduleEditor 
                     },
@@ -364,10 +386,12 @@
                         field : "time_in",
                         width : 90,
                          attributes: {
-                            style: "font-size: 9pt"
+                            style: "font-size: 9pt;text-align:center",
+                            
                         },
                         headerAttributes: {
-                            style: "font-size: 9pt"
+                            style: "font-size: 9pt;text-align:center",
+                            
                         }    
                     },
                     {
@@ -375,21 +399,25 @@
                         field : "time_out",
                         width : 90,
                          attributes: {
-                            style: "font-size: 9pt"
+                            style: "font-size: 9pt;text-align:center"
+                            
                         },
                         headerAttributes: {
-                            style: "font-size: 9pt"
+                            style: "font-size: 9pt;text-align:center"
+                            
                         }    
                     },
                     {
                         title : "Late",
-                        field : "late_eq",
+                        field : "late",
                         width : 90,
                          attributes: {
-                            style: "font-size: 9pt"
+                            style: "font-size: 9pt;text-align:center"
+                            
                         },
                         headerAttributes: {
-                            style: "font-size: 9pt"
+                            style: "font-size: 9pt;text-align:center"
+                            
                         }    
                     },
                     {
@@ -397,10 +425,12 @@
                         field : "over_time",
                         width : 90,
                          attributes: {
-                            style: "font-size: 9pt"
+                            style: "font-size: 9pt;text-align:center",
+                            
                         },
                         headerAttributes: {
-                            style: "font-size: 9pt"
+                            style: "font-size: 9pt;text-align:center",
+                            
                         }    
                     },
                     {
@@ -408,10 +438,12 @@
                         field : "over_time",
                         width : 90,
                          attributes: {
-                            style: "font-size: 9pt"
+                            style: "font-size: 9pt;text-align:center",
+                            
                         },
                         headerAttributes: {
-                            style: "font-size: 9pt"
+                            style: "font-size: 9pt;text-align:center",
+                            
                         }    
                     },
                     {
@@ -419,10 +451,12 @@
                         field : "night_diff",
                         width : 90,    
                         attributes: {
-                            style: "font-size: 9pt"
+                            style: "font-size: 9pt;text-align:center",
+                            
                         },
                         headerAttributes: {
-                            style: "font-size: 9pt"
+                            style: "font-size: 9pt;text-align:center",
+                            
                         }
                     }
                   
