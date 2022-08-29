@@ -8,6 +8,17 @@
         </span>&nbsp; Compute
     </button>
 </script>	
+
+<script type="text/x-kendo-template" id="subgidcommand">
+    <button class="k-grid-save-changes k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="events: { click: buttonHandler.makeDTR }">
+        </span>&nbsp; Make Blank
+    </button>
+
+    <button class="k-grid-save-changes k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="events: { click: buttonHandler.print }">
+        </span>&nbsp; Print
+    </button>
+</script>	
+
     <script>
         $(document).ready(function(){
 
@@ -226,7 +237,14 @@
                         },function(){
                             viewModel.ds.dtrgrid.read();
                         });
-                    }
+                    },
+                    makeDTR : function (){
+
+                    },
+                    print : function (){
+                        let url = `manage-dtr/print/${viewModel.selectedPeriod.id}`;
+                        window.open(url);
+                    },   
                 },
                 functions : {
                     showPop : function(data)
@@ -338,6 +356,11 @@
                 height : 550,
                 scrollable: true,
                 selectable : true,
+                toolbar : [
+                    {
+                       template : kendo.template($("#subgidcommand").html())
+                    }
+                ],
                 columns : [
                     {
                         title : "Bio ID",
@@ -430,7 +453,7 @@
                     {
                         title : "Time In",
                         field : "time_in",
-                        width : 80,
+                        width : 70,
                          attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -443,7 +466,7 @@
                     {
                         title : "Time Out",
                         field : "time_out",
-                        width : 80,
+                        width : 70,
                          attributes: {
                             style: "font-size: 9pt;text-align:center"
                             
@@ -504,7 +527,7 @@
                     {
                         title : "OT",
                         field : "over_time",
-                        width : 60,
+                        width : 45,
                          attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -519,13 +542,13 @@
                     },
                     {
                         title : "UT",
-                        field : "over_time",
-                        width : 60,
-                         attributes: {
+                        field : "under_time",
+                        width : 45,
+                        attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
                         },
-                        template : "# if(over_time==0){#  #} else{# #= over_time #  #}#",
+                        template : "# if(under_time==0){#  #} else{# #= under_time #  #}#",
                         headerAttributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -536,7 +559,7 @@
                     {
                         title : "ND",
                         field : "night_diff",
-                        //width : 90,    
+                        width : 45, 
                         attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -548,6 +571,18 @@
                         },
                         aggregates : ['sum'], 
                         footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+
+                    },
+                    {
+                        title : "Hol",
+                        field : "holiday_type",
+                        width : 45, 
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                    },
+                    {
 
                     }
                   
@@ -566,6 +601,10 @@
                     dataTextField: "schedule_desc",
                     dataValueField: "schedule_id",
                     dataSource: viewModel.ds.sched,
+                    optionLabel : {
+                        schedule_desc : "-",
+                        schedule_id : 0,
+                    },
                     change : function(e)
                     {
                         let grid = $("#dtrgrid").data("kendoGrid");

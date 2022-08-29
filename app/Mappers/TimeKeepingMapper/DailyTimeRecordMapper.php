@@ -167,11 +167,17 @@ class DailyTimeRecordMapper extends AbstractMapper {
 
     public function getSemiDTR($biometric_id,$period_id)
     {
-        $result = $this->model->select(DB::raw("edtr.id,biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc"))
+        $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc,case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type"))
         ->from('edtr')
-        ->where('biometric_id',$biometric_id)
+        ->where('edtr.biometric_id',$biometric_id)
         ->join('payroll_period',function($join){
             $join->whereRaw('dtr_date between payroll_period.date_from and payroll_period.date_to');
+        })
+        ->leftJoin('employees','employees.biometric_id','=','edtr.biometric_id')
+        ->leftJoin('holidays','edtr.dtr_date','=','holidays.holiday_date')
+        ->join('holiday_location',function($join){
+            $join->on('holiday_location.holiday_id','=','holiday_id');
+            $join->on('holiday_location.location_id','=','employees.location_id');
         })
         ->leftJoin('work_schedules','schedule_id','=','work_schedules.id')
         ->where('payroll_period.id',$period_id)
@@ -347,6 +353,9 @@ class DailyTimeRecordMapper extends AbstractMapper {
 
                         $rec->late = $late;
                         $rec->late_eq = $quart * 0.25;
+                    }else{
+                        $rec->late = 0;
+                        $rec->late_eq = 0;
                     }
 
                     if($rec->day_name!='Sun'){
@@ -359,6 +368,42 @@ class DailyTimeRecordMapper extends AbstractMapper {
                 }
             }   
         }
+    }
+
+    public function getEmployeeForPrint($period_id,$type)
+    {
+        if($type=='semi')
+        {
+            $result = $this->model->select(DB::raw("employees.id,employees.biometric_id,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) as empname"))
+            ->from('edtr')
+            ->join('employees','edtr.biometric_id','=','employees.biometric_id')
+            ->join('payroll_period',function($join){
+                $join->whereRaw('dtr_date between payroll_period.date_from and payroll_period.date_to');
+            })
+            ->whereIn('pay_type',[1,2])
+            ->where('exit_status',1)
+            ->where('payroll_period.id',$period_id)
+            ->distinct();
+        }else{
+            $result = $this->model->select(DB::raw("employees.id,employees.biometric_id,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) as empname"))
+            ->from('edtr')
+            ->join('employees','edtr.biometric_id','=','employees.biometric_id')
+            ->join('payroll_period_weekly',function($join){
+                $join->whereRaw('dtr_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
+            })
+            ->where('pay_type',3)
+            ->where('exit_status',1)
+            ->where('payroll_period_weekly.id',$period_id)
+            ->distinct();
+        }
+        $employees = $result->limit(5)->get();
+        foreach($employees as $employee){
+            $dtr = $this->getSemiDTR($employee->biometric_id,$period_id);
+            $employee->dtr = $dtr;
+        }
+
+        return $employees;
+
     }
 
    

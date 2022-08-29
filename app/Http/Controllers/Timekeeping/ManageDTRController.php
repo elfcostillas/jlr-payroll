@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Timekeeping;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mappers\TimeKeepingMapper\DailyTimeRecordMapper;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ManageDTRController extends Controller
 {
@@ -108,6 +109,16 @@ class ManageDTRController extends Controller
         $this->mapper->computeLogs($dtr,'semi');
 
         return response()->json(true);
+    }
+
+    public function print(Request $request)
+    {
+        $period_id = $request->period_id;
+        $result = $this->mapper->getEmployeeForPrint($period_id,'semi');
+       
+        $pdf = PDF::loadView('app.timekeeping.manage-dtr.print',['employees' => $result])->setPaper('Letter','portrait');
+        return $pdf->stream('JLR-DTR-Print.pdf'); 
+        //return view('app.timekeeping.manage-dtr.print',['employees' => $result]);
     }
     
 }
