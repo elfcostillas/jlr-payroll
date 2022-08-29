@@ -118,7 +118,8 @@
                                     over_time : { type:'number', },
                                     night_diff : { type:'number', },
                                     schedule_id : { type:'number', },
-                                    schedule_desc : { type: 'string' }
+                                    schedule_desc : { type: 'string' },
+                                    ndays: { type:'number', },
                                 }
                             }
                         }
@@ -456,7 +457,7 @@
                     {
                         title : "Night Diff",
                         field : "night_diff",
-                        width : 90,    
+                        //width : 90,    
                         attributes: {
                             style: "font-size: 9pt;text-align:center",
                             

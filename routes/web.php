@@ -85,6 +85,7 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         
         Route::post('update-dtr',[ManageDTRWeeklyController::class,'updateDTR']);
         Route::post('draw-logs',[ManageDTRWeeklyController::class,'drawLogs']);
+        Route::post('compute-logs',[ManageDTRWeeklyController::class,'computeLogs']);
         
     });
 
@@ -113,6 +114,7 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         
         Route::post('update-dtr',[ManageDTRController::class,'updateDTR']);
         Route::post('draw-logs',[ManageDTRController::class,'drawLogs']);
+        Route::post('compute-logs',[ManageDTRController::class,'computeLogs']);
     });
 
     Route::prefix('upload-log')->group(function(){

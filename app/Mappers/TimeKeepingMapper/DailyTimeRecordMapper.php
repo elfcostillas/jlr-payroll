@@ -152,7 +152,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
 
     public function getweeklyDTR($biometric_id,$period_id)
     {
-        $result = $this->model->select(DB::raw("edtr.id,biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,under_time,over_time,night_diff,schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc"))
+        $result = $this->model->select(DB::raw("edtr.id,biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc"))
         ->from('edtr')
         ->where('biometric_id',$biometric_id)
         ->join('payroll_period_weekly',function($join){
@@ -167,7 +167,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
 
     public function getSemiDTR($biometric_id,$period_id)
     {
-        $result = $this->model->select(DB::raw("edtr.id,biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,under_time,over_time,night_diff,schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc"))
+        $result = $this->model->select(DB::raw("edtr.id,biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc"))
         ->from('edtr')
         ->where('biometric_id',$biometric_id)
         ->join('payroll_period',function($join){
@@ -186,6 +186,27 @@ class DailyTimeRecordMapper extends AbstractMapper {
         $result = $this->model->select(DB::raw("id as schedule_id,CONCAT(time_in,'-',time_out) AS schedule_desc"))
                     ->from('work_schedules')
                     ->orderBy('time_in');
+
+        return $result->get();
+    }
+
+    public function getSemiDTRforComputation($biometric_id,$period_id)
+    {
+        $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,time_to_sec(work_schedules.time_in) as sched_in,holiday_type,time_to_sec(edtr.time_in) as actual_in"))
+        ->from('edtr')
+        ->where('edtr.biometric_id',$biometric_id)
+        ->join('payroll_period',function($join){
+            $join->whereRaw('dtr_date between payroll_period.date_from and payroll_period.date_to');
+        })
+        ->leftJoin('employees','employees.biometric_id','=','edtr.biometric_id')
+        ->leftJoin('holidays','edtr.dtr_date','=','holidays.holiday_date')
+        ->join('holiday_location',function($join){
+            $join->on('holiday_location.holiday_id','=','holiday_id');
+            $join->on('holiday_location.location_id','=','employees.location_id');
+        })
+        ->leftJoin('work_schedules','schedule_id','=','work_schedules.id')
+        ->where('payroll_period.id',$period_id)
+        ->orderBy('dtr_date');
 
         return $result->get();
     }
@@ -304,6 +325,40 @@ class DailyTimeRecordMapper extends AbstractMapper {
 
             $this->updateValid($dtr->toArray());
         }       
+    }
+
+    public function computeLogs($dtr,$type)
+    {
+        if($type=='semi'){
+            foreach($dtr as $rec)
+            {
+                // var_dump($rec->holiday_type);
+               
+                if($rec->schedule_id!=0){
+                    
+                    if($rec->actual_in > $rec->sched_in){
+                        $late = ($rec->actual_in - $rec->sched_in)/60;
+
+                        if($late>0){
+                            $quart = 0;
+                            $quart += round($late/15,0);
+                            $quart += ($late%15 > 0) ? 1 : 0;
+                        }
+
+                        $rec->late = $late;
+                        $rec->late_eq = $quart * 0.25;
+                    }
+
+                    if($rec->day_name!='Sun'){
+                        //var_dump($rec->day_name);
+                        $rec->ndays = ($rec->time_in!='' && $rec->time_out!='' && $rec->holiday_type==NULL) ? 1 : 0;
+                        //var_dump($rec->ndays);
+                    }
+
+                    $this->updateValid($rec->toArray());
+                }
+            }   
+        }
     }
 
    

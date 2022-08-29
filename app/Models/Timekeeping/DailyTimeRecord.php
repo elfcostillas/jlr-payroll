@@ -24,5 +24,6 @@ class DailyTimeRecord extends Model
         'over_time',
         'night_diff',
         'schedule_id',
+        'ndays'
     ];
 }

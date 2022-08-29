@@ -97,5 +97,17 @@ class ManageDTRController extends Controller
         
         return response()->json(true);
     }
+
+    public function computeLogs(Request $request)
+    {
+        $biometric_id = $request->biometric_id;
+        $period_id = $request->period_id;
+
+        $dtr = $this->mapper->getSemiDTRforComputation($biometric_id,$period_id);
+
+        $this->mapper->computeLogs($dtr,'semi');
+
+        return response()->json(true);
+    }
     
 }

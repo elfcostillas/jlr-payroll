@@ -71,6 +71,10 @@
         font-size : 10pt !important;
     }
 
+    .k-footer-template td {
+        padding :1px !important;
+    }
+
 
 </style>
 @section('title')
