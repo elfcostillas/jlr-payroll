@@ -87,8 +87,31 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         
     });
 
+    // Route::prefix('manage-dtr-semi-monthly')->middleware('access:timekeeping/manage-dtr-semi-monthly')->group(function(){
+    //     Route::get('/',[ManageDTRWeeklyController::class,'index']);
+    //     Route::post('prepare',[ManageDTRWeeklyController::class,'prepareDTR']);
+    //     Route::get('get-employee-list/{period_id}',[ManageDTRWeeklyController::class,'getEmployeeList']);
+    //     Route::get('get-employee-raw-logs/{period_id}/{biometric_id}',[ManageDTRWeeklyController::class,'getEmployeeRawLogs']);
+    //     Route::get('get-employee-dtr-logs/{period_id}/{biometric_id}',[ManageDTRWeeklyController::class,'getweeklyDTR']);
+        
+    //     Route::get('get-employee-schedules',[ManageDTRWeeklyController::class,'getSchedules']);
+        
+    //     Route::post('update-dtr',[ManageDTRWeeklyController::class,'updateDTR']);
+    //     Route::post('draw-logs',[ManageDTRWeeklyController::class,'drawLogs']);
+        
+    // });
+
     Route::prefix('manage-dtr')->middleware('access:timekeeping/manage-dtr')->group(function(){
         Route::get('/',[ManageDTRController::class,'index']);
+        Route::post('prepare',[ManageDTRController::class,'prepareDTR']);
+        Route::get('get-employee-list/{period_id}',[ManageDTRController::class,'getEmployeeList']);
+        Route::get('get-employee-raw-logs/{period_id}/{biometric_id}',[ManageDTRController::class,'getEmployeeRawLogs']);
+        Route::get('get-employee-dtr-logs/{period_id}/{biometric_id}',[ManageDTRController::class,'getweeklyDTR']);
+        
+        Route::get('get-employee-schedules',[ManageDTRController::class,'getSchedules']);
+        
+        Route::post('update-dtr',[ManageDTRController::class,'updateDTR']);
+        Route::post('draw-logs',[ManageDTRController::class,'drawLogs']);
     });
 
     Route::prefix('upload-log')->group(function(){
