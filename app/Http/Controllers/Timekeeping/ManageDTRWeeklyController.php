@@ -24,7 +24,7 @@ class ManageDTRWeeklyController extends Controller
     }
     public function prepareDTR(Request $request)
     {
-        $result = $this->mapper->prepDTRbyPeriod($request->period_id);
+        $result = $this->mapper->prepDTRbyPeriod($request->period_id,'weekly');
 
         return response()->json($result);
     }
@@ -39,7 +39,7 @@ class ManageDTRWeeklyController extends Controller
             'sort' => $request->input('sort'),
         ];
 
-        $result = $this->mapper->empWithDTR($request->period_id,$filter);
+        $result = $this->mapper->empWithDTR($request->period_id,$filter,'weekly');
         return response()->json($result);
     }
 
@@ -51,7 +51,7 @@ class ManageDTRWeeklyController extends Controller
         $biometric_id = $request->biometric_id;
         $period_id = $request->period_id;
 
-        $result = $this->mapper->getRawLogs($biometric_id,$period_id);
+        $result = $this->mapper->getRawLogs($biometric_id,$period_id,'weekly');
         return view('app.timekeeping.manage-dtr-weekly.raw-logs',['logs' => $result]);
         //return response()->json($result);
     }

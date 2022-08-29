@@ -20,24 +20,41 @@ class DailyTimeRecordMapper extends AbstractMapper {
         
     ];
 
-    public function prepDTRbyPeriod($period_id)
+    public function prepDTRbyPeriod($period_id,$type)
     {
         $blank_dtr = [];
 
-        $empWithPunch = $this->model->select('edtr_raw.biometric_id')->from('edtr_raw')
-                        ->join('employees','edtr_raw.biometric_id','=','employees.biometric_id')
-                        ->join('payroll_period_weekly',function($join){
-                            //$join->whereBetween('punch_date',['payroll_period_weekly.date_from','payroll_period_weekly.date_to']);
-                            $join->whereRaw('punch_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
-                        })
-                        ->where('pay_type',3)
-                        ->where('exit_status',1)
-                        ->where('payroll_period_weekly.id',$period_id)
-                        ->distinct()
-                        ->get();
+        if($type=='semi'){
+            $empWithPunch = $this->model->select('edtr_raw.biometric_id')->from('edtr_raw')
+            ->join('employees','edtr_raw.biometric_id','=','employees.biometric_id')
+            ->join('payroll_period',function($join){
+               $join->whereRaw('punch_date between payroll_period.date_from and payroll_period.date_to');
+            })
+            ->whereIn('pay_type',[1,2])
+            ->where('exit_status',1)
+            ->where('payroll_period.id',$period_id)
+            ->distinct()
+            ->get();
+            $range = $this->model->select('date_from','date_to')->from('payroll_period')->where('payroll_period.id',$period_id)->first();
+        }else{
+            $empWithPunch = $this->model->select('edtr_raw.biometric_id')->from('edtr_raw')
+            ->join('employees','edtr_raw.biometric_id','=','employees.biometric_id')
+            ->join('payroll_period_weekly',function($join){
+                //$join->whereBetween('punch_date',['payroll_period_weekly.date_from','payroll_period_weekly.date_to']);
+                $join->whereRaw('punch_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
+            })
+            ->where('pay_type',3)
+            ->where('exit_status',1)
+            ->where('payroll_period_weekly.id',$period_id)
+            ->distinct()
+            ->get();
+            $range = $this->model->select('date_from','date_to')->from('payroll_period_weekly')->where('payroll_period_weekly.id',$period_id)->first();
 
-        $range = $this->model->select('date_from','date_to')->from('payroll_period_weekly')->where('payroll_period_weekly.id',$period_id)->first();
+        }
 
+       
+
+       
         $period = CarbonPeriod::create($range['date_from'],$range['date_to']);
 
         foreach($empWithPunch as $emp)
@@ -55,9 +72,22 @@ class DailyTimeRecordMapper extends AbstractMapper {
       
     }
 
-    public function empWithDTR($period_id,$filter)
+    public function empWithDTR($period_id,$filter,$type)
     {
-        $result = $this->model->select(DB::raw("employees.id,employees.biometric_id,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) as empname"))
+
+        if($type=='semi'){
+            $result = $this->model->select(DB::raw("employees.id,employees.biometric_id,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) as empname"))
+                            ->from('edtr')
+                            ->join('employees','edtr.biometric_id','=','employees.biometric_id')
+                            ->join('payroll_period',function($join){
+                                $join->whereRaw('dtr_date between payroll_period.date_from and payroll_period.date_to');
+                            })
+                            ->whereIn('pay_type',[1,2])
+                            ->where('exit_status',1)
+                            ->where('payroll_period.id',$period_id)
+                            ->distinct();
+        }else{
+            $result = $this->model->select(DB::raw("employees.id,employees.biometric_id,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) as empname"))
                             ->from('edtr')
                             ->join('employees','edtr.biometric_id','=','employees.biometric_id')
                             ->join('payroll_period_weekly',function($join){
@@ -67,6 +97,9 @@ class DailyTimeRecordMapper extends AbstractMapper {
                             ->where('exit_status',1)
                             ->where('payroll_period_weekly.id',$period_id)
                             ->distinct();
+        }
+
+        
 
         //return $empWithPunch->get();
         if($filter['filter']!=null){
@@ -87,9 +120,20 @@ class DailyTimeRecordMapper extends AbstractMapper {
 
     }
 
-    public function getRawLogs($biometric_id,$period_id)
+    public function getRawLogs($biometric_id,$period_id,$type)
     {
-        $result = $this->model->select('biometric_id','punch_date','punch_time','cstate')
+        if($type=='semi'){
+            $result = $this->model->select('biometric_id','punch_date','punch_time','cstate')
+                    ->from('edtr_raw')
+                    ->where('biometric_id',$biometric_id)
+                    ->join('payroll_period',function($join){
+                        $join->whereRaw('punch_date between payroll_period.date_from and payroll_period.date_to');
+                    })
+                    ->where('payroll_period.id',$period_id)
+                    ->orderBy('punch_date')
+                    ->orderBy('punch_time');
+        }else{
+            $result = $this->model->select('biometric_id','punch_date','punch_time','cstate')
                     ->from('edtr_raw')
                     ->where('biometric_id',$biometric_id)
                     ->join('payroll_period_weekly',function($join){
@@ -98,6 +142,8 @@ class DailyTimeRecordMapper extends AbstractMapper {
                     ->where('payroll_period_weekly.id',$period_id)
                     ->orderBy('punch_date')
                     ->orderBy('punch_time');
+        }
+        
        
         //WHERE biometric_id = 100 ORDER BY punch_date,punch_time;
 
@@ -114,6 +160,21 @@ class DailyTimeRecordMapper extends AbstractMapper {
         })
         ->leftJoin('work_schedules','schedule_id','=','work_schedules.id')
         ->where('payroll_period_weekly.id',$period_id)
+        ->orderBy('dtr_date');
+
+        return $result->get();
+    }
+
+    public function getSemiDTR($biometric_id,$period_id)
+    {
+        $result = $this->model->select(DB::raw("edtr.id,biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,under_time,over_time,night_diff,schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc"))
+        ->from('edtr')
+        ->where('biometric_id',$biometric_id)
+        ->join('payroll_period',function($join){
+            $join->whereRaw('dtr_date between payroll_period.date_from and payroll_period.date_to');
+        })
+        ->leftJoin('work_schedules','schedule_id','=','work_schedules.id')
+        ->where('payroll_period.id',$period_id)
         ->orderBy('dtr_date');
 
         return $result->get();
@@ -211,16 +272,30 @@ class DailyTimeRecordMapper extends AbstractMapper {
                 ])
                 ->orderBy('punch_time')
                 ->first();
+                if($in){
+                    $out =  $this->model->select()
+                        ->from('edtr_raw')
+                        ->where([
+                            ['punch_date',$dtr->dtr_date],
+                            ['biometric_id',$dtr->biometric_id],
+                            ['cstate','C/Out']
+                        ])
+                        ->whereRaw("TIME_TO_SEC(punch_time) > TIME_TO_SEC('".$in->punch_time."')")
+                        ->orderBy('punch_time')
+                        ->first();
+                }else{
+                    $out =  $this->model->select()
+                        ->from('edtr_raw')
+                        ->where([
+                            ['punch_date',$dtr->dtr_date],
+                            ['biometric_id',$dtr->biometric_id],
+                            ['cstate','C/Out']
+                        ])
+                        ->orderBy('punch_time')
+                        ->first();
+                }
                 
-                $out =  $this->model->select()
-                ->from('edtr_raw')
-                ->where([
-                    ['punch_date',$dtr->dtr_date],
-                    ['biometric_id',$dtr->biometric_id],
-                    ['cstate','C/Out']
-                ])
-                ->orderBy('punch_time')
-                ->first();
+               
 
             }
 

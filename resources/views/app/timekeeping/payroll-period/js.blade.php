@@ -59,6 +59,7 @@
                             model : {
                                 id : 'id',
                                 fields : {
+                                    id : {ype : 'number',editable :false },
                                     date_from : { type : 'date' },
                                     date_to: { type : 'date' },
                                     date_release: { type : 'date' },
@@ -113,7 +114,7 @@
                     },
                     {
                         command : ['edit'],
-                        width : 170,    
+                        width : 190,    
                     },
                   
                 ]

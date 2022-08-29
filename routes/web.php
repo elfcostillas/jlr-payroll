@@ -45,6 +45,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 Route::middleware('auth')->prefix('timekeeping')->group(function(){
+    
     Route::prefix('payroll-period')->middleware('access:timekeeping/payroll-period')->group(function(){
         Route::get('/',[PayrollPeriodController::class,'index']);
         Route::get('list',[PayrollPeriodController::class,'list']);
@@ -106,7 +107,7 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::post('prepare',[ManageDTRController::class,'prepareDTR']);
         Route::get('get-employee-list/{period_id}',[ManageDTRController::class,'getEmployeeList']);
         Route::get('get-employee-raw-logs/{period_id}/{biometric_id}',[ManageDTRController::class,'getEmployeeRawLogs']);
-        Route::get('get-employee-dtr-logs/{period_id}/{biometric_id}',[ManageDTRController::class,'getweeklyDTR']);
+        Route::get('get-employee-dtr-logs/{period_id}/{biometric_id}',[ManageDTRController::class,'getSemiDTR']);
         
         Route::get('get-employee-schedules',[ManageDTRController::class,'getSchedules']);
         

@@ -154,7 +154,9 @@
                         $.post('manage-dtr-weekly/prepare',{
                             period_id : data.id
                         },function(){
-
+                            let empListUrl = `manage-dtr/get-employee-list/${data.id}`;
+                            viewModel.ds.subgrid.transport.options.read.url = empListUrl;
+                            viewModel.ds.subgrid.read();
                         });
                     },
                     manage : function(e){
@@ -235,14 +237,7 @@
                     buttonCount : 5
                 },
                 noRecords: true,
-                filterable : {
-                    extra: false,
-                    operators: {
-                        string: {
-                            contains : "Contains"
-                        }
-                    }
-                },
+                filterable : true,
                 sortable : true,
                 height : 550,
                 scrollable: true,
@@ -299,14 +294,7 @@
                     buttonCount : 5
                 },
                 noRecords: true,
-                filterable : {
-                    extra: false,
-                    operators: {
-                        string: {
-                            contains : "Contains"
-                        }
-                    }
-                },
+                filterable : true,
                 sortable : true,
                 height : 550,
                 scrollable: true,
@@ -339,7 +327,7 @@
                     buttonCount : 5
                 },
                 noRecords: true,
-                //filterable : true,
+                filterable : true,
                 editable: true,
                 //height : 550,
                 scrollable: true,

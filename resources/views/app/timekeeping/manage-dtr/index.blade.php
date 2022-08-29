@@ -74,7 +74,7 @@
 
 </style>
 @section('title')
-    <h4> Manage DTR - Weekly <h4>
+    <h4> Manage DTR - Semi Monthly <h4>
 @endsection
 @section('content')
     <div class="container">
@@ -102,8 +102,8 @@
                             <td>
                                 <div id="dtrgrid"></div>
                             </td>
-                            <td style="width:170px;background-color: #f8f9fa;">
-                                <div id="raw-logs">
+                            <td style="width:170px;background-color: #f8f9fa;vertical-align:top;">
+                                <div id="raw-logs"> </div>
                             </td>
                         </tr>
                    </table>
@@ -113,4 +113,4 @@
     </div>
 @endsection </div>
 
-@include('app.timekeeping.manage-dtr-weekly.js')
+@include('app.timekeeping.manage-dtr.js')

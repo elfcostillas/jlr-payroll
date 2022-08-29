@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Timekeeping;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Mappers\TimeKeepingMapper\DailyTimeRecordMapper;
 
 class ManageDTRController extends Controller
 {
@@ -23,7 +24,7 @@ class ManageDTRController extends Controller
     }
     public function prepareDTR(Request $request)
     {
-        $result = $this->mapper->prepDTRbyPeriod($request->period_id);
+        $result = $this->mapper->prepDTRbyPeriod($request->period_id,'semi');
 
         return response()->json($result);
     }
@@ -38,7 +39,7 @@ class ManageDTRController extends Controller
             'sort' => $request->input('sort'),
         ];
 
-        $result = $this->mapper->empWithDTR($request->period_id,$filter);
+        $result = $this->mapper->empWithDTR($request->period_id,$filter,'semi');
         return response()->json($result);
     }
 
@@ -50,17 +51,17 @@ class ManageDTRController extends Controller
         $biometric_id = $request->biometric_id;
         $period_id = $request->period_id;
 
-        $result = $this->mapper->getRawLogs($biometric_id,$period_id);
+        $result = $this->mapper->getRawLogs($biometric_id,$period_id,'semi');
         return view('app.timekeeping.manage-dtr-weekly.raw-logs',['logs' => $result]);
         //return response()->json($result);
     }
 
-    public function getweeklyDTR(Request $request)
+    public function getSemiDTR(Request $request)
     {
         $biometric_id = $request->biometric_id;
         $period_id = $request->period_id;
 
-        $result = $this->mapper->getweeklyDTR($biometric_id,$period_id);
+        $result = $this->mapper->getSemiDTR($biometric_id,$period_id);
         return response()->json($result);
     }
     public function getSchedules()
@@ -91,7 +92,7 @@ class ManageDTRController extends Controller
        
         //$this->mapper->mapRawLogs($rawlogs);
        
-        $dtr = $this->mapper->getweeklyDTR($biometric_id,$period_id);
+        $dtr = $this->mapper->getSemiDTR($biometric_id,$period_id);
         $this->mapper->mapRawLogs2($dtr);
         
         return response()->json(true);

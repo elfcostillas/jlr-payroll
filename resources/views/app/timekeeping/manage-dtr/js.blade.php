@@ -14,7 +14,7 @@
                     maingrid : new kendo.data.DataSource({
                         transport : {
                             read : {
-                                url : 'payroll-period-weekly/list',
+                                url : 'payroll-period/list',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -41,10 +41,10 @@
                             }
                         }
                     }),
-                    subgrid :  new kendo.data.DataSource({ //timekeeping/manage-dtr-weekly/get-employee-list/1
+                    subgrid :  new kendo.data.DataSource({ //timekeeping/manage-dtr/get-employee-list/1
                         transport : {
                             read : {
-                                url : 'manage-dtr-weekly/get-employee-list/0',
+                                url : 'manage-dtr/get-employee-list/0',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -71,7 +71,7 @@
                     dtrgrid :  new kendo.data.DataSource({
                         transport : {
                             read : {
-                                url : 'manage-dtr-weekly/get-employee-dtr-logs/0/0',
+                                url : 'manage-dtr/get-employee-dtr-logs/0/0',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -79,7 +79,7 @@
                                 }
                             },
                             update : {
-                                url : 'manage-dtr-weekly/update-dtr',
+                                url : 'manage-dtr/update-dtr',
                                 type : 'post',
                                 dataType : 'json',
                                 complete : function (e){
@@ -100,7 +100,7 @@
                         },
                         batch: true,
                         //autoSync: true,
-                        pageSize :14,
+                        pageSize :16,
                         schema : {
                             // data : "data",
                             // total : "total",
@@ -126,7 +126,7 @@
                     sched : new kendo.data.DataSource({
                         transport : {
                             read : {
-                                url : 'manage-dtr-weekly/get-employee-schedules',
+                                url : 'manage-dtr/get-employee-schedules',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -151,9 +151,12 @@
                         let tr = $(e.target).closest("tr");
                         let data = this.dataItem(tr);
 
-                        $.post('manage-dtr-weekly/prepare',{
+                        $.post('manage-dtr/prepare',{
                             period_id : data.id
                         },function(){
+                            let empListUrl = `manage-dtr/get-employee-list/${data.id}`;
+                            viewModel.ds.subgrid.transport.options.read.url = empListUrl;
+                            viewModel.ds.subgrid.read();
 
                         });
                     },
@@ -170,7 +173,7 @@
                             viewModel.functions.showPop(data);
                             viewModel.set('selectedEmployee',data.biometric_id);
 
-                            let rawLogsUrl = `manage-dtr-weekly/get-employee-raw-logs/${viewModel.selectedPeriod.id}/${data.biometric_id}`;
+                            let rawLogsUrl = `manage-dtr/get-employee-raw-logs/${viewModel.selectedPeriod.id}/${data.biometric_id}`;
                             // viewModel.ds.rawlogs.transport.options.read.url = rawLogsUrl;
                             // viewModel.ds.rawlogs.read();
                             $.get(rawLogsUrl,function(data){
@@ -179,7 +182,7 @@
                             });
 
 
-                            let dtrUrl = `manage-dtr-weekly/get-employee-dtr-logs/${viewModel.selectedPeriod.id}/${data.biometric_id}`;
+                            let dtrUrl = `manage-dtr/get-employee-dtr-logs/${viewModel.selectedPeriod.id}/${data.biometric_id}`;
                             viewModel.ds.dtrgrid.transport.options.read.url = dtrUrl;
                             viewModel.ds.dtrgrid.read();
 
@@ -193,7 +196,7 @@
                     drawLogs : function()
                     {
                         
-                        $.post('manage-dtr-weekly/draw-logs',{
+                        $.post('manage-dtr/draw-logs',{
                             period_id : viewModel.selectedPeriod.id,
                             biometric_id : viewModel.selectedEmployee
                         },function(){
@@ -208,7 +211,7 @@
                         
                         myWindow.kendoWindow({
                             width: "1124", //1124 - 1152
-                            height: "410",
+                            height: "610",
                             //title: "Employee Information",
                             visible: false,
                             animation: false,
@@ -285,7 +288,7 @@
                     viewModel.set('selectedPeriod',selectedItem);
 
                     //console.log(selectedItem.id);
-                    let empListUrl = `manage-dtr-weekly/get-employee-list/${selectedItem.id}`;
+                    let empListUrl = `manage-dtr/get-employee-list/${selectedItem.id}`;
                     viewModel.ds.subgrid.transport.options.read.url = empListUrl;
                     viewModel.ds.subgrid.read();
 
