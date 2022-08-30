@@ -21,7 +21,9 @@ use App\Http\Controllers\EmployeeFile\JobTitleController;
 use App\Http\Controllers\Reports\EmployeeReportController;
 use Carbon\CarbonPeriod;
 
-
+use App\Http\Controllers\PayrollTransaction\PayrollRegisterController;
+use App\Http\Controllers\PayrollTransaction\BankTransmittalController;
+use App\Http\Controllers\PayrollTransaction\PayslipController;
 
 /*
 |--------------------------------------------------------------------------
@@ -191,6 +193,15 @@ Route::middleware('auth')->prefix('reports')->group(function(){
         Route::get('generate',[EmployeeReportController::class,'generate']);
     });
 });
+
+Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
+    //Route::get('locations',[LocationController::class,'index']);
+    Route::prefix('payroll-register')->middleware('access:payroll-transaction/payroll-register')->group(function(){
+        Route::get('/',[PayrollRegisterController::class,'index']);
+        Route::get('unposted-payroll',[PayrollRegisterController::class,'getUnpostedPeriod']);
+    }); 
+});
+
 
 Route::post('logout',[AuthenticatedSessionController::class,'logout'])->middleware('auth');
 

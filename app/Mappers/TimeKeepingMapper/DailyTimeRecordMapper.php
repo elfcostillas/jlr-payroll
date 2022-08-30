@@ -396,7 +396,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
             ->where('payroll_period_weekly.id',$period_id)
             ->distinct();
         }
-        $employees = $result->limit(5)->get();
+        $employees = $result->get();
         foreach($employees as $employee){
             $dtr = $this->getSemiDTR($employee->biometric_id,$period_id);
             $employee->dtr = $dtr;

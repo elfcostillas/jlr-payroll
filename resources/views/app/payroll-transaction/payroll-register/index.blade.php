@@ -71,14 +71,14 @@
         font-size : 10pt !important;
     }
 
-    .k-footer-template td {
-        padding :1px !important;
+    button.fixwidth {
+        width: 120px;
     }
 
 
 </style>
 @section('title')
-    <h4> Manage DTR - Weekly <h4>
+    <h4> Payroll Register <h4>
 @endsection
 @section('content')
     <div class="container">
@@ -86,17 +86,36 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="card card-secondary">
-                        <div class="card-header"> Payroll Period </div>
+                        <div class="card-header"> Unposted Payroll</div>
                         <div class="card-body"> 
-                            <div id="maingrid"></div>
+                        <table class="formTable" border=0 style="width:100%">
+                            <tr>
+                                <td colspan=4>Payroll Period</td>
+                            </tr>
+                            <tr>
+                                <td colspan=2 > <input type="text" id="unposted_period"></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan=4>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td> <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base fixwidth" data-bind="click : buttonHandler.compute"> Compute</button> </td>
+                                <td> <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base fixwidth" data-bind="click : buttonHandler.view"> View</button> </td>
+                                <td> <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base fixwidth" data-bind="click : buttonHandler.download"> Download Excel</button> </td>
+                                <td> <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base fixwidth" data-bind="click : buttonHandler.post"> Post</button> </td>
+                            </tr>
+                            
+                        </table>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="card card-secondary">
-                        <div class="card-header"> Employee List </div>
+                        <div class="card-header"> Posted Payroll </div>
                         <div class="card-body"> 
-                            <div id="subgrid"></div>
+                            
                         </div>
                     </div>
                 </div>
@@ -117,4 +136,4 @@
     </div>
 @endsection </div>
 
-@include('app.timekeeping.manage-dtr-weekly.js')
+@include('app.payroll-transaction.payroll-register.js')

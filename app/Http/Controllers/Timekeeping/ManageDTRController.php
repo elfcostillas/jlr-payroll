@@ -116,7 +116,14 @@ class ManageDTRController extends Controller
         $period_id = $request->period_id;
         $result = $this->mapper->getEmployeeForPrint($period_id,'semi');
        
-        $pdf = PDF::loadView('app.timekeeping.manage-dtr.print',['employees' => $result])->setPaper('Letter','portrait');
+        $pdf = PDF::loadView('app.timekeeping.manage-dtr.print',['employees' => $result])->setPaper('A4','portrait');
+
+        //$pdf->output();
+        $pdf->output();
+        $dom_pdf = $pdf->getDomPDF();
+        
+        $canvas = $dom_pdf ->get_canvas();
+        $canvas->page_text(510, 800, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
         return $pdf->stream('JLR-DTR-Print.pdf'); 
         //return view('app.timekeeping.manage-dtr.print',['employees' => $result]);
     }

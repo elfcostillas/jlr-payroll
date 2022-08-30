@@ -53,9 +53,11 @@
                     dept_id: null,
                     location_id: null,
                     pay_type: null,
+                    date_hired : null
             };
 
             var viewModel = kendo.observable({ 
+                selected : null,
                 form : {
                     model : {
                         id : null,
@@ -88,6 +90,7 @@
                         dept_id: null,
                         location_id: null,
                         pay_type: null,
+                        date_hired : null
                     },
                   
                 },
@@ -208,17 +211,22 @@
                             data : json_data
                         },function(data,staus){
                             swal_success(data);
+                            
+                            let url  = `employee-master-data/read/${viewModel.selected.id}`;
+                            viewModel.functions.prepareForm(viewModel.selected);
+                            setTimeout(function(){
+                                read(url,viewModel);
+                            }, 500);
+                           
+
                             viewModel.ds.maingrid.read();
                             //viewModel.maingrid.formReload(data);
                         })
                         .fail(function(data){
                            swal_error(data);
-                           
                         }).always(function() {
                             //viewModel.maingrid.ds.read();
                         });
-
-                       
                     },
                     view : async function(e){
                         e.preventDefault(); 
@@ -227,6 +235,8 @@
                        
                         var tr = $(e.target).closest("tr");
                         var data = this.dataItem(tr);
+
+                        viewModel.set('selected',data);
 
                         let url  = `employee-master-data/read/${data.id}`;
                         await viewModel.functions.prepareForm(data);
@@ -288,6 +298,8 @@
                         viewModel.form.model.set('pay_type',($('#pay_type').data('kendoDropDownList').value()!='') ? $('#pay_type').data('kendoDropDownList').value() : 0 );
                         viewModel.form.model.set('deduct_sss',(viewModel.form.model.deduct_sss) ? 'Y':'N');
                         viewModel.form.model.set('deduct_phic',(viewModel.form.model.deduct_phic) ? 'Y':'N');
+                        viewModel.form.model.set('is_daily',(viewModel.form.model.is_daily) ? 'Y':'N');
+                        viewModel.form.model.set('date_hired',kendo.toString($('#date_hired').data('kendoDatePicker').value(),'yyyy-MM-dd'));
                         //viewModel.form.model.set('deduct_sss',(viewModel.form.model.deduct_sss) ? 'Y':'N');
                     
                     },
@@ -306,6 +318,7 @@
                   
                     viewModel.form.model.set('deduct_sss',(viewModel.form.model.deduct_sss=='Y') ? true:false);
                     viewModel.form.model.set('deduct_phic',(viewModel.form.model.deduct_phic=='Y') ? true:false);
+                    viewModel.form.model.set('is_daily',(viewModel.form.model.is_daily=='Y') ? true:false);
                 }
             });
 
@@ -419,6 +432,10 @@
                 format: "MM/dd/yyyy"
             });
 
+            $("#date_hired").kendoDatePicker({
+                format: "MM/dd/yyyy"
+            });
+
             $("#civil_status").kendoDropDownList({
                 dataTextField: "text",
                 dataValueField: "value",
@@ -515,6 +532,7 @@
             $("#tin_no").kendoTextBox({ });
             $("#hdmf_contri").kendoTextBox({ });
             $("#biometric_id").kendoTextBox({ });
+            $("#basic_salary").kendoNumericTextBox({  decimals: 2});
             
             //<input type="checkbox" data-bind="checked: isChecked" /> <input class="form-check-input" type="checkbox">
 

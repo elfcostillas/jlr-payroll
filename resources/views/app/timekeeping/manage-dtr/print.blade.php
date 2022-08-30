@@ -3,12 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
     <title>JLR - Employee DTR </title>
 </head>
 <?php
     use Carbon\Carbon;
 ?>
+
+<style>
+    @font-face {
+        font-family: arial;
+        src: url({{storage_path('/fonts/Helvetica.ttf')}}) format('truetype');
+
+    }
+
+    * {
+        font-family : "Helvetica"
+    }
+
+    table {
+        font-size :9pt;
+        page-break-inside: avoid; 
+        border-collapse:collapse;
+        margin-bottom : 4px;
+    }
+ 
+    tr { 
+        page-break-inside:avoid; 
+        page-break-after:auto 
+    }
+
+    @page { margin: 40px 40px 60px 40px; border:1px solid green } /* top right bottom left */
+
+
+</style>
 <body>
     @foreach($employees as $employee)
         <table border=1 style="border-collapse:collapse;margin-bottom : 16px;width:100%;">
