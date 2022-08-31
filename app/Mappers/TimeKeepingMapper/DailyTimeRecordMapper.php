@@ -105,7 +105,12 @@ class DailyTimeRecordMapper extends AbstractMapper {
         if($filter['filter']!=null){
 			foreach($filter['filter']['filters'] as $f)
 			{
-				$result->where($f['field'],'like','%'.$f['value'].'%');
+				
+                //$result->where($f['field'],'like','%'.$f['value'].'%');
+                if($f['field']=='empname'){
+                    $result->where('lastname','like','%'.$f['value'].'%')
+                    ->orWhere('firstname','like','%'.$f['value'].'%');
+                }
 			}
 		}
 

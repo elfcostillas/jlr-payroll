@@ -11,6 +11,7 @@ use App\Http\Controllers\Timekeeping\PayrollPeriodController;
 use App\Http\Controllers\Timekeeping\UploadLogController;
 use App\Http\Controllers\Timekeeping\ManageDTRWeeklyController;
 use App\Http\Controllers\Timekeeping\ManageDTRController;
+use App\Http\Controllers\Timekeeping\ManualDTRController;
 
 use App\Http\Controllers\Settings\LocationController;
 
@@ -123,6 +124,13 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
     Route::prefix('upload-log')->group(function(){
         Route::get('/',[UploadLogController::class,'index']);
         Route::post('upload',[UploadLogController::class,'upload']);
+    });
+
+    Route::prefix('manual-dtr')->middleware('access:timekeeping/manual-dtr')->group(function(){
+        Route::get('/',[ManualDTRController::class,'index']);
+        Route::get('list',[ManualDTRController::class,'list']);
+        Route::get('employee-list',[ManualDTRController::class,'getEmployees']);
+        Route::post('save',[ManualDTRController::class,'save']);
     });
     
 });
