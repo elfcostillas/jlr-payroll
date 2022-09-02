@@ -9,6 +9,7 @@
             let emp_stat =<?php echo json_encode($emp_stat) ?>;
             let exit_stat =<?php echo json_encode($exit_stat) ?>;
             let pay_type =<?php echo json_encode($pay_type) ?>;
+            let emp_level =<?php echo json_encode($level_desc) ?>;
 
             let genderOptions = [
                     { text: "Male", value: "M" },
@@ -53,7 +54,9 @@
                     dept_id: null,
                     location_id: null,
                     pay_type: null,
-                    date_hired : null
+                    date_hired : null,
+                    emp_level : null,
+                    job_title_id : null
             };
 
             var viewModel = kendo.observable({ 
@@ -90,7 +93,9 @@
                         dept_id: null,
                         location_id: null,
                         pay_type: null,
-                        date_hired : null
+                        date_hired : null,
+                        emp_level : null,
+                        job_title_id : null
                     },
                     mirror : {
                         is_daily : false,
@@ -197,6 +202,26 @@
                             }
                         }
                     }),
+                    job_titles : new kendo.data.DataSource({
+                        transport : {
+                            read : {
+                                url : 'employee-master-data/job-titles/0',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },
+                        },
+                        schema : {
+                            model : {
+                                id : 'id',
+                                fields : {
+                                    job_title_name : { type : 'string' },
+                                }
+                            }
+                        }
+                    }),
                     
                 },
                 buttonHandler : {  
@@ -298,7 +323,8 @@
                         viewModel.form.model.set('civil_status',$('#civil_status').data('kendoDropDownList').value());
                         viewModel.form.model.set('division_id',$('#division_id').data('kendoDropDownList').value());
                         viewModel.form.model.set('dept_id',($('#dept_id').data('kendoDropDownList').value()!='') ? $('#dept_id').data('kendoDropDownList').value() : 0 );
-                        viewModel.form.model.set('location_id',($('#location_id').data('kendoDropDownList').value()!='') ? $('#location_id').data('kendoDropDownList').value() : 0 );
+                        viewModel.form.model.set('job_title_id',($('#job_title_id').data('kendoDropDownList').value()!='') ? $('#job_title_id').data('kendoDropDownList').value() : null );
+                        viewModel.form.model.set('emp_level',($('#emp_level').data('kendoDropDownList').value()!='') ? $('#emp_level').data('kendoDropDownList').value() : null );
 
                         viewModel.form.model.set('employee_stat',($('#employee_stat').data('kendoDropDownList').value()!='') ? $('#employee_stat').data('kendoDropDownList').value() : 0 );
                         viewModel.form.model.set('exit_status',($('#exit_status').data('kendoDropDownList').value()!='') ? $('#exit_status').data('kendoDropDownList').value() : 0 );
@@ -307,6 +333,7 @@
                         viewModel.form.model.set('deduct_phic',(viewModel.form.mirror.deduct_phic) ? 'Y':'N');
                         viewModel.form.model.set('is_daily',(viewModel.form.mirror.is_daily) ? 'Y':'N');
                         viewModel.form.model.set('date_hired',kendo.toString($('#date_hired').data('kendoDatePicker').value(),'yyyy-MM-dd'));
+                        viewModel.form.model.set('location_id',($('#location_id').data('kendoDropDownList').value()!='') ? $('#location_id').data('kendoDropDownList').value() : 0 );
                         //viewModel.form.model.set('deduct_sss',(viewModel.form.model.deduct_sss) ? 'Y':'N');
                         
 
@@ -317,6 +344,10 @@
                         let deptUrl = `divisions-departments/department/list-option/${data.division_id}`;
                         viewModel.ds.department.transport.options.read.url = deptUrl;
                         viewModel.ds.department.read();
+
+                        let jobtitleUrl = `employee-master-data/job-titles/${data.dept_id}`;
+                        viewModel.ds.job_titles.transport.options.read.url = jobtitleUrl;
+                        viewModel.ds.job_titles.read();
                     }
                    
 
@@ -530,6 +561,30 @@
                 }
                 //change: onChange
             });
+
+            $("#emp_level").kendoDropDownList({
+                dataTextField: "level_desc",
+                dataValueField: "id",
+                dataSource: emp_level,
+                index: 1,
+                dataBound : function(e){
+                  
+                }
+                //change: onChange
+            });
+
+            $("#job_title_id").kendoDropDownList({
+                dataTextField: "job_title_name",
+                dataValueField: "id",
+                dataSource: viewModel.ds.job_titles,
+                index: 1,
+                dataBound : function(e){
+                  
+                }
+                //change: onChange
+            });
+
+            
             
 
             $("#contact_no").kendoTextBox({ });

@@ -168,6 +168,8 @@ Route::middleware('auth')->prefix('employee-files')->group(function(){
         //Route::post('create',[EmployeeController::class,'create']);
         //Route::post('update',[EmployeeController::class,'update']);
         Route::post('save',[EmployeeController::class,'save']);
+        Route::get('job-titles/{id}',[EmployeeController::class,'getJobTitles']);
+        
         
     });
 

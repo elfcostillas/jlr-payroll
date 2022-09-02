@@ -43,7 +43,9 @@ class Employee extends Model
         'dept_id',
         'location_id',
         'pay_type',
-        'date_hired'
+        'date_hired',
+        'emp_level',
+        'job_title_id'
     ];
 
 }

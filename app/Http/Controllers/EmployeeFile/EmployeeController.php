@@ -21,7 +21,9 @@ class EmployeeController extends Controller
         $emp_stat = $this->mapper->getEmploymentStat();
         $exit_stat = $this->mapper->getExitStat();
         $pay_type = $this->mapper->getPayTypes();
-        return view('app.employee-file.employee-master-data.index',['emp_stat'=>$emp_stat, 'exit_stat'=>$exit_stat, 'pay_type'=>$pay_type]);
+        $level_desc = $this->mapper->getLevels();
+       
+        return view('app.employee-file.employee-master-data.index',['emp_stat'=>$emp_stat, 'exit_stat'=>$exit_stat, 'pay_type'=>$pay_type, 'level_desc'=>$level_desc]);
     }
 
     public function list(Request $request)
@@ -84,6 +86,12 @@ class EmployeeController extends Controller
     public function readById(Request $request)
     {
         $result = $this->mapper->header($request->id);
+        return response()->json($result);
+    }
+
+    public function getJobTitles(Request $request)
+    {
+        $result = $this->mapper->getJobTitles($request->id);
         return response()->json($result);
     }
 

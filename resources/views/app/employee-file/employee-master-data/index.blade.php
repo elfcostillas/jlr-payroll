@@ -165,7 +165,7 @@
                                 <td><input type="text" id="location_id" data-bind="value:form.model.location_id"></td>
                                 <td colspan=2><input type="text" id="division_id" data-bind="value:form.model.division_id"></td>
                                 <td colspan=2><input type="text" id="dept_id" data-bind="value:form.model.dept_id"></td>
-                                <td colspan=2></td>
+                                <td colspan=2><input type="text" id="job_title_id" data-bind="value:form.model.job_title_id"></td>
                             </tr>
                             <tr>
                                 <td colspan=2>Employment Status</td>
@@ -179,6 +179,19 @@
                                 <td colspan=2><input type="text" id="exit_status" data-bind="value:form.model.exit_status"></td>
                                 <td colspan=2><input type="text" id="pay_type" data-bind="value:form.model.pay_type"></td>
                                 <td colspan=2><input type="text" id="date_hired" data-bind="value:form.model.date_hired"></td>
+                            </tr>
+                            <tr>
+                                <td colspan=2>Level</td>
+                                <td colspan=2></td>
+                                <td colspan=2></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan=2><input type="text" id="emp_level" data-bind="value:form.model.emp_level"></td>
+                                <td colspan=2></td>
+                                <td colspan=2></td>
+                                <td colspan=2></td>
                             </tr>
                         </table>
                     </div>

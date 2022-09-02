@@ -121,7 +121,19 @@ class EmployeeMapper extends AbstractMapper {
 		$result = $this->model->select('id','pay_description')->from('emp_pay_types');
 		return $result->get();
 	}
+
+	public function getLevels()
+	{
+		$result = $this->model->select('id','level_desc')->from('emp_level');
+		return $result->get();
+	}
 	
+	public function getJobTitles($dept_id)
+	{
+		//SELECT id,job_title_name FROM job_titles WHERE dept_id =9
+		$result = $this->model->select('id','job_title_name')->from('job_titles')->where('dept_id',$dept_id);
+		return $result->get();
+	}
 
 
 
