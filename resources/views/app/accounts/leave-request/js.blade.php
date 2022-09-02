@@ -1,15 +1,10 @@
 @section('jquery')
     <script id="template" type="text/x-kendo-template">
-        <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="click:buttonHandler.createEmployee" > <span class="k-icon k-i-plus k-button-icon"></span>Create Employee</button>
+        <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="click:buttonHandler.createEmployee" > <span class="k-icon k-i-plus k-button-icon"></span>Create Leave</button>
     </script>
    
     <script>
         $(document).ready(function(){
-
-            let emp_stat =<?php echo json_encode($emp_stat) ?>;
-            let exit_stat =<?php echo json_encode($exit_stat) ?>;
-            let pay_type =<?php echo json_encode($pay_type) ?>;
-            let emp_level =<?php echo json_encode($level_desc) ?>;
 
             let genderOptions = [
                     { text: "Male", value: "M" },
@@ -110,7 +105,7 @@
                     maingrid : new kendo.data.DataSource({
                         transport : {
                             read : {
-                                url : 'employee-master-data/list',
+                                url : 'leave-request/list',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -128,13 +123,29 @@
                             model : {
                                 id : 'id',
                                 fields : {
-                                    biometric_id : { type : 'number' },
-                                    lastname : { type : 'string' },
-                                    firstname : { type : 'string' },
-                                    middlename : { type : 'string' },
-                                    primary_addr : { type : 'string' },
-                                    division_id: { type : 'number' },
-                                    dept_id: { type : 'number' },
+                                    biometric_id : { type:"number"},
+                                    requesting_emp : { type:"string"},
+                                    leave_type_code : { type:"string"},
+                                    remarks : { type:"string"},
+                                    document_status : {type:"string"},
+                                    acknowledge_status : { type:"string"},
+                                    approver_emp : { type:"string"},
+                                    acknowledge_time : { type:"string"},
+                                    hr_emp : { type:"string"},
+                                    received_time : { type:"date"},
+
+
+                                    // "id":2,
+                                    // "biometric_id":847,
+                                    // "requesting_emp":"Costillas, Elmer  ",
+                                    // "leave_type_code":null,
+                                    // "remarks":null,
+                                    // "document_status":null,
+                                    // "acknowledge_status":null,
+                                    // "approver_emp":", ",
+                                    // "acknowledge_time":null,
+                                    // "hr_emp":", ",
+                                    // "received_time":null
                                 }
                             }
                         }
@@ -387,58 +398,46 @@
                     {
                         title : "Bio ID",
                         field : "biometric_id",
-                       
+                        width : 80,    
+                    },
+                    {
+                        title : "Employee",
+                        field : "requesting_emp",
+                       // width : 180,    
+                    },
+                    {
+                        title : "Type",
+                        field : "leave_type_code",
+                        width : 90,    
+                    },
+                    // {
+                    //     title : "Reason",
+                    //     field : "remarks",
+                        
+                    // },
+                    {
+                        title : "Status",
+                        field : "document_status",
                         width : 90,    
                     },
                     {
-                        title : "Last Name",
-                        field : "lastname",
-                        width : 130,    
-                    },
-                    {
-                        title : "First Name",
-                        field : "firstname",
-                        width : 130,  
-                    },
-                    {
-                        title : "Middle Name",
-                        field : "middlename",
-                        width : 130,  
-                    },
-                    {
-                        title : "Jr,Sr,II,III",
-                        field : "suffixname",
+                        
+                        title : "Approval",
+                        field : "acknowledge_status",
                         width : 90,  
-                    },
+                    }, 
                     {
-                        title : "Division",
-                        field : "div_code",
-                        //width : 90,  
+                        title : "Approver",
+                        field : "approver_emp",
+                        width : 180,  
                     },
+                    
                     {
-                        title : "Department",
-                        field : "dept_code",
-                        //width : 90,  
+                        title : "Received",
+                        field : "hr_emp",
+                        width : 180,  
                     },
-                    // {
-                    //     title : "Emp Status",
-                    //     field : "estatus_desc",
-                    //     width : 100,  
-                    // }, 
-                    {
-                        title : "Emp Type",
-                        field : "pay_description",
-                        width : 100,  
-                    },
-                    {
-                        title : "Status",
-                        field : "exit_status",
-                        template : "#: status_desc #",
-                        width : 80,  
-                        filterable: {
-                            ui: statusFilter
-                        }
-                    },
+                   
                     {
                         command: { text : 'View',icon : 'edit' ,click : viewModel.buttonHandler.view },
                         attributes : { style : 'font-size:10pt !important;'},
@@ -534,49 +533,49 @@
                 //change: onChange
             });
 
-            $("#employee_stat").kendoDropDownList({
-                dataTextField: "estatus_desc",
-                dataValueField: "id",
-                dataSource: emp_stat,
-                index: 1,
-                dataBound : function(e){
+            // $("#employee_stat").kendoDropDownList({
+            //     dataTextField: "estatus_desc",
+            //     dataValueField: "id",
+            //     dataSource: emp_stat,
+            //     index: 1,
+            //     dataBound : function(e){
                   
-                }
+            //     }
                 
-            });
+            // });
 
-            $("#exit_status").kendoDropDownList({
-                dataTextField: "status_desc",
-                dataValueField: "id",
-                dataSource: exit_stat,
-                index: 1,
-                dataBound : function(e){
+            // $("#exit_status").kendoDropDownList({
+            //     dataTextField: "status_desc",
+            //     dataValueField: "id",
+            //     dataSource: exit_stat,
+            //     index: 1,
+            //     dataBound : function(e){
                   
-                }
-                //change: onChange
-            });
+            //     }
+            //     //change: onChange
+            // });
 
-            $("#pay_type").kendoDropDownList({
-                dataTextField: "pay_description",
-                dataValueField: "id",
-                dataSource: pay_type,
-                index: 1,
-                dataBound : function(e){
+            // $("#pay_type").kendoDropDownList({
+            //     dataTextField: "pay_description",
+            //     dataValueField: "id",
+            //     dataSource: pay_type,
+            //     index: 1,
+            //     dataBound : function(e){
                   
-                }
-                //change: onChange
-            });
+            //     }
+            //     //change: onChange
+            // });
 
-            $("#emp_level").kendoDropDownList({
-                dataTextField: "level_desc",
-                dataValueField: "id",
-                dataSource: emp_level,
-                index: 1,
-                dataBound : function(e){
+            // $("#emp_level").kendoDropDownList({
+            //     dataTextField: "level_desc",
+            //     dataValueField: "id",
+            //     dataSource: emp_level,
+            //     index: 1,
+            //     dataBound : function(e){
                   
-                }
-                //change: onChange
-            });
+            //     }
+            //     //change: onChange
+            // });
 
             $("#job_title_id").kendoDropDownList({
                 dataTextField: "job_title_name",

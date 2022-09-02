@@ -29,7 +29,7 @@ use App\Http\Controllers\PayrollTransaction\BankTransmittalController;
 use App\Http\Controllers\PayrollTransaction\PayslipController;
 
 use App\Http\Controllers\Accounts\BiometricController;
-use App\Http\Controllers\Accounts\LeaveApplicationController;
+use App\Http\Controllers\Accounts\LeaveRequestController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -242,8 +242,9 @@ Route::middleware('auth')->prefix('accounts')->group(function(){
         
     });
 
-    Route::prefix('leave-application')->group(function(){
-        Route::get('/',[LeaveApplicationController::class,'index']);
+    Route::prefix('leave-request')->group(function(){
+        Route::get('/',[LeaveRequestController::class,'index']);
+        Route::get('list',[LeaveRequestController::class,'list']);
         
     });
 
