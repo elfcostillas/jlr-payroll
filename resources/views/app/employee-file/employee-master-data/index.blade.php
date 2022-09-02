@@ -137,9 +137,9 @@
                             </tr>
                             <tr>
                                 <td><input type="text" id="sss_no" data-bind="value:form.model.sss_no"></td>
-                                <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" data-bind="checked:form.model.deduct_sss" id="deduct_sss"></div></div></td>
+                                <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" data-bind="checked:form.mirror.deduct_sss" id="deduct_sss"></div></div></td>
                                 <td><input type="text" id="phic_no" data-bind="value:form.model.phic_no"></td>
-                                <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" data-bind="checked:form.model.deduct_phic" id="deduct_phic"></div></div></td>
+                                <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" data-bind="checked:form.mirror.deduct_phic" id="deduct_phic"></div></div></td>
                                 <td><input type="text" id="hdmf_no" data-bind="value:form.model.hdmf_no"></td>
                                 <td><input type="text" id="hdmf_contri" data-bind="value:form.model.hdmf_contri"></td>
                                 <td colspan=2><input type="text" id="tin_no" data-bind="value:form.model.tin_no"></td>
@@ -197,7 +197,7 @@
                             </tr>
                             <tr>
                                 <td colspan=2><input type="text" id="basic_salary" data-bind="value:form.model.basic_salary"></td>
-                                <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" data-bind="checked:form.model.is_daily" id="is_daily"></div></div></td>
+                                <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" data-bind="checked:form.mirror.is_daily" id="is_daily"></div></div></td>
                                 <td></td>
                                 <td colspan=2></td>
                                 <td colspan=2></td>

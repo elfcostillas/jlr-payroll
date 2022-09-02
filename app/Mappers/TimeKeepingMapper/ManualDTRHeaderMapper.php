@@ -15,9 +15,13 @@ class ManualDTRHeaderMapper extends AbstractMapper {
         'remarks' => 'required|sometimes',
         //'encoded_by',
         //'encoded_on',
-        'date_from' => 'required|sometimes',
+        'date_from' => ['required','sometimes',],
         'date_to' => 'required|sometimes',
     ];
+
+    public function header($id){
+		return $this->model->find($id);
+    }
 
     public function list($filter)
     {
@@ -56,8 +60,42 @@ class ManualDTRHeaderMapper extends AbstractMapper {
         return $result->get();
     }
 
+    public function validateDate($date,$biometric_id)
+    {
+        //SELECT MIN(date_from) as dfrom,MAX(date_to) as dto FROM manual_dtr WHERE biometric_id = 352
+        $range = $this->model->select(DB::raw("MIN(date_from) as dfrom,MAX(date_to) as dto"))->where('biometric_id',$biometric_id)->first();
+        
+       
+        if($range->dfrom && $range->dto){
+            $startDate = Carbon::createFromFormat('Y-m-d',$range->dfrom);
+            $endDate = Carbon::createFromFormat('Y-m-d',$range->dto);
+            $toCheck = Carbon::createFromFormat('Y-m-d',$date);
+    
+            $check =  $toCheck->between($startDate,$endDate);
+        }else {
+            $check = false;
+        }
+       
+        
+        return $check;
+    }
+
+    public function printHeader($id)
+    {
+        //SELECT manual_dtr.*,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) AS empname,CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),'-',DATE_FORMAT(date_to,'%m/%d/%Y')) AS periodrange 
+        //FROM manual_dtr INNER JOIN employees ON manual_dtr.biometric_id = employees.biometric_id
+        $result = $this->model->select(DB::raw("manual_dtr.*,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) AS empname,CONCAT(DATE_FORMAT(date_from,'%b %d, %Y'),' - ',DATE_FORMAT(date_to,'%b %d, %Y')) AS periodrange"))
+                ->from('manual_dtr')
+                ->join('employees','manual_dtr.biometric_id','=','employees.biometric_id')
+                ->where('manual_dtr.id',$id);
+
+        return $result->first();
+    }
+
 
 }
+
+   
 
 /*
 

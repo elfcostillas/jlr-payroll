@@ -12,8 +12,10 @@ use App\Http\Controllers\Timekeeping\UploadLogController;
 use App\Http\Controllers\Timekeeping\ManageDTRWeeklyController;
 use App\Http\Controllers\Timekeeping\ManageDTRController;
 use App\Http\Controllers\Timekeeping\ManualDTRController;
+use App\Http\Controllers\Timekeeping\FTPController;
 
 use App\Http\Controllers\Settings\LocationController;
+use App\Http\Controllers\Settings\DefaultScheduleController;
 
 use App\Http\Controllers\EmployeeFile\DivisionController;
 use App\Http\Controllers\EmployeeFile\EmployeeController;
@@ -26,6 +28,8 @@ use App\Http\Controllers\PayrollTransaction\PayrollRegisterController;
 use App\Http\Controllers\PayrollTransaction\BankTransmittalController;
 use App\Http\Controllers\PayrollTransaction\PayslipController;
 
+use App\Http\Controllers\Accounts\BiometricController;
+use App\Http\Controllers\Accounts\LeaveApplicationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -130,9 +134,28 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::get('/',[ManualDTRController::class,'index']);
         Route::get('list',[ManualDTRController::class,'list']);
         Route::get('employee-list',[ManualDTRController::class,'getEmployees']);
+        Route::get('header/{id}',[ManualDTRController::class,'header']);
         Route::post('save',[ManualDTRController::class,'save']);
+        Route::get('details/{id}',[ManualDTRController::class,'details']);
+        Route::post('detail-update',[ManualDTRController::class,'detailUpdate']);
+        Route::get('print/{id}',[ManualDTRController::class,'print']);
+
+        
     });
     
+    Route::prefix('ftp')->middleware('access:timekeeping/ftp')->group(function(){
+        Route::get('/',[FTPController::class,'index']);
+        Route::get('list',[FTPController::class,'list']);
+        //Route::get('employee-list',[FTPController::class,'getEmployees']);
+       // Route::get('header/{id}',[FTPController::class,'header']);
+        // Route::post('create',[FTPController::class,'save']);
+        // Route::get('details/{id}',[FTPController::class,'details']);
+        // Route::post('detail-update',[FTPController::class,'detailUpdate']);
+        // Route::get('print/{id}',[FTPController::class,'print']);
+
+        
+    });
+
 });
 
 //divisions-departments
@@ -192,6 +215,12 @@ Route::middleware('auth')->prefix('settings')->group(function(){
         Route::post('update',[LocationController::class,'update']);
         Route::get('get-locations',[LocationController::class,'listOption']);
     });
+
+    Route::prefix('default-schedules')->group(function(){
+        Route::get('/',[DefaultScheduleController::class,'index']);
+        Route::get('list',[DefaultScheduleController::class,'list']);
+        Route::post('update',[DefaultScheduleController::class,'update']);
+    });
 });
 
 Route::middleware('auth')->prefix('reports')->group(function(){
@@ -201,6 +230,23 @@ Route::middleware('auth')->prefix('reports')->group(function(){
         Route::get('generate',[EmployeeReportController::class,'generate']);
     });
 });
+
+Route::middleware('auth')->prefix('accounts')->group(function(){
+    //Route::get('locations',[LocationController::class,'index']);
+    Route::prefix('biometric')->group(function(){
+        Route::get('/',[BiometricController::class,'index']);
+        Route::post('save',[BiometricController::class,'save']);
+        Route::get('get-id',[BiometricController::class,'getID']);
+        
+    });
+
+    Route::prefix('leave-application')->group(function(){
+        Route::get('/',[LeaveApplicationController::class,'index']);
+        
+    });
+
+});
+
 
 Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
     //Route::get('locations',[LocationController::class,'index']);

@@ -1,4 +1,7 @@
 @section('jquery')
+<script id="template" type="text/x-kendo-template">
+    <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="click:buttonHandler.createDTR" > <span class="k-icon k-i-plus k-button-icon"></span>Create DTR</button>
+</script>
     <script>
         $(document).ready(function(){
 
@@ -68,6 +71,81 @@
                             }
                         }
                     }),
+                    dtrgrid : new kendo.data.DataSource({
+                        transport : {
+                            read : {
+                                url : 'manual-dtr/details/0',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },
+                            update : {
+                                url : 'manual-dtr/detail-update',
+                                type : 'post',
+                                dataType : 'json',
+                                complete : function(e){
+                                    viewModel.ds.dtrgrid.read();
+                                }
+                            },
+                            parameterMap: function (data, type) {
+                                if(type=='update'){
+                                    data.dtr_date = kendo.toString(data.dtr_date,'yyyy-MM-dd');
+                                    
+                                    if(data.time_in!=null){
+                                        data.time_in = pad(data.time_in,4);
+                                        data.time_in = (data.time_in.includes(':')) ? data.time_in : data.time_in.substring(0,2)+':'+ data.time_in.substring(2,4);
+                                    }
+
+                                    if(data.time_out!=null){
+                                        data.time_out = pad(data.time_out,4);
+                                        data.time_out = (data.time_out.includes(':')) ? data.time_out : data.time_out.substring(0,2)+':'+ data.time_out.substring(2,4);
+                                    }
+
+                                    if(data.overtime_in!=null){
+                                        data.overtime_in = pad(data.overtime_in,4);
+                                        data.overtime_in = (data.overtime_in.includes(':')) ? data.overtime_in : data.overtime_in.substring(0,2)+':'+ data.overtime_in.substring(2,4);
+                                    }
+
+                                    if(data.overtime_out!=null){
+                                        data.overtime_out = pad(data.overtime_out,4);
+                                        data.overtime_out = (data.overtime_out.includes(':')) ? data.overtime_out : data.overtime_out.substring(0,2)+':'+ data.overtime_out.substring(2,4);
+                                    }
+                                    
+                                }
+
+                                return data;
+                            }
+                        },
+                        pageSize :11,
+                        schema : {
+                          
+                            model : {
+                                id : 'line_id',
+                                fields : {
+                                    header_id : { type: "number",editable:false },
+                                    biometric_id : { type: "number",editable:false  },
+                                    dtr_date : { type: "date",editable:false  },
+                                    time_in : { type: "string" },
+                                    time_out : { type: "string" },
+                                    overtime_in : { type: "string" },
+                                    overtime_out : { type: "string" },
+                                    overtime_hrs : { type: "number" },
+                                    reg_hrs : { type: "number" },
+                                    reg_day : { type: "number" },
+                                    rd_hrs : { type: "number" },
+                                    rd_ot : { type: "number" },
+                                    sh_hrs : { type: "number" },
+                                    sh_ot : { type: "number" },
+                                    lh_hrs : { type: "number" },
+                                    lh_ot : { type: "number" },
+                                    remarks : { type: "string" },
+                                    dayname : { type: "string",editable:false },
+                                }
+                            }
+                        }
+                    }),
                 },
                 functions : {
                     showPOP : function()
@@ -75,8 +153,8 @@
                         var myWindow = $("#pop");
                         
                         myWindow.kendoWindow({
-                            width: "864", //1124 - 1152
-                            height: "710",
+                            width: "884", //1124 - 1152
+                            height: "750",
                             title: "Manual DTR Form",
                             visible: false,
                             animation: false,
@@ -97,11 +175,19 @@
                         viewModel.form.model.set('date_to',kendo.toString($('#date_to').data('kendoDatePicker').value(),'yyyy-MM-dd'));
                         viewModel.form.model.set('biometric_id',$('#biometric_id').data('kendoComboBox').value());
                     },
+                    prepareForm :function(data){
+
+                    }
                 },
                 toolbarHandler : {
-
+                    
                 },
                 buttonHandler : {
+                    createDTR : function()
+                    {
+                        viewModel.buttonHandler.clear();
+                        viewModel.functions.showPOP();
+                    },
                     view : async function (e)
                     {
                         e.preventDefault(); 
@@ -113,9 +199,13 @@
 
                         // viewModel.set('selected',data);
 
-                        // let url  = `employee-master-data/read/${data.id}`;
-                        // await viewModel.functions.prepareForm(data);
-                        // read(url,viewModel);
+                        let url  = `manual-dtr/header/${data.id}`;
+                        await viewModel.functions.prepareForm(data);
+                        read(url,viewModel);
+
+                        let detailUrl = `manual-dtr/details/${data.id}`;
+                        viewModel.ds.dtrgrid.transport.options.read.url = detailUrl;
+                        viewModel.ds.dtrgrid.read();
                     },
                     save : async function(e){
 
@@ -127,7 +217,14 @@
                             data : json_data
                         },function(data,staus){
                             swal_success(data);
-                           
+
+                            let url  = `manual-dtr/header/${data}`;
+                            read(url,viewModel);
+
+                            let detailUrl = `manual-dtr/details/${data}`;
+                            viewModel.ds.dtrgrid.transport.options.read.url = detailUrl;
+                            viewModel.ds.dtrgrid.read();
+
                             viewModel.ds.maingrid.read();
                             //viewModel.maingrid.formReload(data);
                         })
@@ -138,13 +235,24 @@
                         });
                     },
                     clear : function(e){
-
+                        viewModel.form.model.set('id',null);
+                        viewModel.form.model.set('remarks',null);
+                        viewModel.form.model.set('date_from',null);
+                        viewModel.form.model.set('date_to',null);
+                        viewModel.form.model.set('biometric_id',null);
+                        
                     },
                     print : function(){
 
+                        let url = `manual-dtr/print/${viewModel.form.model.id}`;
+                        window.open(url);
                     },
                 },
                 closePop : function ()
+                {
+
+                },
+                callBack : function()
                 {
 
                 }
@@ -164,6 +272,7 @@
             $("#biometric_id").kendoComboBox({ 
                 dataTextField: "empname",
                 dataValueField: "biometric_id",
+                filter: "contains",
                 dataSource: viewModel.ds.employees,
             });
 
@@ -184,10 +293,12 @@
                 noRecords: true,
                 filterable : true,
                 sortable : true,
-                height : 550,
+                height : 450,
                 scrollable: true,
-                toolbar : [{ name :'create'}],
-                editable : "inline",
+                toolbar : [
+                    { template: kendo.template($("#template").html()) }
+                ],
+                editable : false,
                 columns : [
                     {
                         title : "ID",
@@ -234,6 +345,154 @@
                     
                 ]
             });
+
+            $("#dtrgrid").kendoGrid({
+                dataSource : viewModel.ds.dtrgrid,
+                pageable : {
+                    refresh : true,
+                    buttonCount : 5
+                },
+                noRecords: true,
+                filterable : true,
+                sortable : true,
+                height : 374,
+                scrollable: true,
+                editable : "inline",
+                columns : [
+                    {
+                        width : 190,
+                        command : ['edit']  
+                    },
+                    {
+                        title : "Day",
+                        field : "dayname",
+                        width : 80,    
+                    },
+                    {
+                        title : "Date From",
+                        field : "dtr_date",
+                        width : 100,    
+                        template : "#= (data.dtr_date) ? kendo.toString(data.dtr_date,'MM/dd/yyyy') : ''  #",
+                    },
+                    {
+                        title : "IN",
+                        field : "time_in",
+                        width : 90,    
+                        editor : timeEdior
+                    },
+                    {
+                        title : "OUT",
+                        field : "time_out",
+                        width : 90,    
+                    },
+                    {
+                        title : "Hrs",
+                        field : "reg_hrs",
+                        width : 90,    
+                    },
+                    {
+                        title : "Reg Day",
+                        field : "reg_day",
+                        width : 90,    
+                    },
+                    {
+                        title : "IN (OT)",
+                        field : "overtime_in",
+                        width : 90,    
+                    },
+                    {
+                        title : "OUT (OT)",
+                        field : "overtime_out",
+                        width : 90,    
+                    },
+                    {
+                        title : "HRS (OT)",
+                        field : "overtime_hrs",
+                        width : 90,    
+                    },
+
+                    {
+                        title : "RD Hrs",
+                        field : "rd_hrs",
+                        width : 90,    
+                    },
+                    {
+                        title : "RD OT",
+                        field : "rd_ot",
+                        width : 90,    
+                    },
+                    {
+                        title : "SH Hrs",
+                        field : "sh_hrs",
+                        width : 90,    
+                    },
+                    {
+                        title : "SH OT",
+                        field : "sh_ot",
+                        width : 90,    
+                    },
+                    {
+                        title : "LH hrs",
+                        field : "lh_hrs",
+                        width : 90,    
+                    },
+                    {
+                        title : "LH OT",
+                        field : "lh_ot",
+                        width : 90,    
+                    },
+
+                    {
+                        title : "Remarks",
+                        field : "remarks",
+                        width : 400,    
+                    },
+                    {
+                        //command: { text : 'View',icon : 'edit' ,click : viewModel.buttonHandler.view },
+                        // attributes : { style : 'font-size:10pt !important;'},
+                        width : 190,
+                        command : ['edit']  
+                    },
+                    
+                ]
+            });
+
+            function timeEdior(container, options)
+            {
+                $('<input name="' + options.field + '" />')
+                .appendTo(container)
+                .kendoTextBox({
+                    change : function(e)
+                    {
+                        // let v = e.sender.value();
+                        // let nv = v.substring(0,2)+':'+ v.substring(2,4);
+                        // e.sender.value = nv;
+                        // e.sender.text = nv;
+                   
+
+                        // console.log(e.model);
+
+                        // let grid = $("#dtrgrid").data("kendoGrid");
+                        // let selectedRow = grid.dataItem(grid.select());
+                        // //console.log(e.sender);
+                        // //console.log(e.sender.text());
+                        // //console.log(selectedRow.set("schedule_desc"));
+                        // selectedRow.set("schedule_desc",e.sender.text());
+                    },
+                    edit : function(e){
+                        console.log(e.model);
+                    }
+                    
+                });
+            }
+
+            /*
+             change : function(e){
+                let v = e.sender.value();
+                let nv = v.substring(0,2)+':'+ v.substring(2,4);
+                alert(nv);
+              }
+              */
 
             kendo.bind($("#viewModel"),viewModel);
 

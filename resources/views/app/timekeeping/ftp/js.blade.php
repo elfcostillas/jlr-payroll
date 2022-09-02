@@ -9,7 +9,7 @@
                     maingrid : new kendo.data.DataSource({
                         transport : {
                             read : {
-                                url : 'job-title/list',
+                                url : 'ftp/list',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -17,7 +17,7 @@
                                 }
                             },
                             create : {
-                                url : 'job-title/create',
+                                url : 'ftp/create',
                                 type : 'post',
                                 dataType : 'json',
                                 complete : function(e,status){
@@ -31,7 +31,7 @@
                                 }
                             },
                             update : {
-                                url : 'job-title/update',
+                                url : 'ftp/update',
                                 type : 'post',
                                 dataType : 'json',
                                 complete : function(e){
@@ -43,7 +43,15 @@
                                     }
                                 }
                             },
-                          
+                            parameterMap: function (data, type) {
+                                if(type=='create' || type=='update'){
+                                    data.ftp_date = kendo.toString(data.ftp_date,'yyyy-MM-dd');
+                                    // data.date_to = kendo.toString(data.date_to,'yyyy-MM-dd');
+                                    // data.date_release = kendo.toString(data.date_release,'yyyy-MM-dd');
+                                }
+
+                                return data;
+                            }
                         },
                         pageSize :11,
                         serverPaging : true,
@@ -54,11 +62,13 @@
                             model : {
                                 id : 'id',
                                 fields : {
-                                    dept_id : { type : 'number' },
-                                    job_title_code : { type : 'string' },
-                                    job_title_name : { type : 'string' },
-                                    dept_code : { type : 'string' },
-                                    div_code : { type : 'string' },
+                                    biometric_id : {type:"number"},
+                                    ftp_date : {type:"date"},
+                                    ftp_time : {type:"string"},
+                                    ftp_state : {type:"string"},
+                                    encoded_by : {type:"number"},
+                                    ftp_remarks : {type:"string"},
+                                    
                                 }
                             }
                         }
@@ -66,34 +76,9 @@
                 },
                 buttonHandler : {  
                    
-                    closePop : function(e){
-
-                    }
                 },
                 functions : {
-                    showPOP : function(data){
-                       
-                        var myWindow = $("#pop");
-                        
-                        myWindow.kendoWindow({
-                            width: "360", //1124 - 1152
-                            height: "320",
-                            title: "",
-                            visible: false,
-                            animation: false,
-                            actions: [
-                                "Pin",
-                                "Minimize",
-                                "Maximize",
-                                "Close"
-                            ],
-                            close: viewModel.buttonHandler.closePop,
-                            position : {
-                                top : 0
-                            }
-                        }).data("kendoWindow").center().open().title(data.holiday_remarks);
-                        // myWindow.title(data.holiday_remarks);
-                    },
+                    
                 }
             });
 
@@ -108,33 +93,48 @@
                 sortable : true,
                 height : 550,
                 scrollable: true,
-                toolbar : [{ name :'create',text:'Add Job Title' }],
+                toolbar : [{ name :'create',text:'Add FTP' }],
                 editable : "inline",
                 columns : [
                     {
-                        title : "Dept Code",
-                        field : "dept_id",
-                        template : '#= div_code # - #= dept_code #',
-                        editor : departmentEditor,
-                        width : 220,    
-                    },
-                    // {
-                    //     title : "Job Code",
-                    //     field : "job_title_code",
-                    //     width : 120,    
-                    // },
-                    {
-                        title : "Name",
-                        field : "job_title_name",
+                        title : "Date",
+                        field : "holiday_date",
+                        template : "#= (data.ftp_date) ? kendo.toString(data.ftp_date,'MM/dd/yyyy') : ''  #",
+                        width : 120,    
                     },
                     {
-                        command : ['edit'],
-                        width : 185,    
+                        title : "Type",
+                        //field : "type_description",
+                        field : "holiday_type",
+                        template : "#: type_description #",
+                        editor : holidayTypeEditor,
+                        width : 160,    
                     },
+                    {
+                        title : "Description",
+                        field : "holiday_remarks",
+                    },
+                    {
+                        command : ['edit']
+                    }
+                  
                 ]
             });
 
-            function departmentEditor(container, options)
+            $('input:checkbox.urights').click(function(){
+			var url = '';
+                if($(this).prop('checked')){
+                    url = 'holiday/location-create';
+                }else{
+                    url = 'holiday/location-destroy';
+                }
+                if($("#userid").val()!=""){
+                    $.post(url,{ holiday_id : viewModel.holiday_id, location_id : this.value  },function(data){	});
+                }
+                
+            });
+
+            function holidayTypeEditor(container, options)
             {
                 $('<input name="' + options.field + '"/>')
                 .appendTo(container)
@@ -142,12 +142,12 @@
                 //.kendoComboBox({
                     //autoBind: false,
                     autoWidth: true,
-                    dataTextField: "dept_code",
+                    dataTextField: "type_description",
                     dataValueField: "id",
                     dataSource: {
                         //type: "json",
                         transport: {
-                            read: 'job-title/get-departments'
+                            read: 'holiday/types'
                         }
                     }
                 });

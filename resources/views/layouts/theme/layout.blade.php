@@ -259,20 +259,6 @@ if($prefix!=""){
                 $mmodule->sub = $sub;
               }
 
-            
-              // foreach($main as $m){
-              //       $sub = DB::table('user_rights')
-              //       ->select('sub_menu.menu_desc','sub_menu.menu_url')
-              //       ->join('sub_menu','sub_menu_id','=','sub_menu.line_id')
-              //       ->join('main_menu','main_id','=','main_menu.line_id')
-              //       ->where('user_rights.user_id',$user->id)
-              //       ->where('sub_menu.main_id',$m->line_id)
-              //       ->get();
-                    
-              //       $m->sub = $sub;
-
-              //   }
-
           @endphp
 
           
@@ -309,6 +295,18 @@ if($prefix!=""){
               </p>
             </a>
             <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{ url('accounts/biometric') }}"  class="nav-link">
+                  -&nbsp;&nbsp;&nbsp;&nbsp;<i class="fas fa-id-card nav-icon"></i>
+                    <p> Biometic ID</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ url('accounts/leave-application') }}"  class="nav-link">
+                  -&nbsp;&nbsp;&nbsp;&nbsp;<i class="fas fa-plane-departure nav-icon"></i>
+                    <p> File Leave</p>
+                  </a>
+                </li>
                 <li class="nav-item">
                   <form id="logoutme" action="{{ url('logout') }}" method="POST">@csrf</form>
                   <a href="#" onclick="document.getElementById('logoutme').submit()" class="nav-link">

@@ -47,7 +47,7 @@ class EmployeeMapper extends AbstractMapper {
 		'location_id.gt' => 'Assigned Location field is required.',
 		'employee_stat.gt' => 'Employment Status field is required.',
 		'exit_status.gt' => 'Exit Status field is required.',
-		'pay_type.gt' => 'Employee Type Status field is required.'
+		'pay_type.gt' => 'Employee Pay Type Status field is required.'
 	];
 
 	public function header($id){

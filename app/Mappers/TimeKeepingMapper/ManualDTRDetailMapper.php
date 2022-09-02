@@ -37,6 +37,18 @@ class ManualDTRDetailMapper extends AbstractMapper {
        
     }
 
+    public function insertBatch($arr)
+    {
+        $result = DB::table('manual_dtr_details')->insertOrIgnore($arr);
+    }
+
+    public function listDetail($header_id)
+    {
+        $result = $this->model->select(DB::raw("manual_dtr_details.*,DATE_FORMAT(dtr_date,'%a') as dayname"))->where('header_id',$header_id);
+
+        return $result->get();
+    }
+
 
 }
 

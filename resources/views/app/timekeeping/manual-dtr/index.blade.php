@@ -88,7 +88,7 @@
                     <div id="toolbar"></div>
                     <input type="hidden" id="id" data-bind="value:form.model.id" >
                     <div class="card-body">
-                        <table class="formTable" border=0 style="width:100%">
+                        <table class="formTable mb-1" border=0 style="width:100%">
                             <tr>
                                 <td colspan=4>Employee <span class="require">*Required </span></td>
                                 <td colspan="3"></td>
@@ -116,6 +116,7 @@
                                 <td colspan=8><input type="text" id="remarks" data-bind="value:form.model.remarks"></td>
                           </tr>
                         </table>
+                        <div id="dtrgrid" ></div>
                     </div>
                 </div>
             </div>

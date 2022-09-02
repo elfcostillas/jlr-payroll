@@ -92,6 +92,13 @@
                         pay_type: null,
                         date_hired : null
                     },
+                    mirror : {
+                        is_daily : false,
+                        deduct_sss : false,
+                        deduct_hdmf : false,
+                        deduct_phic : false,
+
+                    }
                   
                 },
                 ds : {
@@ -212,11 +219,11 @@
                         },function(data,staus){
                             swal_success(data);
                             
-                            let url  = `employee-master-data/read/${viewModel.selected.id}`;
-                            viewModel.functions.prepareForm(viewModel.selected);
-                            setTimeout(function(){
-                                read(url,viewModel);
-                            }, 500);
+                            // let url  = `employee-master-data/read/${viewModel.selected.id}`;
+                            // viewModel.functions.prepareForm(viewModel.selected);
+                            // setTimeout(function(){
+                            //     read(url,viewModel);
+                            // }, 500);
                            
 
                             viewModel.ds.maingrid.read();
@@ -296,12 +303,13 @@
                         viewModel.form.model.set('employee_stat',($('#employee_stat').data('kendoDropDownList').value()!='') ? $('#employee_stat').data('kendoDropDownList').value() : 0 );
                         viewModel.form.model.set('exit_status',($('#exit_status').data('kendoDropDownList').value()!='') ? $('#exit_status').data('kendoDropDownList').value() : 0 );
                         viewModel.form.model.set('pay_type',($('#pay_type').data('kendoDropDownList').value()!='') ? $('#pay_type').data('kendoDropDownList').value() : 0 );
-                        viewModel.form.model.set('deduct_sss',(viewModel.form.model.deduct_sss) ? 'Y':'N');
-                        viewModel.form.model.set('deduct_phic',(viewModel.form.model.deduct_phic) ? 'Y':'N');
-                        viewModel.form.model.set('is_daily',(viewModel.form.model.is_daily) ? 'Y':'N');
+                        viewModel.form.model.set('deduct_sss',(viewModel.form.mirror.deduct_sss) ? 'Y':'N');
+                        viewModel.form.model.set('deduct_phic',(viewModel.form.mirror.deduct_phic) ? 'Y':'N');
+                        viewModel.form.model.set('is_daily',(viewModel.form.mirror.is_daily) ? 'Y':'N');
                         viewModel.form.model.set('date_hired',kendo.toString($('#date_hired').data('kendoDatePicker').value(),'yyyy-MM-dd'));
                         //viewModel.form.model.set('deduct_sss',(viewModel.form.model.deduct_sss) ? 'Y':'N');
-                    
+                        
+
                     },
                     prepareForm : function(data)
                     {
@@ -316,9 +324,9 @@
                 callBack : function()
                 {
                   
-                    viewModel.form.model.set('deduct_sss',(viewModel.form.model.deduct_sss=='Y') ? true:false);
-                    viewModel.form.model.set('deduct_phic',(viewModel.form.model.deduct_phic=='Y') ? true:false);
-                    viewModel.form.model.set('is_daily',(viewModel.form.model.is_daily=='Y') ? true:false);
+                    viewModel.form.mirror.set('deduct_sss',(viewModel.form.model.deduct_sss=='Y') ? true:false);
+                    viewModel.form.mirror.set('deduct_phic',(viewModel.form.model.deduct_phic=='Y') ? true:false);
+                    viewModel.form.mirror.set('is_daily',(viewModel.form.model.is_daily=='Y') ? true:false);
                 }
             });
 
