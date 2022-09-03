@@ -302,7 +302,7 @@ if($prefix!=""){
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{{ url('accounts/leave-application') }}"  class="nav-link">
+                  <a href="{{ url('accounts/leave-request') }}"  class="nav-link">
                   -&nbsp;&nbsp;&nbsp;&nbsp;<i class="fas fa-plane-departure nav-icon"></i>
                     <p> Leave Request</p>
                   </a>

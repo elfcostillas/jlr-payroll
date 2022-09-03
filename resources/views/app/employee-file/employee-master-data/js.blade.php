@@ -243,8 +243,16 @@
                             data : json_data
                         },function(data,staus){
                             swal_success(data);
+
+                            if(viewModel.form.model.id==null)
+                            {
+                                let url  = `employee-master-data/read/${data}`;
+                                setTimeout(function(){
+                                    read(url,viewModel);
+                                }, 500);
+                            }   
                             
-                            // let url  = `employee-master-data/read/${viewModel.selected.id}`;
+                            //let url  = `employee-master-data/read/${viewModel.selected.id}`;
                             // viewModel.functions.prepareForm(viewModel.selected);
                             // setTimeout(function(){
                             //     read(url,viewModel);

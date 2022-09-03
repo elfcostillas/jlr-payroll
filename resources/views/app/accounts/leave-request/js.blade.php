@@ -6,52 +6,17 @@
     <script>
         $(document).ready(function(){
 
-            let genderOptions = [
-                    { text: "Male", value: "M" },
-                    { text: "Female", value: "F" },
-                ];
-            
-                let civilStatusOptions = [
-                    { text: "Sinlge", value: 1 },
-                    { text: "Married", value: 2 },
-                    { text: "Divorced", value: 3 },
-                    { text: "Widowed", value: 4 },
-                ];
+            let leaveOptions = [
+                { text: "Vacation Leave", value: "VL" },
+                { text: "Sick leave", value: "SL" },
+                { text: "Undertime", value: "UT" },
+                { text: "Emergency", value: "EL" },
+                { text: "Maternity/Paternity Leave", value: "MP" },
+                { text: "Others", value: "O" },
+            ];
 
             let obj = {
-                    id : null,
-                    firstname: null,
-                    lastname: null,
-                    middlename: null,
-                    suffixname: null,
-                    biometric_id: null,
-                    primary_addr: null,
-                    secondary_addr: null,
-                    remarks: null,
-                    sss_no: null,
-                    deduct_sss: null,
-                    tin_no: null,
-                    phic_no: null,
-                    deduct_phic: null,
-                    hdmf_no: null,
-                    deduct_hdmf: null,
-                    hdmf_contri: null,
-                    civil_status: null,
-                    gender: null,
-                    birthdate: null,
-                    employee_stat: null,
-                    bank_acct: null,
-                    basic_salary: null,
-                    is_daily: null,
-                    exit_status: null,
-                    contact_no : null,
-                    division_id: null,
-                    dept_id: null,
-                    location_id: null,
-                    pay_type: null,
-                    date_hired : null,
-                    emp_level : null,
-                    job_title_id : null
+                   
             };
 
             var viewModel = kendo.observable({ 
@@ -59,47 +24,28 @@
                 form : {
                     model : {
                         id : null,
-                        firstname: null,
-                        lastname: null,
-                        middlename: null,
-                        suffixname: null,
                         biometric_id: null,
-                        primary_addr: null,
-                        secondary_addr: null,
-                        remarks: null,
-                        sss_no: null,
-                        deduct_sss: null,
-                        tin_no: null,
-                        phic_no: null,
-                        deduct_phic: null,
-                        hdmf_no: null,
-                        deduct_hdmf: null,
-                        hdmf_contri: null,
-                        civil_status: null,
-                        gender: null,
-                        birthdate: null,
-                        employee_stat: null,
-                        bank_acct: null,
-                        basic_salary: null,
-                        is_daily: null,
-                        exit_status: null,
-                        contact_no : null,
-                        division_id: null,
+                        date_from: null,
+                        date_to: null,
                         dept_id: null,
-                        location_id: null,
-                        pay_type: null,
-                        date_hired : null,
-                        emp_level : null,
-                        job_title_id : null
-                    },
-                    mirror : {
-                        is_daily : false,
-                        deduct_sss : false,
-                        deduct_hdmf : false,
-                        deduct_phic : false,
+                        division_id: null,
+                        job_title_id: null,
+                        remarks: null,
+                        leave_type: null,
+                        reliever_id: null,
+                        document_status : null,
 
-                    }
-                  
+                    },
+                },
+                employee : {
+                    biometric_id : null,
+                    division_id : null,
+                    division_desc : null,
+                    department_id : null,
+                    department_desc : null,
+                    job_title_id : null,
+                    job_title_desc : null,
+
                 },
                 ds : {
                     maingrid : new kendo.data.DataSource({
@@ -134,26 +80,15 @@
                                     hr_emp : { type:"string"},
                                     received_time : { type:"date"},
 
-
-                                    // "id":2,
-                                    // "biometric_id":847,
-                                    // "requesting_emp":"Costillas, Elmer  ",
-                                    // "leave_type_code":null,
-                                    // "remarks":null,
-                                    // "document_status":null,
-                                    // "acknowledge_status":null,
-                                    // "approver_emp":", ",
-                                    // "acknowledge_time":null,
-                                    // "hr_emp":", ",
-                                    // "received_time":null
                                 }
                             }
                         }
                     }),
-                    division : new kendo.data.DataSource({
+            
+                    employee : new kendo.data.DataSource({
                         transport : {
                             read : {
-                                url : 'divisions-departments/division/get-divisions',
+                                url : 'leave-request/employee-list',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -161,74 +96,19 @@
                                 }
                             },
                         },
+                        serverPaging : true,
+                        serverFiltering : true,
                         schema : {
                             model : {
-                                id : 'id',
+                                id : 'biometric_id',
                                 fields : {
-                                    div_code : { type : 'string' },
-                                    div_name : { type : 'string' },
-                                }
-                            }
-                        }
-                    }),
-                    department : new kendo.data.DataSource({
-                        transport : {
-                            read : {
-                                url : 'divisions-departments/department/list-option/0',
-                                type : 'get',
-                                dataType : 'json',
-                                complete : function(e){
-                                    
-                                }
-                            },
-                        },
-                        schema : {
-                            model : {
-                                id : 'id',
-                                fields : {
-                                    div_code : { type : 'string' },
-                                    div_name : { type : 'string' },
-                                }
-                            }
-                        }
-                    }),
-                    location : new kendo.data.DataSource({
-                        transport : {
-                            read : {
-                                url : '../settings/locations/get-locations',
-                                type : 'get',
-                                dataType : 'json',
-                                complete : function(e){
-                                    
-                                }
-                            },
-                        },
-                        schema : {
-                            model : {
-                                id : 'id',
-                                fields : {
-                                    div_code : { type : 'string' },
-                                    div_name : { type : 'string' },
-                                }
-                            }
-                        }
-                    }),
-                    job_titles : new kendo.data.DataSource({
-                        transport : {
-                            read : {
-                                url : 'employee-master-data/job-titles/0',
-                                type : 'get',
-                                dataType : 'json',
-                                complete : function(e){
-                                    
-                                }
-                            },
-                        },
-                        schema : {
-                            model : {
-                                id : 'id',
-                                fields : {
-                                    job_title_name : { type : 'string' },
+                                    employee_name : { type : "string"},
+                                    dept_id : { type : "number"},
+                                    division_id : { type : "number"},
+                                    job_title_id : { type : "number"},
+                                    job_title_name : { type : "string"},
+                                    dept_name : { type : "string"},
+                                    div_name : { type : "string"}
                                 }
                             }
                         }
@@ -250,18 +130,13 @@
                         
                         var json_data = JSON.stringify(viewModel.form.model);
                         
-                        $.post('employee-master-data/save',{
+                        $.post('leave-request/save',{
                             data : json_data
                         },function(data,staus){
                             swal_success(data);
-                            
-                            // let url  = `employee-master-data/read/${viewModel.selected.id}`;
-                            // viewModel.functions.prepareForm(viewModel.selected);
-                            // setTimeout(function(){
-                            //     read(url,viewModel);
-                            // }, 500);
-                           
 
+                            let url = `leave-request/read-header/${data}`;
+                            read(url,viewModel);
                             viewModel.ds.maingrid.read();
                             //viewModel.maingrid.formReload(data);
                         })
@@ -281,8 +156,8 @@
 
                         viewModel.set('selected',data);
 
-                        let url  = `employee-master-data/read/${data.id}`;
-                        await viewModel.functions.prepareForm(data);
+                        let url  = `leave-request/read-header/${data.id}`;
+                        //await viewModel.functions.prepareForm(data);
                         read(url,viewModel);
                         //console.log(data);
 
@@ -293,15 +168,16 @@
                             //console.log(key); //console.log(key + " -> " + p[key]);
                             viewModel.form.model.set(key,null);
                         }
+                        viewModel.form.model.set('document_status','DRAFT');
 
-                        viewModel.form.model.set('civil_status',1);
-                        viewModel.form.model.set('gender','M');
-                        viewModel.form.model.set('location_id',1);
-                        viewModel.form.model.set('division_id',1);
+                        // viewModel.form.model.set('civil_status',1);
+                        // viewModel.form.model.set('gender','M');
+                        // viewModel.form.model.set('location_id',1);
+                        // viewModel.form.model.set('division_id',1);
 
-                        viewModel.form.model.set('employee_stat',1);
-                        viewModel.form.model.set('exit_status',1);
-                        viewModel.form.model.set('pay_type',1);
+                        // viewModel.form.model.set('employee_stat',1);
+                        // viewModel.form.model.set('exit_status',1);
+                        // viewModel.form.model.set('pay_type',1);
                     }
                 },
                 functions : {
@@ -312,7 +188,7 @@
                         myWindow.kendoWindow({
                             width: "864", //1124 - 1152
                             height: "710",
-                            title: "Employee Information",
+                            title: "Leave Request Form",
                             visible: false,
                             animation: false,
                             actions: [
@@ -329,36 +205,43 @@
                         
                     },
                     reAssignValues : function(){
-                        viewModel.form.model.set('gender',$('#gender').data('kendoDropDownList').value());
-                        viewModel.form.model.set('birthdate',kendo.toString($('#birthdate').data('kendoDatePicker').value(),'yyyy-MM-dd'));
-                        viewModel.form.model.set('civil_status',$('#civil_status').data('kendoDropDownList').value());
-                        viewModel.form.model.set('division_id',$('#division_id').data('kendoDropDownList').value());
-                        viewModel.form.model.set('dept_id',($('#dept_id').data('kendoDropDownList').value()!='') ? $('#dept_id').data('kendoDropDownList').value() : 0 );
-                        viewModel.form.model.set('job_title_id',($('#job_title_id').data('kendoDropDownList').value()!='') ? $('#job_title_id').data('kendoDropDownList').value() : null );
-                        viewModel.form.model.set('emp_level',($('#emp_level').data('kendoDropDownList').value()!='') ? $('#emp_level').data('kendoDropDownList').value() : null );
 
-                        viewModel.form.model.set('employee_stat',($('#employee_stat').data('kendoDropDownList').value()!='') ? $('#employee_stat').data('kendoDropDownList').value() : 0 );
-                        viewModel.form.model.set('exit_status',($('#exit_status').data('kendoDropDownList').value()!='') ? $('#exit_status').data('kendoDropDownList').value() : 0 );
-                        viewModel.form.model.set('pay_type',($('#pay_type').data('kendoDropDownList').value()!='') ? $('#pay_type').data('kendoDropDownList').value() : 0 );
-                        viewModel.form.model.set('deduct_sss',(viewModel.form.mirror.deduct_sss) ? 'Y':'N');
-                        viewModel.form.model.set('deduct_phic',(viewModel.form.mirror.deduct_phic) ? 'Y':'N');
-                        viewModel.form.model.set('is_daily',(viewModel.form.mirror.is_daily) ? 'Y':'N');
-                        viewModel.form.model.set('date_hired',kendo.toString($('#date_hired').data('kendoDatePicker').value(),'yyyy-MM-dd'));
-                        viewModel.form.model.set('location_id',($('#location_id').data('kendoDropDownList').value()!='') ? $('#location_id').data('kendoDropDownList').value() : 0 );
-                        //viewModel.form.model.set('deduct_sss',(viewModel.form.model.deduct_sss) ? 'Y':'N');
+                        viewModel.form.model.set('biometric_id',($('#biometric_id').data('kendoComboBox').value()!='') ? $('#biometric_id').data('kendoComboBox').value() : null );
+                        viewModel.form.model.set('reliever_id',($('#reliever_id').data('kendoComboBox').value()!='') ? $('#reliever_id').data('kendoComboBox').value() : null );
+                        viewModel.form.model.set('leave_type',($('#leave_type').data('kendoDropDownList').value()!='') ? $('#leave_type').data('kendoDropDownList').value() : null );
+
+                        viewModel.form.model.set('date_from',kendo.toString($('#date_from').data('kendoDatePicker').value(),'yyyy-MM-dd'));
+                        viewModel.form.model.set('date_to',kendo.toString($('#date_to').data('kendoDatePicker').value(),'yyyy-MM-dd'));
+                        // viewModel.form.model.set('gender',$('#gender').data('kendoDropDownList').value());
+                        // viewModel.form.model.set('birthdate',kendo.toString($('#birthdate').data('kendoDatePicker').value(),'yyyy-MM-dd'));
+                        // viewModel.form.model.set('civil_status',$('#civil_status').data('kendoDropDownList').value());
+                        // viewModel.form.model.set('division_id',$('#division_id').data('kendoDropDownList').value());
+                        // viewModel.form.model.set('dept_id',($('#dept_id').data('kendoDropDownList').value()!='') ? $('#dept_id').data('kendoDropDownList').value() : 0 );
+                        // viewModel.form.model.set('job_title_id',($('#job_title_id').data('kendoDropDownList').value()!='') ? $('#job_title_id').data('kendoDropDownList').value() : null );
+                        // viewModel.form.model.set('emp_level',($('#emp_level').data('kendoDropDownList').value()!='') ? $('#emp_level').data('kendoDropDownList').value() : null );
+
+                        // viewModel.form.model.set('employee_stat',($('#employee_stat').data('kendoDropDownList').value()!='') ? $('#employee_stat').data('kendoDropDownList').value() : 0 );
+                        // viewModel.form.model.set('exit_status',($('#exit_status').data('kendoDropDownList').value()!='') ? $('#exit_status').data('kendoDropDownList').value() : 0 );
+                        // viewModel.form.model.set('pay_type',($('#pay_type').data('kendoDropDownList').value()!='') ? $('#pay_type').data('kendoDropDownList').value() : 0 );
+                        // viewModel.form.model.set('deduct_sss',(viewModel.form.mirror.deduct_sss) ? 'Y':'N');
+                        // viewModel.form.model.set('deduct_phic',(viewModel.form.mirror.deduct_phic) ? 'Y':'N');
+                        // viewModel.form.model.set('is_daily',(viewModel.form.mirror.is_daily) ? 'Y':'N');
+                        // viewModel.form.model.set('date_hired',kendo.toString($('#date_hired').data('kendoDatePicker').value(),'yyyy-MM-dd'));
+                        // viewModel.form.model.set('location_id',($('#location_id').data('kendoDropDownList').value()!='') ? $('#location_id').data('kendoDropDownList').value() : 0 );
+                        // //viewModel.form.model.set('deduct_sss',(viewModel.form.model.deduct_sss) ? 'Y':'N');
                         
 
                     },
                     prepareForm : function(data)
                     {
                        
-                        let deptUrl = `divisions-departments/department/list-option/${data.division_id}`;
-                        viewModel.ds.department.transport.options.read.url = deptUrl;
-                        viewModel.ds.department.read();
+                        // let deptUrl = `divisions-departments/department/list-option/${data.division_id}`;
+                        // viewModel.ds.department.transport.options.read.url = deptUrl;
+                        // viewModel.ds.department.read();
 
-                        let jobtitleUrl = `employee-master-data/job-titles/${data.dept_id}`;
-                        viewModel.ds.job_titles.transport.options.read.url = jobtitleUrl;
-                        viewModel.ds.job_titles.read();
+                        // let jobtitleUrl = `employee-master-data/job-titles/${data.dept_id}`;
+                        // viewModel.ds.job_titles.transport.options.read.url = jobtitleUrl;
+                        // viewModel.ds.job_titles.read();
                     }
                    
 
@@ -396,8 +279,8 @@
                 //editable : "inline",
                 columns : [
                     {
-                        title : "Bio ID",
-                        field : "biometric_id",
+                        title : "ID",
+                        field : "id",
                         width : 80,    
                     },
                     {
@@ -431,13 +314,11 @@
                         field : "approver_emp",
                         width : 180,  
                     },
-                    
                     {
                         title : "Received",
                         field : "hr_emp",
                         width : 180,  
                     },
-                   
                     {
                         command: { text : 'View',icon : 'edit' ,click : viewModel.buttonHandler.view },
                         attributes : { style : 'font-size:10pt !important;'},
@@ -446,161 +327,68 @@
                   
                 ]
             });
-
-            // $("#po_date").kendoDatePicker({
-            // format: "MM/dd/yyyy"
-            // });
             
-            $("#firstname").kendoTextBox({ });
-            $("#lastname").kendoTextBox({ });
-            $("#middlename").kendoTextBox({ });
-            $("#suffixname").kendoTextBox({ });
-            $("#primary_addr").kendoTextBox({ });
-            $("#secondary_addr").kendoTextBox({ });
-
-            $("#gender").kendoDropDownList({
-                dataTextField: "text",
-                dataValueField: "value",
-                dataSource: genderOptions,
-                index: 1,
-                //change: onChange
-            });
-
-            $("#birthdate").kendoDatePicker({
-                format: "MM/dd/yyyy"
-            });
-
-            $("#date_hired").kendoDatePicker({
-                format: "MM/dd/yyyy"
-            });
-
-            $("#civil_status").kendoDropDownList({
-                dataTextField: "text",
-                dataValueField: "value",
-                dataSource: civilStatusOptions,
-                index: 1,
-                //change: onChange
-            });
-
-            $("#civil_status").kendoDropDownList({
-                dataTextField: "text",
-                dataValueField: "value",
-                dataSource: civilStatusOptions,
-                index: 1,
-                //change: onChange
-            });
-
-            $("#division_id").kendoDropDownList({
-                dataTextField: "div_name",
-                dataValueField: "id",
-                dataSource: viewModel.ds.division,
-                index: 1,
-                change: function(e){
-                    let selected = e.sender.dataItem();
-                    let deptUrl = `divisions-departments/department/list-option/${selected.id}`;
-                    viewModel.ds.department.transport.options.read.url = deptUrl;
-                    viewModel.ds.department.read();
-                }
-            });
-
-            $("#dept_id").kendoDropDownList({
-                dataTextField: "dept_name",
-                dataValueField: "id",
-                dataSource: viewModel.ds.department,
-                index: 1,
-                dataBound : function(e){
-                    if(viewModel.form.model.dept_id!=null){
-                        $('#dept_id').data('kendoDropDownList').value(viewModel.form.model.dept_id);
-                    }
+            $("#biometric_id").kendoComboBox({
+                dataSource : viewModel.ds.employee,
+                filter : "contains",
+                dataTextField: "employee_name",
+                dataValueField: "biometric_id",
+                minLength: 3,
+                change : function(e){
+                    //console.log(e.sender.value());
+                    let data = e.sender.dataItem();
                     
-                },
-                change: function(e){
-                        let selected = e.sender.dataItem();
-                        let jobtitleUrl = `employee-master-data/job-titles/${selected.id}`;
-                        viewModel.ds.job_titles.transport.options.read.url = jobtitleUrl;
-                        viewModel.ds.job_titles.read();
+                    viewModel.employee.set('biometric_id',data.biometric_id);
+                    viewModel.employee.set('division_id',data.division_id);
+                    viewModel.employee.set('division_desc',data.div_name);
+                    viewModel.employee.set('department_id',data.dept_id);
+                    viewModel.employee.set('department_desc',data.dept_name);
+                    viewModel.employee.set('job_title_id',data.job_title_id);
+                    viewModel.employee.set('job_title_desc',data.job_title_name);
+
+                    viewModel.form.model.set('dept_id',data.dept_id);
+                    viewModel.form.model.set('division_id',data.division_id);
+                    viewModel.form.model.set('job_title_id',data.job_title_id);
+                    
                 }
             });
 
-            $("#location_id").kendoDropDownList({
-                dataTextField: "location_name",
-                dataValueField: "id",
-                dataSource: viewModel.ds.location,
+            $("#reliever_id").kendoComboBox({ 
+                dataSource : viewModel.ds.employee,
+                filter : "contains",
+                dataTextField: "employee_name",
+                dataValueField: "biometric_id",
+                minLength: 3
+            });
+            //$("#lastname").kendoTextBox({ });
+            $("#job_title_desc").kendoTextBox({ });
+            $("#department_desc").kendoTextBox({ });
+            $("#division_desc").kendoTextBox({ });
+
+            $("#remarks").kendoTextBox({ });
+
+            //$("#secondary_addr").kendoTextBox({ });
+
+
+            $("#date_from").kendoDatePicker({
+                format: "MM/dd/yyyy"
+            });
+
+            $("#date_to").kendoDatePicker({
+                format: "MM/dd/yyyy"
+            });
+
+            $("#leave_type").kendoDropDownList({
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: leaveOptions,
                 index: 1,
                 dataBound : function(e){
                   
                 }
                 //change: onChange
             });
-
-            // $("#employee_stat").kendoDropDownList({
-            //     dataTextField: "estatus_desc",
-            //     dataValueField: "id",
-            //     dataSource: emp_stat,
-            //     index: 1,
-            //     dataBound : function(e){
-                  
-            //     }
-                
-            // });
-
-            // $("#exit_status").kendoDropDownList({
-            //     dataTextField: "status_desc",
-            //     dataValueField: "id",
-            //     dataSource: exit_stat,
-            //     index: 1,
-            //     dataBound : function(e){
-                  
-            //     }
-            //     //change: onChange
-            // });
-
-            // $("#pay_type").kendoDropDownList({
-            //     dataTextField: "pay_description",
-            //     dataValueField: "id",
-            //     dataSource: pay_type,
-            //     index: 1,
-            //     dataBound : function(e){
-                  
-            //     }
-            //     //change: onChange
-            // });
-
-            // $("#emp_level").kendoDropDownList({
-            //     dataTextField: "level_desc",
-            //     dataValueField: "id",
-            //     dataSource: emp_level,
-            //     index: 1,
-            //     dataBound : function(e){
-                  
-            //     }
-            //     //change: onChange
-            // });
-
-            $("#job_title_id").kendoDropDownList({
-                dataTextField: "job_title_name",
-                dataValueField: "id",
-                dataSource: viewModel.ds.job_titles,
-                index: 1,
-                dataBound : function(e){
-                  
-                }
-                //change: onChange
-            });
-
-            
-            
-
-            $("#contact_no").kendoTextBox({ });
-
-            $("#sss_no").kendoTextBox({ });
-            $("#phic_no").kendoTextBox({ });
-            $("#hdmf_no").kendoTextBox({ });
-            $("#tin_no").kendoTextBox({ });
-            $("#hdmf_contri").kendoTextBox({ });
-            $("#biometric_id").kendoTextBox({ });
-            $("#basic_salary").kendoNumericTextBox({  decimals: 2});
-            
+        
             //<input type="checkbox" data-bind="checked: isChecked" /> <input class="form-check-input" type="checkbox">
 
             var activeToolbar = $("#toolbar").kendoToolBar({
@@ -610,15 +398,6 @@
                 ]
             });
 
-            function statusFilter(element) {
-                element.kendoDropDownList({
-                dataSource: exit_stat,
-                dataTextField: "status_desc",
-                dataValueField: "id",
-                //optionLabel: "--Select Value--"
-            });
-            }
-            
             kendo.bind($("#viewModel"),viewModel);
 
         });

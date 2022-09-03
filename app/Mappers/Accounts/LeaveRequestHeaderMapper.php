@@ -61,6 +61,49 @@ class LeaveRequestHeaderMapper extends AbstractMapper {
         return $result->get();
     }
 
+	public function searchEmployee($filter)
+	{	
+		
+		$result = $this->model->select(DB::raw("biometric_id,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) AS employee_name,employees.dept_id,employees.division_id,employees.job_title_id,job_title_name,dept_name,div_name"))
+					->from('employees')
+					->leftJoin('departments', 'departments.id','=', 'employees.dept_id')
+					->leftJoin('divisions', 'divisions.id','=', 'employees.division_id')
+					->leftJoin('job_titles', 'job_titles.id','=', 'job_title_id');
+	
+		if($filter!=null){
+			if(array_key_exists('filters',$filter)){
+				foreach($filter['filters'] as $f)
+				{
+					$result->where('lastname','like','%'.$f['value'].'%')
+					->orWhere('firstname','like','%'.$f['value'].'%');
+				}
+			}
+		}
+
+		return $result->get();
+		
+	}
+
+	public function header($id)
+	{
+		$result = $this->model->select(DB::raw("leave_request_header.id,
+					leave_request_header.biometric_id,
+					leave_request_header.reliever_id,
+					date_from,
+					date_to,
+					leave_type,
+					leave_request_header.remarks
+					"))
+				->from('leave_request_header')
+				->join('employees','leave_request_header.biometric_id','=','employees.biometric_id')
+				->leftJoin('divisions','leave_request_header.division_id','=','divisions.id')
+				->leftJoin('departments','leave_request_header.dept_id','=','departments.id')
+				->leftJoin('job_titles','leave_request_header.job_title_id','=','job_titles.id')
+				->where('leave_request_header.id',$id);
+
+		return $result->first();
+	}
+
 }
 
 /*
@@ -75,4 +118,11 @@ LEFT JOIN employees AS approver ON approver.biometric_id = acknowledge_by
 LEFT JOIN employees AS hr_staff ON hr_staff.biometric_id = received_by
 ORDER BY leave_request_header.id
 
+
+SELECT biometric_id,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) AS employee_name,employees.dept_id,employees.division_id,employees.job_title_id,
+job_title_name,dept_name,div_name
+FROM employees
+LEFT JOIN departments ON departments.id = employees.dept_id
+LEFT JOIN divisions ON divisions.id = employees.division_id
+LEFT JOIN job_titles ON job_titles.id = job_title_id
 */

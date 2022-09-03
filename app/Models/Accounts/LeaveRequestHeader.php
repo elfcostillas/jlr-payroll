@@ -33,5 +33,6 @@ class LeaveRequestHeader extends Model
         'division_id',
         'job_title_id',
         'document_status',
+        'reliever_id'
     ];
 }

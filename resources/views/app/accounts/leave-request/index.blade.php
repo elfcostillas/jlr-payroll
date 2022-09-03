@@ -55,6 +55,11 @@
         white-space: nowrap;
     }
 
+    .k-grid td{
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
     
 </style>
 @section('title')
@@ -76,52 +81,58 @@
             <div id="pop" style="display:none;background-color:#212529;"><!--f8f9fa  #343a40 #212529 2d3035-->
                 <div id="toolbar"></div>
                 <div class="card card-secondary mt-1">
-                    <div class="card-header"> Basic Information </div>
+                    <div class="card-header"> Leave Details </div>
                     <input type="hidden" id="id" data-bind="value:form.model.id" >
                     <div class="card-body">
                         <table class="formTable" border=0 style="width:100%">
                             <tr>
-                                <td colspan=2>Firstname <span class="require">*Required </span></td>
-                                <td colspan=2>Lastname <span class="require">*Required </span></td>
-                                <td colspan=2>Middlename</td>
-                                <td>Suffix(Jr/Sr.)</td>
+                                <td colspan=2>Employee Name <span class="require">*Required </span></td>
+                                <td colspan=2>Division <span class="require"> </span></td>
+                                <td colspan=2>Department</td>
+                                <td>Position</td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td colspan=2><input type="text" id="firstname" data-bind="value:form.model.firstname"></td>
-                                <td colspan=2><input type="text" id="lastname" data-bind="value:form.model.lastname"></td>
-                                <td colspan=2><input type="text" id="middlename" data-bind="value:form.model.middlename"></td>
-                                <td colspan=2><input type="text" id="suffixname" data-bind="value:form.model.suffixname"></td>
+                                <td colspan=2><input type="text" id="biometric_id" data-bind="value:form.model.biometric_id"></td>
+                                <td colspan=2><input type="text" id="division_desc" data-bind="value:employee.division_desc"></td>
+                                <td colspan=2><input type="text" id="department_desc" data-bind="value:employee.department_desc"></td>
+                                <td colspan=2><input type="text" id="job_title_desc" data-bind="value:employee.job_title_desc"></td>
                             </tr>
-                            <tr>
+                            {{-- <tr>
                                 <td colspan=4>Address (Primary)</td>
                                 <td colspan=4>Address (Secondary)</td>
                             </tr>
                             <tr>
                                 <td colspan=4><input type="text" id="primary_addr" data-bind="value:form.model.primary_addr"></td>
                                 <td colspan=4><input type="text" id="secondary_addr" data-bind="value:form.model.secondary_addr"></td>
+                            </tr> --}}
+                            <tr>
+                                <td>Reliever</td>
+                                <td></td>
+                                <td>Date From</td>
+                                <td></td>
+                                <td>Date To</td>
+                                <td></td>
+                                <td>Type Of Leave</td>
+                                <td></td>
                             </tr>
                             <tr>
-                                <td>Gender</td>
-                                <td></td>
-                                <td>Birtdate</td>
-                                <td></td>
-                                <td>Civil Status</td>
-                                <td></td>
-                                <td>Phone No.</td>
-                                <td></td>
+                                <td colspan=2><input type="text" id="reliever_id" data-bind="value:form.model.reliever_id"></td>
+                                <td colspan=2><input type="text" id="date_from" data-bind="value:form.model.date_from"></td>
+                                <td colspan=2><input type="text" id="date_to" data-bind="value:form.model.date_to"></td>
+                                <td colspan=2><input type="text" id="leave_type" data-bind="value:form.model.leave_type"></td>
                             </tr>
                             <tr>
-                                <td colspan=2><input type="text" id="gender" data-bind="value:form.model.gender"></td>
-                                <td colspan=2><input type="text" id="birthdate" data-bind="value:form.model.birthdate"></td>
-                                <td colspan=2><input type="text" id="civil_status" data-bind="value:form.model.civil_status"></td>
-                                <td colspan=2><input type="text" id="contact_no" data-bind="value:form.model.contact_no"></td>
+                                <td colspan=8>Reason :</td>
+                            </tr>
+                            <tr>
+                                <td colspan=8><input type="text" id="remarks" data-bind="value:form.model.remarks"></td>
                             </tr>
                         </table>
                     </div>
                 </div>
 
-                <div class="card card-secondary mt-1">
+                {{-- <div class="card card-secondary mt-1">
                     <div class="card-header"> Government ID & Deductions </div>
                     <div class="card-body">
                         <table class="formTable" border=0 style="width:100%">
@@ -218,7 +229,7 @@
                          
                         </table>
                     </div>
-                </div>
+                </div> --}}
 
                 
             </div>

@@ -245,7 +245,10 @@ Route::middleware('auth')->prefix('accounts')->group(function(){
     Route::prefix('leave-request')->group(function(){
         Route::get('/',[LeaveRequestController::class,'index']);
         Route::get('list',[LeaveRequestController::class,'list']);
-        
+        Route::get('employee-list',[LeaveRequestController::class,'getEmployees']);
+        Route::post('save',[LeaveRequestController::class,'save']);
+        Route::get('read-header/{id}',[LeaveRequestController::class,'readHeader']);
+        Route::get('read-detail/{id}',[LeaveRequestController::class,'readDetails']);
     });
 
 });

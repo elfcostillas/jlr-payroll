@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Accounts;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mappers\Accounts\LeaveRequestHeaderMapper;
+use Illuminate\Support\Facades\Auth;
 
 class LeaveRequestController extends Controller
 {
@@ -38,13 +39,27 @@ class LeaveRequestController extends Controller
 
     public function save(Request $request)
     {
+        $data = json_decode($request->data);
 
+        $data_arr = (array) $data;
+
+
+        if($data_arr['id']==null){
+            $data_arr['encoded_on']= now();
+            $data_arr['request_date']= now();
+            $data_arr['encoded_by']= Auth::user()->id;
+            
+            $result = $this->header->insertValid($data_arr);
+        }else{
+            $result = $this->header->updateValid($data_arr);
+        }
     }
 
     public function readHeader(Request $request)
     {
-
-    }
+        $result = $this->header->header($request->id);
+        return response()->json($result);
+    }       
 
     public function readDetails(Request $request)
     {
@@ -54,6 +69,13 @@ class LeaveRequestController extends Controller
     public function updateDetails(Request $request)
     {
 
+    }
+
+    public function getEmployees(Request $request)
+    {
+        $result = $this->header->searchEmployee($request->filter);
+
+        return response()->json($result);
     }
 }
 
