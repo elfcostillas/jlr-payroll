@@ -28,9 +28,9 @@
                      
                         schema : {
                             model : {
-                                id : 'period_id',
+                                id : 'id',
                                 fields : {
-                                    period_id : { type : 'number' },
+                                    id : { type : 'number',editable : false },
                                     period_range : {type:'string'}
                                 }
                             }
@@ -62,7 +62,11 @@
                 },
                 buttonHandler : {
                     compute : function(){
-                        alert('compute');
+
+                        let period = $("#unposted_period").data("kendoDropDownList");
+                        //console.log(period.value());
+                        let url = `payroll-register/compute/${period.value()}`;
+                        window.open(url)
                     },
 
                     view : function(){
@@ -119,9 +123,9 @@
 
             $("#unposted_period").kendoDropDownList({
                 dataTextField: "period_range",
-                dataValueField: "period_id",
+                dataValueField: "id",
                 dataSource: viewModel.ds.unposted,
-                index: 0,
+                //index: 0,
                 autoWidth : true,
                 dataBound : function(e){
                   

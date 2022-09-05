@@ -584,11 +584,11 @@ insert  into `edtr`(`id`,`biometric_id`,`dtr_date`,`time_in`,`time_out`,`late`,`
 (424,3,'2022-08-04',NULL,NULL,0,0.00,0.00,0.00,0.00,0,0),
 (425,3,'2022-08-05',NULL,NULL,0,0.00,0.00,0.00,0.00,0,0),
 (426,3,'2022-08-06',NULL,NULL,0,0.00,0.00,0.00,0.00,0,0),
-(2056,4,'2022-08-01','07:42','07:42',0,0.00,0.00,0.00,0.00,7,0),
-(2057,4,'2022-08-02','07:43',NULL,0,0.00,0.00,0.00,0.00,0,0),
-(2058,4,'2022-08-03','09:43',NULL,0,0.00,0.00,0.00,0.00,0,0),
-(2059,4,'2022-08-04','06:26',NULL,0,0.00,0.00,0.00,0.00,0,0),
-(2060,4,'2022-08-05','06:47',NULL,0,0.00,0.00,0.00,0.00,0,0),
+(2056,4,'2022-08-01','07:42','07:42',0,0.00,0.00,0.00,0.00,7,1),
+(2057,4,'2022-08-02','07:43',NULL,0,0.00,0.00,0.00,0.00,1,0),
+(2058,4,'2022-08-03','09:43',NULL,0,0.00,0.00,0.00,0.00,1,0),
+(2059,4,'2022-08-04','06:26',NULL,0,0.00,0.00,0.00,0.00,1,0),
+(2060,4,'2022-08-05','06:47',NULL,0,0.00,0.00,0.00,0.00,1,0),
 (2061,4,'2022-08-06','04:10',NULL,0,0.00,0.00,0.00,0.00,0,0),
 (2062,4,'2022-08-07',NULL,NULL,0,0.00,0.00,0.00,0.00,0,0),
 (2063,4,'2022-08-08','07:41',NULL,0,0.00,0.00,0.00,0.00,0,0),
@@ -2876,12 +2876,12 @@ insert  into `edtr`(`id`,`biometric_id`,`dtr_date`,`time_in`,`time_out`,`late`,`
 (1882,847,'2022-08-07',NULL,NULL,0,0.00,0.00,0.00,0.00,0,0),
 (1883,847,'2022-08-08','07:42','17:04',0,0.00,0.00,0.00,0.00,1,1),
 (1884,847,'2022-08-09','07:39','17:06',0,0.00,0.00,0.00,0.00,1,1),
-(1885,847,'2022-08-10','07:31','17:04',0,0.00,0.00,0.00,0.00,0,0),
-(1886,847,'2022-08-11','07:40','17:04',0,0.00,0.00,0.00,0.00,0,0),
-(1887,847,'2022-08-12','07:36','17:04',0,0.00,0.00,0.00,0.00,0,0),
-(1888,847,'2022-08-13','07:34','12:28',0,0.00,0.00,0.00,0.00,0,0),
-(1889,847,'2022-08-14',NULL,NULL,0,0.00,0.00,0.00,0.00,0,0),
-(1890,847,'2022-08-15','07:31','17:08',0,0.00,0.00,0.00,0.00,0,0),
+(1885,847,'2022-08-10','07:31','17:04',0,0.00,0.00,0.00,0.00,1,1),
+(1886,847,'2022-08-11','07:40','17:04',0,0.00,0.00,0.00,0.00,1,1),
+(1887,847,'2022-08-12','07:36','17:04',0,0.00,0.00,0.00,0.00,1,1),
+(1888,847,'2022-08-13','07:34','12:28',0,0.00,0.00,0.00,0.00,1,1),
+(1889,847,'2022-08-14',NULL,NULL,0,0.00,0.00,0.00,0.00,1,0),
+(1890,847,'2022-08-15','07:31','17:08',0,0.00,0.00,0.00,0.00,1,1),
 (976,854,'2022-08-01',NULL,NULL,0,0.00,0.00,0.00,0.00,0,0),
 (977,854,'2022-08-02',NULL,NULL,0,0.00,0.00,0.00,0.00,0,0),
 (978,854,'2022-08-03',NULL,NULL,0,0.00,0.00,0.00,0.00,0,0),
@@ -9909,7 +9909,7 @@ insert  into `employees`(`id`,`firstname`,`lastname`,`middlename`,`suffixname`,`
 (112,'Glen  ','Colina',NULL,NULL,933,NULL,NULL,NULL,NULL,'N',NULL,NULL,'N',NULL,'N',0.00,1,'M',NULL,NULL,NULL,0.00,'N',2,NULL,1,1,NULL,NULL,NULL,NULL,NULL),
 (113,'Kevin Roy ','Corbo',NULL,NULL,334,NULL,NULL,NULL,NULL,'N',NULL,NULL,'N',NULL,'N',0.00,1,'M',NULL,2,NULL,0.00,'N',1,NULL,1,1,1,2,NULL,NULL,NULL),
 (114,'Josefina  ','Costanilla',NULL,NULL,1524,NULL,NULL,NULL,NULL,'N',NULL,NULL,'N',NULL,'N',0.00,1,'M',NULL,2,NULL,0.00,'N',1,NULL,1,1,NULL,3,NULL,NULL,NULL),
-(115,'Elmer  ','Costillas',NULL,NULL,847,NULL,NULL,NULL,NULL,'Y',NULL,NULL,'Y',NULL,'N',0.00,1,'M',NULL,2,NULL,0.00,'N',1,NULL,3,9,1,1,NULL,5,15),
+(115,'Elmer  ','Costillas',NULL,NULL,847,NULL,NULL,NULL,NULL,'Y',NULL,NULL,'Y',NULL,'N',0.00,1,'M',NULL,2,NULL,20000.00,'N',1,NULL,3,9,1,1,NULL,5,NULL),
 (116,'Randy  ','Cuizon',NULL,NULL,1510,NULL,NULL,NULL,NULL,'N',NULL,NULL,'N',NULL,'N',0.00,1,'M',NULL,2,NULL,0.00,'N',1,NULL,1,1,NULL,3,NULL,NULL,NULL),
 (117,'Dondy  ','Cuizon',NULL,NULL,1520,NULL,NULL,NULL,NULL,'N',NULL,NULL,'N',NULL,'N',0.00,1,'M',NULL,2,NULL,0.00,'N',1,NULL,1,1,NULL,3,NULL,NULL,NULL),
 (118,'Merlito  ','Cuyos',NULL,NULL,958,NULL,NULL,NULL,NULL,'N',NULL,NULL,'N',NULL,'N',0.00,1,'M',NULL,NULL,NULL,0.00,'N',2,NULL,1,1,NULL,NULL,NULL,NULL,NULL),
@@ -10454,7 +10454,7 @@ CREATE TABLE `leave_credits` (
   `sick_leave` int(11) DEFAULT '0',
   PRIMARY KEY (`fy_year`,`biometric_id`),
   UNIQUE KEY `line_id` (`line_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `leave_credits` */
 
@@ -10466,16 +10466,42 @@ insert  into `leave_credits`(`line_id`,`fy_year`,`biometric_id`,`vacation_leave`
 DROP TABLE IF EXISTS `leave_request_detail`;
 
 CREATE TABLE `leave_request_detail` (
-  `line_id` int(11) DEFAULT NULL,
+  `line_id` int(11) NOT NULL AUTO_INCREMENT,
   `header_id` int(11) DEFAULT NULL,
   `leave_date` date DEFAULT NULL,
   `is_canceled` enum('Y','N') DEFAULT NULL,
   `time_from` varchar(5) DEFAULT NULL,
   `time_to` varchar(5) DEFAULT NULL,
-  `days` decimal(12,2) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `days` decimal(12,2) DEFAULT NULL,
+  `with_pay` enum('Y','N') DEFAULT NULL,
+  KEY `line_id` (`line_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `leave_request_detail` */
+
+insert  into `leave_request_detail`(`line_id`,`header_id`,`leave_date`,`is_canceled`,`time_from`,`time_to`,`days`,`with_pay`) values 
+(1,1,'2022-09-05','N','00:00','00:00',1.00,'N'),
+(2,1,'2022-09-06','N','00:00','00:00',1.00,'N'),
+(3,1,'2022-09-07','N','00:00','00:00',1.00,'N'),
+(4,1,'2022-09-08','N','00:00','00:00',1.00,'N'),
+(5,1,'2022-09-09','N','00:00','00:00',1.00,'N'),
+(6,2,'2022-09-14','N','00:00','00:00',1.00,'N'),
+(7,2,'2022-09-15','N','00:00','00:00',1.00,'N'),
+(8,2,'2022-09-16','N','00:00','00:00',1.00,'N'),
+(9,3,'2022-09-26','N','00:00','00:00',1.00,'N'),
+(10,3,'2022-09-27','N','00:00','00:00',1.00,'N'),
+(11,3,'2022-09-28','N','00:00','00:00',1.00,'N'),
+(12,3,'2022-09-29','N','00:00','00:00',1.00,'N'),
+(13,4,'2022-08-30','Y','00:00','00:00',0.50,'Y'),
+(14,4,'2022-08-31','N','00:00','00:00',1.00,'N'),
+(15,5,'2022-09-05','N','00:00','00:00',1.00,'N'),
+(16,5,'2022-09-06','N','00:00','00:00',1.00,'N'),
+(17,5,'2022-09-07','N','00:00','00:00',1.00,'N'),
+(18,6,'2022-09-08','N','00:00','00:00',1.00,'N'),
+(19,7,'2022-09-01','N','7:45','12:00',0.50,'N'),
+(20,8,'2022-09-09','N','00:00','00:00',1.00,'N'),
+(21,8,'2022-09-10','N','00:00','00:00',1.00,'N'),
+(22,8,'2022-09-12','N','00:00','00:00',1.00,'N');
 
 /*Table structure for table `leave_request_header` */
 
@@ -10488,7 +10514,6 @@ CREATE TABLE `leave_request_header` (
   `encoded_by` int(11) DEFAULT NULL,
   `request_date` datetime DEFAULT NULL,
   `leave_type` varchar(12) DEFAULT NULL,
-  `with_pay` enum('Y','N') DEFAULT NULL,
   `date_from` date DEFAULT NULL,
   `date_to` date DEFAULT NULL,
   `remarks` text,
@@ -10503,12 +10528,19 @@ CREATE TABLE `leave_request_header` (
   `document_status` enum('DRAFT','POSTED') DEFAULT NULL,
   `reliever_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `leave_request_header` */
 
-insert  into `leave_request_header`(`id`,`biometric_id`,`encoded_on`,`encoded_by`,`request_date`,`leave_type`,`with_pay`,`date_from`,`date_to`,`remarks`,`acknowledge_status`,`acknowledge_time`,`acknowledge_by`,`received_by`,`received_time`,`dept_id`,`division_id`,`job_title_id`,`document_status`,`reliever_id`) values 
-(1,847,'2022-09-03 03:48:52',1,'2022-09-03 03:48:52','EL',NULL,'2022-09-01','2022-10-01',NULL,NULL,NULL,NULL,NULL,NULL,9,3,15,'DRAFT',203);
+insert  into `leave_request_header`(`id`,`biometric_id`,`encoded_on`,`encoded_by`,`request_date`,`leave_type`,`date_from`,`date_to`,`remarks`,`acknowledge_status`,`acknowledge_time`,`acknowledge_by`,`received_by`,`received_time`,`dept_id`,`division_id`,`job_title_id`,`document_status`,`reliever_id`) values 
+(1,205,'2022-09-05 01:54:26',1,'2022-09-05 01:54:26','SL','2022-09-05','2022-09-09','test 1234',NULL,NULL,NULL,NULL,NULL,1,1,NULL,'DRAFT',205),
+(2,4,'2022-09-05 02:28:37',1,'2022-09-05 02:28:37','UT','2022-09-14','2022-09-16','tes 123123123123',NULL,NULL,NULL,NULL,NULL,1,1,NULL,'DRAFT',205),
+(3,205,'2022-09-05 02:31:19',1,'2022-09-05 02:31:19','EL','2022-09-26','2022-09-29','123123123123123',NULL,NULL,NULL,NULL,NULL,1,1,NULL,'DRAFT',205),
+(4,876,'2022-09-05 02:33:10',1,'2022-09-05 02:33:10','EL','2022-08-30','2022-08-31','sdfsdfsdfsdfsdf',NULL,NULL,NULL,NULL,NULL,1,1,NULL,'DRAFT',4),
+(5,863,'2022-09-05 03:14:52',1,'2022-09-05 03:14:52','SL','2022-09-05','2022-09-07','234234234234',NULL,NULL,NULL,NULL,NULL,1,1,NULL,'POSTED',4),
+(6,876,'2022-09-05 03:16:43',1,'2022-09-05 03:16:43','VL','2022-09-08','2022-09-08','wowejklsjdlfjslkdjfsdfsdfsdfs',NULL,NULL,NULL,NULL,NULL,1,1,NULL,'POSTED',NULL),
+(7,863,'2022-09-05 08:25:54',2,'2022-09-05 08:25:54','VL','2022-09-01','2022-09-01','wedding',NULL,NULL,NULL,NULL,NULL,1,1,NULL,'DRAFT',205),
+(8,158,'2022-09-05 08:29:19',2,'2022-09-05 08:29:19','VL','2022-09-09','2022-09-12','wedding',NULL,NULL,NULL,NULL,NULL,1,1,NULL,'DRAFT',205);
 
 /*Table structure for table `leave_request_type` */
 
@@ -10756,23 +10788,9 @@ CREATE TABLE `payrollregister_posted` (
   `period_id` int(11) NOT NULL,
   PRIMARY KEY (`biometric_id`,`period_id`),
   UNIQUE KEY `line_id` (`line_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `payrollregister_posted` */
-
-insert  into `payrollregister_posted`(`line_id`,`biometric_id`,`period_id`) values 
-(1,1,1),
-(2,2,1),
-(3,3,1),
-(4,4,1),
-(5,5,1),
-(6,6,1),
-(7,1,2),
-(8,2,2),
-(9,3,2),
-(10,4,2),
-(11,5,2),
-(12,6,2);
 
 /*Table structure for table `payrollregister_posted_weekly` */
 
@@ -10796,31 +10814,31 @@ CREATE TABLE `payrollregister_unposted` (
   `line_id` int(11) NOT NULL AUTO_INCREMENT,
   `biometric_id` int(11) NOT NULL,
   `period_id` int(11) NOT NULL,
+  `basic_salary` decimal(24,2) DEFAULT NULL,
+  `is_daily` varchar(1) DEFAULT NULL,
+  `basic_pay` decimal(24,2) DEFAULT NULL,
+  `late` decimal(24,2) DEFAULT NULL,
+  `late_eq` decimal(24,2) DEFAULT NULL,
+  `ndays` decimal(24,2) DEFAULT NULL,
+  `night_diff` decimal(24,2) DEFAULT NULL,
+  `overtime` decimal(24,2) DEFAULT NULL,
+  `pay_type` int(11) DEFAULT NULL,
+  `under_time` decimal(24,2) DEFAULT NULL,
   PRIMARY KEY (`biometric_id`,`period_id`),
   UNIQUE KEY `line_id` (`line_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `payrollregister_unposted` */
 
-insert  into `payrollregister_unposted`(`line_id`,`biometric_id`,`period_id`) values 
-(1,1,1),
-(4,2,1),
-(5,3,1),
-(6,4,1),
-(7,5,1),
-(8,6,1),
-(9,1,2),
-(10,2,2),
-(11,3,2),
-(12,4,2),
-(13,5,2),
-(14,6,2),
-(15,1,3),
-(16,2,3),
-(17,3,3),
-(18,4,3),
-(19,5,3),
-(20,6,3);
+insert  into `payrollregister_unposted`(`line_id`,`biometric_id`,`period_id`,`basic_salary`,`is_daily`,`basic_pay`,`late`,`late_eq`,`ndays`,`night_diff`,`overtime`,`pay_type`,`under_time`) values 
+(33,4,1,0.00,'N',0.00,0.00,0.00,1.00,0.00,0.00,2,0.00),
+(34,158,1,0.00,'N',0.00,15.00,0.25,5.00,0.00,0.00,2,0.00),
+(35,205,1,0.00,'N',0.00,1.00,0.25,1.00,0.00,0.00,2,0.00),
+(36,352,1,0.00,'N',0.00,0.00,0.00,0.00,0.00,0.00,2,0.00),
+(37,692,1,0.00,'N',0.00,0.00,0.00,0.00,0.00,0.00,2,0.00),
+(38,822,1,0.00,'N',0.00,0.00,0.00,0.00,0.00,0.00,2,0.00),
+(39,847,1,20000.00,'N',10000.00,16.00,0.50,12.00,0.00,0.00,1,0.00),
+(40,876,1,0.00,'N',0.00,0.00,0.00,0.00,0.00,0.00,2,0.00);
 
 /*Table structure for table `payrollregister_unposted_weekly` */
 
@@ -11033,7 +11051,7 @@ CREATE TABLE `users` (
   `self_img` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `users` */
 
@@ -11047,7 +11065,8 @@ insert  into `users`(`id`,`name`,`email`,`email_verified_at`,`password`,`remembe
 (7,'Mark Arvin Soleño','marksoleno',NULL,'$2y$10$nPvw9/Ja30DW2VYN2CmU9uwLWbeDZTa0oCCacBj0Dp6SKE3m74vv2',NULL,'2022-09-01 08:09:02','2022-09-01 08:09:02',NULL,NULL),
 (8,'Test User','test.user1',NULL,'$2y$10$/4XLrtpFTaBr/2UjYGu0dOfVbjbLbNlVdI58YTaNVYAgH3shqtIXi',NULL,'2022-09-02 00:07:50','2022-09-02 00:07:50',NULL,NULL),
 (9,'Test User','test.user',NULL,'$2y$10$t1U1w2CHKKZMrl9Bj4H8H.Sja2/45in/x2tyBsPQdOcDInVcuk7Me',NULL,'2022-09-02 02:23:40','2022-09-02 02:23:40',NULL,NULL),
-(10,'Michael Cinco','mocinco',NULL,'$2y$10$d8teJpbV.ArG9n5I.5LGkO4jSCktFpYOPiyob2tuqlzO9.ndh1v.u',NULL,'2022-09-02 02:37:15','2022-09-02 02:37:15',NULL,NULL);
+(10,'Michael Cinco','mocinco',NULL,'$2y$10$d8teJpbV.ArG9n5I.5LGkO4jSCktFpYOPiyob2tuqlzO9.ndh1v.u',NULL,'2022-09-02 02:37:15','2022-09-02 02:37:15',NULL,NULL),
+(11,'Marie Bongo','marie.bongo@jlr.com',NULL,'$2y$10$ITLK952XPpt4Rd/PnrBunOy2LKrr3x1gY2dabwPvlO1ygohIYZt9u',NULL,'2022-09-05 08:45:23','2022-09-05 08:45:23',NULL,NULL);
 
 /*Table structure for table `work_schedules` */
 
@@ -11080,7 +11099,7 @@ CREATE TABLE `work_schedules_default` (
   `dept_id` int(11) DEFAULT NULL,
   `schedule_id` int(11) DEFAULT NULL,
   KEY `line_id` (`line_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `work_schedules_default` */
 
@@ -11089,7 +11108,8 @@ insert  into `work_schedules_default`(`line_id`,`dept_id`,`schedule_id`) values
 (2,7,2),
 (3,8,2),
 (4,10,2),
-(5,11,2);
+(5,11,2),
+(6,12,2);
 
 /* Function  structure for function  `proper` */
 

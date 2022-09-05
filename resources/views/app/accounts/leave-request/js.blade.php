@@ -15,8 +15,31 @@
                 { text: "Others", value: "O" },
             ];
 
+            var validator = $("#leaveRequestForm").kendoValidator().data("kendoValidator");
+
             let obj = {
-                   
+                id : null,
+                biometric_id: null,
+                date_from: null,
+                date_to: null,
+                dept_id: null,
+                division_id: null,
+                job_title_id: null,
+                remarks: null,
+                leave_type: null,
+                reliever_id: null,
+                document_status : null,
+            };
+
+            let obj2= {
+                biometric_id : null,
+                division_id : null,
+                division_desc : null,
+                department_id : null,
+                department_desc : null,
+                job_title_id : null,
+                job_title_desc : null,
+                
             };
 
             var viewModel = kendo.observable({ 
@@ -113,6 +136,53 @@
                             }
                         }
                     }),
+
+                    leaveDetails :  new kendo.data.DataSource({
+                        transport : {
+                            read : {
+                                url : 'leave-request/read-detail/0',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },
+                            update : {
+                                url : 'leave-request/update-detail',
+                                type : 'post',
+                                dataType : 'json',
+                                complete : function(e){
+                                    viewModel.ds.leaveDetails.read();
+                                }
+                            },
+                            parameterMap : function (data,type){
+                                if(type=='update'){
+                                    // $.each(data.models,function(index,value){
+                                    // });
+                                    data.leave_date =  kendo.toString(data.leave_date,'yyyy-MM-dd');
+                                }
+                                return data;
+                            }
+                        },
+                        pageSize :120,
+                        schema : {
+                            model : {
+                                id : 'line_id',
+                                fields : {
+                
+                                    leave_date : { type : "date",editable:false,},
+                                    is_canceled : { type : "string"},
+                                    time_from : { type : "string"},
+                                    time_to : { type : "string"},
+                                    days : { type : "number"},
+                                    with_pay : { type : "string"},
+                                }
+                            }
+                        },
+                        aggregate : [
+                            { field : "days" , aggregate: "sum" },
+                        ]
+                    })
                     
                 },
                 buttonHandler : {  
@@ -123,28 +193,38 @@
                     createEmployee : function(e){
                         viewModel.buttonHandler.clear();
                         viewModel.functions.showPOP();
+                        viewModel.callBack();
+                        
                     },
                     save : async function(e){
 
                         await viewModel.functions.reAssignValues();
                         
-                        var json_data = JSON.stringify(viewModel.form.model);
-                        
-                        $.post('leave-request/save',{
-                            data : json_data
-                        },function(data,staus){
-                            swal_success(data);
+                        if(validator.validate()) 
+                        {
+                            var json_data = JSON.stringify(viewModel.form.model);
+                            
+                            $.post('leave-request/save',{
+                                data : json_data
+                            },function(data,staus){
+                                swal_success(data);
 
-                            let url = `leave-request/read-header/${data}`;
-                            read(url,viewModel);
-                            viewModel.ds.maingrid.read();
-                            //viewModel.maingrid.formReload(data);
-                        })
-                        .fail(function(data){
-                           swal_error(data);
-                        }).always(function() {
-                            //viewModel.maingrid.ds.read();
-                        });
+                                let url = `leave-request/read-header/${data}`;
+                                read(url,viewModel);
+                                viewModel.ds.maingrid.read();
+
+                                let detailUrl = `leave-request/read-detail/${data}`;
+                                viewModel.ds.leaveDetails.transport.options.read.url = detailUrl;
+                                viewModel.ds.leaveDetails.read();
+
+                                //viewModel.maingrid.formReload(data);
+                            })
+                            .fail(function(data){
+                            swal_error(data);
+                            }).always(function() {
+                                //viewModel.maingrid.ds.read();
+                            });
+                        }
                     },
                     view : async function(e){
                         e.preventDefault(); 
@@ -157,18 +237,39 @@
                         viewModel.set('selected',data);
 
                         let url  = `leave-request/read-header/${data.id}`;
-                        //await viewModel.functions.prepareForm(data);
                         read(url,viewModel);
+
+                        let detailUrl = `leave-request/read-detail/${data.id}`;
+                        viewModel.ds.leaveDetails.transport.options.read.url = detailUrl;
+                        viewModel.ds.leaveDetails.read();
+
+                        //await viewModel.functions.prepareForm(data);
+                        
                         //console.log(data);
 
                     }, 
                     clear : function(e){
                         //$.each(viewModel.form.model,function(index,value));
+                      
                         for (var key in obj) {
                             //console.log(key); //console.log(key + " -> " + p[key]);
                             viewModel.form.model.set(key,null);
                         }
+
+                        for (var key2 in obj2) {
+                            //console.log(key); //console.log(key + " -> " + p[key]);
+                          
+                            viewModel.employee.set(key2,null);
+                           
+                        }
+
                         viewModel.form.model.set('document_status','DRAFT');
+
+                        let detailUrl = `leave-request/read-detail/0`;
+                        viewModel.ds.leaveDetails.transport.options.read.url = detailUrl;
+                        viewModel.ds.leaveDetails.read();
+
+                        console.log(viewModel.employee);
 
                         // viewModel.form.model.set('civil_status',1);
                         // viewModel.form.model.set('gender','M');
@@ -178,6 +279,22 @@
                         // viewModel.form.model.set('employee_stat',1);
                         // viewModel.form.model.set('exit_status',1);
                         // viewModel.form.model.set('pay_type',1);
+                    },
+                    post : function(e){
+                        Swal.fire({
+                            title: 'Finalize and Post Leave Request',
+                            text: "You won't be able to revert this!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Finalize'
+                        }).then((result) => {
+                            if (result.value) {                       
+                                viewModel.form.model.set('document_status','POSTED'); 
+                                viewModel.buttonHandler.save();
+                            }
+                        });
                     }
                 },
                 functions : {
@@ -249,9 +366,42 @@
                 callBack : function()
                 {
                   
-                    viewModel.form.mirror.set('deduct_sss',(viewModel.form.model.deduct_sss=='Y') ? true:false);
-                    viewModel.form.mirror.set('deduct_phic',(viewModel.form.model.deduct_phic=='Y') ? true:false);
-                    viewModel.form.mirror.set('is_daily',(viewModel.form.model.is_daily=='Y') ? true:false);
+                    // viewModel.form.mirror.set('deduct_sss',(viewModel.form.model.deduct_sss=='Y') ? true:false);
+                    // viewModel.form.mirror.set('deduct_phic',(viewModel.form.model.deduct_phic=='Y') ? true:false);
+                    // viewModel.form.mirror.set('is_daily',(viewModel.form.model.is_daily=='Y') ? true:false);
+                    //div_name":"Shared Services","dept_id":9,"dept_name":"Information Technology","job_title_id":15,"job_title_name":"IT Programmer"
+                    if(viewModel.form.model.biometric_id!=null){
+                        viewModel.employee.set('biometric_id',viewModel.form.model.biometric_id);
+                        viewModel.employee.set('division_desc',viewModel.form.model.div_name);
+                        viewModel.employee.set('department_desc',viewModel.form.model.dept_name);
+                        viewModel.employee.set('job_title_desc',viewModel.form.model.job_title_name);
+                    }
+                    // let active = $("#toolbar").data("kendoToolBar");
+                    // let posted = $("#toolbar2").data("kendoToolBar");
+
+                    //console.log(viewModel.form.model.document_status);
+                    // biometric_id
+                    // division_id
+                    // division_desc
+                    // department_id
+                    // department_desc
+                    // job_title_id
+                    // job_title_desc
+                    let grid = $("#subgrid").data('kendoGrid');
+                
+                    if(viewModel.form.model.document_status=='POSTED'){
+                        grid.hideColumn(6);
+                        grid.showColumn(7);
+
+                        activeToolbar.hide();
+                        postedToolbar.show();
+                    }else{
+                        grid.hideColumn(7);
+                        grid.showColumn(6);
+
+                        activeToolbar.show();
+                        postedToolbar.hide();
+                    }
                 }
             });
 
@@ -327,6 +477,91 @@
                   
                 ]
             });
+
+            $("#subgrid").kendoGrid({
+                dataSource : viewModel.ds.leaveDetails,
+                pageable : {
+                    refresh : true,
+                    buttonCount : 5
+                },
+                noRecords: true,
+                filterable : {
+                    extra: false,
+                    operators: {
+                        string: {
+                            contains : "Contains"
+                        }
+                    }
+                },
+                sortable : true,
+                height : 310,
+                scrollable: true,
+                editable : "inline",
+                columns : [
+                    {
+                        title : "Date",
+                        field : "leave_date",
+                        template : "#= (data.leave_date) ? kendo.toString(data.leave_date,'MM/dd/yyyy') : ''  #",
+                        width : 110,    
+                    },
+                    {
+                        title : "Cancelled",
+                        field : "is_canceled",
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center"
+                            
+                        },
+                        width : 100,    
+                    },
+                    {
+                        title : "Time From",
+                        field : "time_from",
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center"
+                            
+                        },
+                        //width : 90,    
+                    },
+                    {
+                        title : "Time To",
+                        field : "time_to",
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center"
+                            
+                        },
+                        //width : 90,    
+                    },
+                    {
+                        title : "Day",
+                        field : "days",
+                        width : 80,   
+                        aggregates : ['sum'], 
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center"
+                            
+                        },
+                        footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+                     
+                    },
+                    {
+                        title : "W/Pay",
+                        field : "with_pay",
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center"
+                            
+                        },
+                        width : 80,    
+                    },
+                    {
+                        command : ['edit'],
+                        width :190,    
+                    },
+                    {
+                        width : 190
+                    }
+                  
+                ]
+            });
             
             $("#biometric_id").kendoComboBox({
                 dataSource : viewModel.ds.employee,
@@ -395,6 +630,15 @@
                 items : [
                     { id : 'saveBtn', type: "button", text: "Save", icon: 'save', click : viewModel.buttonHandler.save },
                     { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
+                    { id : 'postBtn', type: "button", text: "Post", icon: 'print', click : viewModel.buttonHandler.post },
+                ]
+            });
+
+            var postedToolbar = $("#toolbar2").kendoToolBar({
+                items : [
+                    //{ id : 'saveBtn', type: "button", text: "Save", icon: 'save', click : viewModel.buttonHandler.save },
+                    { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
+                    //{ id : 'postBtn', type: "button", text: "Post", icon: 'print', click : viewModel.buttonHandler.post },
                 ]
             });
 

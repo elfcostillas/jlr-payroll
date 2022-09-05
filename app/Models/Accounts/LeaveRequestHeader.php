@@ -20,7 +20,7 @@ class LeaveRequestHeader extends Model
         //'request_apprv',  //date time appoved
         'request_date', // date posted
         'leave_type', //leave type
-        'with_pay', 
+        //'with_pay', 
         'date_from',
         'date_to',
         'remarks',

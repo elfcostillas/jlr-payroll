@@ -249,6 +249,8 @@ Route::middleware('auth')->prefix('accounts')->group(function(){
         Route::post('save',[LeaveRequestController::class,'save']);
         Route::get('read-header/{id}',[LeaveRequestController::class,'readHeader']);
         Route::get('read-detail/{id}',[LeaveRequestController::class,'readDetails']);
+        Route::post('update-detail',[LeaveRequestController::class,'updateDetail']);
+        
     });
 
 });
@@ -259,6 +261,8 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
     Route::prefix('payroll-register')->middleware('access:payroll-transaction/payroll-register')->group(function(){
         Route::get('/',[PayrollRegisterController::class,'index']);
         Route::get('unposted-payroll',[PayrollRegisterController::class,'getUnpostedPeriod']);
+        Route::get('compute/{id}',[PayrollRegisterController::class,'compute']);
+        
     }); 
 });
 

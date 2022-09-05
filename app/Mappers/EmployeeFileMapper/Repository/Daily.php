@@ -9,6 +9,11 @@ class Daily implements EmployeeInterface
     {
         
     }
+
+    function getBasicPay($data)
+    {
+        return (float) round($data['basic_salary'] * $data['n_days'],2);
+    }
 }
 
 ?>

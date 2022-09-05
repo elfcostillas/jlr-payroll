@@ -92,7 +92,22 @@ class LeaveRequestHeaderMapper extends AbstractMapper {
 					date_from,
 					date_to,
 					leave_type,
-					leave_request_header.remarks
+					leave_request_header.remarks,
+					employees.division_id,
+					div_name,
+					employees.dept_id,
+					dept_name,
+					employees.job_title_id,
+					job_title_name,
+					encoded_on,
+					encoded_by,
+					request_date,
+					acknowledge_status,
+					acknowledge_time,
+					acknowledge_by,
+					received_by,
+					received_time,
+					document_status
 					"))
 				->from('leave_request_header')
 				->join('employees','leave_request_header.biometric_id','=','employees.biometric_id')

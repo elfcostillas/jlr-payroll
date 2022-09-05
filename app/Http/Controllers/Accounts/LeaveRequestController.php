@@ -5,16 +5,19 @@ namespace App\Http\Controllers\Accounts;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mappers\Accounts\LeaveRequestHeaderMapper;
+use App\Mappers\Accounts\LeaveRequestDetailMapper;
 use Illuminate\Support\Facades\Auth;
 
 class LeaveRequestController extends Controller
 {
     //
     private $header;
+    private $detail;
 
-    public function __construct(LeaveRequestHeaderMapper $header)
+    public function __construct(LeaveRequestHeaderMapper $header,LeaveRequestDetailMapper $detail)
     {
         $this->header = $header;
+        $this->detail = $detail;
     }
 
     public function index()
@@ -48,11 +51,21 @@ class LeaveRequestController extends Controller
             $data_arr['encoded_on']= now();
             $data_arr['request_date']= now();
             $data_arr['encoded_by']= Auth::user()->id;
-            
+
             $result = $this->header->insertValid($data_arr);
+
+           
+
+            $this->detail->createDates($data_arr,$result);
+            
         }else{
             $result = $this->header->updateValid($data_arr);
+            if(is_object($result)){
+                return response()->json($result)->setStatusCode(500, 'Error');
+            }
         }
+
+        return response()->json($result);
     }
 
     public function readHeader(Request $request)
@@ -63,6 +76,9 @@ class LeaveRequestController extends Controller
 
     public function readDetails(Request $request)
     {
+        $result = $this->detail->listDates($request->id);
+
+        return response()->json($result);
 
     }
 
@@ -74,6 +90,13 @@ class LeaveRequestController extends Controller
     public function getEmployees(Request $request)
     {
         $result = $this->header->searchEmployee($request->filter);
+
+        return response()->json($result);
+    }
+
+    public function updateDetail(Request $request)
+    {
+        $result = $this->detail->updateValid($request->all());
 
         return response()->json($result);
     }
