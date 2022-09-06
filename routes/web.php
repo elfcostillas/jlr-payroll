@@ -16,6 +16,8 @@ use App\Http\Controllers\Timekeeping\FTPController;
 
 use App\Http\Controllers\Settings\LocationController;
 use App\Http\Controllers\Settings\DefaultScheduleController;
+use App\Http\Controllers\Settings\DeductionTypeController;
+use App\Http\Controllers\Settings\LoanTypeController;
 
 use App\Http\Controllers\EmployeeFile\DivisionController;
 use App\Http\Controllers\EmployeeFile\EmployeeController;
@@ -222,6 +224,30 @@ Route::middleware('auth')->prefix('settings')->group(function(){
         Route::get('/',[DefaultScheduleController::class,'index']);
         Route::get('list',[DefaultScheduleController::class,'list']);
         Route::post('update',[DefaultScheduleController::class,'update']);
+    });
+
+    Route::prefix('deduction-type')->group(function(){
+        Route::get('/',[DeductionTypeController::class,'index']);
+        Route::get('list',[DeductionTypeController::class,'list']);
+        Route::post('create',[DeductionTypeController::class,'create']);
+        Route::post('update',[DeductionTypeController::class,'update']);
+        //Route::get('get-locations',[LocationController::class,'listOption']);
+    });
+
+    Route::prefix('loan-type')->group(function(){
+        Route::get('/',[LoanTypeController::class,'index']);
+        Route::get('list',[LoanTypeController::class,'list']);
+        Route::post('create',[LoanTypeController::class,'create']);
+        Route::post('update',[LoanTypeController::class,'update']);
+       
+    });
+
+    
+});
+
+Route::middleware('auth')->prefix('deductions')->group(function(){
+    Route::prefix('one-time-deduction')->group(function(){
+
     });
 });
 
