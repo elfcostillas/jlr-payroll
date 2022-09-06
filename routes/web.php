@@ -32,6 +32,8 @@ use App\Http\Controllers\PayrollTransaction\PayslipController;
 
 use App\Http\Controllers\Accounts\BiometricController;
 use App\Http\Controllers\Accounts\LeaveRequestController;
+
+use  App\Http\Controllers\Deductions\OneTimeDeductionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -231,6 +233,7 @@ Route::middleware('auth')->prefix('settings')->group(function(){
         Route::get('list',[DeductionTypeController::class,'list']);
         Route::post('create',[DeductionTypeController::class,'create']);
         Route::post('update',[DeductionTypeController::class,'update']);
+       
         //Route::get('get-locations',[LocationController::class,'listOption']);
     });
 
@@ -246,8 +249,12 @@ Route::middleware('auth')->prefix('settings')->group(function(){
 });
 
 Route::middleware('auth')->prefix('deductions')->group(function(){
-    Route::prefix('one-time-deduction')->group(function(){
-
+    Route::prefix('one-time')->group(function(){
+        Route::get('/',[OneTimeDeductionController::class,'index']);
+        Route::get('read-header/{id}',[OneTimeDeductionController::class,'readHeader']);
+        Route::get('list/{id}',[OneTimeDeductionController::class,'list']);
+        Route::get('list-types',[OneTimeDeductionController::class,'getTypes']);
+        Route::get('list-payroll-period',[OneTimeDeductionController::class,'getPayrollPeriod']);
     });
 });
 
