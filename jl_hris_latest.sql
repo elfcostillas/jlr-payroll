@@ -35,6 +35,28 @@ insert  into `civil_status`(`id`,`stat_code`,`stat_desc`) values
 (3,'DIV','Divorced'),
 (4,'WID','Widowed');
 
+/*Table structure for table `deduction_fixed` */
+
+DROP TABLE IF EXISTS `deduction_fixed`;
+
+CREATE TABLE `deduction_fixed` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `period_id` int(11) DEFAULT NULL,
+  `biometric_id` int(11) DEFAULT NULL,
+  `deduction_type` int(11) DEFAULT NULL,
+  `remarks` text,
+  `amount` decimal(24,2) DEFAULT NULL,
+  `is_stopped` enum('Y','N') DEFAULT NULL,
+  `encoded_by` int(11) DEFAULT NULL,
+  `encoded_on` datetime DEFAULT NULL,
+  KEY `id` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+
+/*Data for the table `deduction_fixed` */
+
+insert  into `deduction_fixed`(`id`,`period_id`,`biometric_id`,`deduction_type`,`remarks`,`amount`,`is_stopped`,`encoded_by`,`encoded_on`) values 
+(1,1,847,1,'test',500.00,'N',1,'2022-09-07 14:04:18');
+
 /*Table structure for table `deduction_onetime_details` */
 
 DROP TABLE IF EXISTS `deduction_onetime_details`;
@@ -46,9 +68,15 @@ CREATE TABLE `deduction_onetime_details` (
   `amount` decimal(24,2) DEFAULT NULL,
   PRIMARY KEY (`header_id`,`biometric_id`),
   KEY `line_id` (`line_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `deduction_onetime_details` */
+
+insert  into `deduction_onetime_details`(`line_id`,`header_id`,`biometric_id`,`amount`) values 
+(1,1,158,500.00),
+(2,13,4,0.00),
+(3,15,352,111.00),
+(4,19,352,222.00);
 
 /*Table structure for table `deduction_onetime_headers` */
 
@@ -61,10 +89,19 @@ CREATE TABLE `deduction_onetime_headers` (
   `remarks` text,
   `encoded_by` int(11) DEFAULT NULL,
   `encoded_on` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `doc_status` varchar(12) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `PeriodDeductionTypeUnique` (`period_id`,`deduction_type`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `deduction_onetime_headers` */
+
+insert  into `deduction_onetime_headers`(`id`,`period_id`,`deduction_type`,`remarks`,`encoded_by`,`encoded_on`,`doc_status`) values 
+(1,1,3,'dfgdfgdfgdf',1,'2022-09-07 05:02:50','POSTED'),
+(13,1,5,'ewerwerwerwer',1,'2022-09-07 05:24:24','DRAFT'),
+(15,1,6,'1231231231',1,'2022-09-07 05:27:14','DRAFT'),
+(17,1,23,'werwerwer',1,'2022-09-07 05:27:45','POSTED'),
+(19,1,19,'erterterert',1,'2022-09-07 05:29:50','POSTED');
 
 /*Table structure for table `deduction_types` */
 
@@ -11007,7 +11044,7 @@ insert  into `sub_menu`(`id`,`sub_menu_desc`,`sub_menu_main`,`sub_menu_link`,`su
 (22,'Loan Types',4,'settings/loan-type','fas fa-money-bill-wave'),
 (23,'One Time Deductions',6,'deductions/one-time',NULL),
 (24,'Installments',6,'deductions/installments',NULL),
-(25,'Fixed Deductions',6,'deductions/reoccuring',NULL),
+(25,'Fixed Deductions',6,'deductions/fixed-deductions',NULL),
 (26,'Loans',6,'deductions/government-loans',NULL);
 
 /*Table structure for table `user_rights` */
@@ -11272,6 +11309,49 @@ BEGIN
 	REPAIR TABLE payrollregister_unposted_weekly;
     END */$$
 DELIMITER ;
+
+/*Table structure for table `employee_names_vw` */
+
+DROP TABLE IF EXISTS `employee_names_vw`;
+
+/*!50001 DROP VIEW IF EXISTS `employee_names_vw` */;
+/*!50001 DROP TABLE IF EXISTS `employee_names_vw` */;
+
+/*!50001 CREATE TABLE  `employee_names_vw`(
+ `biometric_id` int(11) ,
+ `employee_name` varchar(202) ,
+ `exit_status` int(11) 
+)*/;
+
+/*Table structure for table `payroll_period_vw` */
+
+DROP TABLE IF EXISTS `payroll_period_vw`;
+
+/*!50001 DROP VIEW IF EXISTS `payroll_period_vw` */;
+/*!50001 DROP TABLE IF EXISTS `payroll_period_vw` */;
+
+/*!50001 CREATE TABLE  `payroll_period_vw`(
+ `id` int(11) ,
+ `date_from` date ,
+ `date_to` date ,
+ `date_release` date ,
+ `man_hours` int(11) ,
+ `template` varchar(21) 
+)*/;
+
+/*View structure for view employee_names_vw */
+
+/*!50001 DROP TABLE IF EXISTS `employee_names_vw` */;
+/*!50001 DROP VIEW IF EXISTS `employee_names_vw` */;
+
+/*!50001 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `employee_names_vw` AS select `employees`.`biometric_id` AS `biometric_id`,trim(concat(ifnull(`employees`.`lastname`,''),', ',ifnull(`employees`.`firstname`,''),' ',ifnull(`employees`.`suffixname`,''),' ',ifnull(`employees`.`middlename`,''))) AS `employee_name`,`employees`.`exit_status` AS `exit_status` from `employees` order by `employees`.`lastname`,`employees`.`firstname` */;
+
+/*View structure for view payroll_period_vw */
+
+/*!50001 DROP TABLE IF EXISTS `payroll_period_vw` */;
+/*!50001 DROP VIEW IF EXISTS `payroll_period_vw` */;
+
+/*!50001 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `payroll_period_vw` AS select `payroll_period`.`id` AS `id`,`payroll_period`.`date_from` AS `date_from`,`payroll_period`.`date_to` AS `date_to`,`payroll_period`.`date_release` AS `date_release`,`payroll_period`.`man_hours` AS `man_hours`,concat(date_format(`payroll_period`.`date_from`,'%m/%d/%Y'),'-',date_format(`payroll_period`.`date_to`,'%m/%d/%Y')) AS `template` from `payroll_period` order by `payroll_period`.`id` desc */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

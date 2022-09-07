@@ -7,24 +7,27 @@ use App\Libraries\Filters;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class OneTimeDeductionHeaderMapper extends AbstractMapper {
+class FixedDeductionMapper extends AbstractMapper {
 
-	protected $modelClassName = 'App\Models\Deductions\OneTimeDeductionHeader';
+	protected $modelClassName = 'App\Models\Deductions\FixedDeduction';
     protected $rules = [
-    	'period_id' => 'required|sometimes',
+        'period_id' => 'required|sometimes',
+        'biometric_id' => 'required|sometimes',
         'deduction_type' => 'required|sometimes',
-        'remarks' => 'required|sometimes',
+        //'remarks' => 'required|sometimes',
+        'amount' => 'required|sometimes|gt:0',
     ];
 
     public function list($type,$filter)
     {
-        $result = $this->model->select(DB::raw("deduction_onetime_headers.*,deduction_types.description,template,users.name as encoder"))
-		->from('deduction_onetime_headers')
+        $result = $this->model->select(DB::raw("deduction_fixed.*,employee_name,users.name as encoder,payroll_period_vw.template as period_range,
+        deduction_types.description as deduction_desc"))
+		->from('deduction_fixed')
+		->join('employee_names_vw','employee_names_vw.biometric_id','=','deduction_fixed.biometric_id')
+		->join('payroll_period_vw','payroll_period_vw.id','=','deduction_fixed.period_id')
 		->join('deduction_types','deduction_type','=','deduction_types.id')
-		->join('payroll_period_vw','payroll_period_vw.id','=','deduction_onetime_headers.period_id')
-        ->join('users','encoded_by','=','users.id')
-        ;
-
+        ->join('users','encoded_by','=','users.id');
+        
         if($type!=0){
             $result = $result->where('deduction_type',$type);
         }
@@ -95,3 +98,12 @@ class OneTimeDeductionHeaderMapper extends AbstractMapper {
 
 
 }
+
+
+/*
+
+SELECT * FROM deduction_fixed 
+INNER JOIN employee_names_vw ON employee_names_vw.biometric_id = deduction_fixed.biometric_id
+INNER JOIN payroll_period_vw ON deduction_fixed.period_id = payroll_period_vw.id
+INNER JOIN deduction_types ON deduction_type = deduction_types.id
+*/

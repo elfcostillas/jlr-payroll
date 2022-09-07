@@ -34,6 +34,7 @@ use App\Http\Controllers\Accounts\BiometricController;
 use App\Http\Controllers\Accounts\LeaveRequestController;
 
 use  App\Http\Controllers\Deductions\OneTimeDeductionController;
+use  App\Http\Controllers\Deductions\FixedDeductionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -253,8 +254,27 @@ Route::middleware('auth')->prefix('deductions')->group(function(){
         Route::get('/',[OneTimeDeductionController::class,'index']);
         Route::get('read-header/{id}',[OneTimeDeductionController::class,'readHeader']);
         Route::get('list/{id}',[OneTimeDeductionController::class,'list']);
+        Route::get('list-details/{id}',[OneTimeDeductionController::class,'readDetail']);
+
+        Route::post('save',[OneTimeDeductionController::class,'save']);
+        //Route::post('update',[OneTimeDeductionController::class,'update']);
+
+        Route::post('create-detail',[OneTimeDeductionController::class,'createDetail']);
+        Route::post('update-detail',[OneTimeDeductionController::class,'updateDetail']);
+        Route::post('delete-detail',[OneTimeDeductionController::class,'destroyDetail']);
+
         Route::get('list-types',[OneTimeDeductionController::class,'getTypes']);
         Route::get('list-payroll-period',[OneTimeDeductionController::class,'getPayrollPeriod']);
+        Route::get('employee-list',[OneTimeDeductionController::class,'getEmployees']);
+    });
+
+    Route::prefix('fixed-deductions')->group(function(){
+        Route::get('/',[FixedDeductionController::class,'index']);
+        Route::get('list',[FixedDeductionController::class,'list']);
+
+        Route::post('create',[FixedDeductionController::class,'create']);
+        Route::post('update',[FixedDeductionController::class,'update']);
+        Route::post('delete',[FixedDeductionController::class,'delete']);
     });
 });
 

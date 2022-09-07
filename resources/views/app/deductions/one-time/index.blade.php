@@ -35,6 +35,15 @@
         background-color:  #6c757d !important;
     }
 
+    .k-pager-info .k-label {
+        display : block !important;
+        font-size : 9pt !important;
+    }
+
+    .k-button-text {
+        font-size : 10pt !important;
+    }
+
     
 </style>
 @section('title')
@@ -64,6 +73,7 @@
             </div>
             <div id="pop" style="display:none;background-color:#212529;"><!--f8f9fa  #343a40 #212529 2d3035-->
                 <div id="toolbar"></div>
+                <div id="toolbar2"></div>
                 <div class="card card-secondary mt-1">
                    
                     <input type="hidden" id="id" data-bind="value:form.model.id" >
@@ -89,6 +99,7 @@
                             </tr>
                             
                         </table>
+                        <div id="detailsgrid"></div>
                     </div>
                 </div>
             </div>

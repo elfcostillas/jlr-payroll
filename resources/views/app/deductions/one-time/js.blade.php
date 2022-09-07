@@ -108,11 +108,124 @@
                             },
                         }
                     }),
+                    detailsgrid : new kendo.data.DataSource({
+                        transport : {   
+                            read : {
+                                url : 'one-time/list-details/0',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },
+                            create : {
+                                url : 'one-time/create-detail',
+                                type : 'post',
+                                dataType : 'json',
+                                complete : function(e){
+                                    viewModel.ds.detailsgrid.read();
+                                }
+                            },
+                            update : {
+                                url : 'one-time/update-detail',
+                                type : 'post',
+                                dataType : 'json',
+                                complete : function(e){
+                                    viewModel.ds.detailsgrid.read();
+                                }
+                            },
+                            destroy : {
+                                url : 'one-time/delete-detail',
+                                type : 'post',
+                                dataType : 'json',
+                                complete : function(e){
+                                    viewModel.ds.detailsgrid.read();
+                                }
+                            },
+                            parameterMap: function (data, type) {
+                                console.log(viewModel.form.model);
+                                if(type=='create'){
+                                    data.header_id = viewModel.form.model.id;
+                                }
+
+                                return data;
+                            },
+                        },
+                        pageSize :999,
+                        aggregate: [ { field: "amount", aggregate: "sum" },],
+                        schema : {
+                            model : {
+                                id : 'line_id',
+                                fields : { 
+                                    header_id : { type : 'number' },
+                                    biometric_id : { type : 'number' },
+                                    amount : { type : 'number' },
+
+                                    // date_release: { type : 'date' },
+                                    // man_hours: { type : 'number' },
+                                }
+                            }
+                        }
+                    }),
+                    employee : new kendo.data.DataSource({ 
+                        transport : {
+                            read : {
+                                url : 'one-time/employee-list',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            }
+                        },
+                        serverFiltering : true,
+                        schema : {
+                            model : {
+                                id : "biometric_id",
+                                fields : {
+                                    employee_name : { type : 'string' },
+                                }
+                            }
+                        }
+                    })
                 },
                 toolbarHandler : {
 
                 },
                 buttonHandler : {
+                    save : async function(e){
+                        await viewModel.functions.reAssignValues();
+                        
+                        var json_data = JSON.stringify(viewModel.form.model);
+                        
+                        $.post('one-time/save',{
+                            data : json_data
+                        },function(data,staus){
+                            swal_success(data);
+
+                            let url  = `one-time/read-header/${data}`;
+                            read(url,viewModel);
+
+                            // if(viewModel.form.model.id==null)
+                            // {
+                            //     let url  = `one-time/read-header/${data}`;
+                            //     read(url,viewModel);
+                            //     setTimeout(function(){
+                            //         read(url,viewModel);
+                            //     }, 500);
+                            // }   
+                            viewModel.ds.detailsgrid.transport.options.read.url = `one-time/list-details/${data}`;
+                            viewModel.ds.detailsgrid.read();
+
+                            viewModel.ds.maingrid.read();
+                            //viewModel.maingrid.formReload(data);
+                        })
+                        .fail(function(data){
+                           swal_error(data);
+                        }).always(function() {
+                            //viewModel.maingrid.ds.read();
+                        });
+                    },
                     view : function(e) {
                         e.preventDefault(); 
                         viewModel.functions.showPOP();
@@ -122,8 +235,12 @@
 
                         let url  = `one-time/read-header/${data.id}`;
                         read(url,viewModel);
+
+                        viewModel.ds.detailsgrid.transport.options.read.url = `one-time/list-details/${data.id}`;
+                        viewModel.ds.detailsgrid.read();
                     },
                     createDeduction : function(){
+                        viewModel.buttonHandler.clear();
                         viewModel.functions.showPOP();
                     },
                     closePop: function(){
@@ -138,7 +255,29 @@
                         viewModel.form.model.set('doc_status','DRAFT');
                         viewModel.form.model.set('encoded_by',null);
                         viewModel.form.model.set('encoded_on',null);
+
+                        viewModel.ds.detailsgrid.transport.options.read.url = `one-time/list-details/0`;
+                        viewModel.ds.detailsgrid.read();
+
+                        viewModel.callBack();
                     },
+                    post : function()
+                    {
+                        Swal.fire({
+                            title: 'Finalize and One Time Deduction',
+                            text: "You won't be able to revert this!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Finalize'
+                        }).then((result) => {
+                            if (result.value) {                       
+                                viewModel.form.model.set('doc_status','POSTED'); 
+                                viewModel.buttonHandler.save();
+                            }
+                        });
+                    }
 
                 },
                 functions : {
@@ -147,8 +286,8 @@
                        var myWindow = $("#pop");
                        
                        myWindow.kendoWindow({
-                           width: "664", //1124 - 1152
-                           height: "710",
+                           width: "810", //1124 - 1152
+                           height: "730",
                            title: "Deduction Details",
                            visible: false,
                            animation: false,
@@ -164,10 +303,30 @@
                            }
                        }).data("kendoWindow").center().open();
                        
-                   },
+                    },
+                    reAssignValues : function(){
+                        viewModel.form.model.set('period_id',($('#period_id').data('kendoDropDownList').value()!='') ? $('#period_id').data('kendoDropDownList').value() : 0 );
+                        viewModel.form.model.set('deduction_type',($('#deduction_type').data('kendoComboBox').value()!='') ? $('#deduction_type').data('kendoComboBox').value() : 0 );
+                        
+                    }
                 },
                 callBack : function(){
+                    
+                    let grid = $("#detailsgrid").data('kendoGrid');
+                
+                    if(viewModel.form.model.doc_status=='POSTED'){
+                        grid.hideColumn(3);
+                        grid.showColumn(4);
 
+                        activeToolbar.hide();
+                        postedToolbar.show();
+                    }else{
+                        grid.hideColumn(4);
+                        grid.showColumn(3);
+
+                        activeToolbar.show();
+                        postedToolbar.hide();
+                    }
                 }
             });
 
@@ -204,9 +363,10 @@
                     },
                     {
                         title : "Remarks",
-                        field : "description",
+                        field : "remarks",
                         // template : "#= (data.date_release) ? kendo.toString(data.date_release,'MM/dd/yyyy') : ''  #",
-                        // width : 120,    
+                        // width : 120, 
+                        template: "#= description # : #= remarks# "   
                     },
                     {
                         title : "Status",
@@ -257,12 +417,60 @@
                     let grid = $("#typesgrid").data("kendoGrid");
                     let selectedItem = grid.dataItem(grid.select());
 
-                    console.log(selectedItem);
+                    let oneTimeUrl = `one-time/list/${selectedItem.id}`;
 
-                    // let empListUrl = `manage-dtr/get-employee-list/${selectedItem.id}`;
-                    // viewModel.ds.subgrid.transport.options.read.url = empListUrl;
-                    // viewModel.ds.subgrid.read();
+                    viewModel.ds.maingrid.transport.options.read.url = oneTimeUrl;
+                    viewModel.ds.maingrid.read();
                 }
+            });
+
+            $("#detailsgrid").kendoGrid({
+                dataSource : viewModel.ds.detailsgrid,
+                pageable : {
+                    refresh : true,
+                    buttonCount : 5
+                },
+                toolbar : ['create'],
+                noRecords: true,
+                filterable : true,
+                sortable : true,
+                height : 435,
+                scrollable: true,
+                
+                editable : "inline",
+                columns : [
+                    {
+                        title : "ID",
+                        field : "",
+                        template : "#= biometric_id #",
+                        editable : false,
+                        width : 90,    
+                    },
+                    {
+                        title : "Employee",
+                        field : "biometric_id",
+                        editor : employeeEditor,
+                        template : "#if(biometric_id==0){#  #}else {# #= empname #  #}#"
+                    },
+                    {
+                        title : "Amount",
+                        field : "amount",
+                        width : 130,  
+                        template : "#=kendo.toString(amount,'n2')#",
+                        attributes : {
+                            style : 'text-align:right;'
+                        },
+                        footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+
+                    },
+                    {
+                        command : ['edit','delete'],
+                        width : 190
+                    },
+                    {
+                        width : 190
+                    }
+                ]
             });
 
             $("#period_id").kendoDropDownList({
@@ -306,10 +514,27 @@
                 .kendoDropDownList({
                 //.kendoComboBox({
                     //autoBind: false,
+                    placeHolder : "",
                     autoWidth: true,
                     dataTextField: "text",
                     dataValueField: "value",
                     dataSource: fixedOption,
+                   
+                });
+            }
+
+            function employeeEditor(container, options)
+            {
+                $('<input name="' + options.field + '"/>')
+                .appendTo(container)
+                .kendoComboBox({
+                //.kendoComboBox({
+                    //autoBind: false,
+                    autoWidth: true,
+                    dataTextField: "employee_name",
+                    dataValueField: "biometric_id",
+                    dataSource: viewModel.ds.employee,
+                    filter : "contains"
                    
                 });
             }

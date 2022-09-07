@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mappers\Deductions\OneTimeDeductionHeaderMapper;
 use App\Mappers\Deductions\OneTimeDeductionDetailMapper;
+use Illuminate\Support\Facades\Auth;
 
 class OneTimeDeductionController extends Controller
 {
@@ -46,6 +47,29 @@ class OneTimeDeductionController extends Controller
         return response()->json($result);
     }
 
+    public function save(Request $request) {
+
+        $data = json_decode($request->data);
+
+        $data_arr = (array) $data;
+
+        if($data_arr['id']==null){
+            $data_arr['encoded_by'] = Auth::user()->id;
+            $data_arr['encoded_on'] = now();
+            $result = $this->header->insertValid($data_arr);
+        }else{
+            $result = $this->header->updateValid($data_arr);
+        }
+
+        if(is_object($result)){
+			return response()->json($result)->setStatusCode(500, 'Error');
+		}
+
+        return response()->json($result);
+    }
+
+  
+
     public function getTypes(Request $request)
     {
         $result = $this->header->getTypes();
@@ -58,6 +82,48 @@ class OneTimeDeductionController extends Controller
         $result = $this->header->getPayrollPeriod();
         return response()->json($result);
 
+    }
+
+    public function readDetail(Request $request)
+    {
+        $header_id = $request->id;
+        $result = $this->detail->list($header_id);
+
+        return response()->json($result);
+    }
+
+    public function getEmployees(Request $request)
+    {
+        $result = $this->header->searchEmployee($request->filter);
+
+        return response()->json($result);
+    }
+    
+    public function createDetail(Request $request) {
+        $result = $this->detail->insertValid($request->all());
+        if(is_object($result)){
+			return response()->json($result)->setStatusCode(500, 'Error');
+		}
+
+        return response()->json($result);
+    }
+    
+    public function updateDetail(Request $request) {
+        $result = $this->detail->updateValid($request->all());
+        if(is_object($result)){
+			return response()->json($result)->setStatusCode(500, 'Error');
+		}
+
+        return response()->json($result);
+    }
+    
+    public function destroyDetail(Request $request) {
+        $result = $this->detail->destroy($request->all());
+        if(is_object($result)){
+			return response()->json($result)->setStatusCode(500, 'Error');
+		}
+
+        return response()->json($result);
     }
 }
 

@@ -8,6 +8,25 @@ function swal_success(e){
 	});	
 }
 
+// function swal_error(e){
+	
+// 	var errObj = e.responseJSON;
+	 
+// 	const keys = Object.keys(errObj);
+// 	var errMsg='';
+// 	  for (const key of keys) {
+// 		//console.log(key +":"+ errObj[key] );
+// 		errMsg += errObj[key]+'\n';
+// 	  }
+	
+// 	  Swal.fire({
+// 		icon: 'error',
+// 		title: 'Oops...',
+// 		text: errMsg,
+// 		footer: '<a href>Why do I have this issue?</a>'
+// 	  });
+//   }
+
 function swal_error(e){
 	
 	var errObj = e.responseJSON;
@@ -16,7 +35,15 @@ function swal_error(e){
 	var errMsg='';
 	  for (const key of keys) {
 		//console.log(key +":"+ errObj[key] );
-		errMsg += errObj[key]+'\n';
+		if(typeof(errObj[key])==='object'){
+			let newObj=errObj[key];
+			const keys2 = Object.keys(newObj);
+			for (const key2 of keys2) {
+				errMsg += newObj[key2]+'\n';
+			}
+		}else{
+			errMsg += errObj[key]+'\n';
+		}
 	  }
 	
 	  Swal.fire({
