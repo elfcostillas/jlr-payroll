@@ -6,6 +6,11 @@
     <script>
         $(document).ready(function(){
 
+            let stopOption = [
+                { text: "No", value: "N" },
+                { text: "Yes", value: "Y" },
+            ];
+
             var viewModel = kendo.observable({ 
                 form : {
                     model : {
@@ -27,7 +32,7 @@
                                 }
                             },
                             create : {
-                                url : 'create',
+                                url : 'fixed-deductions/create',
                                 type : 'post',
                                 dataType : 'json',
                                 complete : function(e){
@@ -41,7 +46,7 @@
                                 }
                             },
                             update : {
-                                url : 'deduction-type/update',
+                                url : 'fixed-deductions/update',
                                 type : 'post',
                                 dataType : 'json',
                                 complete : function(e){
@@ -73,17 +78,18 @@
                                 id : 'id',
                                 fields : {
                                     id : { type : 'number',editable:false },
-                                    biometric_id: { type : 'number' },
+                                    biometric_id: { type : 'string' },
                                     deduction_type: { type : 'string' },
                                     remarks: { type : 'string' },
                                     amount: { type : 'number' },
                                     is_stopped: { type : 'string' },
-                                    encoded_by: { type : 'number',editable:false },
-                                    encoded_on: { type : 'date',editable:false },
+                                    //encoded_by: { type : 'number',editable:false },
+                                    //encoded_on: { type : 'date',editable:false },
                                     employee_name: { type : 'string' },
                                     encoder: { type : 'string' ,editable:false},
                                     period_range: { type : 'string' },
                                     deduction_desc: { type : 'string' },
+                                    period_id : { type : 'number' },
                                 }
                             }
                         }
@@ -157,7 +163,14 @@
                     buttonCount : 5
                 },
                 noRecords: true,
-                filterable : true,
+                filterable : {
+                    extra: false,
+                    operators: {
+                        string: {
+                            contains: "Contains"
+                        }
+                    }
+                },
                 sortable : true,
                 height : 550,
                 scrollable: true,
@@ -176,22 +189,24 @@
                         width : 60,    
                     },
                     {
-                        title : "Payroll Period",
-                        field : "perio_id",
+                        title : "Start Deduction",
+                        field : "period_id",
                         template : "#= period_range #",
                         width : 170,    
+                        editor : payperiodEditor
                     },
                     {
                         title : "Deduction Type",
                         field : "deduction_type",
                         template : "#= deduction_desc #",
                         width : 170,    
+                        editor : fixedOptionEditor
                     },
                     {
                         title : "Employee",
                         field : "biometric_id",
                         template : "#= employee_name #",
-                        
+                        editor : employeeEditor
                     },
                     {
                         title : "Amount",
@@ -206,7 +221,8 @@
                     {
                         title : "Stop",
                         field : "is_stopped",
-                        width : 75,    
+                        width : 80, 
+                        editor : stopEditor,  
                     },
                     {
                         title : "Encoded By",
@@ -218,11 +234,11 @@
                                 name: "edit",
                                 icon: "edit"
                             },
-                            {
-                                name : "delete",
-                                text : "Delete",
-                                icon : 'delete'
-                            }
+                            // {
+                            //     name : "delete",
+                            //     text : "Delete",
+                            //     icon : 'delete'
+                            // }
                         ],
                         width : 185
                     }
@@ -252,9 +268,39 @@
                 //.kendoComboBox({
                     //autoBind: false,
                     autoWidth: true,
+                    dataTextField: "description",
+                    dataValueField: "id",
+                    dataSource: viewModel.ds.typesgrid,
+                   
+                });
+            }
+
+            function payperiodEditor(container, options)
+            {
+                $('<input name="' + options.field + '"/>')
+                .appendTo(container)
+                .kendoDropDownList({
+                //.kendoComboBox({
+                    //autoBind: false,
+                    autoWidth: true,
+                    dataTextField: "template",
+                    dataValueField: "id",
+                    dataSource: viewModel.ds.payperiod,
+                   
+                });
+            }
+
+            function stopEditor(container, options)
+            {
+                $('<input name="' + options.field + '"/>')
+                .appendTo(container)
+                .kendoDropDownList({
+                //.kendoComboBox({
+                    //autoBind: false,
+                    autoWidth: true,
                     dataTextField: "text",
                     dataValueField: "value",
-                    dataSource: fixedOption,
+                    dataSource: stopOption,
                    
                 });
             }

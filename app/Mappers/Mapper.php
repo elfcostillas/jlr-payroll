@@ -88,9 +88,11 @@ abstract class Mapper implements MapperInterface
         $data = $this->model->find($request[$this->primary])->makeVisible($hiddenColumn);
 
         foreach ($columns as $column) {
-           
-            if ($data->{$column} !== $request[$column]) {
-                $result[$column] = $request[$column];
+            if(array_key_exists($column,$request))
+            {
+                if ($data->{$column} !== $request[$column]) {
+                        $result[$column] = $request[$column];
+                }
             }
         }
 

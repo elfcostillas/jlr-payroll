@@ -7,17 +7,21 @@ use Illuminate\Http\Request;
 use App\Mappers\Deductions\OneTimeDeductionHeaderMapper;
 use App\Mappers\Deductions\OneTimeDeductionDetailMapper;
 use Illuminate\Support\Facades\Auth;
+use App\Mappers\TimeKeepingMapper\PayrollPeriodMapper;
 
 class OneTimeDeductionController extends Controller
 {
     //
     private $header;
-    private $detail;    
+    private $detail;   
+    private $payperiod;
+ 
 
-    public function __construct(OneTimeDeductionHeaderMapper $header,OneTimeDeductionDetailMapper $detail)
+    public function __construct(OneTimeDeductionHeaderMapper $header,OneTimeDeductionDetailMapper $detail,PayrollPeriodMapper $payperiod)
     {
         $this->header = $header;
-        $this->detail = $detail;            
+        $this->detail = $detail;        
+        $this->payperiod = $payperiod;    
     }
 
     public function index()
@@ -79,7 +83,7 @@ class OneTimeDeductionController extends Controller
 
     public function getPayrollPeriod(Request $request)
     {
-        $result = $this->header->getPayrollPeriod();
+        $result = $this->payperiod->getPayrollPeriod();
         return response()->json($result);
 
     }

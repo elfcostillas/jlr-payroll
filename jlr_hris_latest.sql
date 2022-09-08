@@ -35,6 +35,163 @@ insert  into `civil_status`(`id`,`stat_code`,`stat_desc`) values
 (3,'DIV','Divorced'),
 (4,'WID','Widowed');
 
+/*Table structure for table `deduction_fixed` */
+
+DROP TABLE IF EXISTS `deduction_fixed`;
+
+CREATE TABLE `deduction_fixed` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `period_id` int(11) DEFAULT NULL,
+  `biometric_id` int(11) DEFAULT NULL,
+  `deduction_type` int(11) DEFAULT NULL,
+  `remarks` text,
+  `amount` decimal(24,2) DEFAULT NULL,
+  `is_stopped` enum('Y','N') DEFAULT NULL,
+  `encoded_by` int(11) DEFAULT NULL,
+  `encoded_on` datetime DEFAULT NULL,
+  UNIQUE KEY `BioIdAndLoanTypeUnique` (`biometric_id`,`deduction_type`),
+  KEY `id` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+
+/*Data for the table `deduction_fixed` */
+
+insert  into `deduction_fixed`(`id`,`period_id`,`biometric_id`,`deduction_type`,`remarks`,`amount`,`is_stopped`,`encoded_by`,`encoded_on`) values 
+(1,1,4,16,NULL,500.00,'N',1,'2022-09-07 22:58:11'),
+(3,1,4,9,NULL,565.00,'N',1,'2022-09-07 23:18:59'),
+(4,1,863,20,NULL,9990.00,'N',1,'2022-09-07 23:19:18');
+
+/*Table structure for table `deduction_installments` */
+
+DROP TABLE IF EXISTS `deduction_installments`;
+
+CREATE TABLE `deduction_installments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `period_id` int(11) DEFAULT NULL,
+  `biometric_id` int(11) DEFAULT NULL,
+  `deduction_type` int(11) DEFAULT NULL,
+  `remarks` text,
+  `total_amount` decimal(24,2) DEFAULT NULL,
+  `terms` int(11) DEFAULT NULL,
+  `ammortization` decimal(24,2) DEFAULT NULL,
+  `is_stopped` enum('Y','N') DEFAULT NULL,
+  `encoded_by` int(11) DEFAULT NULL,
+  `encoded_on` datetime DEFAULT NULL,
+  `deduction_sched` int(11) DEFAULT NULL,
+  KEY `id` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+
+/*Data for the table `deduction_installments` */
+
+insert  into `deduction_installments`(`id`,`period_id`,`biometric_id`,`deduction_type`,`remarks`,`total_amount`,`terms`,`ammortization`,`is_stopped`,`encoded_by`,`encoded_on`,`deduction_sched`) values 
+(1,1,847,9,'tets12312',1500.00,8,187.50,'N',1,'2022-09-08 06:44:22',2),
+(2,1,863,9,'3',1000.00,5,200.00,'N',1,'2022-09-08 06:47:40',1);
+
+/*Table structure for table `deduction_onetime_details` */
+
+DROP TABLE IF EXISTS `deduction_onetime_details`;
+
+CREATE TABLE `deduction_onetime_details` (
+  `line_id` int(11) NOT NULL AUTO_INCREMENT,
+  `header_id` int(11) NOT NULL,
+  `biometric_id` int(11) NOT NULL,
+  `amount` decimal(24,2) DEFAULT NULL,
+  PRIMARY KEY (`header_id`,`biometric_id`),
+  KEY `line_id` (`line_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
+
+/*Data for the table `deduction_onetime_details` */
+
+insert  into `deduction_onetime_details`(`line_id`,`header_id`,`biometric_id`,`amount`) values 
+(1,1,158,500.00),
+(2,13,4,0.00),
+(5,13,847,500.00),
+(3,15,352,111.00),
+(4,19,352,222.00),
+(6,20,205,5000.00);
+
+/*Table structure for table `deduction_onetime_headers` */
+
+DROP TABLE IF EXISTS `deduction_onetime_headers`;
+
+CREATE TABLE `deduction_onetime_headers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `period_id` int(11) DEFAULT NULL,
+  `deduction_type` int(11) DEFAULT NULL,
+  `remarks` text,
+  `encoded_by` int(11) DEFAULT NULL,
+  `encoded_on` datetime DEFAULT NULL,
+  `doc_status` varchar(12) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `PeriodDeductionTypeUnique` (`period_id`,`deduction_type`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4;
+
+/*Data for the table `deduction_onetime_headers` */
+
+insert  into `deduction_onetime_headers`(`id`,`period_id`,`deduction_type`,`remarks`,`encoded_by`,`encoded_on`,`doc_status`) values 
+(1,1,3,'dfgdfgdfgdf',1,'2022-09-07 05:02:50','POSTED'),
+(13,1,5,'ewerwerwerwer',1,'2022-09-07 05:24:24','DRAFT'),
+(15,1,6,'1231231231',1,'2022-09-07 05:27:14','DRAFT'),
+(17,1,23,'werwerwer',1,'2022-09-07 05:27:45','POSTED'),
+(19,1,19,'erterterert',1,'2022-09-07 05:29:50','POSTED'),
+(20,1,17,'test ',1,'2022-09-07 23:11:39','POSTED');
+
+/*Table structure for table `deduction_sched` */
+
+DROP TABLE IF EXISTS `deduction_sched`;
+
+CREATE TABLE `deduction_sched` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code1` varchar(24) DEFAULT NULL,
+  `sched_desc` varchar(24) DEFAULT NULL,
+  KEY `id` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+
+/*Data for the table `deduction_sched` */
+
+insert  into `deduction_sched`(`id`,`code1`,`sched_desc`) values 
+(1,'1st half','1-15'),
+(2,'2nd half','16-30'),
+(3,'Both','Both');
+
+/*Table structure for table `deduction_types` */
+
+DROP TABLE IF EXISTS `deduction_types`;
+
+CREATE TABLE `deduction_types` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `description` text,
+  `is_fixed` enum('Y','N') DEFAULT 'N',
+  KEY `id` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4;
+
+/*Data for the table `deduction_types` */
+
+insert  into `deduction_types`(`id`,`description`,`is_fixed`) values 
+(1,'Union Dues','N'),
+(2,'WTax Adjustment','N'),
+(3,'Office Account','N'),
+(4,'Medicine','N'),
+(5,'Dental','N'),
+(6,'Hospital','N'),
+(7,'Coop Rice Ammortization','N'),
+(8,'Canteen','N'),
+(9,'Bunk House Rental','Y'),
+(10,'Mortuary','N'),
+(11,'Coop','Y'),
+(12,'Gift Check','N'),
+(13,'Vale','N'),
+(14,'Cash Advance','N'),
+(15,'Company Rice Ammortization','Y'),
+(16,'Safety Shoes','Y'),
+(17,'Safety Violation Fee','N'),
+(18,'Helmet','Y'),
+(19,'Founders Day Tshirt','N'),
+(20,'Office Account Refund','Y'),
+(21,'CSR Pork Meat','Y'),
+(22,'Mobile Phone Unit','Y'),
+(23,'Over Paid','N'),
+(24,'Odette Cash Advance','Y');
+
 /*Table structure for table `departments` */
 
 DROP TABLE IF EXISTS `departments`;
@@ -558,7 +715,7 @@ CREATE TABLE `edtr` (
   `ndays` int(11) DEFAULT '0',
   PRIMARY KEY (`biometric_id`,`dtr_date`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2866 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=5086 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `edtr` */
 
@@ -1328,6 +1485,15 @@ insert  into `edtr`(`id`,`biometric_id`,`dtr_date`,`time_in`,`time_out`,`late`,`
 (400,203,'2022-08-04',NULL,NULL,0,0.00,0.00,0.00,0.00,0,0),
 (401,203,'2022-08-05',NULL,NULL,0,0.00,0.00,0.00,0.00,0,0),
 (402,203,'2022-08-06',NULL,NULL,0,0.00,0.00,0.00,0.00,0,0),
+(2866,203,'2022-08-07',NULL,NULL,0,0.00,0.00,0.00,0.00,0,0),
+(2867,203,'2022-08-08',NULL,NULL,0,0.00,0.00,0.00,0.00,0,0),
+(2868,203,'2022-08-09',NULL,NULL,0,0.00,0.00,0.00,0.00,0,0),
+(2869,203,'2022-08-10',NULL,NULL,0,0.00,0.00,0.00,0.00,0,0),
+(2870,203,'2022-08-11',NULL,NULL,0,0.00,0.00,0.00,0.00,0,0),
+(2871,203,'2022-08-12',NULL,NULL,0,0.00,0.00,0.00,0.00,0,0),
+(2872,203,'2022-08-13',NULL,NULL,0,0.00,0.00,0.00,0.00,0,0),
+(2873,203,'2022-08-14',NULL,NULL,0,0.00,0.00,0.00,0.00,0,0),
+(2874,203,'2022-08-15',NULL,NULL,0,0.00,0.00,0.00,0.00,0,0),
 (2461,205,'2022-08-01','7:46','17:06',1,0.25,0.00,0.00,0.00,1,1),
 (2462,205,'2022-08-02','06:12','17:05',0,0.00,0.00,0.00,0.00,0,0),
 (2463,205,'2022-08-03','06:10','17:11',0,0.00,0.00,0.00,0.00,0,0),
@@ -10563,6 +10729,26 @@ insert  into `leave_request_type`(`id`,`leave_type_code`,`leave_type_desc`) valu
 (5,'MP','Maternity/Paternity'),
 (6,'O','Others');
 
+/*Table structure for table `loan_types` */
+
+DROP TABLE IF EXISTS `loan_types`;
+
+CREATE TABLE `loan_types` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `loan_code` varchar(12) DEFAULT NULL,
+  `description` text,
+  `sched` int(11) DEFAULT NULL,
+  KEY `id` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+
+/*Data for the table `loan_types` */
+
+insert  into `loan_types`(`id`,`loan_code`,`description`,`sched`) values 
+(1,'PGSAL','Pag-Ibig Salary Loan',1),
+(2,'PGCAL','Pag Ibig Calamity Loan',1),
+(3,'SSS','SSS Salary Loan',1),
+(4,'SSS CAL','SSS Calamity Loan',1);
+
 /*Table structure for table `locations` */
 
 DROP TABLE IF EXISTS `locations`;
@@ -10593,7 +10779,7 @@ CREATE TABLE `main_menu` (
   `menu_link` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `main_menu` */
 
@@ -10602,7 +10788,8 @@ insert  into `main_menu`(`id`,`menu_desc`,`menu_icon`,`menu_link`) values
 (2,'Employee File','fas fa-user-cog','employee-files'),
 (3,'Payroll Transaction','fas fa-calculator','payroll-transaction'),
 (4,'Settings','fas fa-cog','settings'),
-(5,'Reports','fas fa-chart-pie','reports');
+(5,'Reports','fas fa-chart-pie','reports'),
+(6,'Loans / Deductions','fas fa-coins','deductions');
 
 /*Table structure for table `manual_dtr` */
 
@@ -10826,19 +11013,19 @@ CREATE TABLE `payrollregister_unposted` (
   `under_time` decimal(24,2) DEFAULT NULL,
   PRIMARY KEY (`biometric_id`,`period_id`),
   UNIQUE KEY `line_id` (`line_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `payrollregister_unposted` */
 
 insert  into `payrollregister_unposted`(`line_id`,`biometric_id`,`period_id`,`basic_salary`,`is_daily`,`basic_pay`,`late`,`late_eq`,`ndays`,`night_diff`,`overtime`,`pay_type`,`under_time`) values 
-(33,4,1,0.00,'N',0.00,0.00,0.00,1.00,0.00,0.00,2,0.00),
-(34,158,1,0.00,'N',0.00,15.00,0.25,5.00,0.00,0.00,2,0.00),
-(35,205,1,0.00,'N',0.00,1.00,0.25,1.00,0.00,0.00,2,0.00),
-(36,352,1,0.00,'N',0.00,0.00,0.00,0.00,0.00,0.00,2,0.00),
-(37,692,1,0.00,'N',0.00,0.00,0.00,0.00,0.00,0.00,2,0.00),
-(38,822,1,0.00,'N',0.00,0.00,0.00,0.00,0.00,0.00,2,0.00),
-(39,847,1,20000.00,'N',10000.00,16.00,0.50,12.00,0.00,0.00,1,0.00),
-(40,876,1,0.00,'N',0.00,0.00,0.00,0.00,0.00,0.00,2,0.00);
+(57,4,1,0.00,'N',0.00,0.00,0.00,1.00,0.00,0.00,2,0.00),
+(58,158,1,0.00,'N',0.00,15.00,0.25,5.00,0.00,0.00,2,0.00),
+(59,205,1,0.00,'N',0.00,1.00,0.25,1.00,0.00,0.00,2,0.00),
+(60,352,1,0.00,'N',0.00,0.00,0.00,0.00,0.00,0.00,2,0.00),
+(61,692,1,0.00,'N',0.00,0.00,0.00,0.00,0.00,0.00,2,0.00),
+(62,822,1,0.00,'N',0.00,0.00,0.00,0.00,0.00,0.00,2,0.00),
+(63,847,1,20000.00,'N',10000.00,16.00,0.50,12.00,0.00,0.00,1,0.00),
+(64,876,1,0.00,'N',0.00,0.00,0.00,0.00,0.00,0.00,2,0.00);
 
 /*Table structure for table `payrollregister_unposted_weekly` */
 
@@ -10887,7 +11074,7 @@ CREATE TABLE `sub_menu` (
   `sub_menu_icon` varchar(24) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `sub_menu` */
 
@@ -10911,7 +11098,13 @@ insert  into `sub_menu`(`id`,`sub_menu_desc`,`sub_menu_main`,`sub_menu_link`,`su
 (17,'FTP',1,'timekeeping/ftp','fas fa-business-time'),
 (18,NULL,NULL,'accounts/leave-filling','fas fa-plane-departure'),
 (19,NULL,NULL,'accounts/set-biometric','fas fa-id-card'),
-(20,'Default Work Schedules',4,'settings/default-schedules','fas fa-calendar-alt');
+(20,'Default Work Schedules',4,'settings/default-schedules','fas fa-calendar-alt'),
+(21,'Deduction Types',4,'settings/deduction-type','fas fa-coins'),
+(22,'Loan Types',4,'settings/loan-type','fas fa-money-bill-wave'),
+(23,'One Time Deductions',6,'deductions/one-time',NULL),
+(24,'Installments',6,'deductions/installments',NULL),
+(25,'Fixed Deductions',6,'deductions/fixed-deductions',NULL),
+(26,'Loans',6,'deductions/government-loans',NULL);
 
 /*Table structure for table `user_rights` */
 
@@ -10923,7 +11116,7 @@ CREATE TABLE `user_rights` (
   `sub_menu_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`line_id`),
   KEY `userRightsIndex` (`user_id`,`sub_menu_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=154 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=160 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `user_rights` */
 
@@ -10946,6 +11139,12 @@ insert  into `user_rights`(`line_id`,`user_id`,`sub_menu_id`) values
 (108,1,16),
 (114,1,17),
 (150,1,20),
+(154,1,21),
+(155,1,22),
+(156,1,23),
+(158,1,24),
+(157,1,25),
+(159,1,26),
 (50,2,1),
 (51,2,2),
 (53,2,3),
@@ -11169,6 +11368,49 @@ BEGIN
 	REPAIR TABLE payrollregister_unposted_weekly;
     END */$$
 DELIMITER ;
+
+/*Table structure for table `employee_names_vw` */
+
+DROP TABLE IF EXISTS `employee_names_vw`;
+
+/*!50001 DROP VIEW IF EXISTS `employee_names_vw` */;
+/*!50001 DROP TABLE IF EXISTS `employee_names_vw` */;
+
+/*!50001 CREATE TABLE  `employee_names_vw`(
+ `biometric_id` int(11) ,
+ `employee_name` varchar(202) ,
+ `exit_status` int(11) 
+)*/;
+
+/*Table structure for table `payroll_period_vw` */
+
+DROP TABLE IF EXISTS `payroll_period_vw`;
+
+/*!50001 DROP VIEW IF EXISTS `payroll_period_vw` */;
+/*!50001 DROP TABLE IF EXISTS `payroll_period_vw` */;
+
+/*!50001 CREATE TABLE  `payroll_period_vw`(
+ `id` int(11) ,
+ `date_from` date ,
+ `date_to` date ,
+ `date_release` date ,
+ `man_hours` int(11) ,
+ `template` varchar(21) 
+)*/;
+
+/*View structure for view employee_names_vw */
+
+/*!50001 DROP TABLE IF EXISTS `employee_names_vw` */;
+/*!50001 DROP VIEW IF EXISTS `employee_names_vw` */;
+
+/*!50001 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `employee_names_vw` AS select `employees`.`biometric_id` AS `biometric_id`,trim(concat(ifnull(`employees`.`lastname`,''),', ',ifnull(`employees`.`firstname`,''),' ',ifnull(`employees`.`suffixname`,''),' ',ifnull(`employees`.`middlename`,''))) AS `employee_name`,`employees`.`exit_status` AS `exit_status` from `employees` order by `employees`.`lastname`,`employees`.`firstname` */;
+
+/*View structure for view payroll_period_vw */
+
+/*!50001 DROP TABLE IF EXISTS `payroll_period_vw` */;
+/*!50001 DROP VIEW IF EXISTS `payroll_period_vw` */;
+
+/*!50001 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `payroll_period_vw` AS select `payroll_period`.`id` AS `id`,`payroll_period`.`date_from` AS `date_from`,`payroll_period`.`date_to` AS `date_to`,`payroll_period`.`date_release` AS `date_release`,`payroll_period`.`man_hours` AS `man_hours`,concat(date_format(`payroll_period`.`date_from`,'%m/%d/%Y'),'-',date_format(`payroll_period`.`date_to`,'%m/%d/%Y')) AS `template` from `payroll_period` order by `payroll_period`.`id` desc */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

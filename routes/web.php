@@ -35,6 +35,7 @@ use App\Http\Controllers\Accounts\LeaveRequestController;
 
 use  App\Http\Controllers\Deductions\OneTimeDeductionController;
 use  App\Http\Controllers\Deductions\FixedDeductionController;
+use  App\Http\Controllers\Deductions\InstallmentDeductionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -266,6 +267,7 @@ Route::middleware('auth')->prefix('deductions')->group(function(){
         Route::get('list-types',[OneTimeDeductionController::class,'getTypes']);
         Route::get('list-payroll-period',[OneTimeDeductionController::class,'getPayrollPeriod']);
         Route::get('employee-list',[OneTimeDeductionController::class,'getEmployees']);
+    
     });
 
     Route::prefix('fixed-deductions')->group(function(){
@@ -275,6 +277,24 @@ Route::middleware('auth')->prefix('deductions')->group(function(){
         Route::post('create',[FixedDeductionController::class,'create']);
         Route::post('update',[FixedDeductionController::class,'update']);
         Route::post('delete',[FixedDeductionController::class,'delete']);
+        
+        Route::get('list-types',[FixedDeductionController::class,'getTypes']);
+        Route::get('list-payroll-period',[FixedDeductionController::class,'getPayrollPeriod']);
+        Route::get('employee-list',[FixedDeductionController::class,'getEmployees']);
+  
+    });
+
+    Route::prefix('installments')->group(function(){ 
+        Route::get('/',[InstallmentDeductionController::class,'index']);
+        Route::get('list/{biometric_id}',[InstallmentDeductionController::class,'list']);
+        Route::get('employee-list',[InstallmentDeductionController::class,'getEmployees']);
+        Route::get('deduct-sched-list',[InstallmentDeductionController::class,'getDeductSched']);
+        Route::get('read-header/{id}',[InstallmentDeductionController::class,'readHeader']);
+        
+        Route::get('list-payroll-period',[InstallmentDeductionController::class,'getPayrollPeriod']);
+        Route::get('list-types',[InstallmentDeductionController::class,'getTypes']);
+        Route::post('save',[InstallmentDeductionController::class,'save']);
+        //list-payroll-period
     });
 });
 

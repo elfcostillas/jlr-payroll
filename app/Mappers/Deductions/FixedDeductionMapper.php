@@ -11,11 +11,11 @@ class FixedDeductionMapper extends AbstractMapper {
 
 	protected $modelClassName = 'App\Models\Deductions\FixedDeduction';
     protected $rules = [
-        'period_id' => 'required|sometimes',
-        'biometric_id' => 'required|sometimes',
-        'deduction_type' => 'required|sometimes',
+        'period_id' => 'sometimes|required',
+        'biometric_id' => 'sometimes|required',
+        'deduction_type' => 'sometimes|required',
         //'remarks' => 'required|sometimes',
-        'amount' => 'required|sometimes|gt:0',
+        'amount' => 'sometimes|required|gt:0',
     ];
 
     public function list($type,$filter)
@@ -35,7 +35,12 @@ class FixedDeductionMapper extends AbstractMapper {
         if($filter['filter']!=null){
 			foreach($filter['filter']['filters'] as $f)
 			{
-				$result->where($f['field'],'like','%'.$f['value'].'%');
+				if($f['field']=='biometric_id'){
+                    $result->where('employee_names_vw.employee_name','like','%'.$f['value'].'%');
+                }else{  
+                    $result->where($f['field'],'like','%'.$f['value'].'%');
+                }
+                
 			}
 		}
 
@@ -61,7 +66,7 @@ class FixedDeductionMapper extends AbstractMapper {
     {
         //SELECT id,description FROM deduction_types WHERE is_fixed = 'N'
         $result = $this->model->select('id','description')->from('deduction_types')
-        ->whereRaw('is_fixed = \'N\'');;
+        ->whereRaw('is_fixed = \'Y\'');;
 
         return $result->get();
     }

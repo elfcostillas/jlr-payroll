@@ -8,4 +8,22 @@ use Illuminate\Database\Eloquent\Model;
 class InstallmentDeduction extends Model
 {
     use HasFactory;
+
+    protected $table = 'deduction_installments';
+    protected $primaryKey = 'id';
+    public $timestamps = false;
+
+    protected $fillable = [
+        'period_id',
+        'biometric_id',
+        'deduction_type',
+        'remarks',
+        'total_amount',
+        'terms',
+        'ammortization',
+        'is_stopped',
+        'deduction_sched',
+        'encoded_by',
+        'encoded_on'
+    ];
 }

@@ -39,6 +39,13 @@ class PayrollPeriodMapper extends AbstractMapper {
         return $result->get();
     }
 
+	public function getPayrollPeriod()
+    {
+        $result = $this->model->select()->from('payroll_period_vw')->orderBy('id','desc');
+
+        return $result->get();
+    }
+
 
 }
  
