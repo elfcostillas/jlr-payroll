@@ -47,7 +47,7 @@
     
 </style>
 @section('title')
-    <h4> Installments <h4>
+    <h4> Loans <h4>
 @endsection
 @section('content')
     <div class="container">
@@ -98,7 +98,7 @@
                                 <td colspan=1>Ammortizatoin</td>
                                 <td colspan=1>Stop</td>
                                 <td colspan=1></td>
-                                <td colspan=1>Deduction Sched.</td>
+                                <!-- <td colspan=1>Deduction Sched.</td> -->
                             </tr>
                             <tr>
                                 <td colspan=1><input type="text" id="total_amount" data-bind="value:form.model.total_amount"> </td>
@@ -106,7 +106,7 @@
                                 <td colspan=1><input type="text" id="ammortization" data-bind="value:form.model.ammortization" readonly > </td>
                                 <td colspan=1><input type="text" id="is_stopped" data-bind="value:form.model.is_stopped"> </td>
                                 <td colspan=1></td>
-                                <td colspan=1><input type="text" id="deduction_sched" data-bind="value:form.model.deduction_sched"></td>
+                                <!-- <td colspan=1><input type="text" id="deduction_sched" data-bind="value:form.model.deduction_sched"></td> -->
                             </tr>
                             <tr>
                                 <td colspan=6>Remarks</td>
@@ -123,4 +123,4 @@
     </div>
 @endsection
 
-@include('app.deductions.installment-deductions.js')
+@include('app.deductions.loans.js')

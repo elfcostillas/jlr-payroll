@@ -36,6 +36,7 @@ use App\Http\Controllers\Accounts\LeaveRequestController;
 use  App\Http\Controllers\Deductions\OneTimeDeductionController;
 use  App\Http\Controllers\Deductions\FixedDeductionController;
 use  App\Http\Controllers\Deductions\InstallmentDeductionController;
+use  App\Http\Controllers\Deductions\GovernmentLoanController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -295,6 +296,18 @@ Route::middleware('auth')->prefix('deductions')->group(function(){
         Route::get('list-types',[InstallmentDeductionController::class,'getTypes']);
         Route::post('save',[InstallmentDeductionController::class,'save']);
         //list-payroll-period
+    });
+
+    Route::prefix('government-loans')->group(function(){ 
+        Route::get('/',[GovernmentLoanController::class,'index']);
+        Route::get('list/{biometric_id}',[GovernmentLoanController::class,'list']);
+        Route::get('employee-list',[GovernmentLoanController::class,'getEmployees']);
+        Route::get('deduct-sched-list',[GovernmentLoanController::class,'getDeductSched']);
+        Route::get('read-header/{id}',[GovernmentLoanController::class,'readHeader']);
+        
+        Route::get('list-payroll-period',[GovernmentLoanController::class,'getPayrollPeriod']);
+        Route::get('list-types',[GovernmentLoanController::class,'getTypes']);
+        Route::post('save',[GovernmentLoanController::class,'save']);
     });
 });
 

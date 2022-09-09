@@ -1,25 +1,37 @@
 @section('jquery')
     <script id="template" type="text/x-kendo-template">
         <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="click:buttonHandler.createDeduction" > <span class="k-icon k-i-plus k-button-icon"></span>Create Deduction</button>
+        <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="click:buttonHandler.showAll" > <span class="k-icon k-i-edit k-button-icon"></span>Show All</button>
     </script>
 
     <script>
         $(document).ready(function(){
 
+            let stopOption = [
+                { text: "No", value: "N" },
+                { text: "Yes", value: "Y" },
+            ];
+
             var viewModel = kendo.observable({ 
                 form : {
                     model : {
-                        id : null,
-                        period_id : null,
-                        deduction_type : null,
-                        remarks : null,
+                        id: null,
+                        period_id: null,
+                        biometric_id: null,
+                        deduction_type: null,
+                        remarks: null,
+                        total_amount: null,
+                        terms: null,
+                        ammortization: null,
+                        is_stopped: null,
+                        deduction_sched: null,
                     }
                 },
                 ds : {
                     maingrid : new kendo.data.DataSource({
                         transport : {
                             read : {
-                                url : 'one-time/list/0',
+                                url : 'government-loans/list/0',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -73,11 +85,9 @@
                                 id : 'id',
                                 fields : {
                                     id : { type : 'string',editable : false },
-                                    description : { type : 'string' },
-                                    remarks: { type : 'string' },
-                                    doc_status: { type : 'string' },
-                                    template: { type : 'string' },
-                                    encoder: { type : 'string' },
+                                    employee : { type : 'string' },
+                                    descriptiongit : { type : 'string' },
+                                    total_amount : { type : 'number' },
                                     // date_release: { type : 'date' },
                                     // man_hours: { type : 'number' },
                                 }
@@ -87,7 +97,7 @@
                     typesgrid : new kendo.data.DataSource({
                         transport : {   
                             read : {
-                                url : 'one-time/list-types',
+                                url : 'government-loans/list-types',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -99,7 +109,7 @@
                     payperiod : new kendo.data.DataSource({
                         transport : {   
                             read : {
-                                url : 'one-time/list-payroll-period',
+                                url : 'government-loans/list-payroll-period',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -108,69 +118,10 @@
                             },
                         }
                     }),
-                    detailsgrid : new kendo.data.DataSource({
-                        transport : {   
-                            read : {
-                                url : 'one-time/list-details/0',
-                                type : 'get',
-                                dataType : 'json',
-                                complete : function(e){
-                                    
-                                }
-                            },
-                            create : {
-                                url : 'one-time/create-detail',
-                                type : 'post',
-                                dataType : 'json',
-                                complete : function(e){
-                                    viewModel.ds.detailsgrid.read();
-                                }
-                            },
-                            update : {
-                                url : 'one-time/update-detail',
-                                type : 'post',
-                                dataType : 'json',
-                                complete : function(e){
-                                    viewModel.ds.detailsgrid.read();
-                                }
-                            },
-                            destroy : {
-                                url : 'one-time/delete-detail',
-                                type : 'post',
-                                dataType : 'json',
-                                complete : function(e){
-                                    viewModel.ds.detailsgrid.read();
-                                }
-                            },
-                            parameterMap: function (data, type) {
-                               
-                                if(type=='create'){
-                                    data.header_id = viewModel.form.model.id;
-                                }
-
-                                return data;
-                            },
-                        },
-                        pageSize :999,
-                        aggregate: [ { field: "amount", aggregate: "sum" },],
-                        schema : {
-                            model : {
-                                id : 'line_id',
-                                fields : { 
-                                    header_id : { type : 'number' },
-                                    biometric_id : { type : 'string' , },
-                                    amount : { type : 'number' },
-                                    empname  : { type : 'string' },
-                                    // date_release: { type : 'date' },
-                                    // man_hours: { type : 'number' },
-                                }
-                            }
-                        }
-                    }),
-                    employee : new kendo.data.DataSource({ 
+                    employeegrid : new kendo.data.DataSource({ 
                         transport : {
                             read : {
-                                url : 'one-time/employee-list',
+                                url : 'government-loans/employee-list',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -178,8 +129,12 @@
                                 }
                             }
                         },
+                        serverPaging : true,
                         serverFiltering : true,
+                        pageSize : 15,
                         schema : {
+                            data : "data",
+                            total : "total",
                             model : {
                                 id : "biometric_id",
                                 fields : {
@@ -187,7 +142,56 @@
                                 }
                             }
                         }
+                    }),
+                    employeecombobox : new kendo.data.DataSource({ 
+                        transport : {
+                            read : {
+                                url : 'government-loans/employee-list',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            }
+                        },
+                        // serverPaging : true,
+                        // serverFiltering : true,
+                        // pageSize : 15,
+                        schema : {
+                            data : "data",
+                            total : "total",
+                            model : {
+                                id : "biometric_id",
+                                fields : {
+                                    employee_name : { type : 'string' },
+                                }
+                            }
+                        }
+                    }),
+                    schedlist : new kendo.data.DataSource({ 
+                        transport : {
+                            read : {
+                                url : 'government-loans/deduct-sched-list',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            }
+                        },
+                        pageSize : 15,
+                        schema : {
+                          
+                            model : {
+                                id : "id",
+                                fields : {
+                                    code1 : { type : 'string' },
+                                    sched_desc : { type : 'string' },
+                                }
+                            }
+                        }
                     })
+                    
                 },
                 toolbarHandler : {
 
@@ -198,24 +202,13 @@
                         
                         var json_data = JSON.stringify(viewModel.form.model);
                         
-                        $.post('one-time/save',{
+                        $.post('government-loans/save',{
                             data : json_data
                         },function(data,staus){
                             swal_success(data);
 
-                            let url  = `one-time/read-header/${data}`;
+                            let url  = `government-loans/read-header/${data}`;
                             read(url,viewModel);
-
-                            // if(viewModel.form.model.id==null)
-                            // {
-                            //     let url  = `one-time/read-header/${data}`;
-                            //     read(url,viewModel);
-                            //     setTimeout(function(){
-                            //         read(url,viewModel);
-                            //     }, 500);
-                            // }   
-                            viewModel.ds.detailsgrid.transport.options.read.url = `one-time/list-details/${data}`;
-                            viewModel.ds.detailsgrid.read();
 
                             viewModel.ds.maingrid.read();
                             //viewModel.maingrid.formReload(data);
@@ -233,11 +226,11 @@
                         var tr = $(e.target).closest("tr");
                         var data = this.dataItem(tr);
 
-                        let url  = `one-time/read-header/${data.id}`;
+                        let url  = `government-loans/read-header/${data.id}`;
                         read(url,viewModel);
 
-                        viewModel.ds.detailsgrid.transport.options.read.url = `one-time/list-details/${data.id}`;
-                        viewModel.ds.detailsgrid.read();
+                        // viewModel.ds.detailsgrid.transport.options.read.url = `government-loans/list-details/${data.id}`;
+                        // viewModel.ds.detailsgrid.read();
                     },
                     createDeduction : function(){
                         viewModel.buttonHandler.clear();
@@ -247,36 +240,38 @@
                     
                     },
                     clear : function(){
-
                         viewModel.form.model.set('id',null);
                         viewModel.form.model.set('period_id',null);
+                        viewModel.form.model.set('biometric_id',null);
                         viewModel.form.model.set('deduction_type',null);
                         viewModel.form.model.set('remarks',null);
-                        viewModel.form.model.set('doc_status','DRAFT');
-                        viewModel.form.model.set('encoded_by',null);
-                        viewModel.form.model.set('encoded_on',null);
-
-                        viewModel.ds.detailsgrid.transport.options.read.url = `one-time/list-details/0`;
-                        viewModel.ds.detailsgrid.read();
-
-                        viewModel.callBack();
+                        viewModel.form.model.set('total_amount',null);
+                        viewModel.form.model.set('terms',null);
+                        viewModel.form.model.set('ammortization',null);
+                        viewModel.form.model.set('is_stopped','N');
+                        viewModel.form.model.set('deduction_sched',1);
                     },
                     post : function()
                     {
-                        Swal.fire({
-                            title: 'Finalize and Post One Time Deduction',
-                            text: "You won't be able to revert this!",
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Finalize'
-                        }).then((result) => {
-                            if (result.value) {                       
-                                viewModel.form.model.set('doc_status','POSTED'); 
-                                viewModel.buttonHandler.save();
-                            }
-                        });
+                        // Swal.fire({
+                        //     title: 'Finalize and One Time Deduction',
+                        //     text: "You won't be able to revert this!",
+                        //     icon: 'warning',
+                        //     showCancelButton: true,
+                        //     confirmButtonColor: '#3085d6',
+                        //     cancelButtonColor: '#d33',
+                        //     confirmButtonText: 'Finalize'
+                        // }).then((result) => {
+                        //     if (result.value) {                       
+                        //         viewModel.form.model.set('doc_status','POSTED'); 
+                        //         viewModel.buttonHandler.save();
+                        //     }
+                        // });
+                    },
+                    showAll : function()
+                    {
+                        viewModel.ds.maingrid.transport.options.read.url = `government-loans/list/0`;
+                        viewModel.ds.maingrid.read();
                     }
 
                 },
@@ -287,7 +282,7 @@
                        
                        myWindow.kendoWindow({
                            width: "810", //1124 - 1152
-                           height: "730",
+                           height: "360",
                            title: "Deduction Details",
                            visible: false,
                            animation: false,
@@ -305,28 +300,15 @@
                        
                     },
                     reAssignValues : function(){
-                        viewModel.form.model.set('period_id',($('#period_id').data('kendoDropDownList').value()!='') ? $('#period_id').data('kendoDropDownList').value() : 0 );
-                        viewModel.form.model.set('deduction_type',($('#deduction_type').data('kendoComboBox').value()!='') ? $('#deduction_type').data('kendoComboBox').value() : 0 );
-                        
+                        viewModel.form.model.set('period_id',($('#period_id').data('kendoDropDownList').value()!='') ? $('#period_id').data('kendoDropDownList').value() : null );
+                        viewModel.form.model.set('deduction_type',($('#deduction_type').data('kendoComboBox').value()!='') ? $('#deduction_type').data('kendoComboBox').value() : null );
+                        viewModel.form.model.set('is_stopped',($('#is_stopped').data('kendoDropDownList').value()!='') ? $('#is_stopped').data('kendoDropDownList').value() : null );
+                        viewModel.form.model.set('deduction_sched',($('#deduction_sched').data('kendoDropDownList').value()!='') ? $('#deduction_sched').data('kendoDropDownList').value() : null );
+                        viewModel.form.model.set('biometric_id',($('#biometric_id').data('kendoComboBox').value()!='') ? $('#biometric_id').data('kendoComboBox').value() : null );
                     }
                 },
                 callBack : function(){
                     
-                    let grid = $("#detailsgrid").data('kendoGrid');
-                
-                    if(viewModel.form.model.doc_status=='POSTED'){
-                        grid.hideColumn(3);
-                        grid.showColumn(4);
-
-                        activeToolbar.hide();
-                        postedToolbar.show();
-                    }else{
-                        grid.hideColumn(4);
-                        grid.showColumn(3);
-
-                        activeToolbar.show();
-                        postedToolbar.hide();
-                    }
                 }
             });
 
@@ -352,31 +334,23 @@
                     {
                         title : "ID",
                         field : "id",
-                        //template : "#= (data.date_to) ? kendo.toString(data.date_to,'MM/dd/yyyy') : ''  #",
+                       
                         width : 60,    
                     },
                     {
-                        title : "Payroll Period",
-                        field : "perio_id",
-                        template : "#= template #",
-                        width : 170,    
+                        title : "Employee",
+                        field : "employee_name",
+                       
                     },
                     {
-                        title : "Remarks",
-                        field : "remarks",
-                        // template : "#= (data.date_release) ? kendo.toString(data.date_release,'MM/dd/yyyy') : ''  #",
-                        // width : 120, 
-                        template: "#= description # : #= remarks# "   
+                        title : "Deduction Type",
+                        field : "description",
                     },
                     {
-                        title : "Status",
-                        field : "doc_status",
-                        width : 80,    
-                    },
-                    {
-                        title : "Encoded By",
-                        field : "encoder",
+                        title : "Amount",
+                        field : "total_amount",
                         width : 110,    
+                        template : "#=kendo.toString(total_amount,'n2')#",
                     },
                     {
                         command: { text : 'View',icon : 'edit' ,click : viewModel.buttonHandler.view },
@@ -387,14 +361,21 @@
                 ]
             });
 
-            $("#typesgrid").kendoGrid({
-                dataSource : viewModel.ds.typesgrid,
+            $("#employeegrid").kendoGrid({
+                dataSource : viewModel.ds.employeegrid,
                 pageable : {
                     refresh : true,
                     buttonCount : 5
                 },
                 noRecords: true,
-                filterable : true,
+                filterable : {
+                    extra : false,
+                    operators: {
+                        string: {
+                            contains: "Contains"
+                        }
+                    }
+                },
                 sortable : true,
                 height : 550,
                 scrollable: true,
@@ -403,87 +384,22 @@
                    
                     {
                         title : "ID",
-                        field : "id",
+                        field : "biometric_id",
                         //template : "#= (data.date_to) ? kendo.toString(data.date_to,'MM/dd/yyyy') : ''  #",
                         width : 60,    
                     },
                     {
                         title : "Description",
-                        field : "description",
+                        field : "employee_name",
                         // template : "#= (data.date_release) ? kendo.toString(data.date_release,'MM/dd/yyyy') : ''  #",
                         // width : 120,    
                     },
                 ],change : function(e){   
-                    let grid = $("#typesgrid").data("kendoGrid");
+                    let grid = $("#employeegrid").data("kendoGrid");
                     let selectedItem = grid.dataItem(grid.select());
 
-                    let oneTimeUrl = `one-time/list/${selectedItem.id}`;
-
-                    viewModel.ds.maingrid.transport.options.read.url = oneTimeUrl;
+                    viewModel.ds.maingrid.transport.options.read.url = `government-loans/list/${selectedItem.biometric_id}`;
                     viewModel.ds.maingrid.read();
-                }
-            });
-
-            $("#detailsgrid").kendoGrid({
-                dataSource : viewModel.ds.detailsgrid,
-                pageable : {
-                    refresh : true,
-                    buttonCount : 5
-                },
-                toolbar : ['create'],
-                noRecords: true,
-                filterable : true,
-                sortable : true,
-                height : 435,
-                scrollable: true,
-                selectable : true,
-                editable : "inline",
-                columns : [
-                    {
-                        title : "ID",
-                        field : "",
-                        //template : "#= biometric_id #",
-                        template : "#if(biometric_id==null){# # }else{ # #= biometric_id # # }#",
-                        width : 90,    
-                    },
-                    {
-                        title : "Employee",
-                        field : "biometric_id",
-                        editor : employeeEditor,
-                        template : "#if(biometric_id==0){#  #}else {# #= empname #  #}#"
-                    },
-                    {
-                        title : "Amount",
-                        field : "amount",
-                        width : 130,  
-                        template : "#=kendo.toString(amount,'n2')#",
-                        attributes : {
-                            style : 'text-align:right;'
-                        },
-                        footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
-
-                    },
-                    {
-                        command : ['edit','delete'],
-                        width : 190
-                    },
-                    {
-                        width : 190
-                    }
-                ],
-                edit : function(e){
-                    // console.log(e.container);
-                    // if (e.model.isNew()) {
-                    //     alert("new");
-                    // }
-                    // var combobox = e.container.find("#biometric_id").data("kendoComboBox");
-                    // console.log(e.container);
-                    // if ( combobox && combobox.value() === "0" ) {
-                    //     combobox.value("");
-                    //     alert();
-                    // }else{
-                    //     alert(combobox.value());
-                    // }
                 }
             });
 
@@ -506,9 +422,56 @@
                 autoWidth : true,
             });
 
+            $("#biometric_id").kendoComboBox({
+                dataSource : viewModel.ds.employeecombobox,
+                dataTextField: "employee_name",
+                dataValueField: "biometric_id",
+                filter : "contains",
+                autoWidth : true,
+            });
+
+            $("#total_amount").kendoNumericTextBox({ 
+                format : "n2",
+                change : function(e){
+                    let ammortization = viewModel.form.model.total_amount / viewModel.form.model.terms;
+                    viewModel.form.model.set('ammortization',ammortization);
+                },
+            });
+
+            $("#terms").kendoNumericTextBox({ 
+                format : "n0",
+                change : function(e){
+                    let ammortization = viewModel.form.model.total_amount / viewModel.form.model.terms;
+                    viewModel.form.model.set('ammortization',ammortization);
+                }, 
+            });
+            $("#ammortization").kendoNumericTextBox({format : "n2"});
+
             $("#remarks").kendoTextBox({ });
             
+            $("#is_stopped").kendoDropDownList({
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: stopOption,
+                index: 1,
+                dataBound : function(e){
+                  
+                }
+                //change: onChange
+            });
 
+            // $("#deduction_sched").kendoDropDownList({
+            //     dataTextField: "code1",
+            //     dataValueField: "id",
+            //     dataSource: viewModel.ds.schedlist,
+            //     index: 1,
+            //     dataBound : function(e){
+                  
+            //     }
+            //     //change: onChange
+            // });
+
+            
 
             // $("#emp_level").kendoDropDownList({
             //     dataTextField: "level_desc",
@@ -548,7 +511,7 @@
                     autoWidth: true,
                     dataTextField: "employee_name",
                     dataValueField: "biometric_id",
-                    dataSource: viewModel.ds.employee,
+                    dataSource: viewModel.ds.employeecombobox,
                     filter : "contains"
                    
                 });
@@ -558,17 +521,11 @@
                 items : [
                     { id : 'saveBtn', type: "button", text: "Save", icon: 'save', click : viewModel.buttonHandler.save },
                     { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
-                    { id : 'postBtn', type: "button", text: "Post", icon: 'print', click : viewModel.buttonHandler.post },
+                //  { id : 'postBtn', type: "button", text: "Post", icon: 'print', click : viewModel.buttonHandler.post },
                 ]
             });
 
-            var postedToolbar = $("#toolbar2").kendoToolBar({
-                items : [
-                    //{ id : 'saveBtn', type: "button", text: "Save", icon: 'save', click : viewModel.buttonHandler.save },
-                    { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
-                    //{ id : 'postBtn', type: "button", text: "Post", icon: 'print', click : viewModel.buttonHandler.post },
-                ]
-            });
+           
 
             kendo.bind($("#viewModel"),viewModel);
 

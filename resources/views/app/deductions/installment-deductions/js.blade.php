@@ -1,6 +1,7 @@
 @section('jquery')
     <script id="template" type="text/x-kendo-template">
         <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="click:buttonHandler.createDeduction" > <span class="k-icon k-i-plus k-button-icon"></span>Create Deduction</button>
+        <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="click:buttonHandler.showAll" > <span class="k-icon k-i-edit k-button-icon"></span>Show All</button>
     </script>
 
     <script>
@@ -266,6 +267,11 @@
                         //         viewModel.buttonHandler.save();
                         //     }
                         // });
+                    },
+                    showAll : function()
+                    {
+                        viewModel.ds.maingrid.transport.options.read.url = `installments/list/0`;
+                        viewModel.ds.maingrid.read();
                     }
 
                 },
