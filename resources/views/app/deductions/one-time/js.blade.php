@@ -123,7 +123,13 @@
                                 type : 'post',
                                 dataType : 'json',
                                 complete : function(e){
-                                    viewModel.ds.detailsgrid.read();
+                                    if(e.status==500){
+                                        swal_error(e);
+                                    }else{
+                                        swal_success(e);
+                                        viewModel.ds.detailsgrid.read();
+                                    }
+                                    
                                 }
                             },
                             update : {
@@ -131,7 +137,12 @@
                                 type : 'post',
                                 dataType : 'json',
                                 complete : function(e){
-                                    viewModel.ds.detailsgrid.read();
+                                    if(e.status==500){
+                                        swal_error(e);
+                                    }else{
+                                        swal_success(e);
+                                        viewModel.ds.detailsgrid.read();
+                                    }
                                 }
                             },
                             destroy : {
@@ -288,7 +299,7 @@
                        myWindow.kendoWindow({
                            width: "810", //1124 - 1152
                            height: "730",
-                           title: "Deduction Details",
+                           title: "Deduction Details - One Time Deduction",
                            visible: false,
                            animation: false,
                            actions: [
@@ -438,6 +449,9 @@
                 scrollable: true,
                 selectable : true,
                 editable : "inline",
+                edit : function(e){
+                    alert();
+                },
                 columns : [
                     {
                         title : "ID",

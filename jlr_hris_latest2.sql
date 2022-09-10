@@ -71,11 +71,11 @@ CREATE TABLE `deduction_gov_loans` (
   `encoded_on` datetime DEFAULT NULL,
   `deduction_sched` int(11) DEFAULT NULL,
   KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `deduction_gov_loans` */
 
-insert  into `deduction_gov_loans`(`id`,`period_id`,`biometric_id`,`deduction_type`,`remarks`,`total_amount`,`terms`,`ammortization`,`is_stopped`,`encoded_by`,`encoded_on`,`deduction_sched`) values (1,1,4,2,'5asasdasd','22000.00',24,'916.67','N',1,'2022-09-09 07:20:37',1);
+insert  into `deduction_gov_loans`(`id`,`period_id`,`biometric_id`,`deduction_type`,`remarks`,`total_amount`,`terms`,`ammortization`,`is_stopped`,`encoded_by`,`encoded_on`,`deduction_sched`) values (1,1,4,2,'5asasdasd','22000.00',24,'916.67','N',1,'2022-09-09 07:20:37',1),(2,1,352,2,'asdasdasd','2200.00',24,'91.67','N',1,'2022-09-10 07:13:03',NULL);
 
 /*Table structure for table `deduction_installments` */
 
@@ -112,11 +112,11 @@ CREATE TABLE `deduction_onetime_details` (
   `amount` decimal(24,2) DEFAULT NULL,
   PRIMARY KEY (`header_id`,`biometric_id`),
   KEY `line_id` (`line_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `deduction_onetime_details` */
 
-insert  into `deduction_onetime_details`(`line_id`,`header_id`,`biometric_id`,`amount`) values (1,1,158,'500.00'),(2,13,4,'0.00'),(5,13,847,'500.00'),(3,15,352,'111.00'),(4,19,352,'222.00'),(6,20,205,'5000.00');
+insert  into `deduction_onetime_details`(`line_id`,`header_id`,`biometric_id`,`amount`) values (1,1,205,'500.00');
 
 /*Table structure for table `deduction_onetime_headers` */
 
@@ -132,11 +132,11 @@ CREATE TABLE `deduction_onetime_headers` (
   `doc_status` varchar(12) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `PeriodDeductionTypeUnique` (`period_id`,`deduction_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `deduction_onetime_headers` */
 
-insert  into `deduction_onetime_headers`(`id`,`period_id`,`deduction_type`,`remarks`,`encoded_by`,`encoded_on`,`doc_status`) values (1,1,3,'dfgdfgdfgdf',1,'2022-09-07 05:02:50','POSTED'),(13,1,5,'ewerwerwerwer',1,'2022-09-07 05:24:24','DRAFT'),(15,1,6,'1231231231',1,'2022-09-07 05:27:14','DRAFT'),(17,1,23,'werwerwer',1,'2022-09-07 05:27:45','POSTED'),(19,1,19,'erterterert',1,'2022-09-07 05:29:50','POSTED'),(20,1,17,'test ',1,'2022-09-07 23:11:39','POSTED');
+insert  into `deduction_onetime_headers`(`id`,`period_id`,`deduction_type`,`remarks`,`encoded_by`,`encoded_on`,`doc_status`) values (1,1,19,'terterter',1,'2022-09-10 07:24:37','DRAFT');
 
 /*Table structure for table `deduction_sched` */
 

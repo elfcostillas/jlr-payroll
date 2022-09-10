@@ -11,7 +11,9 @@ class OneTimeDeductionDetailMapper extends AbstractMapper {
 
 	protected $modelClassName = 'App\Models\Deductions\OneTimeDeductionDetail';
     protected $rules = [
-    	
+    	'header_id' => 'required|sometimes',
+        'biometric_id' => 'required|sometimes',
+        'amount' => 'required|sometimes'
     ];
 
     public function list($header_id)

@@ -283,7 +283,7 @@
                        myWindow.kendoWindow({
                            width: "810", //1124 - 1152
                            height: "360",
-                           title: "Deduction Details",
+                           title: "Deduction Details - Loans",
                            visible: false,
                            animation: false,
                            actions: [
