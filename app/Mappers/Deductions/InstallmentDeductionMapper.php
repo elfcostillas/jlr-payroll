@@ -142,7 +142,6 @@ class InstallmentDeductionMapper extends AbstractMapper {
 
 
 /*
-
 SELECT * FROM deduction_fixed 
 INNER JOIN employee_names_vw ON employee_names_vw.biometric_id = deduction_fixed.biometric_id
 INNER JOIN payroll_period_vw ON deduction_fixed.period_id = payroll_period_vw.id

@@ -17,13 +17,13 @@ class GovernmentLoans extends Model
     protected $fillable = [
         'period_id',
         'biometric_id',
-        //'deduction_type',
+        'deduction_type',
         'remarks',
         'total_amount',
         'terms',
         'ammortization',
         'is_stopped',
-        'deduction_sched',
+        //'deduction_sched',
         'encoded_by',
         'encoded_on'
     ];

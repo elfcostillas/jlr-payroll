@@ -37,11 +37,11 @@ class GovernmentLoanMapper extends AbstractMapper {
 
     public function list($biometric_id,$filter)
     {
-        $result = $this->model->select(DB::raw("deduction_gov_loans.id,employee_names_vw.employee_name,deduction_types.description,total_amount"))
+        $result = $this->model->select(DB::raw("deduction_gov_loans.id,employee_names_vw.employee_name,loan_types.description,total_amount"))
 		->from('deduction_gov_loans')
 		->join('employee_names_vw','employee_names_vw.biometric_id','=','deduction_gov_loans.biometric_id')
 		->join('payroll_period_vw','payroll_period_vw.id','=','deduction_gov_loans.period_id')
-		->join('deduction_types','deduction_type','=','deduction_types.id')
+		->join('loan_types','deduction_type','=','loan_types.id')
         ->join('users','encoded_by','=','users.id');
         
         if($biometric_id!=0){
@@ -74,7 +74,7 @@ class GovernmentLoanMapper extends AbstractMapper {
 
     public function getTypes()
     {
-        //SELECT id,description FROM deduction_types WHERE is_fixed = 'N'
+        //SELECT id,description FROM loan_types WHERE is_fixed = 'N'
         $result = $this->model->select('id','description')->from('loan_types');
         return $result->get();
     }
@@ -144,5 +144,5 @@ class GovernmentLoanMapper extends AbstractMapper {
 SELECT * FROM deduction_fixed 
 INNER JOIN employee_names_vw ON employee_names_vw.biometric_id = deduction_fixed.biometric_id
 INNER JOIN payroll_period_vw ON deduction_fixed.period_id = payroll_period_vw.id
-INNER JOIN deduction_types ON deduction_type = deduction_types.id
+INNER JOIN loan_types ON deduction_type = loan_types.id
 */

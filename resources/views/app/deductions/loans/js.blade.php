@@ -24,7 +24,7 @@
                         terms: null,
                         ammortization: null,
                         is_stopped: null,
-                        deduction_sched: null,
+                       //deduction_sched: null,
                     }
                 },
                 ds : {
@@ -249,7 +249,7 @@
                         viewModel.form.model.set('terms',null);
                         viewModel.form.model.set('ammortization',null);
                         viewModel.form.model.set('is_stopped','N');
-                        viewModel.form.model.set('deduction_sched',1);
+                        //viewModel.form.model.set('deduction_sched',1);
                     },
                     post : function()
                     {
@@ -303,7 +303,7 @@
                         viewModel.form.model.set('period_id',($('#period_id').data('kendoDropDownList').value()!='') ? $('#period_id').data('kendoDropDownList').value() : null );
                         viewModel.form.model.set('deduction_type',($('#deduction_type').data('kendoComboBox').value()!='') ? $('#deduction_type').data('kendoComboBox').value() : null );
                         viewModel.form.model.set('is_stopped',($('#is_stopped').data('kendoDropDownList').value()!='') ? $('#is_stopped').data('kendoDropDownList').value() : null );
-                        viewModel.form.model.set('deduction_sched',($('#deduction_sched').data('kendoDropDownList').value()!='') ? $('#deduction_sched').data('kendoDropDownList').value() : null );
+                        //viewModel.form.model.set('deduction_sched',($('#deduction_sched').data('kendoDropDownList').value()!='') ? $('#deduction_sched').data('kendoDropDownList').value() : null );
                         viewModel.form.model.set('biometric_id',($('#biometric_id').data('kendoComboBox').value()!='') ? $('#biometric_id').data('kendoComboBox').value() : null );
                     }
                 },
