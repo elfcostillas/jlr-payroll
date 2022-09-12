@@ -45,7 +45,10 @@ class Employee extends Model
         'pay_type',
         'date_hired',
         'emp_level',
-        'job_title_id'
+        'job_title_id',
+        'daily_allowance',
+        'monthly_allowance',
+
     ];
 
 }

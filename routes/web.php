@@ -37,6 +37,10 @@ use  App\Http\Controllers\Deductions\OneTimeDeductionController;
 use  App\Http\Controllers\Deductions\FixedDeductionController;
 use  App\Http\Controllers\Deductions\InstallmentDeductionController;
 use  App\Http\Controllers\Deductions\GovernmentLoanController;
+
+use App\Http\Controllers\Compentsations\OtherCompensationController;
+use App\Http\Controllers\Compentsations\FixCompensationController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -351,6 +355,17 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         
     }); 
 });
+
+Route::middleware('auth')->prefix('compensations')->group(function(){
+    Route::prefix('fixed-compensations')->middleware('access:compensations/fixed-compensations')->group(function(){
+        Route::get('/',[FixCompensationController::class,'index']);
+    }); 
+
+    Route::prefix('other-compensations')->middleware('access:compensations/other-compensations')->group(function(){
+        Route::get('/',[OtherCompensationController::class,'index']);
+    }); 
+});
+
 
 
 Route::post('logout',[AuthenticatedSessionController::class,'logout'])->middleware('auth');

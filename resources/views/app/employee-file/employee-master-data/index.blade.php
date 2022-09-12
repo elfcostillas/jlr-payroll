@@ -81,15 +81,15 @@
                     <div class="card-body">
                         <table class="formTable" border=0 style="width:100%">
                             <tr>
-                                <td colspan=2>Firstname <span class="require">*Required </span></td>
                                 <td colspan=2>Lastname <span class="require">*Required </span></td>
+                                <td colspan=2>Firstname <span class="require">*Required </span></td>
                                 <td colspan=2>Middlename</td>
                                 <td>Suffix(Jr/Sr.)</td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td colspan=2><input type="text" id="firstname" data-bind="value:form.model.firstname"></td>
                                 <td colspan=2><input type="text" id="lastname" data-bind="value:form.model.lastname"></td>
+                                <td colspan=2><input type="text" id="firstname" data-bind="value:form.model.firstname"></td>
                                 <td colspan=2><input type="text" id="middlename" data-bind="value:form.model.middlename"></td>
                                 <td colspan=2><input type="text" id="suffixname" data-bind="value:form.model.suffixname"></td>
                             </tr>
@@ -204,18 +204,17 @@
                             <tr>
                                 <td colspan=2>Basic Salary </td>
                                 <td>Daily Rate</td>
+                                <td colspan=2>Monthly Allowance</td>
+                                <td colspan=2>Daily Allowance</td>
                                 <td></td>
-                                <td colspan=2></td>
-                                <td colspan=2></td>
                             </tr>
                             <tr>
                                 <td colspan=2><input type="text" id="basic_salary" data-bind="value:form.model.basic_salary"></td>
                                 <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" data-bind="checked:form.mirror.is_daily" id="is_daily"></div></div></td>
+                                <td colspan=2><input type="text" id="monthly_allowance" data-bind="value:form.model.monthly_allowance"></td>
+                                <td colspan=2><input type="text" id="daily_allowance" data-bind="value:form.model.daily_allowance"></td>
                                 <td></td>
-                                <td colspan=2></td>
-                                <td colspan=2></td>
                             </tr>
-                         
                         </table>
                     </div>
                 </div>

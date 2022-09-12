@@ -56,7 +56,10 @@
                     pay_type: null,
                     date_hired : null,
                     emp_level : null,
-                    job_title_id : null
+                    job_title_id : null,
+                    daily_allowance: null,
+                    monthly_allowance: null,
+
             };
 
             var viewModel = kendo.observable({ 
@@ -95,7 +98,9 @@
                         pay_type: null,
                         date_hired : null,
                         emp_level : null,
-                        job_title_id : null
+                        job_title_id : null,
+                        daily_allowance: null,
+                        monthly_allowance: null,
                     },
                     mirror : {
                         is_daily : false,
@@ -307,7 +312,7 @@
                         var myWindow = $("#pop");
                         
                         myWindow.kendoWindow({
-                            width: "864", //1124 - 1152
+                            width: "920", //1124 - 1152
                             height: "710",
                             title: "Employee Information",
                             visible: false,
@@ -592,7 +597,7 @@
                 dataSource: viewModel.ds.job_titles,
                 index: 1,
                 dataBound : function(e){
-                  
+                    $('#job_title_id').data("kendoDropDownList").value(viewModel.form.model.job_title_id);
                 }
                 //change: onChange
             });
@@ -609,6 +614,9 @@
             $("#hdmf_contri").kendoTextBox({ });
             $("#biometric_id").kendoTextBox({ });
             $("#basic_salary").kendoNumericTextBox({  decimals: 2});
+
+            $("#daily_allowance").kendoNumericTextBox({  decimals: 2});
+            $("#monthly_allowance").kendoNumericTextBox({  decimals: 2});
             
             //<input type="checkbox" data-bind="checked: isChecked" /> <input class="form-check-input" type="checkbox">
 
