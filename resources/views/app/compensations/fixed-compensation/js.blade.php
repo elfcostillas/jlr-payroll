@@ -1,6 +1,6 @@
 @section('jquery')
     <script id="template" type="text/x-kendo-template">
-        <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="click:buttonHandler.createDeduction" > <span class="k-icon k-i-plus k-button-icon"></span>Create Deduction</button>
+        <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="click:buttonHandler.createDeduction" > <span class="k-icon k-i-plus k-button-icon"></span>Add Compensation</button>
     </script>
 
     <script>
@@ -11,7 +11,7 @@
                     model : {
                         id : null,
                         period_id : null,
-                        deduction_type : null,
+                        compensation_type : null,
                         remarks : null,
                     }
                 },
@@ -19,7 +19,7 @@
                     maingrid : new kendo.data.DataSource({
                         transport : {
                             read : {
-                                url : 'one-time/list/0',
+                                url : 'fixed-compensations/list/0',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -87,7 +87,7 @@
                     typesgrid : new kendo.data.DataSource({
                         transport : {   
                             read : {
-                                url : 'one-time/list-types',
+                                url : 'fixed-compensations/list-types',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -99,7 +99,7 @@
                     payperiod : new kendo.data.DataSource({
                         transport : {   
                             read : {
-                                url : 'one-time/list-payroll-period',
+                                url : 'fixed-compensations/list-payroll-period',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -111,7 +111,7 @@
                     detailsgrid : new kendo.data.DataSource({
                         transport : {   
                             read : {
-                                url : 'one-time/list-details/0',
+                                url : 'fixed-compensations/list-details/0',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -119,7 +119,7 @@
                                 }
                             },
                             create : {
-                                url : 'one-time/create-detail',
+                                url : 'fixed-compensations/create-detail',
                                 type : 'post',
                                 dataType : 'json',
                                 complete : function(e){
@@ -133,7 +133,7 @@
                                 }
                             },
                             update : {
-                                url : 'one-time/update-detail',
+                                url : 'fixed-compensations/update-detail',
                                 type : 'post',
                                 dataType : 'json',
                                 complete : function(e){
@@ -146,7 +146,7 @@
                                 }
                             },
                             destroy : {
-                                url : 'one-time/delete-detail',
+                                url : 'fixed-compensations/delete-detail',
                                 type : 'post',
                                 dataType : 'json',
                                 complete : function(e){
@@ -181,7 +181,7 @@
                     employee : new kendo.data.DataSource({ 
                         transport : {
                             read : {
-                                url : 'one-time/employee-list',
+                                url : 'fixed-compensations/employee-list',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -209,23 +209,23 @@
                         
                         var json_data = JSON.stringify(viewModel.form.model);
                         
-                        $.post('one-time/save',{
+                        $.post('fixed-compensations/save',{
                             data : json_data
                         },function(data,staus){
                             swal_success(data);
 
-                            let url  = `one-time/read-header/${data}`;
+                            let url  = `fixed-compensations/read-header/${data}`;
                             read(url,viewModel);
 
                             // if(viewModel.form.model.id==null)
                             // {
-                            //     let url  = `one-time/read-header/${data}`;
+                            //     let url  = `fixed-compensations/read-header/${data}`;
                             //     read(url,viewModel);
                             //     setTimeout(function(){
                             //         read(url,viewModel);
                             //     }, 500);
                             // }   
-                            viewModel.ds.detailsgrid.transport.options.read.url = `one-time/list-details/${data}`;
+                            viewModel.ds.detailsgrid.transport.options.read.url = `fixed-compensations/list-details/${data}`;
                             viewModel.ds.detailsgrid.read();
 
                             viewModel.ds.maingrid.read();
@@ -244,10 +244,10 @@
                         var tr = $(e.target).closest("tr");
                         var data = this.dataItem(tr);
 
-                        let url  = `one-time/read-header/${data.id}`;
+                        let url  = `fixed-compensations/read-header/${data.id}`;
                         read(url,viewModel);
 
-                        viewModel.ds.detailsgrid.transport.options.read.url = `one-time/list-details/${data.id}`;
+                        viewModel.ds.detailsgrid.transport.options.read.url = `fixed-compensations/list-details/${data.id}`;
                         viewModel.ds.detailsgrid.read();
                     },
                     createDeduction : function(){
@@ -261,13 +261,13 @@
 
                         viewModel.form.model.set('id',null);
                         viewModel.form.model.set('period_id',null);
-                        viewModel.form.model.set('deduction_type',null);
+                        viewModel.form.model.set('compensation_type',null);
                         viewModel.form.model.set('remarks',null);
                         viewModel.form.model.set('doc_status','DRAFT');
                         viewModel.form.model.set('encoded_by',null);
                         viewModel.form.model.set('encoded_on',null);
 
-                        viewModel.ds.detailsgrid.transport.options.read.url = `one-time/list-details/0`;
+                        viewModel.ds.detailsgrid.transport.options.read.url = `fixed-compensations/list-details/0`;
                         viewModel.ds.detailsgrid.read();
 
                         viewModel.callBack();
@@ -299,7 +299,7 @@
                        myWindow.kendoWindow({
                            width: "810", //1124 - 1152
                            height: "730",
-                           title: "Deduction Details - One Time Deduction",
+                           title: "Compensation Details - Fixed Compensation",
                            visible: false,
                            animation: false,
                            actions: [
@@ -317,7 +317,7 @@
                     },
                     reAssignValues : function(){
                         viewModel.form.model.set('period_id',($('#period_id').data('kendoDropDownList').value()!='') ? $('#period_id').data('kendoDropDownList').value() : 0 );
-                        viewModel.form.model.set('deduction_type',($('#deduction_type').data('kendoComboBox').value()!='') ? $('#deduction_type').data('kendoComboBox').value() : 0 );
+                        viewModel.form.model.set('compensation_type',($('#compensation_type').data('kendoComboBox').value()!='') ? $('#compensation_type').data('kendoComboBox').value() : 0 );
                         
                     }
                 },
@@ -365,12 +365,18 @@
                         field : "id",
                         //template : "#= (data.date_to) ? kendo.toString(data.date_to,'MM/dd/yyyy') : ''  #",
                         width : 60,    
+                        attributes : {
+                            style : "font-size:9pt;"
+                        }
                     },
                     {
                         title : "Payroll Period",
                         field : "perio_id",
                         template : "#= template #",
-                        width : 170,    
+                        width : 150,    
+                        attributes : {
+                            style : "font-size:9pt;"
+                        }
                     },
                     {
                         title : "Remarks",
@@ -383,11 +389,17 @@
                         title : "Status",
                         field : "doc_status",
                         width : 80,    
+                        attributes : {
+                            style : "font-size:9pt;"
+                        }
                     },
                     {
                         title : "Encoded By",
                         field : "encoder",
                         width : 110,    
+                        attributes : {
+                            style : "font-size:9pt;"
+                        }
                     },
                     {
                         command: { text : 'View',icon : 'edit' ,click : viewModel.buttonHandler.view },
@@ -416,11 +428,17 @@
                         title : "ID",
                         field : "id",
                         //template : "#= (data.date_to) ? kendo.toString(data.date_to,'MM/dd/yyyy') : ''  #",
-                        width : 60,    
+                        width : 55,    
+                        attributes : {
+                            style : "font-size:8pt;"
+                        }
                     },
                     {
                         title : "Description",
                         field : "description",
+                        attributes : {
+                            style : "font-size:8pt;"
+                        }
                         // template : "#= (data.date_release) ? kendo.toString(data.date_release,'MM/dd/yyyy') : ''  #",
                         // width : 120,    
                     },
@@ -428,7 +446,7 @@
                     let grid = $("#typesgrid").data("kendoGrid");
                     let selectedItem = grid.dataItem(grid.select());
 
-                    let oneTimeUrl = `one-time/list/${selectedItem.id}`;
+                    let oneTimeUrl = `fixed-compensations/list/${selectedItem.id}`;
 
                     viewModel.ds.maingrid.transport.options.read.url = oneTimeUrl;
                     viewModel.ds.maingrid.read();
@@ -512,7 +530,7 @@
                 //change: onChange
             });
 
-            $("#deduction_type").kendoComboBox({
+            $("#compensation_type").kendoComboBox({
                 dataSource : viewModel.ds.typesgrid,
                 dataTextField: "description",
                 dataValueField: "id",

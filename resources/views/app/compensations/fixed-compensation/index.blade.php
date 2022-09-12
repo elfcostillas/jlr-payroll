@@ -35,8 +35,8 @@
         background-color:  #6c757d !important;
     }
 
-    .k-pager-info .k-label {
-        display : block !important;
+    .k-pager-info,.k-label {
+        /* display : block !important; */
         font-size : 9pt !important;
     }
 
@@ -64,7 +64,7 @@
 
                 <div class="col-md-9">
                     <div class="card card-secondary">
-                        <div class="card-header"> Deductions </div>
+                        <div class="card-header"> Compensations </div>
                         <div class="card-body">
                             <div id="maingrid"></div>
                         </div>
@@ -72,6 +72,7 @@
                 </div>
             </div>
             <div id="pop" style="display:none;background-color:#212529;"><!--f8f9fa  #343a40 #212529 2d3035-->
+                
                 <div id="toolbar"></div>
                 <div id="toolbar2"></div>
                 <div class="card card-secondary mt-1">
@@ -87,7 +88,7 @@
                             </tr>
                             <tr>
                                 <td colspan=2><input type="text" id="period_id" data-bind="value:form.model.period_id"></td>
-                                <td colspan=2><input type="text" id="deduction_type" data-bind="value:form.model.deduction_type"></td>
+                                <td colspan=2><input type="text" id="compensation_type" data-bind="value:form.model.compensation_type"></td>
                                 <td colspan=2></td>
                             </tr>
                             <tr>

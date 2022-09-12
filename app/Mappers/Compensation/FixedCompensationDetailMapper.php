@@ -7,11 +7,13 @@ use App\Libraries\Filters;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class FixedCompensationMapper extends AbstractMapper {
+class FixedCompensationDetailMapper extends AbstractMapper {
 
 	protected $modelClassName = 'App\Models\Admin\UserRights';
     protected $rules = [
     	
     ];
+
+    
 
 }

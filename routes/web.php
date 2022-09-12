@@ -359,6 +359,11 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
 Route::middleware('auth')->prefix('compensations')->group(function(){
     Route::prefix('fixed-compensations')->middleware('access:compensations/fixed-compensations')->group(function(){
         Route::get('/',[FixCompensationController::class,'index']);
+        Route::get('list-types',[FixCompensationController::class,'getFixeddComp']);
+        Route::get('list-payroll-period',[FixCompensationController::class,'getPayrollPeriod']);
+        Route::get('list/{type}',[FixCompensationController::class,'list']);
+        Route::post('save',[FixCompensationController::class,'save']);
+        Route::get('read-header/{id}',[FixCompensationController::class,'readHeader']);
     }); 
 
     Route::prefix('other-compensations')->middleware('access:compensations/other-compensations')->group(function(){
