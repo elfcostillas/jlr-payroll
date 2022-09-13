@@ -59,6 +59,8 @@ class FixCompensationController extends Controller
 			return response()->json($result)->setStatusCode(500, 'Error');
 		}
 
+       $this->detail->createDetails($result);
+       
         return response()->json($result);
     }
 
@@ -79,6 +81,20 @@ class FixCompensationController extends Controller
     public function readHeader(Request $request)
     {
         $result = $this->header->find($request->id);
+        return response()->json($result);
+    }
+
+    public function readDetail(Request $request)
+    {
+        $result = $this->detail->list($request->id);
+
+        return response()->json($result);
+    }
+
+    public function updateDetail(Request $request)
+    {
+        $result = $this->detail->updateValid($request->all());
+
         return response()->json($result);
     }
 }

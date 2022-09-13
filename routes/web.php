@@ -364,6 +364,10 @@ Route::middleware('auth')->prefix('compensations')->group(function(){
         Route::get('list/{type}',[FixCompensationController::class,'list']);
         Route::post('save',[FixCompensationController::class,'save']);
         Route::get('read-header/{id}',[FixCompensationController::class,'readHeader']);
+        Route::get('list-details/{id}',[FixCompensationController::class,'readDetail']);
+
+        Route::post('update-detail',[FixCompensationController::class,'updateDetail']);
+
     }); 
 
     Route::prefix('other-compensations')->middleware('access:compensations/other-compensations')->group(function(){

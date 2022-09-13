@@ -163,17 +163,17 @@
                             },
                         },
                         pageSize :999,
-                        aggregate: [ { field: "amount", aggregate: "sum" },],
+                        aggregate: [ { field: "total_amount", aggregate: "sum" },],
                         schema : {
                             model : {
                                 id : 'line_id',
                                 fields : { 
-                                    header_id : { type : 'number' },
-                                    biometric_id : { type : 'string' , },
-                                    amount : { type : 'number' },
-                                    empname  : { type : 'string' },
-                                    // date_release: { type : 'date' },
-                                    // man_hours: { type : 'number' },
+                                    
+                                    biometric_id: { type : 'number',editable : false },
+                                    employee_name: { type : 'string' ,editable : false },
+                                    exit_status: { type : 'number' , },
+                                    total_amount: { type : 'number' , },
+                                    header_id: { type : 'number' ,editable : false  },
                                 }
                             }
                         }
@@ -275,7 +275,7 @@
                     post : function()
                     {
                         Swal.fire({
-                            title: 'Finalize and Post One Time Deduction',
+                            title: 'Finalize and Post Compensation',
                             text: "You won't be able to revert this!",
                             icon: 'warning',
                             showCancelButton: true,
@@ -459,7 +459,7 @@
                     refresh : true,
                     buttonCount : 5
                 },
-                toolbar : ['create'],
+                //toolbar : ['create'],
                 noRecords: true,
                 filterable : true,
                 sortable : true,
@@ -480,15 +480,16 @@
                     },
                     {
                         title : "Employee",
-                        field : "biometric_id",
+                        field : "employee_name",
                         editor : employeeEditor,
-                        template : "#if(biometric_id==0){#  #}else {# #= empname #  #}#"
+                        template : "#if(biometric_id==0){#  #}else {# #= employee_name #  #}#"
                     },
                     {
                         title : "Amount",
-                        field : "amount",
+                        field : "total_amount",
                         width : 130,  
-                        template : "#=kendo.toString(amount,'n2')#",
+                        //template : "#=kendo.toString(total_amount,'n2')#",
+                        template : "#if(total_amount==0){#  #}else {# #=kendo.toString(total_amount,'n2')#  #}#",
                         attributes : {
                             style : 'text-align:right;'
                         },
@@ -496,7 +497,7 @@
 
                     },
                     {
-                        command : ['edit','delete'],
+                        command : ['edit'],
                         width : 190
                     },
                     {
