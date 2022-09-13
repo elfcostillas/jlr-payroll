@@ -113,12 +113,27 @@ class OneTimeDeductionController extends Controller
     }
     
     public function updateDetail(Request $request) {
-        $result = $this->detail->updateValid($request->all());
-        if(is_object($result)){
-			return response()->json($result)->setStatusCode(500, 'Error');
-		}
+        // $result = $this->detail->updateValid($request->all());
+        // if(is_object($result)){
+		// 	return response()->json($result)->setStatusCode(500, 'Error');
+		// }
 
-        return response()->json($result);
+        // return response()->json($result);
+
+        $data = $request->models;
+        foreach($data as $row)
+        {
+            if($row['line_id']==''||$row['line_id']==null){
+                $result = $this->detail->insertValid($row);
+            }else{
+                $result = $this->detail->updateValid($row);
+            }
+           
+            if(is_object($result)){
+                return response()->json($result)->setStatusCode(500, 'Error');
+            }
+        } 
+        return response()->json(true);
     }
     
     public function destroyDetail(Request $request) {

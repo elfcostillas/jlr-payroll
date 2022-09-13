@@ -351,6 +351,9 @@
                         field : "total_amount",
                         width : 110,    
                         template : "#=kendo.toString(total_amount,'n2')#",
+                        attributes : {
+                            style : "text-align:right;"
+                        }
                     },
                     {
                         command: { text : 'View',icon : 'edit' ,click : viewModel.buttonHandler.view },

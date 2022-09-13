@@ -12,7 +12,7 @@
                         id : null,
                         period_id : null,
                         deduction_type : null,
-                        remarks : null,
+                        remarks : 'N/A',
                     }
                 },
                 ds : {
@@ -158,10 +158,15 @@
                                 if(type=='create'){
                                     data.header_id = viewModel.form.model.id;
                                 }
-
+                                if(type=='update'){
+                                    $.each(data.models,function(index,value){
+                                        value.header_id =  viewModel.form.model.id;
+                                    });
+                                }
                                 return data;
                             },
                         },
+                        batch: true,
                         pageSize :999,
                         aggregate: [ { field: "amount", aggregate: "sum" },],
                         schema : {
@@ -169,9 +174,9 @@
                                 id : 'line_id',
                                 fields : { 
                                     header_id : { type : 'number' },
-                                    biometric_id : { type : 'string' , },
+                                    biometric_id : { type : 'string' ,editable:false,navigatable:false },
                                     amount : { type : 'number' },
-                                    empname  : { type : 'string' },
+                                    empname  : { type : 'string',editable:false },
                                     // date_release: { type : 'date' },
                                     // man_hours: { type : 'number' },
                                 }
@@ -262,7 +267,7 @@
                         viewModel.form.model.set('id',null);
                         viewModel.form.model.set('period_id',null);
                         viewModel.form.model.set('deduction_type',null);
-                        viewModel.form.model.set('remarks',null);
+                        viewModel.form.model.set('remarks','N/A');
                         viewModel.form.model.set('doc_status','DRAFT');
                         viewModel.form.model.set('encoded_by',null);
                         viewModel.form.model.set('encoded_on',null);
@@ -326,18 +331,140 @@
                     let grid = $("#detailsgrid").data('kendoGrid');
                 
                     if(viewModel.form.model.doc_status=='POSTED'){
-                        grid.hideColumn(3);
-                        grid.showColumn(4);
+                        // grid.hideColumn(3);
+                        // grid.showColumn(4);
 
                         activeToolbar.hide();
                         postedToolbar.show();
+                       
+                        
+
                     }else{
-                        grid.hideColumn(4);
-                        grid.showColumn(3);
+                        // grid.hideColumn(4);
+                        // grid.showColumn(3);
 
                         activeToolbar.show();
                         postedToolbar.hide();
+                       
                     }
+                    viewModel.rebuild();
+
+                },
+                rebuild : function(){
+                   console.log('rebuild');
+                    $("#detailsgrid").empty();
+
+                    if(viewModel.form.model.doc_status=='POSTED'){
+                    $("#detailsgrid").kendoGrid({
+                        dataSource : viewModel.ds.detailsgrid,
+                        pageable : {
+                            refresh : true,
+                            buttonCount : 5
+                        },
+                       // toolbar : ['save'],
+                        noRecords: true,
+                        filterable : true,
+                        sortable : true,
+                        height : 500,
+                        scrollable: true,
+                        selectable : true,
+                        //editable : true,
+                        navigatable: true,
+                        edit : function(e){
+                        
+                        },
+                        columns : [
+                            {
+                                title : "ID",
+                                field : "",
+                                //template : "#= biometric_id #",
+                                template : "#if(biometric_id==null){# # }else{ # #= biometric_id # # }#",
+                                width : 90,    
+                                navigatable:false
+                            },
+                            {
+                                title : "Employee",
+                                field : "empname",
+                                //editor : employeeEditor,
+                            
+                                navigatable:false
+                            },
+                            {
+                                title : "Amount",
+                                field : "amount",
+                                width : 130,  
+                                template : "#=kendo.toString(amount,'n2')#",
+                
+                                attributes : {
+                                    style : 'text-align:right;'
+                                },
+                                footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>",
+                                //editor : amountEditor
+                            },
+                            {
+                                width : 30
+                            }
+                        
+                        ],
+                    
+                    });
+                    }else{
+                        $("#detailsgrid").kendoGrid({
+                            dataSource : viewModel.ds.detailsgrid,
+                            pageable : {
+                                refresh : true,
+                                buttonCount : 5
+                            },
+                            toolbar : ['save'],
+                            noRecords: true,
+                            filterable : true,
+                            sortable : true,
+                            height : 500,
+                            scrollable: true,
+                            selectable : true,
+                            editable : true,
+                            navigatable: true,
+                            edit : function(e){
+                            
+                            },
+                            columns : [
+                                {
+                                    title : "ID",
+                                    field : "",
+                                    //template : "#= biometric_id #",
+                                    template : "#if(biometric_id==null){# # }else{ # #= biometric_id # # }#",
+                                    width : 90,    
+                                    navigatable:false
+                                },
+                                {
+                                    title : "Employee",
+                                    field : "empname",
+                                    //editor : employeeEditor,
+                                
+                                    navigatable:false
+                                },
+                                {
+                                    title : "Amount",
+                                    field : "amount",
+                                    width : 130,  
+                                    template : "#=kendo.toString(amount,'n2')#",
+                    
+                                    attributes : {
+                                        style : 'text-align:right;'
+                                    },
+                                    footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>",
+                                    //editor : amountEditor
+                                },
+                                {
+                                    width : 30
+                                }
+                            
+                            ],
+                        
+                        });
+                    }
+                    
+                    
                 }
             });
 
@@ -377,7 +504,7 @@
                         field : "remarks",
                         // template : "#= (data.date_release) ? kendo.toString(data.date_release,'MM/dd/yyyy') : ''  #",
                         // width : 120, 
-                        template: "#= description # : #= remarks# "   
+                        template: "#= description # "   
                     },
                     {
                         title : "Status",
@@ -435,22 +562,24 @@
                 }
             });
 
-            $("#detailsgrid").kendoGrid({
+            /*
+             $("#detailsgrid").kendoGrid({
                 dataSource : viewModel.ds.detailsgrid,
                 pageable : {
                     refresh : true,
                     buttonCount : 5
                 },
-                toolbar : ['create'],
+                toolbar : ['save'],
                 noRecords: true,
                 filterable : true,
                 sortable : true,
-                height : 435,
+                height : 500,
                 scrollable: true,
                 selectable : true,
-                editable : "inline",
+                editable : true,
+                navigatable: true,
                 edit : function(e){
-                    alert();
+                   
                 },
                 columns : [
                     {
@@ -459,31 +588,37 @@
                         //template : "#= biometric_id #",
                         template : "#if(biometric_id==null){# # }else{ # #= biometric_id # # }#",
                         width : 90,    
+                        navigatable:false
                     },
                     {
                         title : "Employee",
-                        field : "biometric_id",
-                        editor : employeeEditor,
-                        template : "#if(biometric_id==0){#  #}else {# #= empname #  #}#"
+                        field : "empname",
+                        //editor : employeeEditor,
+                       
+                        navigatable:false
                     },
                     {
                         title : "Amount",
                         field : "amount",
                         width : 130,  
                         template : "#=kendo.toString(amount,'n2')#",
+        
                         attributes : {
                             style : 'text-align:right;'
                         },
-                        footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
-
+                        footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>",
+                        //editor : amountEditor
                     },
                     {
-                        command : ['edit','delete'],
-                        width : 190
-                    },
-                    {
-                        width : 190
+                        width : 30
                     }
+                    // {
+                    //     command : ['edit','delete'],
+                    //     width : 190
+                    // },
+                    // {
+                    //     width : 190
+                    // }
                 ],
                 edit : function(e){
                     // console.log(e.container);
@@ -500,6 +635,9 @@
                     // }
                 }
             });
+            */
+
+           
 
             $("#period_id").kendoDropDownList({
                 dataTextField: "template",
@@ -534,6 +672,14 @@
             //     }
             //     //change: onChange
             // });
+
+            function amountEditor(container, options){
+                $('<input name="' + options.field + '"/>')
+                .appendTo(container)
+                .kendoTextBox({
+               
+                });
+            }
 
             function fixedOptionEditor(container, options)
             {

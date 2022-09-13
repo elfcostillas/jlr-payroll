@@ -79,7 +79,7 @@
                                 fields : {
                                     id : { type : 'number',editable:false },
                                     biometric_id: { type : 'string' },
-                                    deduction_type: { type : 'string' },
+                                    deduction_type: { type : 'number' },
                                     remarks: { type : 'string' },
                                     amount: { type : 'number' },
                                     is_stopped: { type : 'string' },
@@ -182,24 +182,23 @@
                 selectable: true,
                 columns : [
                    
-                    {
-                        title : "ID",
-                        field : "id",
-                        //template : "#= (data.date_to) ? kendo.toString(data.date_to,'MM/dd/yyyy') : ''  #",
-                        width : 60,    
-                    },
-                    {
-                        title : "Start Deduction",
-                        field : "period_id",
-                        template : "#= period_range #",
-                        width : 170,    
-                        editor : payperiodEditor
-                    },
+                    // {
+                    //     title : "ID",
+                    //     field : "id",
+                    //     width : 60,    
+                    // },
+                    // {
+                    //     title : "Start Deduction",
+                    //     field : "period_id",
+                    //     template : "#= period_range #",
+                    //     width : 170,    
+                    //     editor : payperiodEditor
+                    // },
                     {
                         title : "Deduction Type",
                         field : "deduction_type",
                         template : "#= deduction_desc #",
-                        width : 170,    
+                        width : 140,    
                         editor : fixedOptionEditor
                     },
                     {
@@ -229,25 +228,60 @@
                         field : "encoder",
                         width : 110,    
                     },
-                    { command: [
-                            {
-                                name: "edit",
-                                icon: "edit"
-                            },
-                            // {
-                            //     name : "delete",
-                            //     text : "Delete",
-                            //     icon : 'delete'
-                            // }
-                        ],
-                        width : 185
-                    }
+                    // { command: [
+                    //         {
+                    //             name: "edit",
+                    //             icon: "edit"
+                    //         },
+                    //         // {
+                    //         //     name : "delete",
+                    //         //     text : "Delete",
+                    //         //     icon : 'delete'
+                    //         // }
+                    //     ],
+                    //     width : 185
+                    // }
                   
                 ]
             });
 
            
+            $("#typesgrid").kendoGrid({
+                dataSource : viewModel.ds.typesgrid,
+                pageable : {
+                    refresh : true,
+                    buttonCount : 5
+                },
+                noRecords: true,
+                filterable : true,
+                sortable : true,
+                height : 550,
+                scrollable: true,
+                selectable: true,
+                columns : [
+                   
+                    {
+                        title : "ID",
+                        field : "id",
+                        //template : "#= (data.date_to) ? kendo.toString(data.date_to,'MM/dd/yyyy') : ''  #",
+                        width : 60,    
+                    },
+                    {
+                        title : "Description",
+                        field : "description",
+                        // template : "#= (data.date_release) ? kendo.toString(data.date_release,'MM/dd/yyyy') : ''  #",
+                        // width : 120,    
+                    },
+                ],change : function(e){   
+                    let grid = $("#typesgrid").data("kendoGrid");
+                    let selectedItem = grid.dataItem(grid.select());
 
+                    let oneTimeUrl = `fixed-deductions/list/${selectedItem.id}`;
+
+                    viewModel.ds.maingrid.transport.options.read.url = oneTimeUrl;
+                    viewModel.ds.maingrid.read();
+                }
+            });
 
             // $("#emp_level").kendoDropDownList({
             //     dataTextField: "level_desc",

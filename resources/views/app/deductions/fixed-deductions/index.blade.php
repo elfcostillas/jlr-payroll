@@ -57,7 +57,15 @@
                     <div class="card card-secondary">
                         <div class="card-header"> Deductions </div>
                         <div class="card-body">
-                            <div id="maingrid"></div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div id="typesgrid"></div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div id="maingrid"></div>
+                                </div>
+                            </div>
+                           
                         </div>
                     </div>
                 </div>

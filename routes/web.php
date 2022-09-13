@@ -277,7 +277,7 @@ Route::middleware('auth')->prefix('deductions')->group(function(){
 
     Route::prefix('fixed-deductions')->group(function(){
         Route::get('/',[FixedDeductionController::class,'index']);
-        Route::get('list',[FixedDeductionController::class,'list']);
+        Route::get('list/{id}',[FixedDeductionController::class,'list']);
 
         Route::post('create',[FixedDeductionController::class,'create']);
         Route::post('update',[FixedDeductionController::class,'update']);
