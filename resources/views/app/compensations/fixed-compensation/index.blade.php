@@ -91,13 +91,13 @@
                                 <td colspan=2><input type="text" id="compensation_type" data-bind="value:form.model.compensation_type"></td>
                                 <td colspan=2></td>
                             </tr>
-                            <tr>
+                            {{-- <tr>
                                 <td colspan=6>Remarks</td>
                               
                             </tr>
                             <tr>
                                <td colspan=6><input type="text" id="remarks" data-bind="value:form.model.remarks"></td>
-                            </tr>
+                            </tr> --}}
                             
                         </table>
                         <div id="detailsgrid"></div>

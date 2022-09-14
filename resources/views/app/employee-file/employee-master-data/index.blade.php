@@ -126,24 +126,35 @@
                     <div class="card-body">
                         <table class="formTable" border=0 style="width:100%">
                             <tr>
-                                <td>SSS No</td>
+                                <td  colspan=2>SSS No</td>
                                 <td>Deduct SSS</td>
-                                <td>PHIC</td>
+                                <td  colspan=2>PHIC</td>
                                 <td>Deduct PHIC</td>
-                                <td>HDMF</td>
-                                <td>HDMF Contri.</td>
-                                <td>T.I.N.</td>
+                                <td></td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td><input type="text" id="sss_no" data-bind="value:form.model.sss_no"></td>
+                                <td colspan=2><input type="text" id="sss_no" data-bind="value:form.model.sss_no"></td>
                                 <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" data-bind="checked:form.mirror.deduct_sss" id="deduct_sss"></div></div></td>
-                                <td><input type="text" id="phic_no" data-bind="value:form.model.phic_no"></td>
+                                <td colspan=2><input type="text" id="phic_no" data-bind="value:form.model.phic_no"></td>
                                 <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" data-bind="checked:form.mirror.deduct_phic" id="deduct_phic"></div></div></td>
-                                <td><input type="text" id="hdmf_no" data-bind="value:form.model.hdmf_no"></td>
+                                <td></td>
+                                <td></td>
+                                
+                            </tr>
+                            <tr>
+                                <td colspan="2">T.I.N.</td>
+                                <td></td>
+                                <td colspan="2">HDMF</td>
+                                <td>HDMF Contri</td>
+                                <td colspan="2"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><input type="text" id="tin_no" data-bind="value:form.model.tin_no"></td>
+                                <td></td>
+                                <td colspan="2"><input type="text" id="hdmf_no" data-bind="value:form.model.hdmf_no"></td>
                                 <td><input type="text" id="hdmf_contri" data-bind="value:form.model.hdmf_contri"></td>
-                                <td colspan=2><input type="text" id="tin_no" data-bind="value:form.model.tin_no"></td>
-                               
+                                <td colspan="2"></td>
                             </tr>
                         </table>
                     </div>

@@ -12,6 +12,7 @@
             ];
 
             var viewModel = kendo.observable({ 
+                selected : null,
                 form : {
                     model : {
                         id : null,
@@ -58,6 +59,17 @@
                                     }
                                 }
                             },
+                            parameterMap : function(data, type)
+                            {
+                                if(type=='create' || type=='update'){
+                                    $.each(data.models,function(index,value){
+                                        value.deduction_type =  viewModel.selected;
+                                    });
+                                }
+
+                                return data;
+                            }
+
                             // parameterMap: function (data, type) {
                             //     if(type=='create' || type=='update'){
                             //         data.date_from = kendo.toString(data.date_from,'yyyy-MM-dd');
@@ -68,7 +80,8 @@
                             //     return data;
                             // }
                         },
-                        pageSize :11,
+                        batch : true,
+                        pageSize :14,
                         serverPaging : true,
                         serverFiltering : true,
                         schema : {
@@ -78,14 +91,14 @@
                                 id : 'id',
                                 fields : {
                                     id : { type : 'number',editable:false },
-                                    biometric_id: { type : 'string' },
-                                    deduction_type: { type : 'number' },
+                                    biometric_id: {  type : 'number',editable:false },
+                                    deduction_type: { type : 'number',editable:false },
                                     remarks: { type : 'string' },
                                     amount: { type : 'number' },
                                     is_stopped: { type : 'string' },
                                     //encoded_by: { type : 'number',editable:false },
                                     //encoded_on: { type : 'date',editable:false },
-                                    employee_name: { type : 'string' },
+                                    employee_name: { type : 'string',editable:false },
                                     encoder: { type : 'string' ,editable:false},
                                     period_range: { type : 'string' },
                                     deduction_desc: { type : 'string' },
@@ -175,11 +188,12 @@
                 height : 550,
                 scrollable: true,
                 //toolbar : [{ name :'create',text:'Add Deduction'}],
-                editable : "inline",
+                editable : true,
                 toolbar : [
-                   'create'
+                   'save'
                 ],
                 selectable: true,
+                navigatable : true,
                 columns : [
                    
                     // {
@@ -197,20 +211,22 @@
                     {
                         title : "Deduction Type",
                         field : "deduction_type",
-                        template : "#= deduction_desc #",
-                        width : 140,    
+                        //template : "#= deduction_desc #",
+                        template : "#if(deduction_type==null){#  #}else{# #= deduction_desc # #}# ",
+                        width : 160,    
                         editor : fixedOptionEditor
                     },
                     {
                         title : "Employee",
-                        field : "biometric_id",
-                        template : "#= employee_name #",
-                        editor : employeeEditor
+                        field : "employee_name",
+                        //template : "#= employee_name # : #= biometric_id# ",
+                        //editor : employeeEditor
                     },
                     {
                         title : "Amount",
                         field : "amount",
-                        template : "#=kendo.toString(amount,'n2')#",
+                        //template : "#=kendo.toString(amount,'n2')#",
+                        template :  "#if(amount==null){#  #}else{# #=kendo.toString(amount,'n2')# #}# ",
                         width : 110,
                         attributes : {
                             style : 'text-align:right'
@@ -277,6 +293,8 @@
                     let selectedItem = grid.dataItem(grid.select());
 
                     let oneTimeUrl = `fixed-deductions/list/${selectedItem.id}`;
+
+                    viewModel.set('selected',selectedItem.id);
 
                     viewModel.ds.maingrid.transport.options.read.url = oneTimeUrl;
                     viewModel.ds.maingrid.read();

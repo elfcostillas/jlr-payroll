@@ -28,6 +28,7 @@ class FixCompensationController extends Controller
     public function list(Request $request)
     {
         $type=$request->id;
+       
         $filter = [
             'take' => $request->input('take'),
             'skip' => $request->input('skip'),
@@ -93,7 +94,25 @@ class FixCompensationController extends Controller
 
     public function updateDetail(Request $request)
     {
-        $result = $this->detail->updateValid($request->all());
+        // $result = $this->detail->updateValid($request->all());
+
+        // return response()->json($result);
+
+        $data = $request->models;
+
+        foreach($data as $row)
+        {
+
+            if($row['line_id']==null || $row['line_id']=='' ){
+                $result = $this->detail->insertValid($row);
+            }else{
+                $result = $this->detail->updateValid($row);
+            }
+
+            if(is_object($result)){
+                return response()->json($result)->setStatusCode(500, 'Error');
+            }
+        }
 
         return response()->json($result);
     }

@@ -59,12 +59,33 @@ class FixedDeductionController extends Controller
     public function update(Request $request)
     {
        
-        $result = $this->mapper->updateValid($request->only(['id','amount','is_stopped']));
-        if(is_object($result)){
-			return response()->json($result)->setStatusCode(500, 'Error');
-		}
+        // $result = $this->mapper->updateValid($request->only(['id','amount','is_stopped']));
+        // if(is_object($result)){
+		// 	return response()->json($result)->setStatusCode(500, 'Error');
+		// }
+
+        // return response()->json($result);
+
+        $data = $request->models;
+
+        foreach($data as $row)
+        {
+            $row['encoded_by'] = Auth::user()->id;
+            $row['encoded_on'] = now();
+
+            if($row['id']==null || $row['id']=='' ){
+                $result = $this->mapper->insertValid($row);
+            }else{
+                $result = $this->mapper->updateValid($row);
+            }
+
+            if(is_object($result)){
+                return response()->json($result)->setStatusCode(500, 'Error');
+            }
+        }
 
         return response()->json($result);
+
     }
 
     public function getEmployees(Request $request)

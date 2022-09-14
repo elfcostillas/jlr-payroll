@@ -30,6 +30,7 @@ class FixedCompensationHeaderMapper extends AbstractMapper {
         ;
 
         if($type!=0){
+            
             $result = $result->where('compensation_type',$type);
         }
 

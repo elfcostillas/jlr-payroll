@@ -361,7 +361,7 @@ Route::middleware('auth')->prefix('compensations')->group(function(){
         Route::get('/',[FixCompensationController::class,'index']);
         Route::get('list-types',[FixCompensationController::class,'getFixeddComp']);
         Route::get('list-payroll-period',[FixCompensationController::class,'getPayrollPeriod']);
-        Route::get('list/{type}',[FixCompensationController::class,'list']);
+        Route::get('list/{id}',[FixCompensationController::class,'list']);
         Route::post('save',[FixCompensationController::class,'save']);
         Route::get('read-header/{id}',[FixCompensationController::class,'readHeader']);
         Route::get('list-details/{id}',[FixCompensationController::class,'readDetail']);

@@ -7,6 +7,7 @@
         $(document).ready(function(){
 
             var viewModel = kendo.observable({ 
+                selected : null,
                 form : {
                     model : {
                         id : null,
@@ -162,6 +163,7 @@
                                 return data;
                             },
                         },
+                        batch : true,
                         pageSize :999,
                         aggregate: [ { field: "total_amount", aggregate: "sum" },],
                         schema : {
@@ -253,6 +255,10 @@
                     createDeduction : function(){
                         viewModel.buttonHandler.clear();
                         viewModel.functions.showPOP();
+
+                        console.log(viewModel.selected);
+                        console.log(viewModel.form.model);
+
                     },
                     closePop: function(){
                     
@@ -261,7 +267,7 @@
 
                         viewModel.form.model.set('id',null);
                         viewModel.form.model.set('period_id',null);
-                        viewModel.form.model.set('compensation_type',null);
+                        viewModel.form.model.set('compensation_type',viewModel.selected);
                         viewModel.form.model.set('remarks',null);
                         viewModel.form.model.set('doc_status','DRAFT');
                         viewModel.form.model.set('encoded_by',null);
@@ -326,18 +332,133 @@
                     let grid = $("#detailsgrid").data('kendoGrid');
                 
                     if(viewModel.form.model.doc_status=='POSTED'){
-                        grid.hideColumn(3);
-                        grid.showColumn(4);
+                        // grid.hideColumn(3);
+                        // grid.showColumn(4);
 
                         activeToolbar.hide();
                         postedToolbar.show();
                     }else{
-                        grid.hideColumn(4);
-                        grid.showColumn(3);
+                        // grid.hideColumn(4);
+                        // grid.showColumn(3);
 
                         activeToolbar.show();
                         postedToolbar.hide();
                     }
+                    viewModel.rebuild();
+
+                },rebuild : function(){
+                
+                    $("#detailsgrid").empty();
+
+                    if(viewModel.form.model.doc_status=='POSTED'){
+                        $("#detailsgrid").kendoGrid({
+                            dataSource : viewModel.ds.detailsgrid,
+                            pageable : {
+                                refresh : true,
+                                buttonCount : 5
+                            },
+                            
+                            noRecords: true,
+                            filterable : {
+                                extra : false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            sortable : true,
+                            height : 500,
+                            scrollable: true,
+                            selectable : true,
+                            editable : true,
+                            navigatable : true,
+                            columns : [
+                                {
+                                    title : "ID",
+                                    field : "",
+                                    //template : "#= biometric_id #",
+                                    template : "#if(biometric_id==null){# # }else{ # #= biometric_id # # }#",
+                                    width : 90,    
+                                },
+                                {
+                                    title : "Employee",
+                                    field : "employee_name",
+                                    editor : employeeEditor,
+                                    template : "#if(biometric_id==0){#  #}else {# #= employee_name #  #}#"
+                                },
+                                {
+                                    title : "Amount",
+                                    field : "total_amount",
+                                    width : 130,  
+                                    //template : "#=kendo.toString(total_amount,'n2')#",
+                                    template : "#if(total_amount==0){#  #}else {# #=kendo.toString(total_amount,'n2')#  #}#",
+                                    attributes : {
+                                        style : 'text-align:right;'
+                                    },
+                                    footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+
+                                },
+                            
+                            ],
+                            
+                        });
+                    }else{
+                        $("#detailsgrid").kendoGrid({
+                            dataSource : viewModel.ds.detailsgrid,
+                            pageable : {
+                                refresh : true,
+                                buttonCount : 5
+                            },
+                            toolbar : ['save'],
+                            noRecords: true,
+                            filterable : {
+                                extra : false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            sortable : true,
+                            height : 500,
+                            scrollable: true,
+                            selectable : true,
+                            editable : true,
+                            navigatable : true,
+                            columns : [
+                                {
+                                    title : "ID",
+                                    field : "",
+                                    //template : "#= biometric_id #",
+                                    template : "#if(biometric_id==null){# # }else{ # #= biometric_id # # }#",
+                                    width : 90,    
+                                },
+                                {
+                                    title : "Employee",
+                                    field : "employee_name",
+                                    editor : employeeEditor,
+                                    template : "#if(biometric_id==0){#  #}else {# #= employee_name #  #}#"
+                                },
+                                {
+                                    title : "Amount",
+                                    field : "total_amount",
+                                    width : 130,  
+                                    //template : "#=kendo.toString(total_amount,'n2')#",
+                                    template : "#if(total_amount==0){#  #}else {# #=kendo.toString(total_amount,'n2')#  #}#",
+                                    attributes : {
+                                        style : 'text-align:right;'
+                                    },
+                                    footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+
+                                },
+                            
+                            ],
+                            
+                        });
+                    }
+                    
+                    
                 }
             });
 
@@ -348,7 +469,14 @@
                     buttonCount : 5
                 },
                 noRecords: true,
-                filterable : true,
+                filterable : {
+                    extra : false,
+                    operators: {
+                        string: {
+                            contains: "Contains"
+                        }
+                    }
+                },
                 sortable : true,
                 height : 550,
                 scrollable: true,
@@ -383,7 +511,7 @@
                         field : "remarks",
                         // template : "#= (data.date_release) ? kendo.toString(data.date_release,'MM/dd/yyyy') : ''  #",
                         // width : 120, 
-                        template: "#= description # : #= remarks# "   
+                        template: "#= description # "   
                     },
                     {
                         title : "Status",
@@ -448,77 +576,14 @@
 
                     let oneTimeUrl = `fixed-compensations/list/${selectedItem.id}`;
 
+                    viewModel.set('selected',selectedItem.id);
+
                     viewModel.ds.maingrid.transport.options.read.url = oneTimeUrl;
                     viewModel.ds.maingrid.read();
                 }
             });
 
-            $("#detailsgrid").kendoGrid({
-                dataSource : viewModel.ds.detailsgrid,
-                pageable : {
-                    refresh : true,
-                    buttonCount : 5
-                },
-                //toolbar : ['create'],
-                noRecords: true,
-                filterable : true,
-                sortable : true,
-                height : 435,
-                scrollable: true,
-                selectable : true,
-                editable : "inline",
-                edit : function(e){
-                    alert();
-                },
-                columns : [
-                    {
-                        title : "ID",
-                        field : "",
-                        //template : "#= biometric_id #",
-                        template : "#if(biometric_id==null){# # }else{ # #= biometric_id # # }#",
-                        width : 90,    
-                    },
-                    {
-                        title : "Employee",
-                        field : "employee_name",
-                        editor : employeeEditor,
-                        template : "#if(biometric_id==0){#  #}else {# #= employee_name #  #}#"
-                    },
-                    {
-                        title : "Amount",
-                        field : "total_amount",
-                        width : 130,  
-                        //template : "#=kendo.toString(total_amount,'n2')#",
-                        template : "#if(total_amount==0){#  #}else {# #=kendo.toString(total_amount,'n2')#  #}#",
-                        attributes : {
-                            style : 'text-align:right;'
-                        },
-                        footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
-
-                    },
-                    {
-                        command : ['edit'],
-                        width : 190
-                    },
-                    {
-                        width : 190
-                    }
-                ],
-                edit : function(e){
-                    // console.log(e.container);
-                    // if (e.model.isNew()) {
-                    //     alert("new");
-                    // }
-                    // var combobox = e.container.find("#biometric_id").data("kendoComboBox");
-                    // console.log(e.container);
-                    // if ( combobox && combobox.value() === "0" ) {
-                    //     combobox.value("");
-                    //     alert();
-                    // }else{
-                    //     alert(combobox.value());
-                    // }
-                }
-            });
+            
 
             $("#period_id").kendoDropDownList({
                 dataTextField: "template",
