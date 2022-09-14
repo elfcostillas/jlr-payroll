@@ -389,7 +389,7 @@
                         width : 60,    
                     },
                     {
-                        title : "Description",
+                        title : "Employee Name",
                         field : "employee_name",
                         // template : "#= (data.date_release) ? kendo.toString(data.date_release,'MM/dd/yyyy') : ''  #",
                         // width : 120,    

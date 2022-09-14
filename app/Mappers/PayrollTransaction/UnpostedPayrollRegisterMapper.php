@@ -14,6 +14,14 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
     	
     ];
 
+    public function getPeriod($id){
+        return $this->model->select(DB::raw("payroll_period.*,CASE WHEN DAY(date_from)=1 THEN 1 ELSE 2 END AS period_type"))->from('payroll_period')->where('id',$id)->first();
+    }
+
+    public function getPhilRate(){
+        return $this->model->select('rate')->from('philhealth')->first();
+    }
+
     public function unpostedPeriodList($type)
     {
         if($type=='semi'){
@@ -46,7 +54,10 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                         SUM(under_time) AS under_time,
                         SUM(over_time) AS overtime,
                         SUM(night_diff) AS night_diff,
-                        SUM(ndays) AS ndays
+                        SUM(ndays) AS ndays,
+                        hdmf_contri,
+                        monthly_allowance,
+                        daily_allowance
                         "))
                     ->from('edtr')
                     ->join('payroll_period',function($join){
@@ -69,7 +80,10 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                                 is_daily,
                                 deduct_phic,
                                 deduct_sss,
-                                pay_type'));
+                                pay_type, 
+                                hdmf_contri,
+                                monthly_allowance,
+                                daily_allowance'));
 
         return $result->get();
     }
@@ -80,7 +94,6 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
 
         foreach($employees as $employee)
         {       
-           
             array_push($blank,$employee->toColumnArray());
         }
 
@@ -88,7 +101,43 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
 
     }
 
+    public function runGovLoans($period,$biometric_ids)
+    {
+        //dd($period->id);
 
+        DB::table('unposted_loans')->where('period_id',$period->id)->delete();
+        $tmp_loan = [];
+        $loans = $this->model->select(DB::raw("id,
+                                                deduction_gov_loans.biometric_id,
+                                                deduction_gov_loans.deduction_type,
+                                                SUM(IFNULL(posted_loans.amount,0)) AS paid,
+                                                total_amount-SUM(IFNULL(posted_loans.amount,0)) AS balance,
+                                                IF(total_amount-SUM(IFNULL(posted_loans.amount,0))<ammortization,total_amount-SUM(IFNULL(posted_loans.amount,0)),ammortization) AS ammortization"))
+                            ->from("deduction_gov_loans")
+                            ->leftJoin('posted_loans','deduction_gov_loans.id','=','posted_loans.deduction_id')
+                            ->whereRaw("is_stopped = 'N'")
+                            ->where('deduction_gov_loans.period_id','>=',$period->id)
+                            ->whereIn('deduction_gov_loans.biometric_id',$biometric_ids)
+                            ->groupBy(DB::raw("id,deduction_gov_loans.biometric_id,deduction_gov_loans.deduction_type"))
+                            ->havingRaw('balance>0')
+                            ->get();
+        
+        foreach($loans as $loan)
+        {
+            $tmp = [
+                'period_id' => $period->id,
+                'biometric_id' => $loan->biometric_id,
+                'deduction_type' => $loan->deduction_type,
+                'amount' => $loan->ammortization,
+                'deduction_id' => $loan->id,
+            ];
+
+            array_push($tmp_loan,$tmp);
+        }
+
+        DB::table('unposted_loans')->insertOrIgnore($tmp_loan);
+
+    }
 
 }
 
@@ -126,4 +175,15 @@ basic_salary,
 is_daily,
 deduct_phic,
 deduct_sss;
+
+
+
+
+SELECT id,deduction_gov_loans.biometric_id,ammortization,deduction_gov_loans.deduction_type,
+SUM(IFNULL(posted_loans.amount,0)) AS paid,total_amount-SUM(IFNULL(posted_loans.amount,0)) AS balance,
+IF(total_amount-SUM(IFNULL(posted_loans.amount,0))<ammortization,total_amount-SUM(IFNULL(posted_loans.amount,0)),ammortization) AS ammortization2 FROM deduction_gov_loans 
+LEFT JOIN posted_loans ON deduction_gov_loans.id = posted_loans.deduction_id
+WHERE is_stopped = 'N' AND deduction_gov_loans.period_id >= 1
+HAVING balance>0;
+
 */
