@@ -100,6 +100,7 @@
                             </tr> --}}
                             
                         </table>
+                        <div style="height:4px"></div>
                         <div id="detailsgrid"></div>
                     </div>
                 </div>

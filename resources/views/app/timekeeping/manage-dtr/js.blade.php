@@ -7,6 +7,10 @@
     <button class="k-grid-save-changes k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="events: { click: buttonHandler.compute }">
         </span>&nbsp; Compute
     </button>
+
+      <button class="k-grid-save-changes k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="events: { click: buttonHandler.clear }">
+        </span>&nbsp; Clear
+    </button>
 </script>	
 
 <script type="text/x-kendo-template" id="subgidcommand">
@@ -98,7 +102,7 @@
                                 type : 'post',
                                 dataType : 'json',
                                 complete : function (e){
-
+                                    viewModel.ds.dtrgrid.read();
                                 }
                             },
                             parameterMap : function(data,type)
@@ -245,6 +249,15 @@
                         let url = `manage-dtr/print/${viewModel.selectedPeriod.id}`;
                         window.open(url);
                     },   
+                    clear : function()
+                    {
+                        $.post('manage-dtr/clear-logs',{
+                            period_id : viewModel.selectedPeriod.id,
+                            biometric_id : viewModel.selectedEmployee
+                        },function(){
+                            viewModel.ds.dtrgrid.read();
+                        });
+                    }
                 },
                 functions : {
                     showPop : function(data)
@@ -394,6 +407,7 @@
                 //height : 550,
                 scrollable: true,
                 selectable : true,
+                navigatable : true,
                 toolbar : [
                     {
                         name : 'save'
@@ -538,7 +552,8 @@
                             
                         },
                         aggregates : ['sum'], 
-                        footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+                        footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>",
+                        editor : dataEditor
                     },
                     {
                         title : "UT",
@@ -554,7 +569,8 @@
                             
                         },
                         aggregates : ['sum'], 
-                        footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+                        footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>",
+                        editor : dataEditor 
                     },
                     {
                         title : "ND",
@@ -570,7 +586,8 @@
                             
                         },
                         aggregates : ['sum'], 
-                        footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+                        footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
+                        editor : dataEditor
 
                     },
                     {
@@ -613,10 +630,18 @@
                         //console.log(e.sender.text());
                         //console.log(selectedRow.set("schedule_desc"));
                         selectedRow.set("schedule_desc",e.sender.text());
-
+                        selectedRow.set("schedule_id",e.sender.value());
                         
                     }
                     
+                });
+            }
+
+            function dataEditor(container, options){
+                $('<input name="' + options.field + '"/>')
+                .appendTo(container)
+                .kendoTextBox({
+               
                 });
             }
 

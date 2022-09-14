@@ -5,11 +5,11 @@ namespace App\Models\Compensation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FixCompensationHeader extends Model
+class OtherCompensationHeader extends Model
 {
     use HasFactory;
 
-    protected $table = 'compensation_fixed_headers';
+    protected $table = 'compensation_other_headers';
     protected $primaryKey = 'id';
     public $timestamps = false;
 
@@ -22,6 +22,3 @@ class FixCompensationHeader extends Model
         'doc_status'
     ];
 }
-
-
-

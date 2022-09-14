@@ -111,6 +111,16 @@ class ManageDTRController extends Controller
         return response()->json(true);
     }
 
+    public function clearLogs(Request $request)
+    {   
+        $biometric_id = $request->biometric_id;
+        $period_id = $request->period_id;
+
+        $result = $this->mapper->clearLogs($biometric_id,$period_id);
+
+        return response()->json($result);
+    }
+
     public function print(Request $request)
     {
         $period_id = $request->period_id;

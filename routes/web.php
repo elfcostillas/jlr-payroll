@@ -133,6 +133,7 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::post('update-dtr',[ManageDTRController::class,'updateDTR']);
         Route::post('draw-logs',[ManageDTRController::class,'drawLogs']);
         Route::post('compute-logs',[ManageDTRController::class,'computeLogs']);
+        Route::post('clear-logs',[ManageDTRController::class,'clearLogs']);
         Route::get('print/{period_id}',[ManageDTRController::class,'print']);
     });
 
@@ -372,6 +373,14 @@ Route::middleware('auth')->prefix('compensations')->group(function(){
 
     Route::prefix('other-compensations')->middleware('access:compensations/other-compensations')->group(function(){
         Route::get('/',[OtherCompensationController::class,'index']);
+        Route::get('list-types',[OtherCompensationController::class,'getOtherComp']);
+        Route::get('list-payroll-period',[OtherCompensationController::class,'getPayrollPeriod']);
+        Route::get('list/{id}',[OtherCompensationController::class,'list']);
+        Route::post('save',[OtherCompensationController::class,'save']);
+        Route::get('read-header/{id}',[OtherCompensationController::class,'readHeader']);
+        Route::get('list-details/{id}',[OtherCompensationController::class,'readDetail']);
+
+        Route::post('update-detail',[OtherCompensationController::class,'updateDetail']);
     }); 
 });
 

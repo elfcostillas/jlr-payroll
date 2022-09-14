@@ -23,13 +23,14 @@ class DailyTimeRecordMapper extends AbstractMapper {
     public function prepDTRbyPeriod($period_id,$type)
     {
         $blank_dtr = [];
-
+        //LEFT JOIN work_schedules_default ON employees.dept_id = work_schedules_default.dept_id
         if($type=='semi'){
-            $empWithPunch = $this->model->select('edtr_raw.biometric_id')->from('edtr_raw')
+            $empWithPunch = $this->model->select('edtr_raw.biometric_id','schedule_id')->from('edtr_raw')
             ->join('employees','edtr_raw.biometric_id','=','employees.biometric_id')
             ->join('payroll_period',function($join){
                $join->whereRaw('punch_date between payroll_period.date_from and payroll_period.date_to');
             })
+            ->leftJoin('work_schedules_default','employees.dept_id','=','work_schedules_default.dept_id')
             ->whereIn('pay_type',[1,2])
             ->where('exit_status',1)
             ->where('payroll_period.id',$period_id)
@@ -37,12 +38,13 @@ class DailyTimeRecordMapper extends AbstractMapper {
             ->get();
             $range = $this->model->select('date_from','date_to')->from('payroll_period')->where('payroll_period.id',$period_id)->first();
         }else{
-            $empWithPunch = $this->model->select('edtr_raw.biometric_id')->from('edtr_raw')
+            $empWithPunch = $this->model->select('edtr_raw.biometric_id','schedule_id')->from('edtr_raw')
             ->join('employees','edtr_raw.biometric_id','=','employees.biometric_id')
             ->join('payroll_period_weekly',function($join){
                 //$join->whereBetween('punch_date',['payroll_period_weekly.date_from','payroll_period_weekly.date_to']);
                 $join->whereRaw('punch_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
             })
+            ->leftJoin('work_schedules_default','employees.dept_id','=','work_schedules_default.dept_id')
             ->where('pay_type',3)
             ->where('exit_status',1)
             ->where('payroll_period_weekly.id',$period_id)
@@ -60,7 +62,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
         foreach($empWithPunch as $emp)
         {
             foreach ($period as $date) {
-                array_push($blank_dtr,['biometric_id' => $emp->biometric_id, 'dtr_date' => $date->format('Y-m-d')]);
+                array_push($blank_dtr,['biometric_id' => $emp->biometric_id, 'dtr_date' => $date->format('Y-m-d'),'schedule_id' => $emp->schedule_id]);
             }
            
         }
@@ -85,7 +87,8 @@ class DailyTimeRecordMapper extends AbstractMapper {
                             ->whereIn('pay_type',[1,2])
                             ->where('exit_status',1)
                             ->where('payroll_period.id',$period_id)
-                            ->distinct();
+                            ->distinct()
+                            ->orderBy('empname','ASC');
         }else{
             $result = $this->model->select(DB::raw("employees.id,employees.biometric_id,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) as empname"))
                             ->from('edtr')
@@ -96,7 +99,8 @@ class DailyTimeRecordMapper extends AbstractMapper {
                             ->where('pay_type',3)
                             ->where('exit_status',1)
                             ->where('payroll_period_weekly.id',$period_id)
-                            ->distinct();
+                            ->distinct()
+                            ->orderBy('empname','ASC');
         }
 
         
@@ -116,7 +120,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
 
 		$total = $result->count(DB::raw('employees.id'));
 
-		$result->limit($filter['pageSize'])->skip($filter['skip'])->orderBy('empname','ASC');
+		$result->limit($filter['pageSize'])->skip($filter['skip']);
 
 		return [
 			'total' => $total,
@@ -172,7 +176,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
 
     public function getSemiDTR($biometric_id,$period_id)
     {
-        $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc,case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type"))
+        $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,ifnull(schedule_id,0) schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc,case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type"))
         ->from('edtr')
         ->where('edtr.biometric_id',$biometric_id)
         ->join('payroll_period',function($join){
@@ -271,7 +275,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
     public function mapRawLogs2($dtr_log)
     {
         foreach($dtr_log as $dtr){
-            if($dtr->schedule_id>=5){
+            if($dtr->schedule_id>=5 || $dtr->schedule_id == null || $dtr->schedule_id == 'null' || $dtr->schedule_id == ''  ){
                 $in =  $this->model->select()
                 ->from('edtr_raw')
                 ->where([
@@ -281,18 +285,60 @@ class DailyTimeRecordMapper extends AbstractMapper {
                 ])
                 ->orderBy('punch_time')
                 ->first();
+                if($in){
+                    //->whereRaw("punch_time<'$nextIn->punch_time'")
 
-                $nextDay = Carbon::createFromFormat('Y-m-d',$dtr->dtr_date)->addDay(); //addDays(n days) // subDay // subDays(n days)
+                    $out =  $this->model->select()
+                    ->from('edtr_raw')
+                    ->where([
+                        ['punch_date',$dtr->dtr_date],
+                        ['biometric_id',$dtr->biometric_id],
+                        ['cstate','C/Out']
+                    ])
+                    ->whereRaw("punch_time>'$in->punch_time'")
+                    ->orderBy('punch_time')
+                    ->first();
+                }else {
+                    $out =  $this->model->select()
+                    ->from('edtr_raw')
+                    ->where([
+                        ['punch_date',$dtr->dtr_date],
+                        ['biometric_id',$dtr->biometric_id],
+                        ['cstate','C/Out']
+                    ])
+                    //->whereBetween('punch_date',[$dtr->dtr_date,$nextDay->format('Y-m-d')])
+                    ->orderBy('punch_time')
+                    ->first();
+                }
+               
 
-                $out =  $this->model->select()
-                ->from('edtr_raw')
-                ->where([
-                    ['punch_date',$nextDay->format('Y-m-d')],
-                    ['biometric_id',$dtr->biometric_id],
-                    ['cstate','C/Out']
-                ])
-                ->orderBy('punch_time')
-                ->first();
+                if($out==null){
+                    $nextDay = Carbon::createFromFormat('Y-m-d',$dtr->dtr_date)->addDay(); //addDays(n days) // subDay // subDays(n days)
+
+                    $nextIn =  $this->model->select()
+                    ->from('edtr_raw')
+                    ->where([
+                        ['punch_date',$nextDay->format('Y-m-d')],
+                        ['biometric_id',$dtr->biometric_id],
+                        ['cstate','C/In']
+                    ])
+                    ->orderBy('punch_time')
+                    ->first();
+
+                    if($nextIn){
+                        $out =  $this->model->select()
+                                ->from('edtr_raw')
+                                ->where([
+                                    ['punch_date',$nextDay->format('Y-m-d')],
+                                    ['biometric_id',$dtr->biometric_id],
+                                    ['cstate','C/Out']
+                                ])
+                                ->whereRaw("punch_time<'$nextIn->punch_time'")
+                                //->whereBetween('punch_date',[$dtr->dtr_date,$nextDay->format('Y-m-d')])
+                                ->first();
+                    }
+
+                }
                 
             }else{
                 $in =  $this->model->select()
@@ -363,14 +409,20 @@ class DailyTimeRecordMapper extends AbstractMapper {
                         $rec->late_eq = 0;
                     }
 
-                    if($rec->day_name!='Sun'){
-                        //var_dump($rec->day_name);
-                        $rec->ndays = ($rec->time_in!='' && $rec->time_out!='' && $rec->holiday_type==NULL) ? 1 : 0;
-                        //var_dump($rec->ndays);
-                    }
+                    // if($rec->day_name!='Sun'){
+                    //     //var_dump($rec->day_name);
+                    //     $rec->ndays = ($rec->time_in!='' && $rec->time_out!='' && $rec->holiday_type==NULL) ? 1 : 0;
+                    //     //var_dump($rec->ndays);
+                    // }
 
-                    $this->updateValid($rec->toArray());
+                    // $this->updateValid($rec->toArray());
                 }
+
+                if($rec->day_name!='Sun'){
+                    $rec->ndays = ($rec->time_in!='' && $rec->time_out!='' && $rec->holiday_type==NULL) ? 1 : 0;
+                }
+
+                $this->updateValid($rec->toArray());
             }   
         }
     }
@@ -409,6 +461,12 @@ class DailyTimeRecordMapper extends AbstractMapper {
 
         return $employees;
 
+    }
+
+    function clearLogs($biometric_id,$period_id){
+        DB::statement("UPDATE edtr INNER JOIN payroll_period ON dtr_date BETWEEN date_from AND date_to 
+        SET time_in=NULL,time_out=NULL 
+        WHERE biometric_id = $biometric_id AND payroll_period.id = $period_id");
     }
 
    
