@@ -45,10 +45,14 @@ class PayrollRegisterController extends Controller
        
         if($period->period_type==1){
             /* loans for 15 */
-            $gloans = $this->unposted->runGovLoans($period,$employees->pluck('biometric_id'));
         }else{
             /* loans for 30 */
         }
+
+        $gloans = $this->unposted->runGovLoans($period,$employees->pluck('biometric_id'));
+        $installments = $this->unposted->runInstallments($period,$employees->pluck('biometric_id'));
+        $onetime = $this->unposted->runOneTimeDeduction($period,$employees->pluck('biometric_id'));
+        $fixed = $this->unposted->runFixedDeduction($period,$employees->pluck('biometric_id'));
 
         foreach($employees as $employee){
             $person = ($employee->pay_type==1) ? new Employee($employee,new SemiMonthly) : new Employee($employee,new Daily);

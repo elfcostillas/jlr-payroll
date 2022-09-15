@@ -44,14 +44,12 @@ class Employee
         $this->payreg['basic_pay'] = $this->repo->getBasicPay($this->data);
         $this->rates['monthly_credit'] = $this->repo->getMonthlyCredit($this->data);
         $this->setPayRates();
-        $this->computeContribution($period);
-
         foreach($this->payreg as $key => $value){
-            
             if(array_key_exists($key,$this->data->toArray())){
                 $this->payreg[$key] = $this->data[$key];
             }
         }
+        $this->computeContribution($period);
 
     }
 

@@ -106,21 +106,40 @@
             </tbody>
         </table>
     </div> --}}
-
+    <?php
+        $colspan=2;
+    ?>
     <div id="container2" >
-        <table style="border-collapse:collapse;">
+        <table style="border-collapse:collapse;" border=1 >
             @foreach($data as $location)
                 <tr>
-                    <td class="location"> {{ $location->location_name }} </td>
+                    <td colspan={{$colspan}} class="location"> {{ $location->location_name }} </td>
                 </tr>
                     @foreach($location->divisions as $division)  
                         <tr>
-                            <td class="division"> {{ $division->div_name }} </td>
+                            <td colspan={{$colspan}}  class="division"> {{ $division->div_name }} </td>
                         </tr>
                         @foreach($division->departments as $department)
                             <tr>
-                                <td class="department"> {{ $department->dept_name }} </td>
+                                <td colspan={{$colspan}}  class="department"> {{ $department->dept_name }} </td>
                             </tr>
+                            @foreach($department->employees as $employee)
+                                <?php//  dd($employee); ?>
+                                <tr>
+                                    <td> {{ $employee->biometric_id }} </td> <td> {{ $employee->employee_name }} </td>
+                                    <td>
+                                        @foreach($employee->deductions as $deduction)
+                                            <span style="display:inline-block;width:160px;"> {{ $deduction->description }} </span> <span style="display:inline-block;width:80px;text-align:right;"> {{ number_format($deduction->amount,2) }} </span><br>
+                                        @endforeach
+
+                                        @foreach($employee->gov_deductions as $key => $prem)
+                                                @if($prem>0)
+                                                <span style="display:inline-block;width:160px;"> {{ $key }} </span> <span style="display:inline-block;width:80px;text-align:right;"> {{ number_format($prem,2) }} </span><br>    
+                                                @endif
+                                        @endforeach
+                                    </td>
+                                </tr>
+                            @endforeach
                         @endforeach
                     @endforeach
             @endforeach
