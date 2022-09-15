@@ -139,6 +139,11 @@
                                     schedule_id : { type:'number', },
                                     schedule_desc : { type: 'string' },
                                     ndays : { type:'number', },
+                                    lh_ot  : { type:'number', },
+                                    lhot_rd  : { type:'number', },
+                                    sh_ot  : { type:'number', },
+                                    shot_rd  : { type:'number', },
+                                    sun_ot : { type:'number', },
                                 }
                             }
                         },
@@ -149,6 +154,12 @@
                             { field : "over_time" , aggregate: "sum" },
                             { field : "night_diff" , aggregate: "sum" },
                             { field : "ndays" , aggregate: "sum" },
+
+                            { field : "lh_ot" , aggregate: "sum" },
+                            { field : "lhot_rd" , aggregate: "sum" },
+                            { field : "sh_ot" , aggregate: "sum" },
+                            { field : "shot_rd" , aggregate: "sum" },
+                            { field : "sun_ot" , aggregate: "sum" },
                            
                         ]
                     }),
@@ -265,8 +276,8 @@
                         var myWindow = $("#pop");
                         
                         myWindow.kendoWindow({
-                            width: "1124", //1124 - 1152
-                            height: "640",
+                            width: "1134", //1124 - 1152
+                            height: "700",
                             //title: "Employee Information",
                             visible: false,
                             animation: false,
@@ -453,7 +464,7 @@
                         //template : "#= schedule_desc #",  #=data.schedule_id #
                         //template : "#= if(data.schedule_desc==null) #"
                        
-                        width : 100,
+                        width : 110,
                          attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -504,7 +515,7 @@
                             
                         },
                         aggregates : ['sum'], 
-                        footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n0')#</div>" 
+                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n0')#</div>" 
                     },
                     {
                         title : "Late",
@@ -520,7 +531,7 @@
                             
                         },
                         aggregates : ['sum'], 
-                        footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n0')#</div>" 
+                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n0')#</div>" 
                     },
                     {
                         title : "Late(Hrs)",
@@ -536,12 +547,12 @@
                             
                         },
                         aggregates : ['sum'], 
-                        footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
                     },
                     {
                         title : "OT",
                         field : "over_time",
-                        width : 45,
+                        width : 60,
                          attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -552,13 +563,32 @@
                             
                         },
                         aggregates : ['sum'], 
-                        footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>",
+                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>",
                         editor : dataEditor
                     },
+                    
+                    {
+                        title : "SUN OT",
+                        field : "sun_ot",
+                        width : 80,
+                         attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        template : "# if(sun_ot==0){#  #} else{# #= sun_ot #  #}#",
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        aggregates : ['sum'], 
+                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>",
+                        editor : dataEditor
+                    },
+
                     {
                         title : "UT",
                         field : "under_time",
-                        width : 45,
+                        width : 60,
                         attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -569,13 +599,13 @@
                             
                         },
                         aggregates : ['sum'], 
-                        footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>",
+                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>",
                         editor : dataEditor 
                     },
                     {
                         title : "ND",
                         field : "night_diff",
-                        width : 45, 
+                        width : 60, 
                         attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -586,7 +616,7 @@
                             
                         },
                         aggregates : ['sum'], 
-                        footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
+                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
                         editor : dataEditor
 
                     },
@@ -598,11 +628,82 @@
                             style: "font-size: 9pt;text-align:center",
                             
                         },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
                     },
                     {
-
-                    }
-                  
+                        width : 60,
+                        title : 'SH OT',
+                        field : "sh_ot",
+                        template : "# if(sh_ot==0){#  #} else{# #= sh_ot #  #}#",
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        aggregates : ['sum'], 
+                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
+                        editor : dataEditor
+                    },
+                    {
+                        width : 76,
+                        title : 'SH OT RD',
+                        field : "shot_rd",
+                        template : "# if(shot_rd==0){#  #} else{# #= shot_rd #  #}#",
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        aggregates : ['sum'], 
+                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
+                        editor : dataEditor
+                    },
+                    {
+                        width : 60,
+                        title : 'LH OT',
+                        field : "lh_ot",
+                        template : "# if(lh_ot==0){#  #} else{# #= lh_ot #  #}#",
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        aggregates : ['sum'], 
+                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
+                        editor : dataEditor
+                    },
+                    {
+                        width : 76,
+                        title : 'LH RD OT',
+                        field : "lhot_rd",
+                        template : "# if(lhot_rd==0){#  #} else{# #= lhot_rd #  #}#",
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        aggregates : ['sum'], 
+                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
+                        editor : dataEditor
+                    },
+                    {
+                        width : 60
+                    },
                 ],
                 
             }); 

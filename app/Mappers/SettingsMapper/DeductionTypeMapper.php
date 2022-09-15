@@ -19,7 +19,7 @@ class DeductionTypeMapper extends AbstractMapper {
     public function list($filter)
     {
         //SELECT id,description FROM deduction_types
-        $result = $this->model->select('id','description','is_fixed')->from('deduction_types');
+        $result = $this->model->select('id','description','is_fixed',DB::raw("ifnull(deduction_sched,0) deduction_sched"))->from('deduction_types');
 
         if($filter['filter']!=null){
 			foreach($filter['filter']['filters'] as $f)
@@ -37,6 +37,12 @@ class DeductionTypeMapper extends AbstractMapper {
 			'data' => $result->get()
 		];
 
+        return $result->get();
+    }
+
+	public function getDeductSched()
+    {
+        $result = $this->model->select()->from('deduction_sched');
         return $result->get();
     }
 

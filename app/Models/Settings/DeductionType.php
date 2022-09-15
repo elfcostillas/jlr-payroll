@@ -15,6 +15,7 @@ class DeductionType extends Model
 
     protected $fillable = [
         'description',
-        'is_fixed'   
+        'is_fixed',
+        'deduction_sched'
     ];
 }

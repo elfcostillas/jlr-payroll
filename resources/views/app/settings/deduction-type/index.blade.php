@@ -28,7 +28,7 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <div class="card card-default">
                     {{-- <div class="card-header"> <h5>Semi Monthly</h5> </div> --}}
                     <div class="card-header"></div>

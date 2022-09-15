@@ -68,12 +68,25 @@
                                     id : { type : 'string',editable : false },
                                     description : { type : 'string' },
                                     is_fixed: { type : 'string' },
+                                    deduction_sched: { type : 'number' },
                                     // date_release: { type : 'date' },
                                     // man_hours: { type : 'number' },
                                 }
                             }
                         }
                     }),
+                    deductsched : new kendo.data.DataSource({
+                        transport : {   
+                            read : {
+                                url : 'deduction-type/deduct-sched',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },
+                        }
+                    })
                 },
                 toolbarHandler : {
 
@@ -87,7 +100,14 @@
                     buttonCount : 5
                 },
                 noRecords: true,
-                filterable : true,
+                filterable : {
+                    extra : false,
+                    operator : {
+                        string : {
+                            contains : "Contains"
+                        }
+                    }
+                },
                 sortable : true,
                 height : 550,
                 scrollable: true,
@@ -118,6 +138,16 @@
                         
                     },
                     {
+                        title : "Deduct Sched",
+                        field : "deduction_sched",
+                        width : 120,
+                        attributes : {
+                            style: "text-align:center"
+                        },
+                        template : "#if(deduction_sched==0){#   #}else{# #= deduction_sched # #}# ",
+                        editor : deductSchedEditor
+                    },
+                    {
                         command : ['edit'],
                         width : 190,    
                     },
@@ -139,6 +169,23 @@
                    
                 });
             }
+
+            function deductSchedEditor(container, options)
+            {
+                $('<input name="' + options.field + '"/>')
+                .appendTo(container)
+                .kendoDropDownList({
+                //.kendoComboBox({
+                    //autoBind: false,
+                    autoWidth: true,
+                    dataTextField: "code1",
+                    dataValueField: "id",
+                    dataSource: viewModel.ds.deductsched,
+                   
+                });
+            }
+
+            
 
             kendo.bind($("#viewModel"),viewModel);
 

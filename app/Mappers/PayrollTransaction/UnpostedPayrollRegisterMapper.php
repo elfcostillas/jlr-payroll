@@ -139,10 +139,88 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
 
     }
 
+    public function getPprocessed($period){
+        $locations = $this->model->select('locations.id','location_name')
+                    ->from("employees")
+                    ->join('locations','locations.id','=','employees.location_id')
+                    ->where('exit_status','=','1')
+                    ->distinct()->get();
+            if($locations){
+                foreach($locations as $location)
+                {
+                    //SELECT DISTINCT division_id FROM employees WHERE exit_status = 1 AND location_id=1;
+                    $divisions = $this->getDivisions($location);
+
+                    foreach($divisions as $division){
+                        $departments = $this->getDepartments($location,$division);
+
+                        foreach($departments as $department){
+                            $employees = $this->getEmployees($location,$division,$department);
+                        }
+
+                        $division->departments = $departments;
+                    }
+
+                    $location->divisions = $divisions;
+                }
+            }
+
+        return $locations;
+    }
+
+    public function getDivisions($location)
+    {
+        $divisions = $this->model->select('divisions.id','div_name')
+                        ->from("employees")
+                        ->join('divisions','divisions.id','=','employees.division_id')
+                        ->where('exit_status','=','1')
+                        ->where('location_id',$location->id)
+                        ->distinct()->get();
+        return $divisions;
+    }
+
+    public function getDepartments($location,$division)
+    {
+       // echo var_dump($location,$division)."<hr>";
+       /*
+       SELECT DISTINCT departments.id,departments.dept_name FROM employees 
+        INNER JOIN departments ON departments.id = employees.dept_id
+        WHERE exit_status = 1 AND location_id=1 AND division_id = 1;
+        */
+
+        $departments = $this->model->select('departments.id','dept_name')
+                        ->from("employees")
+                        ->join('departments','departments.id','=','employees.dept_id')
+                        ->where('exit_status','=','1')
+                        ->where('location_id',$location->id)
+                        ->where('division_id',$division->id)
+                        ->distinct()->get();
+
+        return $departments;
+    }
+
+    public function getEmployees($location,$division,$department)
+    {   
+        $employees = $this->model->select(DB::raw("employee_names_vw.employee_name,payrollregister_unposted.* FROM payrollregister_unposted"))
+                                ->from("payrollregister_unposted")
+                                ->join("employees","","=","")
+                                ->join("employee_names_vw","","=","")
+        ;
+
+
+        return $employees;
+    }
+
 }
 
 
 /*
+
+SELECT employee_names_vw.employee_name,payrollregister_unposted.* FROM payrollregister_unposted 
+INNER JOIN employees ON employees.biometric_id = payrollregister_unposted.biometric_id
+INNER JOIN employee_names_vw ON employee_names_vw.biometric_id = payrollregister_unposted.biometric_id
+WHERE 
+
 
 SELECT 
 employees.biometric_id,

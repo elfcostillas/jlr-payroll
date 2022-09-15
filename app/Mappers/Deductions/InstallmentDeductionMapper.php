@@ -26,7 +26,7 @@ class InstallmentDeductionMapper extends AbstractMapper {
         'is_stopped'=> 'sometimes|required',
         'encoded_by'=> 'sometimes|required',
         'encoded_on'=> 'sometimes|required',
-        'deduction_sched'=> 'sometimes|required',
+        //'deduction_sched'=> 'sometimes|required',
     ];
 
     public function header($id)

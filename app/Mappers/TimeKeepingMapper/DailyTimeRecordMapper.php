@@ -176,7 +176,34 @@ class DailyTimeRecordMapper extends AbstractMapper {
 
     public function getSemiDTR($biometric_id,$period_id)
     {
-        $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,ifnull(schedule_id,0) schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc,case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type"))
+
+        $holidays = $this->model->select(DB::raw("holidays.*,location_id"))
+                    ->from('holidays')
+                    ->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
+                    ->join('payroll_period',function($join){
+                        $join->whereRaw('holiday_date between payroll_period.date_from and payroll_period.date_to');
+                    })
+                    ->where('payroll_period.id',$period_id);
+
+
+                    $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,ifnull(schedule_id,0) schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc,case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type,lh_ot,lhot_rd,sh_ot,shot_rd,sun_ot"))
+                            ->from('edtr')
+                            ->where('edtr.biometric_id',$biometric_id)
+                            ->join('payroll_period',function($join){
+                            $join->whereRaw('dtr_date between payroll_period.date_from and payroll_period.date_to');
+                            })
+                            ->leftJoin('employees','employees.biometric_id','=','edtr.biometric_id')
+
+                            ->leftJoinSub($holidays,'holidays',function($join) { //use ($type)
+                            $join->on('holidays.location_id','=','employees.location_id');
+                            $join->on('holidays.holiday_date','=','edtr.dtr_date');
+                            })
+                            ->leftJoin('work_schedules','schedule_id','=','work_schedules.id')
+                            ->where('payroll_period.id',$period_id)
+                            ->orderBy('dtr_date');
+
+        /*
+        $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,ifnull(schedule_id,0) schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc,case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type,lh_ot,lhot_rd,sh_ot,shot_rd"))
         ->from('edtr')
         ->where('edtr.biometric_id',$biometric_id)
         ->join('payroll_period',function($join){
@@ -191,6 +218,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
         ->leftJoin('work_schedules','schedule_id','=','work_schedules.id')
         ->where('payroll_period.id',$period_id)
         ->orderBy('dtr_date');
+        */
 
         return $result->get();
     }
@@ -207,18 +235,26 @@ class DailyTimeRecordMapper extends AbstractMapper {
 
     public function getSemiDTRforComputation($biometric_id,$period_id)
     {
-        $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,time_to_sec(work_schedules.time_in) as sched_in,holiday_type,time_to_sec(edtr.time_in) as actual_in"))
+        $holidays = $this->model->select(DB::raw("holidays.*,location_id"))
+                            ->from('holidays')
+                            ->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
+                            ->join('payroll_period',function($join){
+                                $join->whereRaw('holiday_date between payroll_period.date_from and payroll_period.date_to');
+                            })
+                            ->where('payroll_period.id',$period_id);
+                            
+        $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,time_to_sec(work_schedules.time_in) as sched_in,holidays.holiday_type,time_to_sec(edtr.time_in) as actual_in"))
         ->from('edtr')
         ->where('edtr.biometric_id',$biometric_id)
         ->join('payroll_period',function($join){
             $join->whereRaw('dtr_date between payroll_period.date_from and payroll_period.date_to');
         })
         ->leftJoin('employees','employees.biometric_id','=','edtr.biometric_id')
-        ->leftJoin('holidays','edtr.dtr_date','=','holidays.holiday_date')
-        ->join('holiday_location',function($join){
-            $join->on('holiday_location.holiday_id','=','holiday_id');
-            $join->on('holiday_location.location_id','=','employees.location_id');
-        })
+        //->leftJoin('holidays','edtr.dtr_date','=','holidays.holiday_date')
+        ->leftJoinSub($holidays,'holidays',function($join) { //use ($type)
+						$join->on('holidays.location_id','=','employees.location_id');
+						$join->on('holidays.holiday_date','=','edtr.dtr_date');
+		})
         ->leftJoin('work_schedules','schedule_id','=','work_schedules.id')
         ->where('payroll_period.id',$period_id)
         ->orderBy('dtr_date');

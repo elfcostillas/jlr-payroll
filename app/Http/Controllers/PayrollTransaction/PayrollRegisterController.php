@@ -61,7 +61,8 @@ class PayrollRegisterController extends Controller
        
         $this->unposted->reInsert($period->id,$payreg);
 
+        $collections = $this->unposted->getPprocessed($period);
 
-        return view('app.payroll-transaction.payroll-register.payroll-register',['employees' => $employees]);
+        return view('app.payroll-transaction.payroll-register.payroll-register',['data' => $collections]);
     }
 }

@@ -24,6 +24,11 @@ class DailyTimeRecord extends Model
         'over_time',
         'night_diff',
         'schedule_id',
-        'ndays'
+        'ndays',
+        'lh_ot',
+        'lhot_rd',
+        'sh_ot',
+        'shot_rd',
+        'sun_ot'
     ];
 }

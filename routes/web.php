@@ -241,6 +241,7 @@ Route::middleware('auth')->prefix('settings')->group(function(){
         Route::get('list',[DeductionTypeController::class,'list']);
         Route::post('create',[DeductionTypeController::class,'create']);
         Route::post('update',[DeductionTypeController::class,'update']);
+        Route::get('deduct-sched',[DeductionTypeController::class,'getDeductSched']);
        
         //Route::get('get-locations',[LocationController::class,'listOption']);
     });

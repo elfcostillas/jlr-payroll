@@ -7,6 +7,11 @@
     <title>Document</title>
 
     <style>
+            * {
+                font-family: 'Consolas';
+                font-size : 10pt;
+            }
+
             div#container2 {
                 max-width:  1320px;
                 max-height: 670px;
@@ -47,6 +52,22 @@
                 
             }
 
+            .location {
+                background-color:  #0096FF;
+            }
+
+            .division {
+                background-color:  #FFFF00;
+            }
+
+            .department {
+                background-color:  #BEBEBE;
+            }
+
+            td {
+                padding : 4px;
+            }
+
     </style>
 </head>
 <body>
@@ -62,7 +83,7 @@
             </tr>
         @endforeach
     </table> --}}
-    <div id="container2" >
+    {{-- <div id="container2" >
         <table style="width:4240px;white-space:nowrap;border-collapse:collapse;" border=1>
             <thead>
                 <tr>
@@ -83,6 +104,26 @@
                 </tr>
                 @endfor
             </tbody>
+        </table>
+    </div> --}}
+
+    <div id="container2" >
+        <table style="border-collapse:collapse;">
+            @foreach($data as $location)
+                <tr>
+                    <td class="location"> {{ $location->location_name }} </td>
+                </tr>
+                    @foreach($location->divisions as $division)  
+                        <tr>
+                            <td class="division"> {{ $division->div_name }} </td>
+                        </tr>
+                        @foreach($division->departments as $department)
+                            <tr>
+                                <td class="department"> {{ $department->dept_name }} </td>
+                            </tr>
+                        @endforeach
+                    @endforeach
+            @endforeach
         </table>
     </div>
 </body>
