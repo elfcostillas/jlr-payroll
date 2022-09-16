@@ -25,6 +25,9 @@ class Employee
         'sss_prem' => null,
         'phil_prem' => null,
         'hdmf_contri' => null,
+        'overtime_amount' => null,
+        'daily_allowance' => null,
+        'semi_monthly_allowance' => null,
     ]; 
 
     protected $rates = [
@@ -51,6 +54,24 @@ class Employee
         }
         $this->computeContribution($period);
 
+        /*** Overtime ***/
+        if($this->payreg['overtime']>0)
+        {
+            $this->payreg['overtime_amount'] = round(($this->rates['hourly_rate'] * 1.25) * $this->payreg['overtime'],2);
+            //dd($this->payreg['overtime_amount'],$this->payreg['overtime'],$this->rates['hourly_rate']);
+        }
+
+        if($this->data['daily_allowance']>0){
+            $this->payreg['daily_allowance'] = $this->data['daily_allowance'] * $this->payreg['ndays'];
+        }
+
+        if($this->data['monthly_allowance']>0){
+            $this->payreg['semi_monthly_allowance'] = round($this->data['monthly_allowance']/2,2);
+        }
+       
+
+        /*******/
+
     }
 
     public function computeContribution($period){
@@ -70,10 +91,10 @@ class Employee
     public function setPayRates(){
         if($this->data['is_daily']=='Y'){
             $this->rates["daily_rate"] = $this->data['basic_salary'];
-            $this->rates["hourly_rate"] = (float) round($this->data['daily_rate']/8,4);
+            $this->rates["hourly_rate"] = (float) round($this->rates['daily_rate']/8,4);
         }else{
-            $this->rates["daily_rate"] = (float) round(($this->data['basic_salary']/2)/13,4);
-            $this->rates["hourly_rate"] = (float) round($this->data['daily_rate']/8,4);
+            $this->rates["daily_rate"] = (float) round(($this->data['basic_salary']*12)/314,4);
+            $this->rates["hourly_rate"] = (float) round($this->rates['daily_rate']/8,4);
         }
     }
 

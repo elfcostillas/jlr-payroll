@@ -107,9 +107,9 @@
         </table>
     </div> --}}
     <?php
-        $colspan=2;
+        $colspan=4;
     ?>
-    <div id="container2" >
+    <div id="" >
         <table style="border-collapse:collapse;" border=1 >
             @foreach($data as $location)
                 <tr>
@@ -125,18 +125,34 @@
                             </tr>
                             @foreach($department->employees as $employee)
                                 <?php//  dd($employee); ?>
-                                <tr>
+                                <tr style="vertical-align: top;">
                                     <td> {{ $employee->biometric_id }} </td> <td> {{ $employee->employee_name }} </td>
                                     <td>
-                                        @foreach($employee->deductions as $deduction)
-                                            <span style="display:inline-block;width:160px;"> {{ $deduction->description }} </span> <span style="display:inline-block;width:80px;text-align:right;"> {{ number_format($deduction->amount,2) }} </span><br>
+                                        @foreach($employee->basicEarnings as $basic)
+                                            <span style="display:inline-block;width:200px;"> {{ $basic->name }} </span> <span style="display:inline-block;width:90px;text-align:right;"> {{ $basic->hours }} </span><span style="display:inline-block;width:110px;text-align:right;"> {{ number_format($basic->amount,2) }} </span><br>    
+                                            
                                         @endforeach
 
-                                        @foreach($employee->gov_deductions as $key => $prem)
-                                                @if($prem>0)
-                                                <span style="display:inline-block;width:160px;"> {{ $key }} </span> <span style="display:inline-block;width:80px;text-align:right;"> {{ number_format($prem,2) }} </span><br>    
-                                                @endif
+                                        @foreach($employee->otherEarnings as $other)
+                                            <span style="display:inline-block;width:200px;"> {{ $other->description }} </span> <span style="display:inline-block;width:90px;text-align:right;"> </span><span style="display:inline-block;width:110px;text-align:right;"> {{ number_format($other->amount,2) }} </span><br>    
+                                            
                                         @endforeach
+                                    </td>
+                                    <td>
+                                        @foreach($employee->gov_deductions as $key => $prem)
+                                            @if($prem>0)
+                                            <span style="display:inline-block;width:200px;"> {{ $key }} </span> <span style="display:inline-block;width:90px;text-align:right;"> </span><span style="display:inline-block;width:110px;text-align:right;"> {{ number_format($prem,2) }} </span><br>    
+                                            @endif
+                                        @endforeach
+                                        @foreach($employee->deductions as $deduction)
+                                            <span style="display:inline-block;width:200px;"> {{ $deduction->description }} </span> <span style="display:inline-block;width:90px;text-align:right;"> </span><span style="display:inline-block;width:110px;text-align:right;"> {{ number_format($deduction->amount,2) }} </span><br>
+                                        @endforeach
+                                        @foreach($employee->loans as $loan)
+                                            <span style="display:inline-block;width:200px;"> {{ $loan->description }} </span> <span style="display:inline-block;width:90px;text-align:right;"> </span><span style="display:inline-block;width:110px;text-align:right;"> {{ number_format($loan->amount,2) }} </span><br>    
+                                        @endforeach
+
+                                      
+                                        
                                     </td>
                                 </tr>
                             @endforeach

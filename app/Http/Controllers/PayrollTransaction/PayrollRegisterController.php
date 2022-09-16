@@ -54,6 +54,9 @@ class PayrollRegisterController extends Controller
         $onetime = $this->unposted->runOneTimeDeduction($period,$employees->pluck('biometric_id'));
         $fixed = $this->unposted->runFixedDeduction($period,$employees->pluck('biometric_id'));
 
+        $fixed = $this->unposted->runFixedCompensation($period,$employees->pluck('biometric_id'));
+        $other = $this->unposted->runOtherCompensation($period,$employees->pluck('biometric_id'));
+
         foreach($employees as $employee){
             $person = ($employee->pay_type==1) ? new Employee($employee,new SemiMonthly) : new Employee($employee,new Daily);
             $person->setPhilRate($phil_rate->rate);

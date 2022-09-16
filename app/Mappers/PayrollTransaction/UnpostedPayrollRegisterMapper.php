@@ -116,9 +116,9 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                                                 IF(total_amount-SUM(IFNULL(posted_loans.amount,0))<ammortization,total_amount-SUM(IFNULL(posted_loans.amount,0)),ammortization) AS ammortization"))
                             ->from("deduction_gov_loans")
                             ->leftJoin('posted_loans','deduction_gov_loans.id','=','posted_loans.deduction_id')
-                            ->join('deduction_types','deduction_types.id','=','deduction_gov_loans.deduction_type')
+                            ->join('loan_types','loan_types.id','=','deduction_gov_loans.deduction_type')
                             ->whereRaw("is_stopped = 'N'")
-                            ->whereIn('deduction_types.deduction_sched',[$period->period_type,3])
+                            ->whereIn('loan_types.sched',[$period->period_type,3])
                             ->where('deduction_gov_loans.period_id','<=',$period->id)
                             ->whereIn('deduction_gov_loans.biometric_id',$biometric_ids)
                             ->groupBy(DB::raw("id,deduction_gov_loans.biometric_id,deduction_gov_loans.deduction_type"))
@@ -226,7 +226,7 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                 ->whereIn('deduction_fixed.biometric_id',$biometric_ids)
                 ->where([
                     ['is_stopped','=','N'],
-                    ['deduction_fixed.period_id','<=',$period->id]
+                   // ['deduction_fixed.period_id','<=',$period->id]
                 ])->get();
         
         foreach($fixed as $loan)
@@ -306,9 +306,9 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
         return $departments;
     }
 
-    public function getEmployees($location,$division,$department,$period)
+    public function getEmployees($location,$division,$department,$period) /* Earnings and Deductions here */
     {   
-        $employees = $this->model->select(DB::raw("employee_names_vw.employee_name,payrollregister_unposted.*"))
+        $employees = $this->model->select(DB::raw("employee_names_vw.employee_name,payrollregister_unposted.*,employees.pay_type"))
                                 ->from("payrollregister_unposted")
                                 ->join("employees",'employees.biometric_id','=','payrollregister_unposted.biometric_id')
                                 ->join("employee_names_vw",'employee_names_vw.biometric_id','=','payrollregister_unposted.biometric_id')
@@ -321,6 +321,10 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
         foreach($employees as $employee)
         {   
             $deductions = $this->getDeductions($employee->biometric_id,$period->id);
+           
+            //$employee->earnings = $this->earnings($employee->biometric_id,$period->id);
+            $employee->basicEarnings = $this->basicEarnings($employee,$period);
+            $employee->otherEarnings = $this->otherEarnings($employee->biometric_id,$period->id);
             $employee->deductions = $deductions;
             $employee->gov_deductions = collect(
                 [
@@ -329,13 +333,157 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                     'PAG IBIG Contri' => $employee->hdmf_contri,
                 ]
             );
+            $employee->loans = $this->getGovLoans($employee->biometric_id,$period->id);
 
             // if($employee->biometric_id==847){
             //     dd($employee);
             // }   
         }
-                                    
+                           
         return $employees;
+    }
+
+    public function otherEarnings($biometric_id,$period_id)
+    {
+        /*
+         
+        $onetime = DB::table("unposted_onetime_deductions")->select('deduction_type','amount')->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
+        $fixed = DB::table("unposted_fixed_deductions")->select('deduction_type','amount')->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
+        $install = DB::table("unposted_installments")->select('deduction_type','amount')->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]])
+                    ->unionAll($onetime)->unionAll($fixed);
+        $deductions = DB::table('deduction_types')
+                        ->select('description','deduction_type','amount')
+                        ->joinSub($install,'deductions',function($join){
+                            $join->on('deductions.deduction_type','=','deduction_types.id');
+                        })->orderBy('deduction_type')->get();
+
+        return $deductions;
+        */
+
+        $others = DB::table('unposted_other_compensations')->select('compensation_type','amount')->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
+        $fixed = DB::table('unposted_fixed_compensations')->select('compensation_type','amount')->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]])
+        ->unionAll($others);
+
+        $earnings = DB::table('compensation_types')
+                    ->select('description','compensation_type','amount')
+                    ->joinSub($fixed,'earnings',function($join){
+                        $join->on('earnings.compensation_type','=','compensation_types.id');
+                    })->orderBy('compensation_type')->get();
+        
+        return $earnings;
+       
+    }
+
+    public function runFixedCompensation($period,$biometric_ids)
+    {
+        //unposted_fixed_compensations
+        //unposted_other_compensations
+        /*
+        SELECT period_id,compensation_type,biometric_id,total_amount,header_id 
+        FROM compensation_fixed_headers header
+INNER JOIN compensation_fixed_details details ON header.id = details.header_id
+WHERE period_id = 1 AND total_amount > 0;*/
+
+
+        DB::table('unposted_fixed_compensations')->where('period_id',$period->id)->delete();
+        $tmp_earn = [];
+
+        $fixed = $this->model->select(DB::raw("period_id,compensation_type,biometric_id,total_amount,id"))
+                ->from('compensation_fixed_headers as header')
+                ->join('compensation_fixed_details','header.id','=','header_id')
+                ->whereIn('compensation_fixed_details.biometric_id',$biometric_ids)
+                ->where([
+                  ['period_id','=',$period->id],
+                  ['total_amount','>',0]
+                ])->get();
+        
+        foreach($fixed as $earn)
+        {
+            $tmp = [
+                'period_id' => $period->id,
+                'biometric_id' => $earn->biometric_id,
+                'compensation_type' => $earn->compensation_type,
+                'amount' => $earn->total_amount,
+                'deduction_id' => $earn->id,
+            ];
+
+            array_push($tmp_earn,$tmp);
+        }
+
+        //dd($fixed->toSql(),$fixed->getBindings());
+
+        DB::table('unposted_fixed_compensations')->insertOrIgnore($tmp_earn);
+    }
+
+    public function runOtherCompensation($period,$biometric_ids)
+    {
+        //unposted_fixed_compensations
+        //unposted_other_compensations
+
+        DB::table('unposted_other_compensations')->where('period_id',$period->id)->delete();
+        $tmp_earn = [];
+
+        $fixed = $this->model->select(DB::raw("period_id,compensation_type,biometric_id,total_amount,id"))
+                ->from('compensation_other_headers as header')
+                ->join('compensation_other_details','header.id','=','header_id')
+                ->whereIn('compensation_other_details.biometric_id',$biometric_ids)
+                ->where([
+                  ['period_id','=',$period->id],
+                  ['total_amount','>',0]
+                ])->get();
+        
+        foreach($fixed as $earn)
+        {
+            $tmp = [
+                'period_id' => $period->id,
+                'biometric_id' => $earn->biometric_id,
+                'compensation_type' => $earn->compensation_type,
+                'amount' => $earn->total_amount,
+                'deduction_id' => $earn->id,
+            ];
+
+            array_push($tmp_earn,$tmp);
+        }
+
+        DB::table('unposted_other_compensations')->insertOrIgnore($tmp_earn);
+    }
+
+    public function basicEarnings($employee,$period)
+    {
+        $earnings=[];
+        
+        array_push($earnings, (object) [
+            'name' => 'Basic Salary (Reg Hours)',
+            'hours'=> ($employee->pay_type==1) ? $period->man_hours : $employee->ndays * 8 ,
+            'amount' => $employee->basic_pay
+        ]);
+
+        if($employee->overtime>0){
+            array_push($earnings, (object) [
+                'name' => 'OT Regular',
+                'hours'=> $employee->overtime,
+                'amount' => $employee->overtime_amount
+            ]);
+        }
+
+        if($employee->daily_allowance>0){
+            array_push($earnings, (object) [
+                'name' => 'Daily Allowance',
+                'hours'=> null,
+                'amount' => $employee->daily_allowance
+            ]);
+        }
+
+        if($employee->semi_monthly_allowance>0){
+            array_push($earnings, (object) [
+                'name' => 'Monthly Allowance',
+                'hours'=> null,
+                'amount' => $employee->semi_monthly_allowance
+            ]);
+        }
+       
+
+        return collect($earnings);
     }
 
     public function getDeductions($biometric_id,$period_id)
@@ -351,6 +499,22 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                         })->orderBy('deduction_type')->get();
 
         return $deductions;
+    }
+
+    public function getGovLoans($biometric_id,$period_id)
+    {
+        /*
+        SELECT description,amount FROM unposted_loans INNER JOIN loan_types ON deduction_type = loan_types.id
+        WHERE period_id = 1 AND biometric_id = 847
+        */
+        $loan = DB::table('unposted_loans')->select('description','amount')
+        ->join('loan_types','deduction_type','=','loan_types.id')
+        ->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]])
+        ->orderBy('deduction_type')->get();
+        // if($biometric_id==847){
+        //     dd($loan);
+        // }
+        return $loan;
     }
 
 }

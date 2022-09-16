@@ -157,7 +157,10 @@
                             parameterMap: function (data, type) {
                                
                                 if(type=='create'||type=='update'){
-                                    data.header_id = viewModel.form.model.id;
+                                    // data.header_id = viewModel.form.model.id;
+                                    $.each(data.models,function(index,value){
+                                        value.header_id =  viewModel.form.model.id;
+                                    });
                                 }
 
                                 return data;
