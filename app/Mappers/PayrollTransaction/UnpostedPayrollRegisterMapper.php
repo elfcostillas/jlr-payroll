@@ -58,7 +58,12 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                         SUM(ndays) AS ndays,
                         hdmf_contri,
                         monthly_allowance,
-                        daily_allowance
+                        daily_allowance,
+                        sum(lh_ot) lh_ot,
+                        sum(lhot_rd) AS lhot_rd,
+                        sum(sh_ot) AS sh_ot,
+                        sum(shot_rd) AS shot_rd,
+                        sum(sun_ot) AS sun_ot
                         "))
                     ->from('edtr')
                     ->join('payroll_period',function($join){
@@ -100,6 +105,7 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
 
         $result = DB::table('payrollregister_unposted')->insertOrIgnore($blank);
 
+        return $result;
     }
 
     public function runGovLoans($period,$biometric_ids)
@@ -466,11 +472,12 @@ WHERE period_id = 1 AND total_amount > 0;*/
             ]);
         }
 
-        if($employee->daily_allowance>0){
+        if($employee->sh_ot>0)
+        {
             array_push($earnings, (object) [
-                'name' => 'Daily Allowance',
-                'hours'=> null,
-                'amount' => $employee->daily_allowance
+                'name' => 'OT Special Holiday',
+                'hours'=> $employee->sh_ot,
+                'amount' => $employee->sh_ot_amount
             ]);
         }
 
@@ -481,7 +488,14 @@ WHERE period_id = 1 AND total_amount > 0;*/
                 'amount' => $employee->semi_monthly_allowance
             ]);
         }
-       
+
+        if($employee->daily_allowance>0){
+            array_push($earnings, (object) [
+                'name' => 'Daily Allowance',
+                'hours'=> null,
+                'amount' => $employee->daily_allowance
+            ]);
+        }
 
         return collect($earnings);
     }
@@ -517,10 +531,31 @@ WHERE period_id = 1 AND total_amount > 0;*/
         return $loan;
     }
 
+    public function semiEmployeeNoPayroll($period_id)
+    {
+        $empInPayroll = $this->model->select('biometric_id')->from('payrollregister_unposted')->where('period_id',$period_id);
+
+        $result = $this->model->select('employees.biometric_id','employee_name')
+                                ->from('employees')
+                                ->join('employee_names_vw','employees.biometric_id','=','employee_names_vw.biometric_id')
+                                ->whereNotIn('employees.biometric_id',$empInPayroll)
+                                ->where('employees.exit_status',1);
+
+        return $result->get();
+    }   
+
 }
 
 
 /*
+
+SELECT employees.biometric_id,employee_name FROM employees 
+JOIN employee_names_vw ON employees.biometric_id = employee_names_vw.biometric_id
+WHERE employees.biometric_id NOT IN (SELECT biometric_id FROM payrollregister_unposted WHERE period_id = 1)
+AND employees.exit_status =1;
+
+
+
 SELECT deduction_onetime_headers.period_id,deduction_onetime_details.biometric_id,deduction_type,amount,deduction_onetime_headers.id 
 FROM deduction_onetime_headers 
 INNER JOIN deduction_onetime_details ON deduction_onetime_headers.id = deduction_onetime_details.header_id

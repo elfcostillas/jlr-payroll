@@ -13,6 +13,7 @@ use App\Http\Controllers\Timekeeping\ManageDTRWeeklyController;
 use App\Http\Controllers\Timekeeping\ManageDTRController;
 use App\Http\Controllers\Timekeeping\ManualDTRController;
 use App\Http\Controllers\Timekeeping\FTPController;
+use App\Http\Controllers\Timekeeping\LeavesAbsencesController;
 
 use App\Http\Controllers\Settings\LocationController;
 use App\Http\Controllers\Settings\DefaultScheduleController;
@@ -166,6 +167,11 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         // Route::get('print/{id}',[FTPController::class,'print']);
 
         
+    });
+
+    Route::prefix('leaves-absences')->group(function(){
+        Route::get('/',[LeavesAbsencesController::class,'index']);
+        Route::get('list',[LeavesAbsencesController::class,'list']);
     });
 
 });

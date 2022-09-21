@@ -66,10 +66,17 @@ class PayrollRegisterController extends Controller
 
         }
        
-        $this->unposted->reInsert($period->id,$payreg);
+        $flag = $this->unposted->reInsert($period->id,$payreg);
+
+       
+        if($flag){
+            $noPay = $this->unposted->semiEmployeeNoPayroll($period->id);
+        }else{
+            return false;
+        }
 
         $collections = $this->unposted->getPprocessed($period);
 
-        return view('app.payroll-transaction.payroll-register.payroll-register',['data' => $collections]);
+        return view('app.payroll-transaction.payroll-register.payroll-register',['data' => $collections,'no_pay' => $noPay ]);
     }
 }

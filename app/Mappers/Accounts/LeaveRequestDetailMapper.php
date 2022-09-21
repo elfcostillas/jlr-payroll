@@ -31,8 +31,8 @@ class LeaveRequestDetailMapper extends AbstractMapper {
                     'time_from' => '00:00',
                     'time_to' => '00:00',
                     'days' => 1,
-                    'with_pay' => 'N'
-    
+                    'with_pay' => 0,
+                    'without_pay' => 0
                 ]);
             }
            
@@ -52,7 +52,8 @@ class LeaveRequestDetailMapper extends AbstractMapper {
             'time_from',
             'time_to',
             'days',
-            'with_pay'
+            'with_pay',
+            'without_pay'
         )->where('header_id',$id);
 
         return $result->get();

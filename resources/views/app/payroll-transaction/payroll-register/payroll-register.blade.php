@@ -160,6 +160,24 @@
                     @endforeach
             @endforeach
         </table>
+        @if(count($no_pay)>0)
+        <table border="1" style="border-collapse:collapse;margin-top : 12px">
+            <tr>
+                <td colspan="2"> Employees not in computation</td>
+            </tr>
+            <tr>
+                <td>Biometric ID</td>
+                <td>Employee Name</td>
+            </tr>
+
+            @foreach($no_pay as $e)
+                <tr>
+                    <td> {{ $e->biometric_id }}</td>
+                    <td> {{ $e->employee_name }}</td>
+                </tr>
+            @endforeach
+        </table>
+        @endif
     </div>
 </body>
 </html>

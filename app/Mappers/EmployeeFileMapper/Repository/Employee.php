@@ -28,6 +28,16 @@ class Employee
         'overtime_amount' => null,
         'daily_allowance' => null,
         'semi_monthly_allowance' => null,
+        'lh_ot' => null,
+        'lh_ot_amount' => null,
+        'lhot_rd' => null,
+        'lhot_rd_amount' => null,
+        'sh_ot' => null,
+        'sh_ot_amount' => null,
+        'shot_rd' => null,
+        'shot_rd_amount' => null,
+        'sun_ot' => null,
+        'sun_ot_amount' => null,
     ]; 
 
     protected $rates = [
@@ -68,7 +78,10 @@ class Employee
         if($this->data['monthly_allowance']>0){
             $this->payreg['semi_monthly_allowance'] = round($this->data['monthly_allowance']/2,2);
         }
-       
+
+        if($this->data['sh_ot']>0){
+            $this->payreg['sh_ot_amount'] = round(($this->rates['hourly_rate'] * 1.3) * $this->payreg['sh_ot'],2);
+        }
 
         /*******/
 

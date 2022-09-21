@@ -152,7 +152,7 @@
                         title : "Date",
                         field : "holiday_date",
                         template : "#= (data.holiday_date) ? kendo.toString(data.holiday_date,'MM/dd/yyyy') : ''  #",
-                        width : 120,    
+                        width : 130,    
                     },
                     {
                         title : "Type",

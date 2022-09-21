@@ -96,6 +96,10 @@ class LeaveRequestController extends Controller
 
     public function updateDetail(Request $request)
     {
+        if($request->with_pay+$request->without_pay>1)
+        {
+            return response()->json(['error'=>'Invalid no of days.'])->setStatusCode(500, 'Error');
+        }
         $result = $this->detail->updateValid($request->all());
 
         return response()->json($result);

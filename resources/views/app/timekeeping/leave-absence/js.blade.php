@@ -80,7 +80,7 @@
                     maingrid : new kendo.data.DataSource({
                         transport : {
                             read : {
-                                url : 'leave-request/list',
+                                url : 'leaves-absences/list',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -98,16 +98,11 @@
                             model : {
                                 id : 'id',
                                 fields : {
-                                    biometric_id : { type:"number"},
-                                    requesting_emp : { type:"string"},
-                                    leave_type_code : { type:"string"},
-                                    remarks : { type:"string"},
-                                    document_status : {type:"string"},
-                                    acknowledge_status : { type:"string"},
-                                    approver_emp : { type:"string"},
-                                    acknowledge_time : { type:"string"},
-                                    hr_emp : { type:"string"},
-                                    received_time : { type:"date"},
+                                    employee_name : { type:"string"},
+                                    leave_type_desc : { type:"string"},
+                                    request_date: { type:"string"},
+                                    daterange: { type:"string"},
+                                    receiver: { type:"string"},
 
                                 }
                             }
@@ -117,7 +112,7 @@
                     employee : new kendo.data.DataSource({
                         transport : {
                             read : {
-                                url : 'leave-request/employee-list',
+                                url : '../accounts/leave-request/employee-list',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -146,30 +141,21 @@
                     leaveDetails :  new kendo.data.DataSource({
                         transport : {
                             read : {
-                                url : 'leave-request/read-detail/0',
+                                url : '../accounts/leave-request/read-detail/0',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
                                     
                                 }
                             },
-                            update : {
-                                url : 'leave-request/update-detail',
-                                type : 'post',
-                                dataType : 'json',
-                                complete : function(e){
-                                   //console.log(e.status);
-
-                                    if(e.status==500)
-                                    {
-                                        swal_error(e);
-                                    }
-                                    else{
-                                        swal_success(e);
-                                    }
-                                    viewModel.ds.leaveDetails.read();
-                                }
-                            },
+                            // update : {
+                            //     url : 'leave-request/update-detail',
+                            //     type : 'post',
+                            //     dataType : 'json',
+                            //     complete : function(e){
+                            //         viewModel.ds.leaveDetails.read();
+                            //     }
+                            // },
                             parameterMap : function (data,type){
                                 if(type=='update'){
                                     // $.each(data.models,function(index,value){
@@ -228,7 +214,7 @@
                             $.post('leave-request/save',{
                                 data : json_data
                             },function(data,staus){
-                                //swal_success(data);
+                                swal_success(data);
 
                                 let url = `leave-request/read-header/${data}`;
                                 read(url,viewModel);
@@ -257,10 +243,10 @@
 
                         viewModel.set('selected',data);
 
-                        let url  = `leave-request/read-header/${data.id}`;
+                        let url  = `../accounts/leave-request/read-header/${data.id}`;
                         read(url,viewModel);
 
-                        let detailUrl = `leave-request/read-detail/${data.id}`;
+                        let detailUrl = `../accounts/leave-request/read-detail/${data.id}`;
                         viewModel.ds.leaveDetails.transport.options.read.url = detailUrl;
                         viewModel.ds.leaveDetails.read();
 
@@ -286,7 +272,7 @@
 
                         viewModel.form.model.set('document_status','DRAFT');
 
-                        let detailUrl = `leave-request/read-detail/0`;
+                        let detailUrl = `../accounts/leave-request/read-detail/0`;
                         viewModel.ds.leaveDetails.transport.options.read.url = detailUrl;
                         viewModel.ds.leaveDetails.read();
 
@@ -455,40 +441,29 @@
                         width : 80,    
                     },
                     {
-                        title : "Employee",
-                        field : "requesting_emp",
-                       // width : 180,    
+                        title : "ID",
+                        field : "employee_name",
+                       // width : 80,    
                     },
                     {
                         title : "Type",
-                        field : "leave_type_code",
-                        width : 90,    
-                    },
-                    // {
-                    //     title : "Reason",
-                    //     field : "remarks",
-                        
-                    // },
-                    {
-                        title : "Status",
-                        field : "document_status",
-                        width : 90,    
+                        field : "leave_type_desc",
+                        width : 120,    
                     },
                     {
-                        
-                        title : "Approval",
-                        field : "acknowledge_status",
-                        width : 90,  
-                    }, 
-                    {
-                        title : "Approver",
-                        field : "approver_emp",
-                        width : 180,  
+                        title : "Date Req.",
+                        field : "request_date",
+                        width : 100,    
                     },
                     {
-                        title : "Received",
-                        field : "hr_emp",
-                        width : 180,  
+                        title : "From - To",
+                        field : "daterange",
+                        width : 160,    
+                    },
+                    {
+                        title : "Received By",
+                        field : "receiver",
+                        //width : 80,    
                     },
                     {
                         command: { text : 'View',icon : 'edit' ,click : viewModel.buttonHandler.view },
@@ -689,6 +664,8 @@
                 items : [
                     //{ id : 'saveBtn', type: "button", text: "Save", icon: 'save', click : viewModel.buttonHandler.save },
                     { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
+                    { id : 'setReceived', type: "button", text: "Set as Received", icon: 'save', click : viewModel.buttonHandler.receive },
+                 
                     //{ id : 'postBtn', type: "button", text: "Post", icon: 'print', click : viewModel.buttonHandler.post },
                 ]
             });

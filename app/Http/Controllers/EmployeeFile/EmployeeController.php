@@ -69,6 +69,12 @@ class EmployeeController extends Controller
 
         $data_arr = (array) $data;
 
+        if($data_arr['pay_type']==1){
+            $data_arr['is_daily'] = 'N';       
+        }else{
+            $data_arr['is_daily'] = 'Y';           
+        }
+
         if($data_arr['id']==null){
             $result = $this->mapper->insertValid($data_arr);
         }else{

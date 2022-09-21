@@ -25,6 +25,8 @@ class DailyTimeRecordMapper extends AbstractMapper {
         $blank_dtr = [];
         //LEFT JOIN work_schedules_default ON employees.dept_id = work_schedules_default.dept_id
         if($type=='semi'){
+
+            /*
             $empWithPunch = $this->model->select('edtr_raw.biometric_id','schedule_id')->from('edtr_raw')
             ->join('employees','edtr_raw.biometric_id','=','employees.biometric_id')
             ->join('payroll_period',function($join){
@@ -36,6 +38,15 @@ class DailyTimeRecordMapper extends AbstractMapper {
             ->where('payroll_period.id',$period_id)
             ->distinct()
             ->get();
+            */
+            $empWithPunch = $this->model->select('employees.biometric_id','schedule_id')->from('employees')
+            ->leftJoin('work_schedules_default','employees.dept_id','=','work_schedules_default.dept_id')
+            ->whereIn('pay_type',[1,2])
+            ->where('exit_status',1)
+            //->where('payroll_period.id',$period_id)
+            ->distinct()
+            ->get();
+
             $range = $this->model->select('date_from','date_to')->from('payroll_period')->where('payroll_period.id',$period_id)->first();
         }else{
             $empWithPunch = $this->model->select('edtr_raw.biometric_id','schedule_id')->from('edtr_raw')
