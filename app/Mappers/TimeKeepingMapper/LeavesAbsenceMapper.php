@@ -14,6 +14,10 @@ class LeavesAbsenceMapper extends AbstractMapper {
     	
     ];
 
+    public function header($id){
+        return $this->model->find($id);
+    }
+
     public function list($filter)
     {
         $result = $this->model->select()->from('leave_request_vw');

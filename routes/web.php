@@ -172,6 +172,7 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
     Route::prefix('leaves-absences')->group(function(){
         Route::get('/',[LeavesAbsencesController::class,'index']);
         Route::get('list',[LeavesAbsencesController::class,'list']);
+        Route::post('receive',[LeavesAbsencesController::class,'receive']);
     });
 
 });

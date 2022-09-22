@@ -35,6 +35,7 @@
                 leave_type: null,
                 reliever_id: null,
                 document_status : null,
+                received_by : null
             };
 
             let obj2= {
@@ -63,6 +64,7 @@
                         leave_type: null,
                         reliever_id: null,
                         document_status : null,
+                        received_by : null
 
                     },
                 },
@@ -302,6 +304,28 @@
                                 viewModel.buttonHandler.save();
                             }
                         });
+                    },
+                    receive : function(e){
+                        $.post('leaves-absences/receive',{
+                                id : viewModel.form.model.id
+                            },function(data,staus){
+                                swal_success(data);
+                               
+                                let url = `../accounts/leave-request/read-header/${data}`;
+                                read(url,viewModel);
+                                viewModel.ds.maingrid.read();
+
+                                // let detailUrl = `leave-request/read-detail/${data}`;
+                                // viewModel.ds.leaveDetails.transport.options.read.url = detailUrl;
+                                // viewModel.ds.leaveDetails.read();
+
+                                //viewModel.maingrid.formReload(data);
+                            })
+                            .fail(function(data){
+                            swal_error(data);
+                            }).always(function() {
+                                
+                            });
                     }
                 },
                 functions : {
@@ -402,6 +426,17 @@
 
                         activeToolbar.hide();
                         postedToolbar.show();
+
+                        var toolbar = $("#toolbar2").data("kendoToolBar");
+
+                        if(viewModel.form.model.received_by==null || viewModel.form.model.received_by=='' ){
+                            toolbar.show($("#setReceived"));
+                            //console.log('show');
+                        }else{
+                            toolbar.hide($("#setReceived"));
+                            //console.log('hide');
+                        }
+
                     }else{
                         // grid.hideColumn(7);
                         // grid.showColumn(6);
@@ -409,6 +444,10 @@
                         activeToolbar.show();
                         postedToolbar.hide();
                     }
+
+                    var toolbar = $("#toolbar").data("kendoToolBar");
+                    //toolbar.hide($("#btn2"));
+                  
                 }
             });
 

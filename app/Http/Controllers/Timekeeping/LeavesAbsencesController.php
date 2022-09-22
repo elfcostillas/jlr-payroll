@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Timekeeping;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use  App\Mappers\TimeKeepingMapper\LeavesAbsenceMapper;
+use Illuminate\Support\Facades\Auth;
+use Carbon\CarbonPeriod;
 
 class LeavesAbsencesController extends Controller
 {
@@ -34,5 +36,21 @@ class LeavesAbsencesController extends Controller
         $result = $this->mapper->list($filter);
 
         return response()->json($result);
+    }
+
+    public function receive(Request $request)
+    {
+        $user = Auth::user();
+        $leave = $this->mapper->header($request->id);
+
+        if($leave!=null){
+            $leave->received_by= $user->id;
+            $leave->received_time= now();
+        }
+
+        $result = $this->mapper->updateValid($leave->toArray());
+
+        return response()->json($result);
+
     }
 }
