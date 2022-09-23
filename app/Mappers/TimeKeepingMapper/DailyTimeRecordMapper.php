@@ -521,6 +521,16 @@ class DailyTimeRecordMapper extends AbstractMapper {
 }
 
 /*
+
+SELECT leave_date,with_pay,without_pay,leave_type FROM leave_request_header 
+INNER JOIN leave_request_detail ON leave_request_detail.header_id = leave_request_header.id
+INNER JOIN payroll_period ON leave_request_detail.leave_date BETWEEN payroll_period.date_from AND payroll_period.date_to
+WHERE document_status = 'POSTED'
+AND received_by IS NOT NULL
+AND payroll_period.id = 2
+AND leave_request_header.biometric_id = 808;
+
+
 SELECT punch_time,cstate FROM edtr_raw 
 WHERE punch_date = '2022-08-01'
 AND biometric_id = 871
