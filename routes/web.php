@@ -173,6 +173,9 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::get('/',[LeavesAbsencesController::class,'index']);
         Route::get('list',[LeavesAbsencesController::class,'list']);
         Route::post('receive',[LeavesAbsencesController::class,'receive']);
+        Route::get('copy',[LeavesAbsencesController::class,'getLeavesFrom100']);
+
+
     });
 
 });

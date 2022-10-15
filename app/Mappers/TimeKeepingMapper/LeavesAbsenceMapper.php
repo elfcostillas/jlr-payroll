@@ -40,4 +40,23 @@ class LeavesAbsenceMapper extends AbstractMapper {
 		];
 
     }
+
+	public function getLeavesFrom100(){
+
+		//dps //mysql
+		$leaves = DB::connection('dps')->table('hr_leave')
+							->select(DB::raw('biometrics_id,hr_leave.*'))
+							->leftjoin('jlr_employees','o1_id','=','emp_id')
+							->where('inclusive_from','>=','2022-09-01')
+							->get();
+
+		/*
+		jlr_employees ON o1_id = emp_id
+		*/
+
+		foreach($leaves as $l){
+			dd($l);
+		}
+	}
+
 }

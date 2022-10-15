@@ -91,6 +91,27 @@ return [
             'prefix_indexes' => true,
         ],
 
+        'dps' => [
+            'driver' => 'mysql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST', '172.17.56.100'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'jl_regner_db'),
+            'username' => env('DB_USERNAME', 'netAppUser'),
+            'password' => env('DB_PASSWORD', 'cvvljllv557'),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => false,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                PDO::ATTR_EMULATE_PREPARES => true,
+            ]) : [],
+        ],
+
     ],
 
     /*

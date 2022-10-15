@@ -53,4 +53,10 @@ class LeavesAbsencesController extends Controller
         return response()->json($result);
 
     }
+
+	public function getLeavesFrom100(){
+        $result = $this->mapper->getLeavesFrom100();
+
+        
+    }
 }
