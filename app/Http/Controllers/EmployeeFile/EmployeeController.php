@@ -5,15 +5,19 @@ namespace App\Http\Controllers\EmployeeFile;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mappers\EmployeeFileMapper\EmployeeMapper;
+use App\Mappers\Admin\ActivityLogMapper;
+use Illuminate\Support\Facades\Auth;
 
 class EmployeeController extends Controller
 {
     //
     private $mapper;
+    private $log;
 
-    public function __construct(EmployeeMapper $mapper)
+    public function __construct(EmployeeMapper $mapper,ActivityLogMapper $log)
     {
         $this->mapper = $mapper;
+        $this->log = $log;
     }
 
     public function index()
@@ -77,8 +81,24 @@ class EmployeeController extends Controller
 
         if($data_arr['id']==null){
             $result = $this->mapper->insertValid($data_arr);
+
+            if(is_object($result)){
+                return response()->json($result)->setStatusCode(500, 'Error');
+            }
+
+            if($result){
+                $record = $this->mapper->header($result);
+                $this->createLog('create',$result,$record);
+            }
+           
         }else{
+            $record = $this->mapper->header($data_arr['id']);
+            
             $result = $this->mapper->updateValid($data_arr);
+            if($result){
+                //$record = $this->mapper->header($data_arr['id']);
+                $this->createLog('update',$data_arr['id'],$record);
+            }
         }
 
         if(is_object($result)){
@@ -92,6 +112,7 @@ class EmployeeController extends Controller
     public function readById(Request $request)
     {
         $result = $this->mapper->header($request->id);
+        $this->createLog('view',$request->id,$result);
         return response()->json($result);
     }
 
@@ -100,6 +121,75 @@ class EmployeeController extends Controller
         $result = $this->mapper->getJobTitles($request->id);
         return response()->json($result);
     }
+
+    private function createLog($action,$record_id,$record)
+    {
+        switch($action){
+           
+            case 'update' :
+                    $before = $record;
+                   
+                    $after = $this->mapper->header($record_id);
+                    $log_string = $this->toStringChanges($before,$after);
+                   
+                    
+                break;
+                
+            case 'view' :  case 'create' :
+                $log_string = $this->toString($record);
+                break;
+
+        }
+
+        $log_data = [
+            'log_timestamp' => now(),
+            'log_module'=> 'employee_master',
+            'log_user' => Auth::user()->id,
+            'log_action' => $action,
+            'log_data' => $log_string,
+            'record_id' => $record_id
+        ];
+
+        if($log_string!=""){
+            $result = $this->log->insertValid($log_data);
+        }
+        
+       
+
+    }
+
+    private function toString($object)
+    {
+      
+        $string = "";
+        foreach($object->getAttributes() as $key => $value){
+            $string .= "'".$key."'".'=>'."\"".$value."\", ";
+        }
+      
+        return $string;
+    }
+
+    private function toStringChanges($before,$after)
+    {
+      
+        $string = "";
+        //dd($before,$after);
+        foreach($before->getAttributes() as $key => $value){
+            //dd($before,$after);
+            //$string .="'".$key."'".' : "'. $before->$key.'"=>"'.$after->$key.'"';
+            if($before->$key != $after->$key){
+                //dd($before->$key,$after->$key);
+               // dd($before->$key,$after->$key);
+                //$string .= "'".$key."'".':'."\"".$before->$key."\" => "\"".$after->$key."\" , ";
+                $string .="'".$key."'".' : "'. $before->$key.'"=>"'.$after->$key.'" ,';
+            }
+            
+        }
+      
+        return $string;
+    }
+
+
 
     // public function getEmploymentStat()
     // {

@@ -27,9 +27,9 @@ class LeaveRequestHeaderMapper extends AbstractMapper {
 					document_status,
 					acknowledge_status,
 					acknowledge_time,
-					concat(ifnull(approver.lastname,''),', ',ifnull(approver.firstname,'')) as approver_emp,
+					approver.name as approver_emp,
 					acknowledge_time,
-					concat(ifnull(hr_staff.lastname,''),', ',ifnull(hr_staff.firstname,'')) as hr_emp,
+					hr_staff.name as hr_emp,
 					received_time
 					"))
 				->from('leave_request_header')
@@ -38,10 +38,11 @@ class LeaveRequestHeaderMapper extends AbstractMapper {
 				->leftJoin('departments','leave_request_header.dept_id','=','departments.id')
 				->leftJoin('job_titles','leave_request_header.job_title_id','=','job_titles.id')
 				->leftJoin('leave_request_type','leave_type_code','=','leave_type')
-				->leftJoin('employees AS approver','approver.biometric_id','=','acknowledge_by')
-				->leftJoin('employees AS hr_staff','hr_staff.biometric_id','=','received_by')
+				->leftJoin('users AS approver','approver.id','=','acknowledge_by')
+				->leftJoin('users AS hr_staff','hr_staff.id','=','received_by')
 				->where('encoded_by',$user->id);
 
+				//user -> employee
         if($filter['filter']!=null){
 			foreach($filter['filter']['filters'] as $f)
 			{
@@ -122,6 +123,18 @@ class LeaveRequestHeaderMapper extends AbstractMapper {
 }
 
 /*
+
+	leave_request_header.biometric_id,
+					concat(ifnull(employees.lastname,''),', ',ifnull(employees.firstname,'')) as requesting_emp,
+					leave_request_type.leave_type_code,
+					leave_request_header.remarks,
+					document_status,
+					acknowledge_status,
+					acknowledge_time,
+					concat(ifnull(approver.lastname,''),', ',ifnull(approver.firstname,'')) as approver_emp,
+					acknowledge_time,
+					concat(ifnull(hr_staff.lastname,''),', ',ifnull(hr_staff.firstname,'')) as hr_emp,
+					received_time
 
 SELECT * FROM leave_request_header 
 INNER JOIN employees ON leave_request_header.biometric_id = employees.biometric_id

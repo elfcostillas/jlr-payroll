@@ -515,7 +515,7 @@
                             
                         },
                         aggregates : ['sum'], 
-                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n0')#</div>" 
+                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n1')#</div>" 
                     },
                     {
                         title : "Late",

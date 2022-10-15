@@ -349,6 +349,7 @@ Route::middleware('auth')->prefix('accounts')->group(function(){
         Route::get('read-header/{id}',[LeaveRequestController::class,'readHeader']);
         Route::get('read-detail/{id}',[LeaveRequestController::class,'readDetails']);
         Route::post('update-detail',[LeaveRequestController::class,'updateDetail']);
+        Route::post('recreate',[LeaveRequestController::class,'recreate']);
         
     });
 
@@ -416,6 +417,11 @@ Route::get('test2',function(){
     }
 })->middleware('access:employee-report');
 
+
+Route::get('now',function(){
+    
+    echo now();
+});
 
 
 require __DIR__.'/auth.php';

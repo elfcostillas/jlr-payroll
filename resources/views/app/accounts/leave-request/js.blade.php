@@ -2,7 +2,7 @@
     <script id="template" type="text/x-kendo-template">
         <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="click:buttonHandler.createEmployee" > <span class="k-icon k-i-plus k-button-icon"></span>Create Leave</button>
     </script>
-   
+    {{-- <script src="{{ asset('js/hotkey.js') }}"></script> --}}
     <script>
         $(document).ready(function(){
 
@@ -291,6 +291,7 @@
                         viewModel.ds.leaveDetails.read();
 
                         console.log(viewModel.employee);
+                        viewModel.callBack();
 
                         // viewModel.form.model.set('civil_status',1);
                         // viewModel.form.model.set('gender','M');
@@ -316,6 +317,28 @@
                                 viewModel.buttonHandler.save();
                             }
                         });
+                    },
+                    recreate : function(){
+                        if(viewModel.form.model.id!=null){
+                                Swal.fire({
+                                title: 'Recreate dates for leave request',
+                                text: "You won't be able to revert this!",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Recreate'
+                            }).then((result) => {
+                                if (result.value) {                       
+                                    $.post('leave-request/recreate',{
+                                        id : viewModel.form.model.id
+                                    },function(data){
+                                        viewModel.ds.leaveDetails.read();
+                                    });
+                                }
+                            });
+                        }
+                        
                     }
                 },
                 functions : {
@@ -426,6 +449,48 @@
                 }
             });
 
+
+            // $(document).bind('keydown.alt_1', function(e){
+            //     viewModel.buttonHandler.save()
+            // });
+
+            // $(document).bind('keydown.alt_2', function(e){
+            //     viewModel.buttonHandler.clear();
+            // });
+
+            // $(document).bind('keydown.alt_3', function(e){
+            //     viewModel.buttonHandler.post();
+            // });
+
+            $(document.body).keydown(function(e) {
+                
+                if (e.altKey && e.keyCode == 49) {
+                    if(viewModel.form.model.document_status!='POSTED'){
+                        viewModel.buttonHandler.save();
+                    }
+                   
+                }
+
+                if (e.altKey && e.keyCode == 50) {
+                    viewModel.buttonHandler.clear();
+                    $('#biometric_id').focus();
+                }
+
+                if (e.altKey && e.keyCode == 51) {
+                    if(viewModel.form.model.document_status!='POSTED'){
+                        viewModel.buttonHandler.post();
+                    }
+                }
+               
+                if (e.altKey && e.keyCode == 48) {
+                    
+                    if(viewModel.form.model.document_status!='POSTED'){
+                        viewModel.buttonHandler.recreate();
+                    }
+                }
+            });
+
+
             $("#maingrid").kendoGrid({
                 dataSource : viewModel.ds.maingrid,
                 pageable : {
@@ -527,15 +592,25 @@
                         width : 100,    
                     },
                     {
-                        title : "Cancelled",
-                        field : "is_canceled",
+                        title : "DAY",
+                        field : "dayname",
                         attributes: {
                             style: "font-size: 9pt;text-align:center"
                             
                         },
                         width : 100,    
-                        editor : stopEditor
+                        //editor : stopEditor
                     },
+                    // {
+                    //     title : "Cancelled",
+                    //     field : "is_canceled",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center"
+                            
+                    //     },
+                    //     width : 100,    
+                    //     editor : stopEditor
+                    // },
                     {
                         title : "Time From",
                         field : "time_from",
@@ -543,7 +618,7 @@
                             style: "font-size: 9pt;text-align:center"
                             
                         },
-                        //width : 100,    
+                        width : 100,    
                     },
                     {
                         title : "Time To",
@@ -552,7 +627,7 @@
                             style: "font-size: 9pt;text-align:center"
                             
                         },
-                        //width : 90,    
+                        width : 90,    
                     },
                     // {
                     //     title : "Day",
@@ -567,7 +642,7 @@
                      
                     // },
                     {
-                        title : "W/Pay",
+                        title : "W/Pay (hrs)",
                         field : "with_pay",
                         attributes: {
                             style: "font-size: 9pt;text-align:center"
@@ -578,7 +653,7 @@
                         template : "#if(with_pay==0){#  #}else{# #= with_pay # #}# ",
                     },
                     {
-                        title : "W/Out Pay",
+                        title : "W/Out Pay (hrs)",
                         field : "without_pay",
                         attributes: {
                             style: "font-size: 9pt;text-align:center"
@@ -621,6 +696,7 @@
                     viewModel.form.model.set('division_id',data.division_id);
                     viewModel.form.model.set('job_title_id',data.job_title_id);
                     
+                    $('#date_from').focus();
                 }
             });
 

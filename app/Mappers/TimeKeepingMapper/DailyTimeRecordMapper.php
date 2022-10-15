@@ -441,14 +441,17 @@ class DailyTimeRecordMapper extends AbstractMapper {
                 if($rec->schedule_id!=0){
                     
                     if($rec->actual_in > $rec->sched_in){
-                        $late = ($rec->actual_in - $rec->sched_in)/60;
-
+                        $late = (int)($rec->actual_in - $rec->sched_in)/60;
+                        $quart = 0;
                         if($late>0){
                             $quart = 0;
-                            $quart += round($late/15,0);
-                            $quart += ($late%15 > 0) ? 1 : 0;
+                            $quart +=  ($late<=15) ? 1 : floor($late/15) ;//round($late/15,0);
+                           
+                            $nlate = $late - ($quart * 15);
+                            $quart += ($nlate%15 > 0) ? 1 : 0;
+                          
                         }
-
+                       
                         $rec->late = $late;
                         $rec->late_eq = $quart * 0.25;
                     }else{

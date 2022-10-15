@@ -164,7 +164,7 @@
                             },
                         },
                         batch : true,
-                        pageSize :14,
+                        pageSize :99,
                         
                         aggregate: [ { field: "total_amount", aggregate: "sum" },],
                         schema : {

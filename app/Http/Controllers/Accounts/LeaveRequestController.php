@@ -96,11 +96,24 @@ class LeaveRequestController extends Controller
 
     public function updateDetail(Request $request)
     {
-        if($request->with_pay+$request->without_pay>1)
+        if($request->with_pay+$request->without_pay>9)
         {
             return response()->json(['error'=>'Invalid no of days.'])->setStatusCode(500, 'Error');
         }
         $result = $this->detail->updateValid($request->all());
+
+        return response()->json($result);
+    }
+
+    public function recreate(Request $request)
+    {
+        $result = $this->header->header($request->id);
+        
+        $this->detail->deleteDetail($request->id);
+        $dates = ['date_from'=>$result->date_from,'date_to' => $result->date_to];
+
+        //dd($dates);
+        $this->detail->createDates($dates,$result->id);
 
         return response()->json($result);
     }

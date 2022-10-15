@@ -19,7 +19,7 @@ class LeaveRequestDetailMapper extends AbstractMapper {
     public function createDates($arr,$id)
     {
         $period = CarbonPeriod::create($arr['date_from'],$arr['date_to']);
-
+       
         $leave_details = [];
         foreach($period as $date)
         {
@@ -44,8 +44,13 @@ class LeaveRequestDetailMapper extends AbstractMapper {
 
     public function listDates($id)
     {
-        $result = $this->model->select(
-            'line_id',
+        $result = $this->model->select(DB::raw("line_id,header_id,leave_date,is_canceled,time_from,time_to,days,with_pay,without_pay,DATE_FORMAT(leave_date,'%a') as dayname")
+            
+        )->where('header_id',$id);
+
+        //DATE_FORMAT(leave_date,'%a')
+        /*
+        'line_id',
             'header_id',
             'leave_date',
             'is_canceled',
@@ -54,9 +59,14 @@ class LeaveRequestDetailMapper extends AbstractMapper {
             'days',
             'with_pay',
             'without_pay'
-        )->where('header_id',$id);
+            */
 
         return $result->get();
+    }
+
+    public function deleteDetail($id)
+    {
+        $result = $this->model->where('header_id',$id)->delete();
     }
 
 
