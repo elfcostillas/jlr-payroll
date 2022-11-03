@@ -54,9 +54,7 @@ class LeavesAbsenceMapper extends AbstractMapper {
 		jlr_employees ON o1_id = emp_id
 		*/
 
-		foreach($leaves as $l){
-			dd($l);
-		}
+		return $leaves;
 	}
 
 }

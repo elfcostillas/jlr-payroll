@@ -244,8 +244,85 @@ class DailyTimeRecordMapper extends AbstractMapper {
         return $result->get();
     }
 
+    public function putLeavesUT($biometric_id,$period_id)
+    {
+       $result = $this->model->select()->from('filed_leaves_vw')->leftJoin('payroll_period',function($join){
+            // $join->whereBetween('leave_date',['payroll_period.date_from','payroll_period.date_to']);
+                $join->whereRaw('leave_date between payroll_period.date_from and payroll_period.date_to');
+        })
+        ->where([
+            ['biometric_id',$biometric_id],
+            ['payroll_period.id',$period_id]
+        ])->get();
+
+        foreach($result as $leave){
+            /*  VL -
+                SL -
+                UT
+                EL
+                MP
+                BL
+                O
+                */
+                $ut = 0;
+                $vl_wp = 0;
+                $vl_wop = 0;
+                $sl_wp = 0;
+                $sl_wop = 0;
+                $bl = 0;
+
+            switch($leave->leave_type){
+                case 'VL' :
+                    $vl_wp = $leave->with_pay;
+                    $vl_wop = $leave->without_pay;
+                    break;
+                case 'SL' :
+                    $sl_wp = $leave->with_pay;
+                    $sl_wop = $leave->without_pay;
+                    break;
+                case 'UT' : case 'EL' :
+                    $ut = $leave->without_pay;
+                    break;
+
+                case 'BL' :
+                    $bl = $leave->without_pay;
+                    break;
+                
+                default : 
+                    $vl_wp = $leave->with_pay;
+                    $vl_wop = $leave->without_pay;
+                break;
+            }
+
+            $arr = [
+                'under_time' => $ut,
+                'vl_wp' => $vl_wp,
+                'vl_wop' => $vl_wop,
+                'sl_wp' => $sl_wp,
+                'sl_wop' => $sl_wop,
+                'bl' => $bl,
+            ];
+
+            DB::table('edtr')
+              ->where('biometric_id', $leave->biometric_id)
+              ->where('dtr_date', $leave->leave_date)
+              ->update($arr);
+        }
+       
+
+       /*SELECT filed_leaves_vw.* FROM filed_leaves_vw LEFT JOIN payroll_period ON leave_date BETWEEN date_from AND date_to 
+WHERE biometric_id = 19 AND payroll_period.id = 1;
+
+
+
+
+*/
+    }
+
     public function getSemiDTRforComputation($biometric_id,$period_id)
     {
+
+
         $holidays = $this->model->select(DB::raw("holidays.*,location_id"))
                             ->from('holidays')
                             ->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
@@ -437,6 +514,8 @@ class DailyTimeRecordMapper extends AbstractMapper {
             foreach($dtr as $rec)
             {
                 // var_dump($rec->holiday_type);
+
+                //dd($rec);
                
                 if($rec->schedule_id!=0){
                     

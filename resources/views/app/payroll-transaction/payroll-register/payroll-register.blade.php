@@ -150,7 +150,11 @@
                                         @foreach($employee->loans as $loan)
                                             <span style="display:inline-block;width:200px;"> {{ $loan->description }} </span> <span style="display:inline-block;width:90px;text-align:right;"> </span><span style="display:inline-block;width:110px;text-align:right;"> {{ number_format($loan->amount,2) }} </span><br>    
                                         @endforeach
+                                        @foreach($employee->absences as $absences)
+                                            <span style="display:inline-block;width:200px;"> {{ $absences->name }} </span> <span style="display:inline-block;width:90px;text-align:right;"> {{ $absences->hours }} </span><span style="display:inline-block;width:110px;text-align:right;"> {{ number_format($absences->amount,2) }} </span><br>    
+                                        @endforeach
 
+                                       
                                       
                                         
                                     </td>

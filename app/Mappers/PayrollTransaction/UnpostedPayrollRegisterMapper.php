@@ -340,7 +340,7 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                 ]
             );
             $employee->loans = $this->getGovLoans($employee->biometric_id,$period->id);
-
+            $employee->absences = $this->getAbsences($employee,$period->id);
             // if($employee->biometric_id==847){
             //     dd($employee);
             // }   
@@ -455,7 +455,9 @@ WHERE period_id = 1 AND total_amount > 0;*/
     }
 
     public function basicEarnings($employee,$period)
-    {
+    {   
+    
+       
         $earnings=[];
         
         array_push($earnings, (object) [
@@ -497,8 +499,40 @@ WHERE period_id = 1 AND total_amount > 0;*/
             ]);
         }
 
+        if($employee->vl_wpay>0 && $employee->pay_type!=2){
+            array_push($earnings, (object) [
+                'name' => 'VL w/ Pay',
+                'hours'=> $employee->vl_wpay,
+                'amount' => $employee->vl_wpay_amount,
+            ]);
+        }
+
+        if($employee->sl_wpay>0 && $employee->pay_type!=2){
+            array_push($earnings, (object) [
+                'name' => 'SL w/ Pay',
+                'hours'=> $employee->sl_wpay,
+                'amount' => $employee->sl_wpay_amount,
+            ]);
+        }
+
         return collect($earnings);
     }
+
+    public function getAbsences($employee,$period_id){
+       
+        $absences = [];
+
+        if($employee->absences > 0){
+            array_push($absences, (object) [
+                'name' => 'Tardiness/Absences',
+                'hours'=> $employee->absences,
+                'amount' => $employee->absences_amount,
+            ]);
+        }
+
+        return collect($absences);
+    }
+    
 
     public function getDeductions($biometric_id,$period_id)
     {   
@@ -543,6 +577,20 @@ WHERE period_id = 1 AND total_amount > 0;*/
 
         return $result->get();
     }   
+
+    public function getFiledLeaves($biometric_id,$period_id)
+    {
+        $result = $this->model->select()->from('filed_leaves_vw')->leftJoin('payroll_period',function($join){
+            // $join->whereBetween('leave_date',['payroll_period.date_from','payroll_period.date_to']);
+                $join->whereRaw('leave_date between payroll_period.date_from and payroll_period.date_to');
+        })
+        ->where([
+            ['biometric_id',$biometric_id],
+            ['payroll_period.id',$period_id]
+        ])->get();
+
+        return $result;
+    }
 
 }
 

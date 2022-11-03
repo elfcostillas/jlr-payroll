@@ -19,7 +19,6 @@ class Employee
         'pay_type' => null,
         'late' => null,
         'late_eq' => null,
-        'under_time' => null,
         'overtime' => null,
         'night_diff' => null,
         'sss_prem' => null,
@@ -38,6 +37,24 @@ class Employee
         'shot_rd_amount' => null,
         'sun_ot' => null,
         'sun_ot_amount' => null,
+        'under_time' => null,
+        'under_time_amount' => null,
+        'vl_wpay' => null,
+        'vl_wpay_amount' => null,
+        'vl_wopay' => null,
+        'vl_wopay_amount' => null,
+        'sl_wpay' => null,
+        'sl_wpay_amount' => null,
+        'sl_wopay' => null, 
+        'sl_wopay_amount' => null,
+        'bl_wpay' => null,
+        'bl_wpay_amount' => null,
+        'bl_wopay' => null,
+        'bl_wopay_amount' => null,
+        'absences' => null,
+        'absences_amount' => null
+
+
     ]; 
 
     protected $rates = [
@@ -54,6 +71,7 @@ class Employee
 
     public function compute($period)
     {   
+       
         $this->payreg['basic_pay'] = $this->repo->getBasicPay($this->data);
         $this->rates['monthly_credit'] = $this->repo->getMonthlyCredit($this->data);
         $this->setPayRates();
@@ -83,6 +101,30 @@ class Employee
             $this->payreg['sh_ot_amount'] = round(($this->rates['hourly_rate'] * 1.3) * $this->payreg['sh_ot'],2);
         }
 
+        if($this->data['vl_wpay']>0){
+           // dd($this->data['vl_wpay'] ,$this->rates['hourly_rate']);
+           $this->payreg['vl_wpay'] = $this->data['vl_wpay'];
+            $this->payreg['vl_wpay_amount'] = round($this->data['vl_wpay'] * $this->rates['hourly_rate'],2);
+        }
+
+        // if($this->data['vl_wopay']>0){
+
+        // }
+
+        if($this->data['sl_wpay']>0){
+            $this->payreg['sl_wpay'] = $this->data['sl_wpay'];
+            $this->payreg['sl_wpay_amount'] = round($this->data['sl_wpay'] * $this->rates['hourly_rate'],2);
+            
+        }
+
+        $this->payreg['absences'] =  $this->data['late_eq'] + $this->data['under_time'] + $this->data['vl_wopay'] + $this->data['sl_wopay'] + $this->data['bl_wopay'];
+        $this->payreg['absences_amount'] = $this->payreg['absences'] * $this->rates['hourly_rate'];
+
+
+        // if($this->data['sl_wopay']>0){
+
+        // }
+       
         /*******/
 
     }

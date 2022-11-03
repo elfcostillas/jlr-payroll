@@ -104,6 +104,8 @@ class ManageDTRController extends Controller
         $biometric_id = $request->biometric_id;
         $period_id = $request->period_id;
 
+        $dtr = $this->mapper->putLeavesUT($biometric_id,$period_id);
+
         $dtr = $this->mapper->getSemiDTRforComputation($biometric_id,$period_id);
 
         $this->mapper->computeLogs($dtr,'semi');

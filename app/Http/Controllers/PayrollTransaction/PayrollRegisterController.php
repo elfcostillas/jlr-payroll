@@ -57,11 +57,59 @@ class PayrollRegisterController extends Controller
         $fixed = $this->unposted->runFixedCompensation($period,$employees->pluck('biometric_id'));
         $other = $this->unposted->runOtherCompensation($period,$employees->pluck('biometric_id'));
 
-        foreach($employees as $employee){
+        foreach($employees as $employee)
+        {
+            $employee->under_time_amount = 0;
+            $employee->vl_wpay = 0;
+            $employee->vl_wpay_amount = 0;
+            $employee->vl_wopay = 0;
+            $employee->vl_wopay_amount = 0;
+            $employee->sl_wopay = 0;
+            $employee->sl_wopay_amount = 0;
+            $employee->sl_wpay = 0;
+            $employee->sl_wpay_amount = 0;
+            $employee->bl_wpay = 0;
+            $employee->bl_wpay_amount = 0;
+            $employee->bl_wopay = 0;
+            $employee->bl_wopay_amount = 0;
+
+            $leaves = $this->unposted->getFiledLeaves($employee->biometric_id,$period->id);
+
+            if($leaves->count()>0){
+                foreach($leaves as $leave){
+                    switch($leave->leave_type){
+                       
+                        case 'VL' :
+                            $employee->vl_wpay += $leave->with_pay;
+                            $employee->vl_wopay += $leave->without_pay;
+                           
+                            break;
+                        case 'SL' :
+                            $employee->sl_wpay += $leave->with_pay;
+                            $employee->sl_wopay += $leave->without_pay;
+                            break;
+                        case 'UT' : case 'EL' :
+                            $employee->under_time  += $leave->without_pay;
+                            break;
+        
+                        case 'BL' :
+                            $employee->bl_wpay += $leave->with_pay;
+                            $employee->bl_wopay += $leave->without_pay;
+                            break;
+                        
+                        default : 
+                            $employee->vl_wpay += $leave->with_pay;
+                            $employee->vl_wopay += $leave->without_pay;
+                        break;
+                    }
+                    
+                }
+            }
+
             $person = ($employee->pay_type==1) ? new Employee($employee,new SemiMonthly) : new Employee($employee,new Daily);
             $person->setPhilRate($phil_rate->rate);
             $person->compute($period);
-            
+
             array_push($payreg,$person);
 
         }
