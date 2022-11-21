@@ -7,6 +7,7 @@ use App\Libraries\Filters;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class UnpostedPayrollRegisterMapper extends AbstractMapper {
 
@@ -38,6 +39,7 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
 
     public function getEmployeeWithDTR($period_id)
     {
+        $user = Auth::user();
         $result = $this->model->select(DB::raw("
                         payroll_period.id AS period_id,
                         employees.biometric_id,
@@ -90,6 +92,15 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                                 hdmf_contri,
                                 monthly_allowance,
                                 daily_allowance'));
+                                
+            if($user->super_user=='N')
+            {
+                $result = $result->where('emp_level','>=',5);
+            }
+            else
+            {
+                $result = $result->where('emp_level','<',5);
+            }
 
         return $result->get();
     }
@@ -103,7 +114,7 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
             array_push($blank,$employee->toColumnArray());
         }
 
-        $result = DB::table('payrollregister_unposted')->insertOrIgnore($blank);
+        $result = DB::table('payrollregister_unposted_s')->insertOrIgnore($blank);
 
         return $result;
     }
@@ -312,17 +323,22 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
         return $departments;
     }
 
+    public function buildHeader($period)
+    {
+        
+    }
+
     public function getEmployees($location,$division,$department,$period) /* Earnings and Deductions here */
     {   
-        $employees = $this->model->select(DB::raw("employee_names_vw.employee_name,payrollregister_unposted.*,employees.pay_type"))
-                                ->from("payrollregister_unposted")
-                                ->join("employees",'employees.biometric_id','=','payrollregister_unposted.biometric_id')
-                                ->join("employee_names_vw",'employee_names_vw.biometric_id','=','payrollregister_unposted.biometric_id')
+        $employees = $this->model->select(DB::raw("employee_names_vw.employee_name,payrollregister_unposted_s.*,employees.pay_type"))
+                                ->from("payrollregister_unposted_s")
+                                ->join("employees",'employees.biometric_id','=','payrollregister_unposted_s.biometric_id')
+                                ->join("employee_names_vw",'employee_names_vw.biometric_id','=','payrollregister_unposted_s.biometric_id')
                                 ->where([
                                     ['division_id','=',$division->id],
                                     ['dept_id','=',$department->id],
                                     ['location_id','=',$location->id],
-                                    ['payrollregister_unposted.period_id','=',$period->id]
+                                    ['payrollregister_unposted_s.period_id','=',$period->id]
                                 ])->get();
         foreach($employees as $employee)
         {   
@@ -567,7 +583,7 @@ WHERE period_id = 1 AND total_amount > 0;*/
 
     public function semiEmployeeNoPayroll($period_id)
     {
-        $empInPayroll = $this->model->select('biometric_id')->from('payrollregister_unposted')->where('period_id',$period_id);
+        $empInPayroll = $this->model->select('biometric_id')->from('payrollregister_unposted_s')->where('period_id',$period_id);
 
         $result = $this->model->select('employees.biometric_id','employee_name')
                                 ->from('employees')

@@ -17,7 +17,7 @@
                 ];
             
                 let civilStatusOptions = [
-                    { text: "Sinlge", value: 1 },
+                    { text: "Single", value: 1 },
                     { text: "Married", value: 2 },
                     { text: "Divorced", value: 3 },
                     { text: "Widowed", value: 4 },
@@ -49,6 +49,7 @@
                     basic_salary: null,
                     is_daily: null,
                     exit_status: null,
+                    exit_date: null,
                     contact_no : null,
                     division_id: null,
                     dept_id: null,
@@ -59,6 +60,13 @@
                     job_title_id : null,
                     daily_allowance: null,
                     monthly_allowance: null,
+                    blood_type: null,
+                    email: null,
+                    emergency_person: null,
+                    emergency_relation: null,
+                    emergency_phone: null,
+                    date_regularized: null,
+                    
 
             };
 
@@ -90,7 +98,8 @@
                         bank_acct: null,
                         basic_salary: null,
                         is_daily: null,
-                        exit_status: null,
+                        exit_status : null,
+                        exit_date : null,
                         contact_no : null,
                         division_id: null,
                         dept_id: null,
@@ -101,6 +110,12 @@
                         job_title_id : null,
                         daily_allowance: null,
                         monthly_allowance: null,
+                        blood_type: null,
+                        email: null,
+                        emergency_person: null,
+                        emergency_relation: null,
+                        emergency_phone: null,
+                        date_regularized: null,
                     },
                     mirror : {
                         is_daily : false,
@@ -346,6 +361,8 @@
                         viewModel.form.model.set('deduct_phic',(viewModel.form.mirror.deduct_phic) ? 'Y':'N');
                         viewModel.form.model.set('is_daily',(viewModel.form.mirror.is_daily) ? 'Y':'N');
                         viewModel.form.model.set('date_hired',kendo.toString($('#date_hired').data('kendoDatePicker').value(),'yyyy-MM-dd'));
+                        viewModel.form.model.set('exit_date',kendo.toString($('#exit_date').data('kendoDatePicker').value(),'yyyy-MM-dd'));
+                        viewModel.form.model.set('date_regularized',kendo.toString($('#exit_date').data('kendoDatePicker').value(),'yyyy-MM-dd'));
                         viewModel.form.model.set('location_id',($('#location_id').data('kendoDropDownList').value()!='') ? $('#location_id').data('kendoDropDownList').value() : 0 );
                         //viewModel.form.model.set('deduct_sss',(viewModel.form.model.deduct_sss) ? 'Y':'N');
                         
@@ -470,6 +487,7 @@
             $("#middlename").kendoTextBox({ });
             $("#suffixname").kendoTextBox({ });
             $("#primary_addr").kendoTextBox({ });
+            $("#bank_acct").kendoTextBox({ });
             $("#secondary_addr").kendoTextBox({ });
 
             $("#gender").kendoDropDownList({
@@ -485,6 +503,14 @@
             });
 
             $("#date_hired").kendoDatePicker({
+                format: "MM/dd/yyyy"
+            });
+
+            $("#exit_date").kendoDatePicker({
+                format: "MM/dd/yyyy"
+            });
+
+            $("#date_regularized").kendoDatePicker({
                 format: "MM/dd/yyyy"
             });
 
@@ -539,6 +565,7 @@
             $("#location_id").kendoDropDownList({
                 dataTextField: "location_name",
                 dataValueField: "id",
+                autoWidth : true,
                 dataSource: viewModel.ds.location,
                 index: 1,
                 dataBound : function(e){
@@ -613,6 +640,13 @@
             $("#tin_no").kendoTextBox({ });
             $("#hdmf_contri").kendoTextBox({ });
             $("#biometric_id").kendoTextBox({ });
+            $("#blood_type").kendoTextBox({ });
+            $("#email").kendoTextBox({ });
+
+            $("#emergency_person").kendoTextBox({ });
+            $("#emergency_relation").kendoTextBox({ });
+            $("#emergency_phone").kendoTextBox({ });
+
             $("#basic_salary").kendoNumericTextBox({  decimals: 2});
 
             $("#daily_allowance").kendoNumericTextBox({  decimals: 2});

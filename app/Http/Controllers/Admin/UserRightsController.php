@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use  App\Mappers\Admin\UserRightsMapper;
+use App\Mappers\Admin\UserRightsMapper;
+use App\Models\User;
 
 class UserRightsController extends Controller
 {
@@ -39,6 +40,15 @@ class UserRightsController extends Controller
 
         return response()->json($result);
 
+    }
+
+    public function updateRights(Request $request)
+    {
+        //$result = $this->urights->upda($request->all());
+        $result = User::where('id',$request->id)->update(['super_user'=>$request->super_user]);
+         
+
+        return response()->json($result);
     }
 
     // public function showUserRights($id)

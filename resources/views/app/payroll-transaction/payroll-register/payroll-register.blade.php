@@ -111,6 +111,13 @@
     ?>
     <div id="" >
         <table style="border-collapse:collapse;" border=1 >
+            <thead>
+                <tr>
+                        <th> Bioc ID</th>
+                        <th>Name</th>
+                        <th>Basic Rate</th>
+                </tr>
+            </thead>
             @foreach($data as $location)
                 <tr>
                     <td colspan={{$colspan}} class="location"> {{ $location->location_name }} </td>
@@ -153,10 +160,6 @@
                                         @foreach($employee->absences as $absences)
                                             <span style="display:inline-block;width:200px;"> {{ $absences->name }} </span> <span style="display:inline-block;width:90px;text-align:right;"> {{ $absences->hours }} </span><span style="display:inline-block;width:110px;text-align:right;"> {{ number_format($absences->amount,2) }} </span><br>    
                                         @endforeach
-
-                                       
-                                      
-                                        
                                     </td>
                                 </tr>
                             @endforeach

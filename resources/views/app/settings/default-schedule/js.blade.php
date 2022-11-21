@@ -32,12 +32,14 @@
                             data : "data",
                             total : "total",
                             model : {
-                                id : 'dept_id',
+                                id : 'line_id',
                                 fields : {
-                                   //dept_id : { type: "number",editable : false},
-                                   dept_code: { type: "string",editable : false},
-                                   schedule_id: { type: "number"},
-                                   sched_desc: { type: "string"} ,
+                                    dept_id : { type: "number",editable : false},
+                                    dept_code: { type: "string",editable : false},
+                                    schedule_id: { type: "number"},
+                                    sched_desc: { type: "string"} ,
+                                    schedule_sat: { type:'number',  },
+                                    sched_sat_desc: { type:'string',  },
                                    //work_schedules_default.line_id
                                 }
                             }
@@ -61,6 +63,32 @@
                                 fields : {
                                     schedule_id : { type:'number',  },
                                     schedule_desc : { type:'string',  },
+                                    //schedule_sat: { type:'number',  },
+                                    //schedule_sat_desc: { type:'string',  },
+                                }
+                            }
+                        }
+                    }),
+                    sched_sat : new kendo.data.DataSource({
+                        transport : {
+                            read : {
+                                url : '../timekeeping/manage-dtr-weekly/get-employee-schedules-sat',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },
+                           
+                        },
+                        schema : {
+                            model : {
+                                id : 'schedule_sat',
+                                fields : {
+                                    schedule_sat : { type:'number',  },
+                                    schedule_desc : { type:'string',  },
+                                    //schedule_sat: { type:'number',  },
+                                    //schedule_sat_desc: { type:'string',  },
                                 }
                             }
                         }
@@ -107,12 +135,26 @@
                         width : 170,    
                     },
                     {
-                        title : "Schedule",
+                        title : "MON to FRI",
                         field : "schedule_id",
                         //template : "#= data.sched_desc #"
                          template : "#= (data.sched_desc) ? data.sched_desc : ''  #",
                         // width : 120,  
-                        editor : scheduleEditor  
+                        editor : scheduleEditor ,
+                        headerAttributes : {
+                            style : "text-align:center"
+                        }
+                    },
+                    {
+                        title : "SAT",
+                        field : "schedule_sat",
+                        //template : "#= data.sched_desc #"
+                         template : "#= (data.sched_sat_desc) ? data.sched_sat_desc : ''  #",
+                        // width : 120,  
+                        editor : scheduleEditor2 ,
+                        headerAttributes : {
+                            style : "align:center"
+                        }
                     },
                     {
                         command : ['edit'],
@@ -133,6 +175,30 @@
                     dataTextField: "schedule_desc",
                     dataValueField: "schedule_id",
                     dataSource: viewModel.ds.sched,
+                    change : function(e)
+                    {
+                        // let grid = $("#maingrid").data("kendoGrid");
+                        // let selectedRow = grid.dataItem(grid.select());
+                     
+                        // selectedRow.set("sched_desc",e.sender.text());
+
+                        
+                    }
+                    
+                });
+            }
+
+            function scheduleEditor2(container, options)
+            {
+                $('<input name="' + options.field + '"/>')
+                .appendTo(container)
+                .kendoDropDownList({
+                //.kendoComboBox({
+                    //autoBind: false,
+                    autoWidth: true,
+                    dataTextField: "schedule_desc",
+                    dataValueField: "schedule_sat",
+                    dataSource: viewModel.ds.sched_sat,
                     change : function(e)
                     {
                         // let grid = $("#maingrid").data("kendoGrid");

@@ -6,6 +6,7 @@ use App\Mappers\Mapper as AbstractMapper;
 use App\Libraries\Filters;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class EmployeeMapper extends AbstractMapper {
 
@@ -56,6 +57,9 @@ class EmployeeMapper extends AbstractMapper {
 
     public function list($filter)
     {
+
+		$user = Auth::user();
+		
         $result = $this->model->select(DB::raw('employees.*,dept_code,div_code,emp_exit_status.status_desc,emp_emp_stat.estatus_desc,pay_description'))
 		->leftJoin('departments','departments.id','=','dept_id')
 		->leftJoin('divisions','divisions.id','=','division_id')
@@ -63,6 +67,14 @@ class EmployeeMapper extends AbstractMapper {
 		->leftJoin('emp_emp_stat','employee_stat','=','emp_emp_stat.id')
 		->leftJoin('emp_pay_types','pay_type','=','emp_pay_types.id');
 
+		// if($user->super_user=='N')
+		// {
+		// 	$result = $result->where('emp_level','>=',5);
+		// }
+		// else
+		// {
+		// 	$result = $result->where('emp_level','<',5);
+		// }
 
         if($filter['filter']!=null){
 			foreach($filter['filter']['filters'] as $f)
@@ -133,6 +145,31 @@ class EmployeeMapper extends AbstractMapper {
 		//SELECT id,job_title_name FROM job_titles WHERE dept_id =9
 		$result = $this->model->select('id','job_title_name')->from('job_titles')->where('dept_id',$dept_id);
 		return $result->get();
+	}
+
+	public function getUserDept($bio_id)
+	{
+		$result = $this->model->select('dept_id')->where('biometric_id',$bio_id)->first();
+
+		return $result;
+	}
+
+	public function employeeCount()
+	{
+		$array = [];
+		$total = $this->model->select(DB::raw("count(*) as total"))->where('exit_status',1)->first();
+		
+
+		$reg = $this->model->select(DB::raw("count(*) as total"))->where('exit_status',1)->where('employee_stat',2)->first();
+		$prob = $this->model->select(DB::raw("count(*) as total"))->where('exit_status',1)->where('employee_stat',1)->first();
+		$support = $this->model->select(DB::raw("count(*) as total"))->where('exit_status',1)->where('employee_stat',3)->first();
+		
+		$array['total'] = $total->total;
+		$array['reg'] = $reg->total;
+		$array['prob'] = $prob->total;
+		$array['support'] = $support->total;
+
+		return $array;
 	}
 
 

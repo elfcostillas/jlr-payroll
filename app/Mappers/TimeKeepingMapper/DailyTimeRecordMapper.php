@@ -197,7 +197,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
                     ->where('payroll_period.id',$period_id);
 
 
-                    $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,ifnull(schedule_id,0) schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc,case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type,lh_ot,lhot_rd,sh_ot,shot_rd,sun_ot"))
+                    $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,ifnull(schedule_id,0) schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc,case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type,lh_ot,lhot_rd,sh_ot,shot_rd,sun_ot,ot_in,ot_out"))
                             ->from('edtr')
                             ->where('edtr.biometric_id',$biometric_id)
                             ->join('payroll_period',function($join){
@@ -238,6 +238,16 @@ class DailyTimeRecordMapper extends AbstractMapper {
     {
         //SELECT CONCAT(time_in,'-',time_out) AS schedule_desc FROM work_schedules
         $result = $this->model->select(DB::raw("id as schedule_id,CONCAT(time_in,'-',time_out) AS schedule_desc"))
+                    ->from('work_schedules')
+                    ->orderBy('time_in');
+
+        return $result->get();
+    }
+
+    public function getSchedulesSat()
+    {
+        //SELECT CONCAT(time_in,'-',time_out) AS schedule_desc FROM work_schedules
+        $result = $this->model->select(DB::raw("id as schedule_sat,CONCAT(time_in,'-',time_out) AS schedule_desc"))
                     ->from('work_schedules')
                     ->orderBy('time_in');
 

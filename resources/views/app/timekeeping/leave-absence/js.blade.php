@@ -150,14 +150,14 @@
                                     
                                 }
                             },
-                            // update : {
-                            //     url : 'leave-request/update-detail',
-                            //     type : 'post',
-                            //     dataType : 'json',
-                            //     complete : function(e){
-                            //         viewModel.ds.leaveDetails.read();
-                            //     }
-                            // },
+                            update : {
+                                url : 'leaves-absences/update-detail',
+                                type : 'post',
+                                dataType : 'json',
+                                complete : function(e){
+                                    viewModel.ds.leaveDetails.read();
+                                }
+                            },
                             parameterMap : function (data,type){
                                 if(type=='update'){
                                     // $.each(data.models,function(index,value){
@@ -532,6 +532,9 @@
                 height : 310,
                 scrollable: true,
                 navigatable : true,
+                toolbar: [
+                    { name: "save", text: "Save" }
+                ],
                 editable : true,//"inline",
                 columns : [
                     {

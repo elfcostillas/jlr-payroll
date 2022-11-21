@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\DashBoardController;
+
 use App\Http\Controllers\Admin\UserRightsController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
@@ -57,11 +59,16 @@ Route::get('/', function () {
     //return view('welcome');
     return redirect('login');
 });
+/*
 
-Route::get('/dashboard', function () {
+Route::get('dashboard', function () {
     //return view('dashboard');
     return view('layouts.theme.layout');
+    //Route::get('/',[DashBoardController::class,'index']);
+
 })->middleware(['auth'])->name('dashboard');
+*/
+Route::get('dashboard', [DashBoardController::class,'index'])->middleware(['auth'])->name('dashboard');
 
 Route::middleware('auth')->prefix('timekeeping')->group(function(){
     
@@ -101,6 +108,7 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::get('get-employee-dtr-logs/{period_id}/{biometric_id}',[ManageDTRWeeklyController::class,'getweeklyDTR']);
         
         Route::get('get-employee-schedules',[ManageDTRWeeklyController::class,'getSchedules']);
+        Route::get('get-employee-schedules-sat',[ManageDTRWeeklyController::class,'getSchedulesSat']);
         
         Route::post('update-dtr',[ManageDTRWeeklyController::class,'updateDTR']);
         Route::post('draw-logs',[ManageDTRWeeklyController::class,'drawLogs']);
@@ -173,6 +181,8 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::get('/',[LeavesAbsencesController::class,'index']);
         Route::get('list',[LeavesAbsencesController::class,'list']);
         Route::post('receive',[LeavesAbsencesController::class,'receive']);
+        Route::post('update-detail',[LeavesAbsencesController::class,'updateDetail']);
+        
         Route::get('copy',[LeavesAbsencesController::class,'getLeavesFrom100']);
 
 
@@ -227,6 +237,9 @@ Route::middleware('auth')->prefix('admin')->group(function(){
     Route::post('rights-create',[UserRightsController::class,'createRights']);
     Route::post('rights-destroy',[UserRightsController::class,'destroyRights']);
     Route::post('userrights',[UserRightsController::class,'userRights']);
+
+    Route::post('update-rights',[UserRightsController::class,'updateRights']);
+    
 
 });
 

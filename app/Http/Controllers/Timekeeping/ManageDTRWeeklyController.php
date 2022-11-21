@@ -64,11 +64,20 @@ class ManageDTRWeeklyController extends Controller
         $result = $this->mapper->getweeklyDTR($biometric_id,$period_id);
         return response()->json($result);
     }
+    
     public function getSchedules()
     {
         $result = $this->mapper->getSchedules();
         return response()->json($result);
     }
+
+    public function getSchedulesSat()
+    {
+        $result = $this->mapper->getSchedulesSat();
+        return response()->json($result);
+    }
+
+    
 
     public function updateDTR(Request $request)
     {

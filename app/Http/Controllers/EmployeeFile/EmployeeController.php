@@ -26,8 +26,15 @@ class EmployeeController extends Controller
         $exit_stat = $this->mapper->getExitStat();
         $pay_type = $this->mapper->getPayTypes();
         $level_desc = $this->mapper->getLevels();
+        $userDept = $this->mapper->getUserDept(Auth::user()->biometric_id);
+        //dd($userDept->dept_id);
+        if($userDept->dept_id==8){
+            $canSeeRates = true;
+        }else{
+            $canSeeRates = false;
+        }
        
-        return view('app.employee-file.employee-master-data.index',['emp_stat'=>$emp_stat, 'exit_stat'=>$exit_stat, 'pay_type'=>$pay_type, 'level_desc'=>$level_desc]);
+        return view('app.employee-file.employee-master-data.index',['emp_stat'=>$emp_stat, 'exit_stat'=>$exit_stat, 'pay_type'=>$pay_type, 'level_desc'=>$level_desc,'canSeeRates'=>$canSeeRates]);
     }
 
     public function list(Request $request)

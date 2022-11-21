@@ -41,12 +41,29 @@ class DefaultScheduleController extends Controller
 
     public function update(Request $request)
     {
-        $data = [
-            'dept_id' => $request->dept_id,
-            'schedule_id' => $request->schedule_id
-        ];
+        if($request->line_id){
+            $data = [
+                'line_id' => $request->line_id,
+                'dept_id' => $request->dept_id,
+                'schedule_id' => $request->schedule_id,
+                'schedule_sat' => $request->schedule_sat
+            ];
+            $result = $this->sched->updateValid($data);
+        }else{
+            $data = [
+                'dept_id' => $request->dept_id,
+                'schedule_id' => $request->schedule_id,
+                'schedule_sat' => $request->schedule_sat
+            ];
+            $result = $this->sched->insertValid($data);
+        }
+        // $data = [
+        //     'dept_id' => $request->dept_id,
+        //     'schedule_id' => $request->schedule_id,
+        //     'schedule_sat' => $request->schedule_sat
+        // ];
 
-        $result = $this->sched->updateOrCreate($data);
+        //$result = $this->sched->updateOrCreate($data);
         
         return response()->json($result);
     }

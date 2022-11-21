@@ -61,6 +61,16 @@ class LeavesAbsencesController extends Controller
 
     }
 
+    public function updateDetail(Request $request)
+    {
+        if($request->with_pay+$request->without_pay>9)
+        {
+            return response()->json(['error'=>'Invalid no of days.'])->setStatusCode(500, 'Error');
+        }
+        $result = $this->detail->updateValid($request->all());
+
+        return response()->json($result);
+    }
 	public function getLeavesFrom100(){
         $result = $this->mapper->getLeavesFrom100();
 

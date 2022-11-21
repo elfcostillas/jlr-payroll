@@ -16,7 +16,7 @@ class UserRightsMapper extends AbstractMapper {
 
 	public function showAllUsers($filter)
 	{
-		$result = $this->model->select('id','name','email')
+		$result = $this->model->select('id','name','email','super_user')
 		->from('users');
 
 		if($filter['filter']!=null){

@@ -38,6 +38,7 @@ class Employee extends Model
         'basic_salary',
         'is_daily',
         'exit_status',
+        'exit_date',
         'contact_no',
         'division_id',
         'dept_id',

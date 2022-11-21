@@ -60,6 +60,10 @@
         text-overflow: ellipsis;
     }
 
+    .k-grid-save-changes {
+        font-size : 10pt !important;
+    }
+
     
 </style>
 @section('title')

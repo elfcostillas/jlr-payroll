@@ -103,7 +103,7 @@
                             </tr>
                             <tr>
                                 <td>Gender</td>
-                                <td></td>
+                                <td>Blood Type</td>
                                 <td>Birtdate</td>
                                 <td></td>
                                 <td>Civil Status</td>
@@ -112,10 +112,33 @@
                                 <td></td>
                             </tr>
                             <tr>
-                                <td colspan=2><input type="text" id="gender" data-bind="value:form.model.gender"></td>
+                                <td><input type="text" id="gender" data-bind="value:form.model.gender"></td>
+                                <td><input type="text" id="blood_type" data-bind="value:form.model.blood_type"></td>
                                 <td colspan=2><input type="text" id="birthdate" data-bind="value:form.model.birthdate"></td>
                                 <td colspan=2><input type="text" id="civil_status" data-bind="value:form.model.civil_status"></td>
                                 <td colspan=2><input type="text" id="contact_no" data-bind="value:form.model.contact_no"></td>
+                            </tr>
+                            <tr>
+                                <td colspan=4>Emergency Contact Person</td>
+                                <td colspan=2>Relationship</td>
+                                <td colspan=2>Phone No.</td>
+                            </tr>
+                            <tr>
+                                <td colspan=4><input type="text" id="emergency_person" data-bind="value:form.model.emergency_person"></td>
+                                <td colspan=2><input type="text" id="emergency_relation" data-bind="value:form.model.emergency_relation"></td>
+                                <td colspan=2><input type="text" id="emergency_phone" data-bind="value:form.model.emergency_phone"></td>
+                            </tr>
+                            <tr>
+                                <td colspan=2>E-mail</td>
+                                <td colspan=2></td>
+                                <td colspan=2></td> 
+                                <td colspan=2></td>
+                            </tr>
+                            <tr>
+                                <td colspan=2><input type="text" id="email" data-bind="value:form.model.email"></td>
+                                <td colspan=2></td>
+                                <td colspan=2></td>
+                                <td colspan=2></td>
                             </tr>
                         </table>
                     </div>
@@ -180,34 +203,38 @@
                             </tr>
                             <tr>
                                 <td colspan=2>Employment Status</td>
-                                <td colspan=2>Exit Status</td>
+                                <td colspan=2>Date Regularized</td>
+                               
                                 <td colspan=2>Employee Type</td>
                                 <td>Date Hired</td>
                                 <td></td>
                             </tr>
                             <tr>
                                 <td colspan=2><input type="text" id="employee_stat" data-bind="value:form.model.employee_stat"></td>
-                                <td colspan=2><input type="text" id="exit_status" data-bind="value:form.model.exit_status"></td>
+                                <td colspan=2><input type="text" id="date_regularized" data-bind="value:form.model.date_regularized"></td>
+                                
+                                
                                 <td colspan=2><input type="text" id="pay_type" data-bind="value:form.model.pay_type"></td>
                                 <td colspan=2><input type="text" id="date_hired" data-bind="value:form.model.date_hired"></td>
                             </tr>
                             <tr>
+                                <td colspan=2>Exit Status</td>
+                                <td colspan=2>Exit Date</td>
                                 <td colspan=2>Level</td>
-                                <td colspan=2></td>
-                                <td colspan=2></td>
                                 <td></td>
                                 <td></td>
                             </tr>
                             <tr>
+                                <td colspan=2><input type="text" id="exit_status" data-bind="value:form.model.exit_status"></td>
+                                <td colspan=2><input type="text" id="exit_date" data-bind="value:form.model.exit_date"></td>
                                 <td colspan=2><input type="text" id="emp_level" data-bind="value:form.model.emp_level"></td>
-                                <td colspan=2></td>
-                                <td colspan=2></td>
-                                <td colspan=2></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                         </table>
                     </div>
                 </div>
-
+              
                 <div class="card card-secondary mt-1">
                     <div class="card-header"> Compensation and Benefits </div>
                     <div class="card-body">
@@ -224,6 +251,17 @@
                                 <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" data-bind="checked:form.mirror.is_daily" id="is_daily"></div></div></td>
                                 <td colspan=2><input type="text" id="monthly_allowance" data-bind="value:form.model.monthly_allowance"></td>
                                 <td colspan=2><input type="text" id="daily_allowance" data-bind="value:form.model.daily_allowance"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan=2>Bank Acct </td>
+                                <td></td>
+                                <td colspan=2></td>
+                                <td colspan=2></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan=2><input type="text" id="bank_acct" data-bind="value:form.model.bank_acct"></td>
                                 <td></td>
                             </tr>
                         </table>

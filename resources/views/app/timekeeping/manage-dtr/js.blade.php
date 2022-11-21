@@ -107,10 +107,32 @@
                             },
                             parameterMap : function(data,type)
                             {
-                                console.log(type);
+                                
                                 if(type=='update'){
+                                   
                                     $.each(data.models,function(index,value){
-                                        value.dtr_date =  kendo.toString(value.dtr_date,'yyyy-MM-dd')
+                                        value.dtr_date =  kendo.toString(value.dtr_date,'yyyy-MM-dd');
+                                    
+                                        if(value.time_in!=null){
+                                            value.time_in = pad(value.time_in,4);
+                                            value.time_in = (value.time_in.includes(':')) ? value.time_in : value.time_in.substring(0,2)+':'+ valuevalue.time_in.substring(2,4);
+                                        }
+
+                                        if(data.time_out!=null){
+                                            value.time_out = pad(value.time_out,4);
+                                            value.time_out = (value.time_out.includes(':')) ? value.time_out : data.time_out.substring(0,2)+':'+ value.time_out.substring(2,4);
+                                        }
+
+                                        if(value.ot_in!=null){
+                                           
+                                            value.ot_in = pad(value.ot_in,4);
+                                            value.ot_in = (value.ot_in.includes(':')) ? value.ot_in : value.ot_in.substring(0,2)+':'+ value.ot_in.substring(2,4);
+                                        }
+
+                                        if(value.ot_out!=null){
+                                            value.ot_out = pad(value.ot_out,4);
+                                            value.ot_out = (value.ot_out.includes(':')) ? value.ot_out : value.ot_out.substring(0,2)+':'+ value.ot_out.substring(2,4);
+                                        }
                                     });
                                 }
                                 return data;
@@ -131,6 +153,8 @@
                                     dtr_date : { type:'date',editable : false  },
                                     time_in : { type:'string', },
                                     time_out : { type:'string', },
+                                    ot_in : { type:'string', },
+                                    ot_out : { type:'string', },
                                     late : { type:'number', },
                                     late_eq : { type:'number', },
                                     under_time : { type:'number', },
@@ -491,6 +515,32 @@
                     {
                         title : "Time Out",
                         field : "time_out",
+                        width : 70,
+                         attributes: {
+                            style: "font-size: 9pt;text-align:center"
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center"
+                            
+                        }    
+                    },
+                    {
+                        title : "OT In",
+                        field : "ot_in",
+                        width : 70,
+                         attributes: {
+                            style: "font-size: 9pt;text-align:center"
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center"
+                            
+                        }    
+                    },
+                    {
+                        title : "OT Out",
+                        field : "ot_out",
                         width : 70,
                          attributes: {
                             style: "font-size: 9pt;text-align:center"

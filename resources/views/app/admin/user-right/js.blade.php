@@ -2,6 +2,11 @@
     <script>
         $(document).ready(function(){
 
+        let fixedOption = [
+                { text: "Yes", value: "Y" },
+                { text: "No", value: "N" },
+            ];
+
             var viewModel = kendo.observable({ 
                 rights : [],
                 user_id : null,
@@ -16,6 +21,14 @@
                                     
                                 }
                             },
+                            update : {
+                                url : 'admin/update-rights',
+                                type : 'post',
+                                dataType : 'json',
+                                complete : function(e){
+                                    viewModel.ds.maingrid.read();
+                                }
+                            }
                         },
                         pageSize :11,
                         serverPaging : true,
@@ -26,11 +39,16 @@
                             model : {
                                 id : 'id',
                                 fields : {
-                                    date_from : { type : 'date' },
-                                    date_to: { type : 'date' },
-                                    date_release: { type : 'date' },
-                                    man_hours: { type : 'number' },
+                                    // date_from : { type : 'date' },
+                                    // date_to: { type : 'date' },
+                                    // date_release: { type : 'date' },
+                                    // man_hours: { type : 'number' },
+                                    id: { type : 'number', editable:false  },
+                                    name: { type : 'string', editable:false },
+                                    email: { type : 'string', editable:false },
+                                    super_user: { type : 'string' },
                                 }
+                                //id":5,"name":"Angel Egar","email":"angel.egar","super_user":
                             }
                         }
                     }),
@@ -132,6 +150,17 @@
                         //width : 120,    
                     },
                     {
+                        title : "Show Confi",
+                        field : "super_user",
+                        //template : "#= (data.date_release) ? kendo.toString(data.date_release,'MM/dd/yyyy') : ''  #",
+                        width : 120,    
+                        editor : fixedOptionEditor
+                    },
+                    {
+                        command : ['edit'],
+                        width : 190,
+                    },
+                    {
                         width : 80,
                         command: { text : 'View' ,click : viewModel.buttonHandler.viewRights },
                         attributes : { style : 'font-size:10pt !important;'} 
@@ -139,6 +168,21 @@
 
                 ]
             });
+
+            function fixedOptionEditor(container, options)
+            {
+                $('<input name="' + options.field + '"/>')
+                .appendTo(container)
+                .kendoDropDownList({
+                //.kendoComboBox({
+                    //autoBind: false,
+                    autoWidth: true,
+                    dataTextField: "text",
+                    dataValueField: "value",
+                    dataSource: fixedOption,
+                   
+                });
+            }
 
             $('input:checkbox.urights').click(function(){
 			var url = '';

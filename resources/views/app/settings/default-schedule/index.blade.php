@@ -64,7 +64,7 @@
     <div class="container">
         <div id="viewModel" >
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-8">
                     <div class="card card-secondary">
                         <div class="card-header"> Default Work Schedules </div>
                         <div class="card-body"> 

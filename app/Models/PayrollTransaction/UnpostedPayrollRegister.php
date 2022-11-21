@@ -9,7 +9,7 @@ class UnpostedPayrollRegister extends Model
 {
     use HasFactory;
 
-    protected $table = 'payrollregister_unposted';
+    protected $table = 'payrollregister_unposted_s';
     protected $primaryKey = 'line_id';
     public $timestamps = false;
 

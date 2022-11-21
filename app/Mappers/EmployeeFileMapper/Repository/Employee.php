@@ -15,44 +15,101 @@ class Employee
         'basic_pay' =>null,
         'basic_salary' => null,
         'is_daily' => null,
-        'ndays' => null,
+        'ndays' => 0.00,
         'pay_type' => null,
-        'late' => null,
-        'late_eq' => null,
-        'overtime' => null,
-        'night_diff' => null,
-        'sss_prem' => null,
-        'phil_prem' => null,
-        'hdmf_contri' => null,
-        'overtime_amount' => null,
-        'daily_allowance' => null,
-        'semi_monthly_allowance' => null,
-        'lh_ot' => null,
-        'lh_ot_amount' => null,
-        'lhot_rd' => null,
-        'lhot_rd_amount' => null,
-        'sh_ot' => null,
-        'sh_ot_amount' => null,
-        'shot_rd' => null,
-        'shot_rd_amount' => null,
-        'sun_ot' => null,
-        'sun_ot_amount' => null,
-        'under_time' => null,
-        'under_time_amount' => null,
-        'vl_wpay' => null,
-        'vl_wpay_amount' => null,
-        'vl_wopay' => null,
-        'vl_wopay_amount' => null,
-        'sl_wpay' => null,
-        'sl_wpay_amount' => null,
-        'sl_wopay' => null, 
-        'sl_wopay_amount' => null,
-        'bl_wpay' => null,
-        'bl_wpay_amount' => null,
-        'bl_wopay' => null,
-        'bl_wopay_amount' => null,
-        'absences' => null,
-        'absences_amount' => null
+        'late' => 0.00,
+        'late_eq' => 0.00,
+        'late_eq_amount' => 0.00,
+        'sss_prem' => 0.00,
+        'phil_prem' => 0.00,
+        'hdmf_contri' => 0.00,
+        'daily_allowance' => 0.00,
+        'semi_monthly_allowance' => 0.00,
+        'under_time' => 0.00,
+        'under_time_amount' => 0.00,
+        'vl_wpay' => 0.00,
+        'vl_wpay_amount' => 0.00,
+        'vl_wopay' => 0.00,
+        'vl_wopay_amount' => 0.00,
+        'sl_wpay' => 0.00,
+        'sl_wpay_amount' => 0.00,
+        'sl_wopay' => 0.00, 
+        'sl_wopay_amount' => 0.00,
+        'bl_wpay' => 0.00,
+        'bl_wpay_amount' => 0.00,
+        'bl_wopay' => 0.00,
+        'bl_wopay_amount' => 0.00,
+        'absences' => 0.00,
+        'absences_amount' => 0.00,
+        'reg_ot'	=> 0.00,
+        'reg_ot_amount'	=> 0.00,
+        'reg_nd'	=> 0.00,
+        'reg_nd_amount'	=> 0.00,
+        'reg_ndot'	=> 0.00,
+        'reg_ndot_amount'	=> 0.00,
+        'rd_hrs'	=> 0.00,
+        'rd_hrs_amount'	=> 0.00,
+        'rd_ot'	=> 0.00,
+        'rd_ot_amount'	=> 0.00,
+        'rd_nd'	=> 0.00,
+        'rd_nd_amount'	=> 0.00,
+        'rd_ndot'	=> 0.00,
+        'rd_ndot_amount'	=> 0.00,
+        'leghol_count'	=> 0.00,
+        'leghol_count_amount'	=> 0.00,
+        'leghol_hrs'	=> 0.00,
+        'leghol_hrs_amount'	=> 0.00,
+        'leghol_ot'	=> 0.00,
+        'leghol_ot_amount'	=> 0.00,
+        'leghol_nd'	=> 0.00,
+        'leghol_nd_amount'	=> 0.00,
+        'leghol_rd'	=> 0.00,
+        'leghol_rd_amount'	=> 0.00,
+        'leghol_rdot'	=> 0.00,
+        'leghol_rdot_amount'	=> 0.00,
+        'leghol_ndot'	=> 0.00,
+        'leghol_ndot_amount'	=> 0.00,
+        'leghol_rdnd'	=> 0.00,
+        'leghol_rdnd_amount'	=> 0.00,
+        'leghol_rdndot'	=> 0.00,
+        'leghol_rdndot_amount'	=> 0.00,
+        'sphol_count'	=> 0.00,
+        'sphol_count_amount'	=> 0.00,
+        'sphol_hrs'	=> 0.00,
+        'sphol_hrs_amount'	=> 0.00,
+        'sphol_ot'	=> 0.00,
+        'sphol_ot_amount'	=> 0.00,
+        'sphol_nd'	=> 0.00,
+        'sphol_nd_amount'	=> 0.00,
+        'sphol_rd'	=> 0.00,
+        'sphol_rd_amount'	=> 0.00,
+        'sphol_rdot'	=> 0.00,
+        'sphol_rdot_amount'	=> 0.00,
+        'sphol_ndot'	=> 0.00,
+        'sphol_ndot_amount'	=> 0.00,
+        'sphol_rdnd'	=> 0.00,
+        'sphol_rdnd_amount'	=> 0.00,
+        'sphol_rdndot'	=> 0.00,
+        'sphol_rdndot_amount'	=> 0.00,
+        'dblhol_count'	=> 0.00,
+        'dblhol_count_amount'	=> 0.00,
+        'dblhol_hrs'	=> 0.00,
+        'dblhol_hrs_amount'	=> 0.00,
+        'dblhol_ot'	=> 0.00,
+        'dblhol_ot_amount'	=> 0.00,
+        'dblhol_nd'	=> 0.00,
+        'dblhol_nd_amount'	=> 0.00,
+        'dblhol_rd'	=> 0.00,
+        'dblhol_rd_amount'	=> 0.00,
+        'dblhol_rdot'	=> 0.00,
+        'dblhol_rdot_amount'	=> 0.00,
+        'dblhol_ndot'	=> 0.00,
+        'dblhol_ndot_amount'	=> 0.00,
+        'dblhol_rdnd'	=> 0.00,
+        'dblhol_rdnd_amount'	=> 0.00,
+        'dblhol_rdndot'	=> 0.00,
+        'dblhol_rdndot_amount'	=> 0.00,
+
 
 
     ]; 
@@ -83,42 +140,42 @@ class Employee
         $this->computeContribution($period);
 
         /*** Overtime ***/
-        if($this->payreg['overtime']>0)
-        {
-            $this->payreg['overtime_amount'] = round(($this->rates['hourly_rate'] * 1.25) * $this->payreg['overtime'],2);
-            //dd($this->payreg['overtime_amount'],$this->payreg['overtime'],$this->rates['hourly_rate']);
-        }
-
-        if($this->data['daily_allowance']>0){
-            $this->payreg['daily_allowance'] = $this->data['daily_allowance'] * $this->payreg['ndays'];
-        }
-
-        if($this->data['monthly_allowance']>0){
-            $this->payreg['semi_monthly_allowance'] = round($this->data['monthly_allowance']/2,2);
-        }
-
-        if($this->data['sh_ot']>0){
-            $this->payreg['sh_ot_amount'] = round(($this->rates['hourly_rate'] * 1.3) * $this->payreg['sh_ot'],2);
-        }
-
-        if($this->data['vl_wpay']>0){
-           // dd($this->data['vl_wpay'] ,$this->rates['hourly_rate']);
-           $this->payreg['vl_wpay'] = $this->data['vl_wpay'];
-            $this->payreg['vl_wpay_amount'] = round($this->data['vl_wpay'] * $this->rates['hourly_rate'],2);
-        }
-
-        // if($this->data['vl_wopay']>0){
-
+        // if($this->payreg['overtime']>0)
+        // {
+        //     $this->payreg['overtime_amount'] = round(($this->rates['hourly_rate'] * 1.25) * $this->payreg['overtime'],2);
+        //     //dd($this->payreg['overtime_amount'],$this->payreg['overtime'],$this->rates['hourly_rate']);
         // }
 
-        if($this->data['sl_wpay']>0){
-            $this->payreg['sl_wpay'] = $this->data['sl_wpay'];
-            $this->payreg['sl_wpay_amount'] = round($this->data['sl_wpay'] * $this->rates['hourly_rate'],2);
-            
-        }
+        // if($this->data['daily_allowance']>0){
+        //     $this->payreg['daily_allowance'] = $this->data['daily_allowance'] * $this->payreg['ndays'];
+        // }
 
-        $this->payreg['absences'] =  $this->data['late_eq'] + $this->data['under_time'] + $this->data['vl_wopay'] + $this->data['sl_wopay'] + $this->data['bl_wopay'];
-        $this->payreg['absences_amount'] = $this->payreg['absences'] * $this->rates['hourly_rate'];
+        // if($this->data['monthly_allowance']>0){
+        //     $this->payreg['semi_monthly_allowance'] = round($this->data['monthly_allowance']/2,2);
+        // }
+
+        // if($this->data['sh_ot']>0){
+        //     $this->payreg['sh_ot_amount'] = round(($this->rates['hourly_rate'] * 1.3) * $this->payreg['sh_ot'],2);
+        // }
+
+        // if($this->data['vl_wpay']>0){
+        //    // dd($this->data['vl_wpay'] ,$this->rates['hourly_rate']);
+        //    $this->payreg['vl_wpay'] = $this->data['vl_wpay'];
+        //     $this->payreg['vl_wpay_amount'] = round($this->data['vl_wpay'] * $this->rates['hourly_rate'],2);
+        // }
+
+        // // if($this->data['vl_wopay']>0){
+
+        // // }
+
+        // if($this->data['sl_wpay']>0){
+        //     $this->payreg['sl_wpay'] = $this->data['sl_wpay'];
+        //     $this->payreg['sl_wpay_amount'] = round($this->data['sl_wpay'] * $this->rates['hourly_rate'],2);
+            
+        // }
+
+        // $this->payreg['absences'] =  $this->data['late_eq'] + $this->data['under_time'] + $this->data['vl_wopay'] + $this->data['sl_wopay'] + $this->data['bl_wopay'];
+        // $this->payreg['absences_amount'] = $this->payreg['absences'] * $this->rates['hourly_rate'];
 
 
         // if($this->data['sl_wopay']>0){
