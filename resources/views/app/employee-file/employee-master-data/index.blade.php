@@ -104,7 +104,7 @@
                             <tr>
                                 <td>Gender</td>
                                 <td>Blood Type</td>
-                                <td>Birtdate</td>
+                                <td>Birthdate</td>
                                 <td></td>
                                 <td>Civil Status</td>
                                 <td></td>
