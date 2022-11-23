@@ -16,6 +16,7 @@ use App\Http\Controllers\Timekeeping\ManageDTRController;
 use App\Http\Controllers\Timekeeping\ManualDTRController;
 use App\Http\Controllers\Timekeeping\FTPController;
 use App\Http\Controllers\Timekeeping\LeavesAbsencesController;
+use App\Http\Controllers\Timekeeping\LeaveCreditsController;
 
 use App\Http\Controllers\Settings\LocationController;
 use App\Http\Controllers\Settings\DefaultScheduleController;
@@ -187,6 +188,18 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
 
 
     });
+
+    Route::prefix('leave-credits')->group(function(){
+        Route::get('/',[LeaveCreditsController::class,'index']);
+        Route::get('list',[LeaveCreditsController::class,'list']);
+        Route::get('year',[LeaveCreditsController::class,'yearList']);
+        Route::get('employees/{year}',[LeaveCreditsController::class,'empList']);
+        
+        Route::post('save',[LeaveCreditsController::class,'save']);
+
+    });
+
+    
 
 });
 
