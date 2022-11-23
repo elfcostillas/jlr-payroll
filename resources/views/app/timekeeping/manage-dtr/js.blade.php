@@ -163,11 +163,28 @@
                                     schedule_id : { type:'number', },
                                     schedule_desc : { type: 'string' },
                                     ndays : { type:'number', },
-                                    lh_ot  : { type:'number', },
-                                    lhot_rd  : { type:'number', },
-                                    sh_ot  : { type:'number', },
-                                    shot_rd  : { type:'number', },
-                                    sun_ot : { type:'number', },
+                                    restday_hrs : { type:'number', },
+                                    restday_ot : { type:'number', },
+                                    restday_nd : { type:'number', },
+                                    reghol_pay : { type:'number', },
+                                    reghol_hrs : { type:'number', },
+                                    reghol_ot : { type:'number', },
+                                    reghol_rd : { type:'number', },
+                                    reghol_rdot : { type:'number', },
+                                    reghol_nd : { type:'number', },
+                                    sphol_pay : { type:'number', },
+                                    sphol_hrs : { type:'number', },
+                                    sphol_ot : { type:'number', },
+                                    sphol_rd : { type:'number', },
+                                    sphol_rdot : { type:'number', },
+                                    sphol_nd : { type:'number', },
+                                    dblhol_pay : { type:'number', },
+                                    dblhol_hrs : { type:'number', },
+                                    dblhol_ot : { type:'number', },
+                                    dblhol_rd : { type:'number', },
+                                    dblhol_rdot : { type:'number', },
+                                    dblhol_nd : { type:'number', },
+                                    holiday_type : { type:'string', editable : false }
                                 }
                             }
                         },
@@ -443,6 +460,11 @@
                 scrollable: true,
                 selectable : true,
                 navigatable : true,
+                dataBound: function() {
+                    for (var i = 12; i < this.columns.length; i++) {
+                    this.autoFitColumn(i);
+                    }
+                },
                 toolbar : [
                     {
                         name : 'save'
@@ -464,7 +486,8 @@
                         },
                         headerAttributes: {
                             style: "font-size: 9pt"
-                        } 
+                        },
+                        locked : true,
                     },
                     {
                         title : "Date",
@@ -478,7 +501,8 @@
                         headerAttributes: {
                             style: "font-size: 9pt;text-align:center",
                             
-                        }    
+                        }, 
+                        locked : true,  
                     },
                     {
                         title : "Schedule",
@@ -515,32 +539,6 @@
                     {
                         title : "Time Out",
                         field : "time_out",
-                        width : 70,
-                         attributes: {
-                            style: "font-size: 9pt;text-align:center"
-                            
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center"
-                            
-                        }    
-                    },
-                    {
-                        title : "OT In",
-                        field : "ot_in",
-                        width : 70,
-                         attributes: {
-                            style: "font-size: 9pt;text-align:center"
-                            
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center"
-                            
-                        }    
-                    },
-                    {
-                        title : "OT Out",
-                        field : "ot_out",
                         width : 70,
                          attributes: {
                             style: "font-size: 9pt;text-align:center"
@@ -600,122 +598,6 @@
                         footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
                     },
                     {
-                        title : "ROT",
-                        field : "over_time",
-                        width : 60,
-                         attributes: {
-                            style: "font-size: 9pt;text-align:center",
-                            
-                        },
-                        template : "# if(over_time==0){#  #} else{# #= over_time #  #}#",
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
-                            
-                        },
-                        aggregates : ['sum'], 
-                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>",
-                        editor : dataEditor
-                    },
-                    
-                    {
-                        title : "SOT",
-                        field : "sun_ot",
-                        width : 80,
-                         attributes: {
-                            style: "font-size: 9pt;text-align:center",
-                            
-                        },
-                        template : "# if(sun_ot==0){#  #} else{# #= sun_ot #  #}#",
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
-                            
-                        },
-                        aggregates : ['sum'], 
-                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>",
-                        editor : dataEditor
-                    },
-                    {
-                        title : "Hol",
-                        field : "holiday_type",
-                        width : 45, 
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
-                            
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
-                            
-                        },
-                    },
-                    {
-                        width : 60,
-                        title : 'LH OT',
-                        field : "lh_ot",
-                        template : "# if(lh_ot==0){#  #} else{# #= lh_ot #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
-                            
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
-                            
-                        },
-                        aggregates : ['sum'], 
-                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
-                        editor : dataEditor
-                    },
-                    {
-                        width : 76,
-                        title : 'LH RD OT',
-                        field : "lhot_rd",
-                        template : "# if(lhot_rd==0){#  #} else{# #= lhot_rd #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
-                            
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
-                            
-                        },
-                        aggregates : ['sum'], 
-                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
-                        editor : dataEditor
-                    },
-                    {
-                        width : 60,
-                        title : 'SHOT',
-                        field : "sh_ot",
-                        template : "# if(sh_ot==0){#  #} else{# #= sh_ot #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
-                            
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
-                            
-                        },
-                        aggregates : ['sum'], 
-                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
-                        editor : dataEditor
-                    },
-                    {
-                        width : 76,
-                        title : 'SHOT RD',
-                        field : "shot_rd",
-                        template : "# if(shot_rd==0){#  #} else{# #= shot_rd #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
-                            
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
-                            
-                        },
-                        aggregates : ['sum'], 
-                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
-                        editor : dataEditor
-                    },
-                    {
                         title : "UT",
                         field : "under_time",
                         width : 60,
@@ -750,10 +632,299 @@
                         editor : dataEditor
 
                     },
-                    
                     {
-                        width : 60
+                        title : "OT In",
+                        field : "ot_in",
+                        width : 70,
+                         attributes: {
+                            style: "font-size: 9pt;text-align:center"
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center"
+                            
+                        }    
                     },
+                    {
+                        title : "OT Out",
+                        field : "ot_out",
+                        width : 70,
+                         attributes: {
+                            style: "font-size: 9pt;text-align:center"
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center"
+                            
+                        }    
+                    },
+                    {
+                        title : "Reg OT",
+                        field : "over_time",
+                        width : 60,
+                         attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        template : "# if(over_time==0){#  #} else{# #= over_time #  #}#",
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        aggregates : ['sum'], 
+                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>",
+                        editor : dataEditor
+                    },
+                    {
+                        title : "Hol",
+                        field : "holiday_type",
+                        width : 45, 
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                    },
+                    {
+                        title : '-',
+                        width : 15,
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    },
+                    {
+                        title : 'Reg Hol Pay',
+                        field : 'reghol_pay',
+                        width : 90,
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    },
+                    {
+                        title : 'Reg Hol Hrs',
+                        field : 'reghol_hrs',
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    },
+                    {
+                        title : 'Reg Hol OT',
+                        field : 'reghol_ot',
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    },
+                    {
+                        title : 'Reg Hol RD',
+                        field : 'reghol_rd',
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    },
+                    {
+                        title : 'Reg Hol RD OT',
+                        field : 'reghol_rdot',
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    },
+                    {
+                        title : 'Reg Hol ND',
+                        field : 'reghol_nd',
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    },
+                    {
+                        title : '-',
+                        width : 15
+                    },
+                    {
+                        title : 'SP Hol pay',
+                        field : 'sphol_pay',
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    },
+                    {
+                        title : 'SP Hol Hrs',
+                        field : 'sphol_hrs',
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    },
+                    {
+                        title : 'SP Hol OT',
+                        field : 'sphol_ot',
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    },
+                    {
+                        title : 'SP Hol RD',
+                        field : 'sphol_rd',
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    },
+                    {
+                        title : 'SP Hol RD OT',
+                        field : 'sphol_rdot',
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    },
+                    {
+                        title : 'SP Hol ND',
+                        field : 'sphol_nd',
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    }, 
+                    {
+                        title : '-',
+                        width : 15
+                    }, {
+                        title : 'DBL Hol Pay',
+                        field : 'dblhol_pay',
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    },
+                    {
+                        title : 'DBL Hol Hrs',
+                        field : 'dblhol_hrs',
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    },
+                    {
+                        title : 'DBL Hol OT',
+                        field : 'dblhol_ot',
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    },
+                    {
+                        title : 'DBL Hol RD',
+                        field : 'dblhol_rd',
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    },
+                    {
+                        title : 'DBL Hol RDOT',
+                        field : 'dblhol_rdot',
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    },
+                    {
+                        title : 'DBL Hol ND',
+                        field : 'dblhol_nd',
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    }, 
+                  
                 ],
                 
             }); 

@@ -185,7 +185,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
         return $result->get();
     }
 
-    public function getSemiDTR($biometric_id,$period_id)
+    public function getSemiDTR_old($biometric_id,$period_id)
     {
 
         $holidays = $this->model->select(DB::raw("holidays.*,location_id"))
@@ -230,6 +230,36 @@ class DailyTimeRecordMapper extends AbstractMapper {
         ->where('payroll_period.id',$period_id)
         ->orderBy('dtr_date');
         */
+
+        return $result->get();
+    }
+
+    public function getSemiDTR($biometric_id,$period_id)
+    {
+
+        $holidays = $this->model->select(DB::raw("holidays.*,location_id"))
+                    ->from('holidays')
+                    ->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
+                    ->join('payroll_period',function($join){
+                        $join->whereRaw('holiday_date between payroll_period.date_from and payroll_period.date_to');
+                    })
+                    ->where('payroll_period.id',$period_id);
+
+                    $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,ifnull(schedule_id,0) schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc,case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type,ot_in,ot_out,restday_hrs,restday_ot,restday_nd,reghol_pay,reghol_hrs,reghol_ot,reghol_rd,reghol_nd,sphol_pay,sphol_hrs,sphol_ot,sphol_rd,sphol_nd,dblhol_pay,dblhol_hrs,dblhol_ot,dblhol_rd,dblhol_nd,dblhol_rdot,sphol_rdot,reghol_rdot"))
+                            ->from('edtr')
+                            ->where('edtr.biometric_id',$biometric_id)
+                            ->join('payroll_period',function($join){
+                            $join->whereRaw('dtr_date between payroll_period.date_from and payroll_period.date_to');
+                            })
+                            ->leftJoin('employees','employees.biometric_id','=','edtr.biometric_id')
+
+                            ->leftJoinSub($holidays,'holidays',function($join) { //use ($type)
+                            $join->on('holidays.location_id','=','employees.location_id');
+                            $join->on('holidays.holiday_date','=','edtr.dtr_date');
+                            })
+                            ->leftJoin('work_schedules','schedule_id','=','work_schedules.id')
+                            ->where('payroll_period.id',$period_id)
+                            ->orderBy('dtr_date');
 
         return $result->get();
     }
