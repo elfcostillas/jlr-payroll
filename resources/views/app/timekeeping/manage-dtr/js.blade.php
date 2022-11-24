@@ -160,12 +160,14 @@
                                     under_time : { type:'number', },
                                     over_time : { type:'number', },
                                     night_diff : { type:'number', },
+                                    night_diff_ot : { type:'number', },
                                     schedule_id : { type:'number', },
                                     schedule_desc : { type: 'string' },
                                     ndays : { type:'number', },
                                     restday_hrs : { type:'number', },
                                     restday_ot : { type:'number', },
                                     restday_nd : { type:'number', },
+                                    restday_ndot: { type:'number', },
                                     reghol_pay : { type:'number', },
                                     reghol_hrs : { type:'number', },
                                     reghol_ot : { type:'number', },
@@ -194,6 +196,7 @@
                             { field : "under_time" , aggregate: "sum" },
                             { field : "over_time" , aggregate: "sum" },
                             { field : "night_diff" , aggregate: "sum" },
+                            { field : "night_diff_ot" , aggregate: "sum" },
                             { field : "ndays" , aggregate: "sum" },
 
                             { field : "lh_ot" , aggregate: "sum" },
@@ -461,8 +464,8 @@
                 selectable : true,
                 navigatable : true,
                 dataBound: function() {
-                    for (var i = 12; i < this.columns.length; i++) {
-                    this.autoFitColumn(i);
+                    for (var i =18; i < this.columns.length; i++) {
+                        this.autoFitColumn(i);
                     }
                 },
                 toolbar : [
@@ -676,9 +679,78 @@
                         editor : dataEditor
                     },
                     {
-                        title : "Hol",
-                        field : "holiday_type",
-                        width : 45, 
+                        title : "ND OT",
+                        field : "night_diff_ot",
+                        width : 60, 
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        template : "# if(night_diff_ot==0){#  #} else{# #= night_diff_ot #  #}#",
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        aggregates : ['sum'], 
+                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
+                        editor : dataEditor
+
+                    },
+                    {
+                        title : '-',
+                        width : 15,
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    },
+                    {
+                        title : "RD Hrs",
+                        field : "restday_hrs",
+                        width : 75, 
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                    },
+                    {
+                        title : "RD OT",
+                        field : "restday_ot",
+                        width : 75, 
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                    },
+                    {
+                        title : "RD ND",
+                        field : "restday_nd",
+                        width : 75, 
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                    },
+                    {
+                        title : "RD ND OT",
+                        field : "restday_ndot",
+                        width : 75, 
                         attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -764,6 +836,18 @@
                     {
                         title : 'Reg Hol ND',
                         field : 'reghol_nd',
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    },
+                    {
+                        title : 'Reg Hol ND OT',
+                        field : 'reghol_ndot',
                         attributes: {
                             style: "font-size: 9pt;text-align:center",
                             

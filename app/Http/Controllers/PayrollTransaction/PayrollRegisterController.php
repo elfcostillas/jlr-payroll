@@ -59,6 +59,8 @@ class PayrollRegisterController extends Controller
 
         foreach($employees as $employee)
         {
+
+            //dd($employee);
             $employee->under_time_amount = 0;
             $employee->vl_wpay = 0;
             $employee->vl_wpay_amount = 0;
@@ -124,7 +126,15 @@ class PayrollRegisterController extends Controller
         }
 
         $collections = $this->unposted->getPprocessed($period);
+        $headers =  $this->unposted->getHeaders($period)->toArray();
+        foreach($headers as $key => $value){
+            if($value==0){
+                unset($headers[$key]);
+            }
+            
+        }
 
-        return view('app.payroll-transaction.payroll-register.payroll-register',['data' => $collections,'no_pay' => $noPay ]);
+        dd($headers);
+        return view('app.payroll-transaction.payroll-register.payroll-register',['data' => $collections,'no_pay' => $noPay, ]);
     }
 }

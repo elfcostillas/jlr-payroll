@@ -57,6 +57,7 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                         SUM(under_time) AS under_time,
                         SUM(over_time) AS overtime,
                         SUM(night_diff) AS night_diff,
+                        SUM(night_diff_ot) AS night_diff_ot,
                         SUM(ndays) AS ndays,
                         hdmf_contri,
                         monthly_allowance,
@@ -64,24 +65,31 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                         sum(restday_hrs) as restday_hrs,
                         sum(restday_ot) as restday_ot,
                         sum(restday_nd) as restday_nd,
-                        sum(reghol_pay) as reghol_pay,
-                        sum(reghol_hrs) as reghol_hrs,
-                        sum(reghol_ot) as reghol_ot,
-                        sum(reghol_rd) as reghol_rd,
-                        sum(reghol_rdot) as reghol_rdot,
-                        sum(reghol_nd) as reghol_nd,
+                        sum(restday_ndot) as restday_ndot,
+
+                        sum(reghol_pay) as leghol_count,
+                        sum(reghol_hrs) as leghol_hrs,
+                        sum(reghol_ot) as leghol_ot,
+                        sum(reghol_rd) as leghol_rd,
+                        sum(reghol_rdot) as leghol_rdot,
+                        sum(reghol_nd) as leghol_nd,
+                        sum(reghol_ndot) as leghol_ndot,
+
                         sum(sphol_pay) as sphol_pay,
                         sum(sphol_hrs) as sphol_hrs,
                         sum(sphol_ot) as sphol_ot,
                         sum(sphol_rd) as sphol_rd,
                         sum(sphol_rdot) as sphol_rdot,
                         sum(sphol_nd) as sphol_nd,
+                        sum(sphol_ndot) as sphol_ndot,
+
                         sum(dblhol_pay) as dblhol_pay,
                         sum(dblhol_hrs) as dblhol_hrs,
                         sum(dblhol_ot) as dblhol_ot,
                         sum(dblhol_rd) as dblhol_rd,
                         sum(dblhol_rdot) as dblhol_rdot,
-                        sum(dblhol_nd) as dblhol_nd
+                        sum(dblhol_nd) as dblhol_nd,
+                        sum(dblhol_ndot) as dblhol_ndot
                         "))
                     ->from('edtr')
                     ->join('payroll_period',function($join){
@@ -306,6 +314,83 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
             }
 
         return $locations;
+    }
+
+    public function getHeaders($period)
+    {
+       
+        $result = $this->model->select(DB::raw("SUM(reg_ot) AS reg_ot, 
+        SUM(reg_ot_amount) AS reg_ot_amount,
+        SUM(reg_nd) AS reg_nd,
+        SUM(reg_nd_amount) AS reg_nd_amount,
+        SUM(reg_ndot) AS reg_ndot,
+        SUM(reg_ndot_amount) AS reg_ndot_amount,
+        SUM(rd_hrs) AS rd_hrs,
+        SUM(rd_hrs_amount) AS rd_hrs_amount,
+        SUM(rd_ot) AS rd_ot,
+        SUM(rd_ot_amount) AS rd_ot_amount,
+        SUM(rd_nd) AS rd_nd,
+        SUM(rd_nd_amount) AS rd_nd_amount,
+        SUM(rd_ndot) AS rd_ndot,
+        SUM(rd_ndot_amount) AS rd_ndot_amount,
+        SUM(leghol_count) AS leghol_count,
+        SUM(leghol_count_amount) AS leghol_count_amount,
+        SUM(leghol_hrs) AS leghol_hrs,
+        SUM(leghol_hrs_amount) AS leghol_hrs_amount,
+        SUM(leghol_ot) AS leghol_ot,
+        SUM(leghol_ot_amount) AS leghol_ot_amount,
+        SUM(leghol_nd) AS leghol_nd,
+        SUM(leghol_nd_amount) AS leghol_nd_amount,
+        SUM(leghol_rd) AS leghol_rd,
+        SUM(leghol_rd_amount) AS leghol_rd_amount,
+        SUM(leghol_rdot) AS leghol_rdot,
+        SUM(leghol_rdot_amount) AS leghol_rdot_amount,
+        SUM(leghol_ndot) AS leghol_ndot,
+        SUM(leghol_ndot_amount) AS leghol_ndot_amount,
+        SUM(leghol_rdnd) AS leghol_rdnd,
+        SUM(leghol_rdnd_amount) AS leghol_rdnd_amount,
+        SUM(leghol_rdndot) AS leghol_rdndot,
+        SUM(leghol_rdndot_amount) AS leghol_rdndot_amount,
+        SUM(sphol_count) AS sphol_count,
+        SUM(sphol_count_amount) AS sphol_count_amount,
+        SUM(sphol_hrs) AS sphol_hrs,
+        SUM(sphol_hrs_amount) AS sphol_hrs_amount,
+        SUM(sphol_ot) AS sphol_ot,
+        SUM(sphol_ot_amount) AS sphol_ot_amount,
+        SUM(sphol_nd) AS sphol_nd,
+        SUM(sphol_nd_amount) AS sphol_nd_amount,
+        SUM(sphol_rd) AS sphol_rd,
+        SUM(sphol_rd_amount) AS sphol_rd_amount,
+        SUM(sphol_rdot) AS sphol_rdot,
+        SUM(sphol_rdot_amount) AS sphol_rdot_amount,
+        SUM(sphol_ndot) AS sphol_ndot,
+        SUM(sphol_ndot_amount) AS sphol_ndot_amount,
+        SUM(sphol_rdnd) AS sphol_rdnd,
+        SUM(sphol_rdnd_amount) AS sphol_rdnd_amount,
+        SUM(sphol_rdndot) AS sphol_rdndot,
+        SUM(sphol_rdndot_amount) AS sphol_rdndot_amount,
+        SUM(dblhol_count) AS dblhol_count,
+        SUM(dblhol_count_amount) AS dblhol_count_amount,
+        SUM(dblhol_hrs) AS dblhol_hrs,
+        SUM(dblhol_hrs_amount) AS dblhol_hrs_amount,
+        SUM(dblhol_ot) AS dblhol_ot,
+        SUM(dblhol_ot_amount) AS dblhol_ot_amount,
+        SUM(dblhol_nd) AS dblhol_nd,
+        SUM(dblhol_nd_amount) AS dblhol_nd_amount,
+        SUM(dblhol_rd) AS dblhol_rd,
+        SUM(dblhol_rd_amount) AS dblhol_rd_amount,
+        SUM(dblhol_rdot) AS dblhol_rdot,
+        SUM(dblhol_rdot_amount) AS dblhol_rdot_amount,
+        SUM(dblhol_ndot) AS dblhol_ndot,
+        SUM(dblhol_ndot_amount) AS dblhol_ndot_amount,
+        SUM(dblhol_rdnd) AS dblhol_rdnd,
+        SUM(dblhol_rdnd_amount) AS dblhol_rdnd_amount,
+        SUM(dblhol_rdndot) AS dblhol_rdndot,
+        SUM(dblhol_rdndot_amount) AS dblhol_rdndot_amount"))
+        ->where('period_id',$period->id);
+
+
+        return $result->first();
     }
 
     public function getDivisions($location)
