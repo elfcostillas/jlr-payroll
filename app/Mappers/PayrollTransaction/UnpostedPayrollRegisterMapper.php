@@ -61,11 +61,27 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                         hdmf_contri,
                         monthly_allowance,
                         daily_allowance,
-                        sum(lh_ot) lh_ot,
-                        sum(lhot_rd) AS lhot_rd,
-                        sum(sh_ot) AS sh_ot,
-                        sum(shot_rd) AS shot_rd,
-                        sum(sun_ot) AS sun_ot
+                        sum(restday_hrs) as restday_hrs,
+                        sum(restday_ot) as restday_ot,
+                        sum(restday_nd) as restday_nd,
+                        sum(reghol_pay) as reghol_pay,
+                        sum(reghol_hrs) as reghol_hrs,
+                        sum(reghol_ot) as reghol_ot,
+                        sum(reghol_rd) as reghol_rd,
+                        sum(reghol_rdot) as reghol_rdot,
+                        sum(reghol_nd) as reghol_nd,
+                        sum(sphol_pay) as sphol_pay,
+                        sum(sphol_hrs) as sphol_hrs,
+                        sum(sphol_ot) as sphol_ot,
+                        sum(sphol_rd) as sphol_rd,
+                        sum(sphol_rdot) as sphol_rdot,
+                        sum(sphol_nd) as sphol_nd,
+                        sum(dblhol_pay) as dblhol_pay,
+                        sum(dblhol_hrs) as dblhol_hrs,
+                        sum(dblhol_ot) as dblhol_ot,
+                        sum(dblhol_rd) as dblhol_rd,
+                        sum(dblhol_rdot) as dblhol_rdot,
+                        sum(dblhol_nd) as dblhol_nd
                         "))
                     ->from('edtr')
                     ->join('payroll_period',function($join){
@@ -325,7 +341,7 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
 
     public function buildHeader($period)
     {
-        
+
     }
 
     public function getEmployees($location,$division,$department,$period) /* Earnings and Deductions here */
