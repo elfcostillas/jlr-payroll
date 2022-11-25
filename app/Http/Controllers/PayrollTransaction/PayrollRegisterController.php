@@ -133,8 +133,7 @@ class PayrollRegisterController extends Controller
             }
             
         }
-
-        dd($headers);
+        
         return view('app.payroll-transaction.payroll-register.payroll-register',['data' => $collections,'no_pay' => $noPay, ]);
     }
 }

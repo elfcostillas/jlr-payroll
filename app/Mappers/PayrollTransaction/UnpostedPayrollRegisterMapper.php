@@ -39,6 +39,16 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
 
     public function getEmployeeWithDTR($period_id)
     {
+
+        /*
+       reg_ot
+reg_nd
+reg_ndot
+rd_hrs
+rd_ot
+rd_nd
+rd_ndot
+*/
         $user = Auth::user();
         $result = $this->model->select(DB::raw("
                         payroll_period.id AS period_id,
@@ -55,17 +65,17 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                         SUM(late) AS late,
                         SUM(late_eq) AS late_eq,
                         SUM(under_time) AS under_time,
-                        SUM(over_time) AS overtime,
-                        SUM(night_diff) AS night_diff,
-                        SUM(night_diff_ot) AS night_diff_ot,
+                        SUM(over_time) AS reg_ot,
+                        SUM(night_diff) AS reg_nd,
+                        SUM(night_diff_ot) AS reg_ndot,
                         SUM(ndays) AS ndays,
                         hdmf_contri,
                         monthly_allowance,
                         daily_allowance,
-                        sum(restday_hrs) as restday_hrs,
-                        sum(restday_ot) as restday_ot,
-                        sum(restday_nd) as restday_nd,
-                        sum(restday_ndot) as restday_ndot,
+                        sum(restday_hrs) as rd_hrs,
+                        sum(restday_ot) as rd_ot,
+                        sum(restday_nd) as rd_nd,
+                        sum(restday_ndot) as rd_ndot,
 
                         sum(reghol_pay) as leghol_count,
                         sum(reghol_hrs) as leghol_hrs,
@@ -74,22 +84,25 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                         sum(reghol_rdot) as leghol_rdot,
                         sum(reghol_nd) as leghol_nd,
                         sum(reghol_ndot) as leghol_ndot,
+                        sum(reghol_rdndot) as leghol_rdndot,
 
-                        sum(sphol_pay) as sphol_pay,
+                        sum(sphol_pay) as sphol_count,
                         sum(sphol_hrs) as sphol_hrs,
                         sum(sphol_ot) as sphol_ot,
                         sum(sphol_rd) as sphol_rd,
                         sum(sphol_rdot) as sphol_rdot,
                         sum(sphol_nd) as sphol_nd,
                         sum(sphol_ndot) as sphol_ndot,
+                        sum(sphol_rdndot) as sphol_rdndot,
 
-                        sum(dblhol_pay) as dblhol_pay,
+                        sum(dblhol_pay) as dblhol_count,
                         sum(dblhol_hrs) as dblhol_hrs,
                         sum(dblhol_ot) as dblhol_ot,
                         sum(dblhol_rd) as dblhol_rd,
                         sum(dblhol_rdot) as dblhol_rdot,
                         sum(dblhol_nd) as dblhol_nd,
-                        sum(dblhol_ndot) as dblhol_ndot
+                        sum(dblhol_ndot) as dblhol_ndot,
+                        sum(dblhol_rdndot) as dblhol_rdndot
                         "))
                     ->from('edtr')
                     ->join('payroll_period',function($join){

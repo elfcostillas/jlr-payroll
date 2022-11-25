@@ -132,12 +132,49 @@ class Employee
         $this->payreg['basic_pay'] = $this->repo->getBasicPay($this->data);
         $this->rates['monthly_credit'] = $this->repo->getMonthlyCredit($this->data);
         $this->setPayRates();
+
+        /* Transfer employee to payeg */
         foreach($this->payreg as $key => $value){
             if(array_key_exists($key,$this->data->toArray())){
                 $this->payreg[$key] = $this->data[$key];
             }
         }
         $this->computeContribution($period);
+
+        /*
+          "reg_ot" => "10.00"                          rate 1.25
+            "reg_nd" => "7.00"                      rate * .10
+            "reg_ndot" => "11.00"
+            "rd_hrs" => "12.00"
+            "rd_ot" => "13.00"
+            "rd_nd" => "14.00"
+            "rd_ndot" => "15.00"
+            "leghol_count" => "16.00"
+            "leghol_hrs" => "17.00"
+            "leghol_ot" => "18.00"
+            "leghol_nd" => "21.00"
+            "leghol_rd" => "19.00"
+            "leghol_rdot" => "20.00"
+            "leghol_ndot" => "22.00"
+            "leghol_rdndot" => "23.00"
+            "sphol_count" => "24.00"
+            "sphol_hrs" => "25.00"
+            "sphol_ot" => "26.00"
+            "sphol_nd" => "29.00"
+            "sphol_rd" => "27.00"
+            "sphol_rdot" => "28.00"
+            "sphol_ndot" => "30.00"
+            "sphol_rdndot" => "31.00"
+            "dblhol_count" => "32.00"
+            "dblhol_hrs" => "33.00"
+            "dblhol_ot" => "34.00"
+            "dblhol_nd" => "37.00"
+            "dblhol_rd" => "35.00"
+            "dblhol_rdot" => "36.00"
+            "dblhol_ndot" => "38.00"
+            "dblhol_rdndot" => "39.00"
+        */
+
 
         /*** Overtime ***/
         // if($this->payreg['overtime']>0)

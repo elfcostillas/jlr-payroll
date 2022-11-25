@@ -115,12 +115,12 @@
                                     
                                         if(value.time_in!=null){
                                             value.time_in = pad(value.time_in,4);
-                                            value.time_in = (value.time_in.includes(':')) ? value.time_in : value.time_in.substring(0,2)+':'+ valuevalue.time_in.substring(2,4);
+                                            value.time_in = (value.time_in.includes(':')) ? value.time_in : value.time_in.substring(0,2)+':'+ value.time_in.substring(2,4);
                                         }
 
-                                        if(data.time_out!=null){
+                                        if(value.time_out!=null){
                                             value.time_out = pad(value.time_out,4);
-                                            value.time_out = (value.time_out.includes(':')) ? value.time_out : data.time_out.substring(0,2)+':'+ value.time_out.substring(2,4);
+                                            value.time_out = (value.time_out.includes(':')) ? value.time_out : value.time_out.substring(0,2)+':'+ value.time_out.substring(2,4);
                                         }
 
                                         if(value.ot_in!=null){
@@ -174,18 +174,26 @@
                                     reghol_rd : { type:'number', },
                                     reghol_rdot : { type:'number', },
                                     reghol_nd : { type:'number', },
+                                    reghol_ndot: { type:'number', },
                                     sphol_pay : { type:'number', },
                                     sphol_hrs : { type:'number', },
                                     sphol_ot : { type:'number', },
                                     sphol_rd : { type:'number', },
                                     sphol_rdot : { type:'number', },
                                     sphol_nd : { type:'number', },
+                                    sphol_ndot : { type:'number', },
                                     dblhol_pay : { type:'number', },
                                     dblhol_hrs : { type:'number', },
                                     dblhol_ot : { type:'number', },
                                     dblhol_rd : { type:'number', },
                                     dblhol_rdot : { type:'number', },
                                     dblhol_nd : { type:'number', },
+                                    dblhol_ndot : { type:'number', },
+
+                                    reghol_rdndot : { type:'number', },
+                                    sphol_rdndot : { type:'number', },
+                                    dblhol_rdndot  : { type:'number', },
+
                                     holiday_type : { type:'string', editable : false }
                                 }
                             }
@@ -858,7 +866,19 @@
                         }, 
                     },
                     {
-                        title : '-',
+                        title : 'Reg Hol RD ND OT',
+                        field : 'reghol_rdndot',
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    },
+                    {
+                        title : '-', 
                         width : 15
                     },
                     {
@@ -934,7 +954,31 @@
                         }, 
                     }, 
                     {
-                        title : '-',
+                        title : 'SP Hol ND OT',
+                        field : 'sphol_ndot',
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    }, 
+                    {
+                        title : 'SP Hol RD ND OT',
+                        field : 'sphol_rdndot',
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    }, 
+                    {
+                        title : '-', 
                         width : 15
                     }, {
                         title : 'DBL Hol Pay',
@@ -1008,6 +1052,31 @@
                             
                         }, 
                     }, 
+                    {
+                        title : 'DBL Hol ND OT',
+                        field : 'dblhol_ndot',
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    }, 
+                    {
+                        title : 'DBL Hol RD ND OT',
+                        field : 'dblhol_rdndot',
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    }, 
+                   
                   
                 ],
                 
