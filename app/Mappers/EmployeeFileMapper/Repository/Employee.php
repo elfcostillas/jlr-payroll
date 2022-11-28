@@ -14,6 +14,7 @@ class Employee
         'biometric_id' => null,
         'basic_pay' =>null,
         'basic_salary' => null,
+        'daily_rate' => null,
         'is_daily' => null,
         'ndays' => 0.00,
         'pay_type' => null,
@@ -130,8 +131,11 @@ class Employee
     {   
        
         $this->payreg['basic_pay'] = $this->repo->getBasicPay($this->data);
-        $this->rates['monthly_credit'] = $this->repo->getMonthlyCredit($this->data);
         $this->setPayRates();
+        $this->payreg['daily_rate'] = $this->rates['daily_rate'];
+
+        $this->rates['monthly_credit'] = $this->repo->getMonthlyCredit($this->data);
+        
 
         /* Transfer employee to payeg */
         foreach($this->payreg as $key => $value){
@@ -139,24 +143,66 @@ class Employee
                 $this->payreg[$key] = $this->data[$key];
             }
         }
+        //dd($this->payreg);
         $this->computeContribution($period);
+        //dd($this->rates['hourly_rate']);
+        /* Regular Days */
+        $this->payreg['reg_ot_amount'] = round(($this->rates['hourly_rate'] * 1.25) * $this->payreg['reg_ot'],2);
+        $this->payreg['reg_nd_amount'] = round(($this->rates['hourly_rate'] * 0.1) * $this->payreg['reg_nd'],2);
+        $this->payreg['reg_ndot_amount'] = round(($this->rates['hourly_rate'] * 0.1 * 1.25) * $this->payreg['reg_ndot'],2);
 
+        /*Rest Day*/
+        $this->payreg['rd_hrs_amount'] = round(($this->rates['hourly_rate'] * 1.3) * $this->payreg['rd_hrs'],2);
+        $this->payreg['rd_ot_amount'] = round(($this->rates['hourly_rate'] * 1.3 * 1.3) * $this->payreg['rd_ot'],2);
+        $this->payreg['rd_nd_amount'] = round(($this->rates['hourly_rate'] * 1.3 * 0.1) * $this->payreg['rd_nd'],2);
+        $this->payreg['rd_ndot_amount'] = round(($this->rates['hourly_rate'] * 1.3 * 0.1 * 1.3) * $this->payreg['rd_ndot'],2);
+
+        /* Legal Hours */
+        $this->payreg['leghol_count_amount'] =  round($this->rates['daily_rate'] * $this->payreg['leghol_count'],2);
+        $this->payreg['leghol_hrs_amount'] = round($this->rates['hourly_rate'] * $this->payreg['leghol_hrs'],2);
+        $this->payreg['leghol_ot_amount'] = round($this->rates['hourly_rate'] * 2 * 1.3 * $this->payreg['leghol_ot'],2);
+        $this->payreg['leghol_nd_amount'] = round($this->rates['hourly_rate'] * 2 * 0.1 * $this->payreg['leghol_nd'],2);
+        $this->payreg['leghol_rd_amount'] = round($this->rates['hourly_rate'] * 2.6 * $this->payreg['leghol_rdot'],2);
+        $this->payreg['leghol_rdot_amount'] = round($this->rates['hourly_rate'] * 2.6 * 1.3 * $this->payreg['leghol_rdot'],2);
+        $this->payreg['leghol_ndot_amount'] =  round($this->rates['hourly_rate'] * 2 * 0.1 * 1.3 * $this->payreg['leghol_ndot'],2);
+        $this->payreg['leghol_rdndot_amount'] =  round($this->rates['hourly_rate'] * 2.6 * 0.1 * 1.3 * $this->payreg['leghol_ndot'],2);
+
+        $this->payreg['sphol_count_amount'] = round($this->rates['daily_rate'] * $this->payreg['sphol_count'],2);
+        $this->payreg['sphol_hrs_amount'] = round($this->rates['hourly_rate'] * 0.3,2);
+        $this->payreg['sphol_ot_amount'] = round($this->rates['hourly_rate'] * 1.3 * 1.3 * $this->payreg['sphol_ot'],2);
+        $this->payreg['sphol_nd_amount'] = round($this->rates['hourly_rate'] * 1.3 * 0.1 * $this->payreg['sphol_nd'],2);
+        $this->payreg['sphol_rd_amount'] = round($this->rates['hourly_rate'] * 0.5 * $this->payreg['sphol_rd'],2);
+        $this->payreg['sphol_rdot_amount'] = round($this->rates['hourly_rate'] * 1.5 * 1.3 * $this->payreg['sphol_rdot'],2);
+        $this->payreg['sphol_ndot_amount'] = round($this->rates['hourly_rate'] * $this->payreg['sphol_ndot'],2);
+        $this->payreg['sphol_rdndot_amount'] = round($this->rates['hourly_rate'] * 1.5 * 0.1 * 1.3 * $this->payreg['sphol_rdndot'],2);
+
+        $this->payreg['dblhol_count_amount'] = round($this->rates['daily_rate'] * 2 * $this->payreg['dblhol_count'],2);
+        $this->payreg['dblhol_hrs_amount'] = round($this->rates['hourly_rate'] * $this->payreg['dblhol_hrs'],2);
+
+        $this->payreg['dblhol_ot_amount'] = round($this->rates['hourly_rate'] * 3 * 1.3 * $this->payreg['dblhol_ot'],2);
+        $this->payreg['dblhol_nd_amount'] = round($this->rates['hourly_rate'] * 3 * 0.1 * $this->payreg['dblhol_nd'],2);
+        $this->payreg['dblhol_rd_amount'] = round($this->rates['hourly_rate'] * 3.9 * $this->payreg['dblhol_rd'],2);
+        $this->payreg['dblhol_rdot_amount'] = round($this->rates['hourly_rate'] * 3.9 * 1.3 * $this->payreg['dblhol_rdot'],2);
+        $this->payreg['dblhol_ndot_amount'] = round($this->rates['hourly_rate'] * 3 * 1.1 * 1.3 * $this->payreg['dblhol_ndot'],2);
+        $this->payreg['dblhol_rdndot_amount'] = round($this->rates['hourly_rate'] * 3.9 * 1.1 * 1.3 * $this->payreg['dblhol_rdndot'],2);
+        
         /*
           "reg_ot" => "10.00"                          rate 1.25
             "reg_nd" => "7.00"                      rate * .10
-            "reg_ndot" => "11.00"
-            "rd_hrs" => "12.00"
-            "rd_ot" => "13.00"
-            "rd_nd" => "14.00"
-            "rd_ndot" => "15.00"
-            "leghol_count" => "16.00"
-            "leghol_hrs" => "17.00"
-            "leghol_ot" => "18.00"
-            "leghol_nd" => "21.00"
-            "leghol_rd" => "19.00"
-            "leghol_rdot" => "20.00"
+            "reg_ndot" => "11.00"                   1.1 * 1.25
+            "rd_hrs" => "12.00"                     1.3
+            "rd_ot" => "13.00"                      1.3 * 1.3
+            "rd_nd" => "14.00"          1.3 * 1.1
+            "rd_ndot" => "15.00"        1.3 * 1.1 * 1.3
+            "leghol_count" => "16.00"       
+            "leghol_hrs" => "17.00"     1
+            "leghol_ot" => "18.00"       2 * 1.3 
+            "leghol_nd" => "21.00"             2 * 1.1
+            "leghol_rd" => "19.00"          2.6
+            "leghol_rdot" => "20.00"            
             "leghol_ndot" => "22.00"
             "leghol_rdndot" => "23.00"
+
             "sphol_count" => "24.00"
             "sphol_hrs" => "25.00"
             "sphol_ot" => "26.00"
@@ -165,6 +211,7 @@ class Employee
             "sphol_rdot" => "28.00"
             "sphol_ndot" => "30.00"
             "sphol_rdndot" => "31.00"
+
             "dblhol_count" => "32.00"
             "dblhol_hrs" => "33.00"
             "dblhol_ot" => "34.00"
@@ -229,6 +276,7 @@ class Employee
             $this->payreg['hdmf_contri'] = $this->data['hdmf_contri'];
             $this->payreg['sss_prem'] = 0.00;
             $this->payreg['phil_prem'] = 0.00;
+
         }else{
             $this->payreg['hdmf_contri'] = 0.00;
             $this->payreg['sss_prem'] = ($this->data['deduct_sss']=='Y') ?  $this->computeSSSPrem() : 0.00;
@@ -242,7 +290,7 @@ class Employee
             $this->rates["daily_rate"] = $this->data['basic_salary'];
             $this->rates["hourly_rate"] = (float) round($this->rates['daily_rate']/8,4);
         }else{
-            $this->rates["daily_rate"] = (float) round(($this->data['basic_salary']*12)/314,4);
+            $this->rates["daily_rate"] = (float) round(($this->data['basic_salary']*12)/313,4);
             $this->rates["hourly_rate"] = (float) round($this->rates['daily_rate']/8,4);
         }
     }

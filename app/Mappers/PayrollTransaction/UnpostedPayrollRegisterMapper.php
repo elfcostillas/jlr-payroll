@@ -722,6 +722,34 @@ WHERE period_id = 1 AND total_amount > 0;*/
         return $result;
     }
 
+    public function getColHeaders()
+    {   
+        //SELECT var_name,col_label FROM payreg_header;
+        $result = $this->model->select('var_name','col_label')->from('payreg_header');
+        return $result->get();
+
+    }
+
+    public function getDeductionLabel($period)
+    {
+        //dd($period->id);
+        $qry = "SELECT DISTINCT deduction_id FROM (
+            SELECT * FROM unposted_fixed_deductions
+            UNION ALL 
+            SELECT * FROM unposted_installments
+            UNION ALL
+            SELECT * FROM unposted_onetime_deductions
+        ) AS deduction_types where period_id = '".$period->id."';";
+
+        $result = DB::select($qry);
+            //dd(collect($deductions)->pluck('deduction_id'))
+        return $result;
+
+
+    }
+
+
+
 }
 
 

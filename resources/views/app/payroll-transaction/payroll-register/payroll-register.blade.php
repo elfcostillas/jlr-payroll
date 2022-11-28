@@ -108,14 +108,20 @@
     </div> --}}
     <?php
         $colspan=4;
+       
     ?>
     <div id="" >
-        <table style="border-collapse:collapse;" border=1 >
+        <table style="border-collapse:collapse;white-space:nowrap" border=1 >
             <thead>
                 <tr>
-                        <th> Bioc ID</th>
-                        <th>Name</th>
-                        <th>Basic Rate</th>
+                        <th style="padding : 0px 4px;" > Bioc ID</th>
+                        <th style="padding : 0px 4px;" >Name</th>
+                        <th style="padding : 0px 4px;" >Basic Rate</th>
+                        <th style="padding : 0px 4px;" >Daily Rate</th>
+                        @foreach($headers as $key => $val)
+                            <th style="padding : 0px 4px;" >{{ $labels[$key] }}</th>
+                            @php $colspan++; @endphp
+                        @endforeach
                 </tr>
             </thead>
             @foreach($data as $location)
@@ -133,34 +139,13 @@
                             @foreach($department->employees as $employee)
                                 <?php//  dd($employee); ?>
                                 <tr style="vertical-align: top;">
-                                    <td> {{ $employee->biometric_id }} </td> <td> {{ $employee->employee_name }} </td>
-                                    <td>
-                                        @foreach($employee->basicEarnings as $basic)
-                                            <span style="display:inline-block;width:200px;"> {{ $basic->name }} </span> <span style="display:inline-block;width:90px;text-align:right;"> {{ $basic->hours }} </span><span style="display:inline-block;width:110px;text-align:right;"> {{ number_format($basic->amount,2) }} </span><br>    
-                                            
-                                        @endforeach
-
-                                        @foreach($employee->otherEarnings as $other)
-                                            <span style="display:inline-block;width:200px;"> {{ $other->description }} </span> <span style="display:inline-block;width:90px;text-align:right;"> </span><span style="display:inline-block;width:110px;text-align:right;"> {{ number_format($other->amount,2) }} </span><br>    
-                                            
-                                        @endforeach
-                                    </td>
-                                    <td>
-                                        @foreach($employee->gov_deductions as $key => $prem)
-                                            @if($prem>0)
-                                            <span style="display:inline-block;width:200px;"> {{ $key }} </span> <span style="display:inline-block;width:90px;text-align:right;"> </span><span style="display:inline-block;width:110px;text-align:right;"> {{ number_format($prem,2) }} </span><br>    
-                                            @endif
-                                        @endforeach
-                                        @foreach($employee->deductions as $deduction)
-                                            <span style="display:inline-block;width:200px;"> {{ $deduction->description }} </span> <span style="display:inline-block;width:90px;text-align:right;"> </span><span style="display:inline-block;width:110px;text-align:right;"> {{ number_format($deduction->amount,2) }} </span><br>
-                                        @endforeach
-                                        @foreach($employee->loans as $loan)
-                                            <span style="display:inline-block;width:200px;"> {{ $loan->description }} </span> <span style="display:inline-block;width:90px;text-align:right;"> </span><span style="display:inline-block;width:110px;text-align:right;"> {{ number_format($loan->amount,2) }} </span><br>    
-                                        @endforeach
-                                        @foreach($employee->absences as $absences)
-                                            <span style="display:inline-block;width:200px;"> {{ $absences->name }} </span> <span style="display:inline-block;width:90px;text-align:right;"> {{ $absences->hours }} </span><span style="display:inline-block;width:110px;text-align:right;"> {{ number_format($absences->amount,2) }} </span><br>    
-                                        @endforeach
-                                    </td>
+                                    <td> {{ $employee->biometric_id }} </td> 
+                                    <td> {{ $employee->employee_name }} </td> 
+                                    <td style="text-align:right;"> {{ number_format($employee->basic_salary,2) }}</td>
+                                    <td style="text-align:right;"> {{ number_format($employee->daily_rate,2) }}</td>
+                                    @foreach($headers as $key => $val)
+                                        <td style="text-align:right;">{{ $employee->$key}}</td>
+                                    @endforeach
                                 </tr>
                             @endforeach
                         @endforeach
@@ -168,7 +153,7 @@
             @endforeach
         </table>
         @if(count($no_pay)>0)
-        <table border="1" style="border-collapse:collapse;margin-top : 12px">
+        <table border="1" style="border-collapse:collapse;margin-top : 12px;">
             <tr>
                 <td colspan="2"> Employees not in computation</td>
             </tr>
@@ -181,6 +166,7 @@
                 <tr>
                     <td> {{ $e->biometric_id }}</td>
                     <td> {{ $e->employee_name }}</td>
+                    
                 </tr>
             @endforeach
         </table>
