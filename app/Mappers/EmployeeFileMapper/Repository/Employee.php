@@ -168,7 +168,7 @@ class Employee
         $this->payreg['leghol_rdndot_amount'] =  round($this->rates['hourly_rate'] * 2.6 * 0.1 * 1.3 * $this->payreg['leghol_ndot'],2);
 
         $this->payreg['sphol_count_amount'] = round($this->rates['daily_rate'] * $this->payreg['sphol_count'],2);
-        $this->payreg['sphol_hrs_amount'] = round($this->rates['hourly_rate'] * 0.3,2);
+        $this->payreg['sphol_hrs_amount'] = round($this->rates['hourly_rate'] * 0.3 * $this->payreg['sphol_hrs'],2);
         $this->payreg['sphol_ot_amount'] = round($this->rates['hourly_rate'] * 1.3 * 1.3 * $this->payreg['sphol_ot'],2);
         $this->payreg['sphol_nd_amount'] = round($this->rates['hourly_rate'] * 1.3 * 0.1 * $this->payreg['sphol_nd'],2);
         $this->payreg['sphol_rd_amount'] = round($this->rates['hourly_rate'] * 0.5 * $this->payreg['sphol_rd'],2);
@@ -278,6 +278,7 @@ class Employee
             $this->payreg['phil_prem'] = 0.00;
 
         }else{
+            //dd($period->period_type);
             $this->payreg['hdmf_contri'] = 0.00;
             $this->payreg['sss_prem'] = ($this->data['deduct_sss']=='Y') ?  $this->computeSSSPrem() : 0.00;
             $this->payreg['phil_prem'] = ($this->data['deduct_phic']=='Y') ?  round(($this->rates['monthly_credit'] * ($this->philrate/100))/2,2) : 0.00;
@@ -301,7 +302,8 @@ class Employee
 
     public function computeSSSPrem()
     {
-        $prem = DB::table('hris_sss_table_2021')->select('ee_share')->whereRaw($this->rates['monthly_credit']." between range1 and range2")->first();
+        $prem = DB::table('hris_sss_table_2021')->select('ee_share')
+                ->whereRaw($this->rates['monthly_credit']." between range1 and range2")->first();
         return (float)$prem->ee_share;
     }
 

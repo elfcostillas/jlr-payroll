@@ -39,7 +39,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
             ->distinct()
             ->get();
             */
-            $empWithPunch = $this->model->select('employees.biometric_id','schedule_id')->from('employees')
+            $empWithPunch = $this->model->select('employees.biometric_id','schedule_id','schedule_sat')->from('employees')
             ->leftJoin('work_schedules_default','employees.dept_id','=','work_schedules_default.dept_id')
             ->whereIn('pay_type',[1,2])
             ->where('exit_status',1)
@@ -73,7 +73,20 @@ class DailyTimeRecordMapper extends AbstractMapper {
         foreach($empWithPunch as $emp)
         {
             foreach ($period as $date) {
-                array_push($blank_dtr,['biometric_id' => $emp->biometric_id, 'dtr_date' => $date->format('Y-m-d'),'schedule_id' => $emp->schedule_id]);
+                switch ($date->format('D')){
+                    case 'Mon': case 'Tue': case 'Wed': case 'Thu': case 'Fri':
+                            $sched = $emp->schedule_id;
+                        break;
+                        
+                    case 'Sat' :
+                            $sched = $emp->schedule_sat;
+                        break;
+                    
+                    default : 
+                            $sched = 0;
+                        break;
+                }
+                array_push($blank_dtr,['biometric_id' => $emp->biometric_id, 'dtr_date' => $date->format('Y-m-d'),'schedule_id' => $sched ]);
             }
            
         }
@@ -249,13 +262,13 @@ class DailyTimeRecordMapper extends AbstractMapper {
                             ->from('edtr')
                             ->where('edtr.biometric_id',$biometric_id)
                             ->join('payroll_period',function($join){
-                            $join->whereRaw('dtr_date between payroll_period.date_from and payroll_period.date_to');
+                                $join->whereRaw('dtr_date between payroll_period.date_from and payroll_period.date_to');
                             })
                             ->leftJoin('employees','employees.biometric_id','=','edtr.biometric_id')
 
                             ->leftJoinSub($holidays,'holidays',function($join) { //use ($type)
-                            $join->on('holidays.location_id','=','employees.location_id');
-                            $join->on('holidays.holiday_date','=','edtr.dtr_date');
+                                $join->on('holidays.location_id','=','employees.location_id');
+                                $join->on('holidays.holiday_date','=','edtr.dtr_date');
                             })
                             ->leftJoin('work_schedules','schedule_id','=','work_schedules.id')
                             ->where('payroll_period.id',$period_id)
@@ -361,8 +374,6 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
     public function getSemiDTRforComputation($biometric_id,$period_id)
     {
-
-
         $holidays = $this->model->select(DB::raw("holidays.*,location_id"))
                             ->from('holidays')
                             ->join('holiday_location','holidays.id','=','holiday_location.holiday_id')

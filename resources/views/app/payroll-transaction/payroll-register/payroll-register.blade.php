@@ -119,7 +119,19 @@
                         <th style="padding : 0px 4px;" >Basic Rate</th>
                         <th style="padding : 0px 4px;" >Daily Rate</th>
                         @foreach($headers as $key => $val)
-                            <th style="padding : 0px 4px;" >{{ $labels[$key] }}</th>
+                            <th style="padding : 0px 4px;min-width:100px;" >{{ $labels[$key] }}</th>
+                            @php $colspan++; @endphp
+                        @endforeach
+                        <th style="padding : 0px 4px;" >SSS Premium</th>
+                        <th style="padding : 0px 4px;" >PhilHealt Premium</th>
+                        <th style="padding : 0px 4px;" >PAG IBIG Contri</th>  @php $colspan+=3; @endphp
+                        @foreach($govLoan as $glabel)
+                            <th style="padding : 0px 4px;min-width:100px;" >{{ $glabel->description }}</th>
+                            @php $colspan++; @endphp
+                        @endforeach
+                        
+                        @foreach($deductionLabel as $label)
+                            <th style="padding : 0px 4px;min-width:100px;" >{{ $label->description }}</th>
                             @php $colspan++; @endphp
                         @endforeach
                 </tr>
@@ -137,14 +149,31 @@
                                 <td colspan={{$colspan}}  class="department"> {{ $department->dept_name }} </td>
                             </tr>
                             @foreach($department->employees as $employee)
-                                <?php//  dd($employee); ?>
+                                <?php  //dd($employee->gov_deductions); ?>
                                 <tr style="vertical-align: top;">
-                                    <td> {{ $employee->biometric_id }} </td> 
+                                    <th> {{ $employee->biometric_id }} </th> 
                                     <td> {{ $employee->employee_name }} </td> 
                                     <td style="text-align:right;"> {{ number_format($employee->basic_salary,2) }}</td>
                                     <td style="text-align:right;"> {{ number_format($employee->daily_rate,2) }}</td>
                                     @foreach($headers as $key => $val)
-                                        <td style="text-align:right;">{{ $employee->$key}}</td>
+                                        <td style="text-align:right;">{{ ($employee->$key > 0) ? number_format($employee->$key,2) : '' }}</td>
+                                    @endforeach
+                                    {{-- @foreach($employee->deductions as $ded)
+                                        @php
+                                            dd($ded);
+                                        @endphp
+
+                                    @endforeach --}}
+                                        <td style="text-align:right;" >{{ ($employee->gov_deductions['SSS Premium']>0) ? number_format($employee->gov_deductions['SSS Premium'],2) : ''; }}</td>
+                                        <td style="text-align:right;" >{{ ($employee->gov_deductions['PhilHealt Premium']>0) ? number_format($employee->gov_deductions['PhilHealt Premium'],2) : ''; }}</td>
+                                        <td style="text-align:right;" >{{ ($employee->gov_deductions['PAG IBIG Contri']>0) ? number_format($employee->gov_deductions['PAG IBIG Contri'],2) : ''; }}</td>
+
+                                    @foreach($govLoan as $gkey => $glabel)
+                                       
+                                        <td style="text-align:right;" >{{ (array_key_exists($glabel->id,$employee->loans)) ? number_format($employee->loans[$glabel->id],2) : ''; }}</td>
+                                    @endforeach
+                                    @foreach($deductionLabel as $key => $label)
+                                        <td style="text-align:right;" >{{ (array_key_exists($label->id,$employee->deductions)) ? number_format($employee->deductions[$label->id],2) : ''; }}</td> 
                                     @endforeach
                                 </tr>
                             @endforeach

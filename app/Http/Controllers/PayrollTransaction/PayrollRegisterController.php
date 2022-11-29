@@ -130,26 +130,26 @@ class PayrollRegisterController extends Controller
         $colHeaders = $this->unposted->getColHeaders();
 
         $deductions = $this->unposted->getDeductionLabel($period);
+        $gov = $this->unposted->getGovLoanLabel($period);
+
         $label = [];
+
         foreach($headers as $key => $value){
             if($value==0){
                 unset($headers[$key]);
             }
-            
         }
-
-        //dd(collect($deductions)->pluck('deduction_id'));
 
         foreach($colHeaders  as  $value ){
             //dd($value->var_name,$vaue->col_label);
             $label[$value->var_name] = $value->col_label;
         }
-
+     
         //dd($label);
 
         //dd($colHeaders);
         //dd($headers);
         
-        return view('app.payroll-transaction.payroll-register.payroll-register',['data' => $collections,'no_pay' => $noPay,'headers' => $headers , 'labels' => $label ]);
+        return view('app.payroll-transaction.payroll-register.payroll-register',['data' => $collections,'no_pay' => $noPay,'headers' => $headers , 'labels' => $label,'deductionLabel' => $deductions,'govLoan' => $gov ]);
     }
 }

@@ -666,6 +666,8 @@ WHERE period_id = 1 AND total_amount > 0;*/
 
     public function getDeductions($biometric_id,$period_id)
     {   
+        $ded_array = [];
+
         $onetime = DB::table("unposted_onetime_deductions")->select('deduction_type','amount')->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
         $fixed = DB::table("unposted_fixed_deductions")->select('deduction_type','amount')->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
         $install = DB::table("unposted_installments")->select('deduction_type','amount')->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]])
@@ -676,7 +678,20 @@ WHERE period_id = 1 AND total_amount > 0;*/
                             $join->on('deductions.deduction_type','=','deduction_types.id');
                         })->orderBy('deduction_type')->get();
 
-        return $deductions;
+        //return $deductions;
+        foreach($deductions as $deduction){
+            //$ded_array[$deduction->deduction_type] 
+            if(array_key_exists($deduction->deduction_type,$ded_array)){
+                $ded_array[$deduction->deduction_type] += $deduction->amount;
+            }else{
+                $ded_array[$deduction->deduction_type] = 0;
+                $ded_array[$deduction->deduction_type] += $deduction->amount;
+            }
+        }
+
+        return $ded_array;
+
+        
     }
 
     public function getGovLoans($biometric_id,$period_id)
@@ -685,14 +700,25 @@ WHERE period_id = 1 AND total_amount > 0;*/
         SELECT description,amount FROM unposted_loans INNER JOIN loan_types ON deduction_type = loan_types.id
         WHERE period_id = 1 AND biometric_id = 847
         */
-        $loan = DB::table('unposted_loans')->select('description','amount')
+        $govLoan = [];
+        $loan = DB::table('unposted_loans')->select('id','description','amount')
         ->join('loan_types','deduction_type','=','loan_types.id')
         ->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]])
         ->orderBy('deduction_type')->get();
-        // if($biometric_id==847){
-        //     dd($loan);
-        // }
-        return $loan;
+
+        foreach($loan as $l)
+        {
+            if(array_key_exists($l->id,$govLoan)){
+                $govLoan[$l->id] += $l->amount;
+            }else{
+                $govLoan[$l->id] = 0;
+                $govLoan[$l->id] += $l->amount;
+            }
+        }
+       
+        return $govLoan;
+        
+        //return $loan;
     }
 
     public function semiEmployeeNoPayroll($period_id)
@@ -733,7 +759,7 @@ WHERE period_id = 1 AND total_amount > 0;*/
     public function getDeductionLabel($period)
     {
         //dd($period->id);
-        $qry = "SELECT DISTINCT deduction_id FROM (
+        $qry = "SELECT DISTINCT deduction_type FROM (
             SELECT * FROM unposted_fixed_deductions
             UNION ALL 
             SELECT * FROM unposted_installments
@@ -743,9 +769,25 @@ WHERE period_id = 1 AND total_amount > 0;*/
 
         $result = DB::select($qry);
             //dd(collect($deductions)->pluck('deduction_id'))
-        return $result;
+        
+            //dd(collect($result)->pluck('deduction_id'));
+        //SELECT id,description FROM deduction_types WHERE id IN ();
 
+        $dedLabel = $this->model->select('id','description')->from('deduction_types')->whereIn('id',collect($result)->pluck('deduction_type'));
 
+        return $dedLabel->get();
+    }
+
+    public function getGovLoanLabel($period){
+        //SELECT DISTINCT deduction_type FROM unposted_loans WHERE period_id = 2
+        $qry = "SELECT DISTINCT deduction_type FROM unposted_loans WHERE period_id = ".$period->id;
+
+        $result = DB::select($qry); //SELECT id,loan_code FROM loan_types WHERE id IN ();
+        
+        $govLabel = $this->model->select('id','description')->from('loan_types')->whereIn('id',collect($result)->pluck('deduction_type'));
+
+        //dd($govLabel->get());
+        return $govLabel->get();
     }
 
 
