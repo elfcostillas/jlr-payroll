@@ -28,8 +28,20 @@
                 z-index: 3;
             }
 
+            thead th:nth-child(2) {
+                left: 100px;
+                z-index: 3;
+                
+            }
+
             tbody th:first-child {
                 left: 0;
+                z-index: 1;
+               
+            } 
+          
+            tbody th:nth-child(2) {
+                left: 100px;
                 z-index: 1;
                 
             } 
@@ -40,6 +52,7 @@
                 top: 0;
                 background: #ebecf0;
                 color: #000;
+                
             
             }
 
@@ -49,19 +62,20 @@
                 left: 0;
                 background: #fff; /* dont remove */
                 /* border-right: 1px solid #CCC; */
+                vertical-align: middle;
                 
             }
 
             .location {
-                background-color:  #0096FF;
+                /* background-color:  #0096FF; */
             }
 
             .division {
-                background-color:  #FFFF00;
+                /* background-color:  #FFFF00; */
             }
 
             .department {
-                background-color:  #BEBEBE;
+                /* background-color:  #BEBEBE; */
             }
 
             td {
@@ -107,19 +121,45 @@
         </table>
     </div> --}}
     <?php
-        $colspan=4;
-       
+        $colspan=18;
+       //ndays,basic_pay,late_eq,late_eq_amount,under_time,under_time_amount
     ?>
     <div id="" >
         <table style="border-collapse:collapse;white-space:nowrap" border=1 >
             <thead>
                 <tr>
-                        <th style="padding : 0px 4px;" > Bioc ID</th>
-                        <th style="padding : 0px 4px;" >Name</th>
-                        <th style="padding : 0px 4px;" >Basic Rate</th>
-                        <th style="padding : 0px 4px;" >Daily Rate</th>
+                        <th style="padding : 0px 4px;min-width: 100px" > Bio ID</th>
+                        <th style="padding : 0px 4px; width : 240px;" >Name</th>
+                        <th style="padding : 0px 4px;min-width:110px;" >Basic Rate</th>
+                        <th style="padding : 0px 4px;min-width:110px;" >Daily Rate</th>
+                        <th style="padding : 0px 4px;min-width:110px;" >No Days</th>
+                        <th style="padding : 0px 4px;min-width:110px;" >Basic Pay</th>
+                        
+                        <th style="padding : 0px 4px;min-width:110px;" >Daily Allowance</th>
+                        <th style="padding : 0px 4px;min-width:110px;" >Semi Monthly Allowance</th>
+
+                        <th style="padding : 0px 4px;min-width:110px;" >Late (Hrs)</th>
+                        <th style="padding : 0px 4px;min-width:110px;" >Late Amount</th>
+
+                        <th style="padding : 0px 4px;min-width:110px;" >Undertime (Hrs)</th>
+                        <th style="padding : 0px 4px;min-width:110px;" >Undertime Amount</th>
+
+                        <th style="padding : 0px 4px;min-width:110px;" >VL</th>
+                        <th style="padding : 0px 4px;min-width:110px;" >VL Amount</th>
+
+                        <th style="padding : 0px 4px;min-width:110px;" >SL</th>
+                        <th style="padding : 0px 4px;min-width:110px;" >SL Amount</th>
+
+                        <th style="padding : 0px 4px;min-width:110px;" >Absent</th>
+                        <th style="padding : 0px 4px;min-width:110px;" >Absent Amount</th>
+
+
                         @foreach($headers as $key => $val)
                             <th style="padding : 0px 4px;min-width:100px;" >{{ $labels[$key] }}</th>
+                            @php $colspan++; @endphp
+                        @endforeach
+                        @foreach($compensation as $comp)
+                            <th style="padding : 0px 4px;min-width:100px;" >{{ $comp->description }}</th>
                             @php $colspan++; @endphp
                         @endforeach
                         <th style="padding : 0px 4px;" >SSS Premium</th>
@@ -149,14 +189,40 @@
                                 <td colspan={{$colspan}}  class="department"> {{ $department->dept_name }} </td>
                             </tr>
                             @foreach($department->employees as $employee)
-                                <?php  //dd($employee->gov_deductions); ?>
+                               {{-- @php dd($employee->absences); @endphp --}}
                                 <tr style="vertical-align: top;">
-                                    <th> {{ $employee->biometric_id }} </th> 
-                                    <td> {{ $employee->employee_name }} </td> 
+                                    <th style+="width:120px;"> {{ $employee->biometric_id }} </th> 
+                                    <th style="text-align:left; width : 240px;"> {{ $employee->employee_name }} </th> 
                                     <td style="text-align:right;"> {{ number_format($employee->basic_salary,2) }}</td>
                                     <td style="text-align:right;"> {{ number_format($employee->daily_rate,2) }}</td>
+
+                                    <td style="text-align:right;"> {{ number_format($employee->ndays,2) }}</td>
+                                    <td style="text-align:right;"> {{ number_format($employee->basic_pay,2) }}</td>
+
+                                    <td style="text-align:right;"> {{ ($employee->daily_allowance>0) ? number_format($employee->daily_allowance,2) : ''; }}</td>
+                                    <td style="text-align:right;"> {{ ($employee->payrollregister_unposted_s>0) ? number_format($employee->payrollregister_unposted_s,2) : ''; }}</td>
+
+                                    <td style="text-align:right;"> {{ ($employee->late_eq>0) ? number_format($employee->late_eq,2) : ''; }}</td>
+                                    <td style="text-align:right;"> {{ ($employee->late_eq_amount>0) ? number_format($employee->late_eq_amount,2) : ''; }}</td>
+                                    <td style="text-align:right;"> {{ ($employee->under_time>0) ? number_format($employee->under_time,2) : ''; }}</td>
+                                    <td style="text-align:right;"> {{ ($employee->under_time_amount>0) ? number_format($employee->under_time_amount,2) : ''; }}</td>
+                                
+                                    <td style="text-align:right;"> {{ ($employee->vl_wpay>0) ? number_format($employee->vl_wpay,2) : ''; }}</td>
+                                    <td style="text-align:right;"> {{ ($employee->vl_wpay_amount>0) ? number_format($employee->vl_wpay_amount,2) : ''; }}</td>
+                                    
+                                    <td style="text-align:right;"> {{ ($employee->sl_wpay>0) ? number_format($employee->sl_wpay,2) : ''; }}</td>
+                                    <td style="text-align:right;"> {{ ($employee->sl_wpay_amount>0) ? number_format($employee->sl_wpay_amount,2) : ''; }}</td>
+                                    
+                                    <td style="text-align:right;"> {{ ($employee->absences_amount>0) ? number_format($employee->absences,2) : ''; }}</td>
+                                    <td style="text-align:right;"> {{ ($employee->absences_amount>0) ? number_format($employee->absences_amount,2) : ''; }}</td>
+                                    
+
                                     @foreach($headers as $key => $val)
                                         <td style="text-align:right;">{{ ($employee->$key > 0) ? number_format($employee->$key,2) : '' }}</td>
+                                    @endforeach
+                                    @foreach($compensation as $comp)
+                                        <td style="text-align:right;" > {{ (array_key_exists($comp->id,$employee->otherEarnings)) ? number_format($employee->otherEarnings[$comp->id],2) : ''; }}</td>
+                                       
                                     @endforeach
                                     {{-- @foreach($employee->deductions as $ded)
                                         @php

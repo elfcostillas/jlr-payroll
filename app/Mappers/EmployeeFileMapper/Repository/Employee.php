@@ -110,6 +110,8 @@ class Employee
         'dblhol_rdnd_amount'	=> 0.00,
         'dblhol_rdndot'	=> 0.00,
         'dblhol_rdndot_amount'	=> 0.00,
+        'gross_pay' => 0.00,
+        'gross_total' => 0.00,
 
 
 
@@ -130,19 +132,28 @@ class Employee
     public function compute($period)
     {   
        
-        $this->payreg['basic_pay'] = $this->repo->getBasicPay($this->data);
+        
         $this->setPayRates();
         $this->payreg['daily_rate'] = $this->rates['daily_rate'];
 
         $this->rates['monthly_credit'] = $this->repo->getMonthlyCredit($this->data);
         
-
         /* Transfer employee to payeg */
         foreach($this->payreg as $key => $value){
             if(array_key_exists($key,$this->data->toArray())){
                 $this->payreg[$key] = $this->data[$key];
             }
         }
+
+        $this->setDaysWorked();
+
+        $this->payreg['late_eq_amount'] = round($this->rates['hourly_rate'] * $this->payreg['late_eq'],2);
+        $this->payreg['under_time_amount'] = round($this->rates['hourly_rate'] * $this->payreg['under_time'],2);
+        $this->payreg['absences_amount'] = round($this->rates['hourly_rate'] * $this->payreg['absences'],2);
+
+        $this->payreg['vl_wpay_amount'] = round($this->rates['hourly_rate'] * $this->payreg['vl_wpay'],2);
+        $this->payreg['sl_wpay_amount'] = round($this->rates['hourly_rate'] * $this->payreg['sl_wpay'],2);
+
         //dd($this->payreg);
         $this->computeContribution($period);
         //dd($this->rates['hourly_rate']);
@@ -185,6 +196,26 @@ class Employee
         $this->payreg['dblhol_rdot_amount'] = round($this->rates['hourly_rate'] * 3.9 * 1.3 * $this->payreg['dblhol_rdot'],2);
         $this->payreg['dblhol_ndot_amount'] = round($this->rates['hourly_rate'] * 3 * 1.1 * 1.3 * $this->payreg['dblhol_ndot'],2);
         $this->payreg['dblhol_rdndot_amount'] = round($this->rates['hourly_rate'] * 3.9 * 1.1 * 1.3 * $this->payreg['dblhol_rdndot'],2);
+
+        $this->payreg['basic_pay'] = $this->repo->getBasicPay($this->payreg);
+
+
+
+        /*
+            Semi Monthly *
+            basic_pay = (monthly_rate/2) - late - undertime - vl_wpay - sl_wpay - absent - reg_holiday_pay - sp_holiday_pay - dbl_holiday_pay
+            Semi Monthly days worked
+            Days Worked = 13 - late - undertime - vl - sl - absent - reg holiday - sp holiday - dbl holiday
+
+
+            late_eq_amount
+            under_time_amount
+            vl_wpay_amount
+            sl_wpay_amount
+            absences_amount
+            leghol_count_amount
+            sphol_count_amount
+        */
         
         /*
           "reg_ot" => "10.00"                          rate 1.25
@@ -230,13 +261,13 @@ class Employee
         //     //dd($this->payreg['overtime_amount'],$this->payreg['overtime'],$this->rates['hourly_rate']);
         // }
 
-        // if($this->data['daily_allowance']>0){
-        //     $this->payreg['daily_allowance'] = $this->data['daily_allowance'] * $this->payreg['ndays'];
-        // }
+        if($this->data['daily_allowance']>0){
+            $this->payreg['daily_allowance'] = $this->data['daily_allowance'] * $this->payreg['ndays'];
+        }
 
-        // if($this->data['monthly_allowance']>0){
-        //     $this->payreg['semi_monthly_allowance'] = round($this->data['monthly_allowance']/2,2);
-        // }
+        if($this->data['monthly_allowance']>0){
+            $this->payreg['semi_monthly_allowance'] = round($this->data['monthly_allowance']/2,2);
+        }
 
         // if($this->data['sh_ot']>0){
         //     $this->payreg['sh_ot_amount'] = round(($this->rates['hourly_rate'] * 1.3) * $this->payreg['sh_ot'],2);
@@ -305,6 +336,15 @@ class Employee
         $prem = DB::table('hris_sss_table_2021')->select('ee_share')
                 ->whereRaw($this->rates['monthly_credit']." between range1 and range2")->first();
         return (float)$prem->ee_share;
+    }
+
+    public function setDaysWorked()
+    {
+        if($this->data['is_daily']=='Y'){
+            //$this->payreg['ndays'] = 0;
+        }else{
+            $this->payreg['ndays'] = 13 - round(($this->payreg['late_eq'] + $this->payreg['under_time'] + $this->payreg['vl_wpay'] + $this->payreg['sl_wpay'] + $this->payreg['absences'])/8,2)  - $this->payreg['leghol_count'] - $this->payreg['sphol_count'] - $this->payreg['dblhol_count'] ;
+        }
     }
 
     public function toColumnArray()

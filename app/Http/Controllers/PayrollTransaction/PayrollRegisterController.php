@@ -83,25 +83,28 @@ class PayrollRegisterController extends Controller
                        
                         case 'VL' :
                             $employee->vl_wpay += $leave->with_pay;
-                            $employee->vl_wopay += $leave->without_pay;
+                            //$employee->vl_wopay += $leave->without_pay;
+                            $employee->absences += $leave->without_pay;
                            
                             break;
                         case 'SL' :
                             $employee->sl_wpay += $leave->with_pay;
-                            $employee->sl_wopay += $leave->without_pay;
+                            //$employee->sl_wopay += $leave->without_pay;
+                            $employee->absences += $leave->without_pay;
                             break;
                         case 'UT' : case 'EL' :
                             $employee->under_time  += $leave->without_pay;
                             break;
         
                         case 'BL' :
-                            $employee->bl_wpay += $leave->with_pay;
-                            $employee->bl_wopay += $leave->without_pay;
+                            //$employee->bl_wpay += $leave->with_pay;
+                            //$employee->bl_wopay += $leave->without_pay;
                             break;
                         
                         default : 
                             $employee->vl_wpay += $leave->with_pay;
-                            $employee->vl_wopay += $leave->without_pay;
+                            //$employee->vl_wopay += $leave->without_pay;
+                            $employee->absences += $leave->without_pay;
                         break;
                     }
                     
@@ -131,7 +134,8 @@ class PayrollRegisterController extends Controller
 
         $deductions = $this->unposted->getDeductionLabel($period);
         $gov = $this->unposted->getGovLoanLabel($period);
-
+        $compensation = $this->unposted->getUsedCompensation($period);
+        
         $label = [];
 
         foreach($headers as $key => $value){
@@ -150,6 +154,6 @@ class PayrollRegisterController extends Controller
         //dd($colHeaders);
         //dd($headers);
         
-        return view('app.payroll-transaction.payroll-register.payroll-register',['data' => $collections,'no_pay' => $noPay,'headers' => $headers , 'labels' => $label,'deductionLabel' => $deductions,'govLoan' => $gov ]);
+        return view('app.payroll-transaction.payroll-register.payroll-register',['data' => $collections,'no_pay' => $noPay,'headers' => $headers , 'labels' => $label,'deductionLabel' => $deductions,'govLoan' => $gov,'compensation' => $compensation]);
     }
 }

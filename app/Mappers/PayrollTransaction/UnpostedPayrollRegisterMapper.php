@@ -459,8 +459,10 @@ rd_ndot
             $deductions = $this->getDeductions($employee->biometric_id,$period->id);
            
             //$employee->earnings = $this->earnings($employee->biometric_id,$period->id);
-            $employee->basicEarnings = $this->basicEarnings($employee,$period);
+            //$employee->basicEarnings = $this->basicEarnings($employee,$period);
             $employee->otherEarnings = $this->otherEarnings($employee->biometric_id,$period->id);
+            //$otherEarnings = $this->otherEarnings($employee->biometric_id,$period->id);
+           
             $employee->deductions = $deductions;
             $employee->gov_deductions = collect(
                 [
@@ -470,7 +472,7 @@ rd_ndot
                 ]
             );
             $employee->loans = $this->getGovLoans($employee->biometric_id,$period->id);
-            $employee->absences = $this->getAbsences($employee,$period->id);
+            //$employee->absences = $this->getAbsences($employee,$period->id);
             // if($employee->biometric_id==847){
             //     dd($employee);
             // }   
@@ -496,6 +498,8 @@ rd_ndot
         return $deductions;
         */
 
+        $earning_array = [];
+
         $others = DB::table('unposted_other_compensations')->select('compensation_type','amount')->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
         $fixed = DB::table('unposted_fixed_compensations')->select('compensation_type','amount')->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]])
         ->unionAll($others);
@@ -506,7 +510,11 @@ rd_ndot
                         $join->on('earnings.compensation_type','=','compensation_types.id');
                     })->orderBy('compensation_type')->get();
         
-        return $earnings;
+        foreach($earnings as $earn){
+            $earning_array[$earn->compensation_type] = $earn->amount;
+        }
+        
+        return $earning_array;
        
     }
 
@@ -587,7 +595,6 @@ WHERE period_id = 1 AND total_amount > 0;*/
     public function basicEarnings($employee,$period)
     {   
     
-       
         $earnings=[];
         
         array_push($earnings, (object) [
@@ -788,6 +795,22 @@ WHERE period_id = 1 AND total_amount > 0;*/
 
         //dd($govLabel->get());
         return $govLabel->get();
+    }
+
+    public function getUsedCompensation($period)
+    {
+        $qry = "SELECT DISTINCT compensation_type FROM 
+        (
+           SELECT compensation_type FROM unposted_fixed_compensations WHERE period_id = ".$period->id."
+           UNION ALL
+           SELECT compensation_type FROM unposted_other_compensations WHERE period_id = ".$period->id."
+        ) AS compensation_types ";
+        $result = DB::select($qry);
+        //return $qry; SELECT id,description FROM compensation_types;
+        $compenLabel = $this->model->select('id','description')->from('compensation_types')
+                        ->whereIn('id',collect($result)->pluck('compensation_type'));
+
+        return $compenLabel->get();
     }
 
 
