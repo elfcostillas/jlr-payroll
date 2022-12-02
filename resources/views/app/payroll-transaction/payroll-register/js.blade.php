@@ -78,6 +78,9 @@
                     },
 
                     post : function(){
+
+                        let period = $("#unposted_period").data("kendoDropDownList");
+
                         Swal.fire({
                                 title: 'Finalize and Post Payroll',
                                 text: "You won't be able to revert this!",
@@ -88,7 +91,11 @@
                                 confirmButtonText: 'Finalize'
                             }).then((result) => {
                                 if (result.value) {                       
-                                   alert('unermaintemamce');
+                                    $.post('payroll-register/post',{
+                                        period_id : period.value()
+                                    },function(data){
+
+                                    });
                                 }
                             });
                     },

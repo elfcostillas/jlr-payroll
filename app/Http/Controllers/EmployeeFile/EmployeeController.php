@@ -33,7 +33,7 @@ class EmployeeController extends Controller
         }else{
             $canSeeRates = false;
         }
-       
+    //    dd($canSeeRates);
         return view('app.employee-file.employee-master-data.index',['emp_stat'=>$emp_stat, 'exit_stat'=>$exit_stat, 'pay_type'=>$pay_type, 'level_desc'=>$level_desc,'canSeeRates'=>$canSeeRates]);
     }
 

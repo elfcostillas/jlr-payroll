@@ -814,6 +814,79 @@ WHERE period_id = 1 AND total_amount > 0;*/
     }
 
 
+    public function postNonConfi($period_id)
+    {
+        //$user = Auth::user();
+        $tmp = [];
+        $result = $this->model->select(DB::raw("payrollregister_unposted_s.*"))
+                    ->from('payrollregister_unposted_s')
+                    ->join('employees','payrollregister_unposted_s.biometric_id','=','employees.biometric_id')
+                    ->where('payrollregister_unposted_s.period_id',$period_id)
+                    ->where('emp_level','>=',5)->get();
+        
+        foreach($result  as $line){
+            $data = $line->toArray();
+            unset($data['line_id']);
+
+            array_push($tmp,$data);
+        }
+
+        $tables = [
+            'unposted_fixed_deductions' => 'posted_fixed_deductions',
+            'unposted_installments' => 'posted_installments',
+            'unposted_onetime_deductions' => 'posted_onetime_deductions',
+            'unposted_loans' => 'posted_loans'
+        ];
+
+        DB::beginTransaction();
+        
+        $insertCount = DB::table('payrollregister_posted_s')->insertOrIgnore($tmp);
+      
+        if($result->count() == $insertCount){
+            foreach($tables as $unposted => $posted){
+                $loan_array = [];
+                $loan_type = $this->model->select('period_id','employees.biometric_id','deduction_type','amount','deduction_id')
+                    ->from($unposted)
+                    ->join('employees',$unposted.'.biometric_id','=','employees.biometric_id')
+                    ->where('period_id',$period_id)
+                    ->where('emp_level','>=',5)
+                    ->get();
+                
+                foreach($loan_type as $loans){
+                    $tmploan = $loans->toArray();
+                    unset($tmploan['line_id']);
+                   
+                    array_push($loan_array,$tmploan);
+                }
+    
+                $detailCount = DB::table($posted)->insertOrIgnore($loan_array);
+                if($loan_type->count() != $detailCount){
+                   
+                    DB::rollBack();
+                    return 'Posting on table '.$unposted.'.';
+                    //return response()->json(['error' => 'Posting on table '.$unposted.'.']);
+                }
+            }
+    
+            DB::commit();
+        }else{
+            DB::rollBack();
+            return 'Posting on table payrollregister_unposted_s.';
+            //return response()->json(['error' => 'Posting on table payrollregister_unposted_s.']);
+        }
+        //dd($result->count(),$insertCount);
+
+        /*
+        SELECT period_id,biometric_id,deduction_type,amount,deduction_id FROM unposted_fixed_deductions WHERE period_id = 1;
+SELECT period_id,biometric_id,deduction_type,amount,deduction_id FROM unposted_installments WHERE period_id = 1;
+SELECT period_id,biometric_id,deduction_type,amount,deduction_id FROM unposted_onetime_deductions WHERE period_id = 1;
+SELECT period_id,biometric_id,deduction_type,amount,deduction_id FROM unposted_loans WHERE period_id = 1;
+        
+        */
+
+    }
+
+
 
 }
 

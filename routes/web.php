@@ -391,6 +391,8 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::get('/',[PayrollRegisterController::class,'index']);
         Route::get('unposted-payroll',[PayrollRegisterController::class,'getUnpostedPeriod']);
         Route::get('compute/{id}',[PayrollRegisterController::class,'compute']);
+
+        Route::post('post',[PayrollRegisterController::class,'postPayroll']);
         
     }); 
 });

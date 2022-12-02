@@ -9,7 +9,7 @@
     <style>
             * {
                 font-family: 'Consolas';
-                font-size : 10pt;
+                font-size : 9pt;
             }
 
             div#container2 {
@@ -80,6 +80,7 @@
 
             td {
                 padding : 4px;
+                /* border-style: dotted; */
             }
 
     </style>
@@ -121,11 +122,11 @@
         </table>
     </div> --}}
     <?php
-        $colspan=18;
+        $colspan=22;
        //ndays,basic_pay,late_eq,late_eq_amount,under_time,under_time_amount
     ?>
     <div id="" >
-        <table style="border-collapse:collapse;white-space:nowrap" border=1 >
+        <table style="border-collapse:collapse;white-space:nowrap;" border=1 >
             <thead>
                 <tr>
                         <th style="padding : 0px 4px;min-width: 100px" > Bio ID</th>
@@ -158,10 +159,12 @@
                             <th style="padding : 0px 4px;min-width:100px;" >{{ $labels[$key] }}</th>
                             @php $colspan++; @endphp
                         @endforeach
+                        <th style="padding : 0px 4px;min-width:110px;" >Gross Pay</th>
                         @foreach($compensation as $comp)
                             <th style="padding : 0px 4px;min-width:100px;" >{{ $comp->description }}</th>
                             @php $colspan++; @endphp
                         @endforeach
+                        <th style="padding : 0px 4px;min-width:110px;" >Gross Total</th>
                         <th style="padding : 0px 4px;" >SSS Premium</th>
                         <th style="padding : 0px 4px;" >PhilHealt Premium</th>
                         <th style="padding : 0px 4px;" >PAG IBIG Contri</th>  @php $colspan+=3; @endphp
@@ -174,6 +177,9 @@
                             <th style="padding : 0px 4px;min-width:100px;" >{{ $label->description }}</th>
                             @php $colspan++; @endphp
                         @endforeach
+
+                        <th style="padding : 0px 4px;min-width:110px;" >Total Deduction</th>
+                        <th style="padding : 0px 4px;min-width:110px;" >Net Pay</th>
                 </tr>
             </thead>
             @foreach($data as $location)
@@ -220,16 +226,12 @@
                                     @foreach($headers as $key => $val)
                                         <td style="text-align:right;">{{ ($employee->$key > 0) ? number_format($employee->$key,2) : '' }}</td>
                                     @endforeach
+                                        <td style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($employee->gross_pay > 0) ? number_format($employee->gross_pay,2) : '' }}</td>
                                     @foreach($compensation as $comp)
                                         <td style="text-align:right;" > {{ (array_key_exists($comp->id,$employee->otherEarnings)) ? number_format($employee->otherEarnings[$comp->id],2) : ''; }}</td>
                                        
                                     @endforeach
-                                    {{-- @foreach($employee->deductions as $ded)
-                                        @php
-                                            dd($ded);
-                                        @endphp
-
-                                    @endforeach --}}
+                                        <td style="text-align:right;font-weight:bold;border-bottom:1px solid;" >{{ ($employee->gross_total>0) ? number_format($employee->gross_total,2) : ''; }}</td>
                                         <td style="text-align:right;" >{{ ($employee->gov_deductions['SSS Premium']>0) ? number_format($employee->gov_deductions['SSS Premium'],2) : ''; }}</td>
                                         <td style="text-align:right;" >{{ ($employee->gov_deductions['PhilHealt Premium']>0) ? number_format($employee->gov_deductions['PhilHealt Premium'],2) : ''; }}</td>
                                         <td style="text-align:right;" >{{ ($employee->gov_deductions['PAG IBIG Contri']>0) ? number_format($employee->gov_deductions['PAG IBIG Contri'],2) : ''; }}</td>
@@ -241,6 +243,8 @@
                                     @foreach($deductionLabel as $key => $label)
                                         <td style="text-align:right;" >{{ (array_key_exists($label->id,$employee->deductions)) ? number_format($employee->deductions[$label->id],2) : ''; }}</td> 
                                     @endforeach
+                                    <td style="text-align:right;font-weight:bold;border-bottom:1px solid;" >{{ ($employee->total_deduction>0) ? number_format($employee->total_deduction,2) : ''; }}</td>
+                                    <td style="text-align:right;font-weight:bold;border-bottom:double;" >{{ ($employee->net_pay>0) ? number_format($employee->net_pay,2) : ''; }}</td>
                                 </tr>
                             @endforeach
                         @endforeach

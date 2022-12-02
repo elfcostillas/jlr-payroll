@@ -9,17 +9,21 @@ use App\Mappers\PayrollTransaction\PostedPayrollRegisterMapper;
 use App\Mappers\EmployeeFileMapper\Repository\Employee;
 use App\Mappers\EmployeeFileMapper\Repository\SemiMonthly;
 use App\Mappers\EmployeeFileMapper\Repository\Daily;
+use App\Mappers\EmployeeFileMapper\EmployeeMapper;
+use Illuminate\Support\Facades\Auth;
 
 class PayrollRegisterController extends Controller
 {
     //
     private $unposted;
     private $posted;
+    private $employee;
 
-    public function __construct(UnpostedPayrollRegisterMapper $unposted,PostedPayrollRegisterMapper $posted)
+    public function __construct(UnpostedPayrollRegisterMapper $unposted,PostedPayrollRegisterMapper $posted,EmployeeMapper $employee)
     {
         $this->unposted = $unposted;
         $this->posted = $posted;
+        $this->employee = $employee;
     }
 
     public function index()
@@ -114,6 +118,16 @@ class PayrollRegisterController extends Controller
             $person = ($employee->pay_type==1) ? new Employee($employee,new SemiMonthly) : new Employee($employee,new Daily);
             $person->setPhilRate($phil_rate->rate);
             $person->compute($period);
+            
+            $oe = $this->unposted->otherEarnings($employee->biometric_id,$employee->period_id);
+
+            $person->computeGrossTotal($oe);
+
+            $compd = $this->unposted->getDeductions($employee->biometric_id,$employee->period_id);
+            $govloan = $this->unposted->getGovLoans($employee->biometric_id,$employee->period_id);
+            $person->computeTotalDeduction($compd,$govloan);
+
+            $person->computeNetPay();
 
             array_push($payreg,$person);
 
@@ -135,7 +149,7 @@ class PayrollRegisterController extends Controller
         $deductions = $this->unposted->getDeductionLabel($period);
         $gov = $this->unposted->getGovLoanLabel($period);
         $compensation = $this->unposted->getUsedCompensation($period);
-        
+        //dd($compensation);
         $label = [];
 
         foreach($headers as $key => $value){
@@ -155,5 +169,35 @@ class PayrollRegisterController extends Controller
         //dd($headers);
         
         return view('app.payroll-transaction.payroll-register.payroll-register',['data' => $collections,'no_pay' => $noPay,'headers' => $headers , 'labels' => $label,'deductionLabel' => $deductions,'govLoan' => $gov,'compensation' => $compensation]);
+    }
+
+    public function postPayroll(Request $request)
+    {
+        //dd($request->period_id);
+        $user = Auth::user();
+        //dd($user->biometric_id);
+
+        if($user->biometric_id!="" && $user->biometric_id!=0 && $user->biometric_id != null){
+            $position = $this->employee->getPosition($user->biometric_id);
+            //dd($position->job_title_id);
+            switch($position->job_title_id){
+                case 11 : case 10 : case 105 : case 15 :
+                        $result = $this->unposted->postNonConfi($request->period_id);
+
+                    break;
+                
+                case 6: case 60 :
+
+                    break;
+                
+                default : 
+                        return response()->json(['error' => 'Unauthorized Access.']);
+                    break;
+            }   
+        }
+
+        return response()->json($result);
+        
+        //$position = $this->employee->getPosition();
     }
 }

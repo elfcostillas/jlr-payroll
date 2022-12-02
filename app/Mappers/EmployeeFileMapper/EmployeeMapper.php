@@ -172,6 +172,11 @@ class EmployeeMapper extends AbstractMapper {
 		return $array;
 	}
 
+	public function getPosition($biometric_id){
+        $result = $this->model->select('job_title_id')->where('biometric_id',$biometric_id);
+
+		return $result->first();
+    }
 
 
 

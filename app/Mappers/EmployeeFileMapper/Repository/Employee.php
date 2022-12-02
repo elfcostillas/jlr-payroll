@@ -112,6 +112,8 @@ class Employee
         'dblhol_rdndot_amount'	=> 0.00,
         'gross_pay' => 0.00,
         'gross_total' => 0.00,
+        'total_deduction' => 0.00,
+        'net_pay' => 0.0,
 
 
 
@@ -132,7 +134,6 @@ class Employee
     public function compute($period)
     {   
        
-        
         $this->setPayRates();
         $this->payreg['daily_rate'] = $this->rates['daily_rate'];
 
@@ -199,6 +200,24 @@ class Employee
 
         $this->payreg['basic_pay'] = $this->repo->getBasicPay($this->payreg);
 
+        
+        if($this->data['daily_allowance']>0){
+            $this->payreg['daily_allowance'] = $this->data['daily_allowance'] * $this->payreg['ndays'];
+        }
+
+        if($this->data['monthly_allowance']>0){
+            $this->payreg['semi_monthly_allowance'] = round($this->data['monthly_allowance']/2,2);
+        }
+
+        $this->payreg['gross_pay'] = $this->repo->getBasicPay($this->payreg) + $this->payreg['vl_wpay_amount'] + $this->payreg['sl_wpay_amount'] +
+                        $this->payreg['reg_ot_amount'] +  $this->payreg['reg_nd_amount'] + $this->payreg['reg_ndot_amount'] 
+                        + $this->payreg['rd_hrs_amount'] + $this->payreg['rd_ot_amount'] + $this->payreg['rd_nd_amount'] + $this->payreg['rd_ndot_amount'] 
+                        + $this->payreg['leghol_count_amount'] + $this->payreg['leghol_hrs_amount'] + $this->payreg['leghol_ot_amount'] + $this->payreg['leghol_nd_amount']
+                        + $this->payreg['leghol_rd_amount'] + $this->payreg['leghol_rdot_amount'] + $this->payreg['leghol_ndot_amount'] + $this->payreg['leghol_rdndot_amount']
+                        + $this->payreg['sphol_count_amount'] + $this->payreg['sphol_hrs_amount'] + $this->payreg['sphol_ot_amount'] + $this->payreg['sphol_nd_amount']
+                        + $this->payreg['sphol_rd_amount'] + $this->payreg['sphol_rdot_amount'] + $this->payreg['sphol_ndot_amount'] + $this->payreg['sphol_rdndot_amount']
+                        + $this->payreg['dblhol_count_amount'] + $this->payreg['dblhol_hrs_amount'] + $this->payreg['dblhol_ot_amount'] + $this->payreg['dblhol_nd_amount']
+                        + $this->payreg['dblhol_rd_amount'] + $this->payreg['dblhol_rdot_amount'] + $this->payreg['dblhol_ndot_amount'] + $this->payreg['dblhol_rdndot_amount'] + $this->data['monthly_allowance'] + $this->data['daily_allowance'];
 
 
         /*
@@ -261,13 +280,6 @@ class Employee
         //     //dd($this->payreg['overtime_amount'],$this->payreg['overtime'],$this->rates['hourly_rate']);
         // }
 
-        if($this->data['daily_allowance']>0){
-            $this->payreg['daily_allowance'] = $this->data['daily_allowance'] * $this->payreg['ndays'];
-        }
-
-        if($this->data['monthly_allowance']>0){
-            $this->payreg['semi_monthly_allowance'] = round($this->data['monthly_allowance']/2,2);
-        }
 
         // if($this->data['sh_ot']>0){
         //     $this->payreg['sh_ot_amount'] = round(($this->rates['hourly_rate'] * 1.3) * $this->payreg['sh_ot'],2);
@@ -350,6 +362,34 @@ class Employee
     public function toColumnArray()
     {
         return $this->payreg;
+    }
+
+    public function computeGrossTotal($other_earn){
+        $this->payreg['gross_total'] = $this->payreg['gross_pay'];
+        foreach($other_earn as $earn)
+        {
+            //dd($earn);
+            $this->payreg['gross_total'] += $earn;
+        }
+    }
+
+    public function computeTotalDeduction($company,$govloan)
+    {
+        $this->payreg['total_deduction'] = $this->payreg['hdmf_contri'] + $this->payreg['sss_prem'] + $this->payreg['phil_prem'];
+
+        foreach($company as $loan){
+            $this->payreg['total_deduction'] += $loan;
+        }
+
+        foreach($govloan as $gloan){
+            $this->payreg['total_deduction'] += $gloan;
+        }
+
+    }
+
+    public function computeNetPay()
+    {
+        $this->payreg['net_pay'] = $this->payreg['gross_total'] - $this->payreg['total_deduction'];
     }
 
     
