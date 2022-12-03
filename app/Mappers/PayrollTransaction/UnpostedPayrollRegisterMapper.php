@@ -24,15 +24,30 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
         return $this->model->select('rate')->from('philhealth')->first();
     }
 
-    public function unpostedPeriodList($type)
+    public function unpostedPeriodList($type,$position)
     {
-        if($type=='semi'){
-            $result = $this->model->select(DB::raw("id,CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) AS period_range"))
-            ->from('payroll_period')
-            ->whereNotIn('id',DB::table('payrollregister_posted')->distinct()->pluck('period_id'))
-            //->join('payroll_period','payroll_period.id','=','payrollregister_unposted.period_id')
-            ->distinct();
-        }
+        switch($position->job_title_id){
+            case 11 : case 10 : case 105 : case 15 :
+                   
+                    if($type=='semi'){
+                        $result = $this->model->select(DB::raw("id,CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) AS period_range"))
+                        ->from('payroll_period')
+                        ->whereNotIn('id',DB::table('posting_info')->where('trans_type','non-confi')->distinct()->pluck('period_id'))
+                        //->join('payroll_period','payroll_period.id','=','payrollregister_unposted.period_id')
+                        ->distinct();
+                    }
+                break;
+            
+            case 6: case 60 :
+
+                break;
+            
+            default : 
+                    return response()->json(['error' => 'Unauthorized Access.']);
+                break;
+        }   
+
+       
        
         return $result->get();
     }
@@ -816,7 +831,7 @@ WHERE period_id = 1 AND total_amount > 0;*/
 
     public function postNonConfi($period_id)
     {
-        //$user = Auth::user();
+        $user = Auth::user();
         $tmp = [];
         $result = $this->model->select(DB::raw("payrollregister_unposted_s.*"))
                     ->from('payrollregister_unposted_s')
@@ -836,6 +851,11 @@ WHERE period_id = 1 AND total_amount > 0;*/
             'unposted_installments' => 'posted_installments',
             'unposted_onetime_deductions' => 'posted_onetime_deductions',
             'unposted_loans' => 'posted_loans'
+        ];
+
+        $comp_tables = [
+            'unposted_fixed_compensations' => 'posted_fixed_compensations',
+            'unposted_other_compensations' => 'posted_other_compensations'
         ];
 
         DB::beginTransaction();
@@ -863,20 +883,64 @@ WHERE period_id = 1 AND total_amount > 0;*/
                 if($loan_type->count() != $detailCount){
                    
                     DB::rollBack();
-                    return 'Posting on table '.$unposted.'.';
-                    //return response()->json(['error' => 'Posting on table '.$unposted.'.']);
+                    return array('error'=>'Posting on table '.$unposted.'.');
+                    
+                }
+            }
+
+            foreach($comp_tables as $unposted => $posted){
+                $comp_array = [];
+                $comp_type = $this->model->select('period_id','employees.biometric_id','compensation_type','amount','deduction_id')
+                ->from($unposted)
+                ->join('employees',$unposted.'.biometric_id','=','employees.biometric_id')
+                ->where('period_id',$period_id)
+                ->where('emp_level','>=',5)
+                ->get();
+
+                foreach($comp_type as $compensation){
+                    $tmpcomp = $compensation->toArray();
+                    unset($tmpcomp['line_id']);
+
+                    array_push($comp_array,$tmpcomp);
+                }
+                $detailCount = DB::table($posted)->insertOrIgnore($comp_array);
+                if($comp_type->count() != $detailCount){
+                    DB::rollBack();
+                    return array('error'=>'Posting on table '.$unposted.'.');
+                    
                 }
             }
     
             DB::commit();
+
+            DB::table('posting_info')->insert([
+                'period_id' => $period_id,
+                'trans_type' => 'non-confi',
+                'posted_by' => $user->id,
+                'posted_on' => now(),
+            ]);
+
+            return array('success'=>'Payroll Period posted successfully.');
         }else{
             DB::rollBack();
-            return 'Posting on table payrollregister_unposted_s.';
+            return array('error'=>'Posting on table payrollregister_unposted_s.');
             //return response()->json(['error' => 'Posting on table payrollregister_unposted_s.']);
         }
         //dd($result->count(),$insertCount);
 
         /*
+
+        TRUNCATE posted_fixed_deductions;
+        TRUNCATE posted_installments;
+        TRUNCATE posted_loans;
+        TRUNCATE posted_onetime_deductions;
+        TRUNCATE payrollregister_posted_s;
+        TRUNCATE posted_fixed_compensations;
+        TRUNCATE posted_other_compensations;
+        TRUNCATE posted_fixed_compensations;
+        TRUNCATE posted_other_compensations;
+
+
         SELECT period_id,biometric_id,deduction_type,amount,deduction_id FROM unposted_fixed_deductions WHERE period_id = 1;
 SELECT period_id,biometric_id,deduction_type,amount,deduction_id FROM unposted_installments WHERE period_id = 1;
 SELECT period_id,biometric_id,deduction_type,amount,deduction_id FROM unposted_onetime_deductions WHERE period_id = 1;

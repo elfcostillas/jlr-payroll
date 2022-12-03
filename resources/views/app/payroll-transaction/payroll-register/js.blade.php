@@ -93,9 +93,25 @@
                                 if (result.value) {                       
                                     $.post('payroll-register/post',{
                                         period_id : period.value()
-                                    },function(data){
+                                    },function(data,status,){
+                                        //console.log(status,data);
+                                        //console.log(data.error)
 
-                                    });
+                                        if(data.success){
+                                            Swal.fire({
+                                            //position: 'top-end',
+                                            icon: 'success',
+                                            title: data.success,
+                                            showConfirmButton: false,
+                                            timer: 1000
+                                            });	
+
+                                            viewModel.ds.unposted.read();
+                                        }
+                                        else {
+                                            custom_error(data.error);
+                                        }
+                                    },'json');
                                 }
                             });
                     },

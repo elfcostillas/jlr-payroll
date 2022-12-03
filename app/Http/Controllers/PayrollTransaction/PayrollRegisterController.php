@@ -33,9 +33,15 @@ class PayrollRegisterController extends Controller
 
     public function getUnpostedPeriod()
     {
-        $result = $this->unposted->unpostedPeriodList('semi');
+        $user = Auth::user();
+        if($user->biometric_id!="" && $user->biometric_id!=0 && $user->biometric_id != null){
+            $position = $this->employee->getPosition($user->biometric_id);
 
-        return response()->json($result);
+            $result = $this->unposted->unpostedPeriodList('semi',$position);
+
+            return response()->json($result);
+        }
+       
     }
 
     public function compute(Request $request)
