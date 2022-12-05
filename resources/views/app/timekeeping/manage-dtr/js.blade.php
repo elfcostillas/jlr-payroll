@@ -172,6 +172,7 @@
                                     reghol_hrs : { type:'number', },
                                     reghol_ot : { type:'number', },
                                     reghol_rd : { type:'number', },
+                                    reghol_rdnd : { type:'number', },
                                     reghol_rdot : { type:'number', },
                                     reghol_nd : { type:'number', },
                                     reghol_ndot: { type:'number', },
@@ -179,6 +180,7 @@
                                     sphol_hrs : { type:'number', },
                                     sphol_ot : { type:'number', },
                                     sphol_rd : { type:'number', },
+                                    sphol_rdnd : { type:'number', },
                                     sphol_rdot : { type:'number', },
                                     sphol_nd : { type:'number', },
                                     sphol_ndot : { type:'number', },
@@ -186,6 +188,7 @@
                                     dblhol_hrs : { type:'number', },
                                     dblhol_ot : { type:'number', },
                                     dblhol_rd : { type:'number', },
+                                    dblhol_rdnd : { type:'number', },
                                     dblhol_rdot : { type:'number', },
                                     dblhol_nd : { type:'number', },
                                     dblhol_ndot : { type:'number', },
@@ -720,6 +723,7 @@
                         title : "RD Hrs",
                         field : "restday_hrs",
                         width : 75, 
+                        template : "# if(restday_hrs==0){#  #} else{# #= restday_hrs #  #}#",
                         attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -851,6 +855,19 @@
                         }, 
                     },
                     {
+                        title : 'Reg Hol RD ND',
+                        field : 'reghol_rdnd',
+                        template : "# if(reghol_rdnd==0){#  #} else{# #= reghol_rdnd #  #}#",
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    },
+                    {
                         title : 'Reg Hol RD OT',
                         field : 'reghol_rdot',
                         template : "# if(reghol_rdot==0){#  #} else{# #= reghol_rdot #  #}#",
@@ -959,6 +976,19 @@
                         }, 
                     },
                     {
+                        title : 'SP Hol RD ND',
+                        field : 'sphol_rdnd',
+                        template : "# if(sphol_rdnd==0){#  #} else{# #= sphol_rdnd #  #}#",
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    },
+                    {
                         title : 'SP Hol RD OT',
                         field : 'sphol_rdot',
                         template : "# if(sphol_rdot==0){#  #} else{# #= sphol_rdot #  #}#",
@@ -1057,6 +1087,19 @@
                         title : 'DBL Hol RD',
                         field : 'dblhol_rd',
                         template : "# if(dblhol_rd==0){#  #} else{# #= dblhol_rd #  #}#",
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    },
+                    {
+                        title : 'DBL Hol RD ND',
+                        field : 'dblhol_rdnd',
+                        template : "# if(dblhol_rdnd==0){#  #} else{# #= dblhol_rdnd #  #}#",
                         attributes: {
                             style: "font-size: 9pt;text-align:center",
                             

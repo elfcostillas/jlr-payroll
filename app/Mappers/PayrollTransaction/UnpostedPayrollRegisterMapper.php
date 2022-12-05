@@ -98,6 +98,7 @@ rd_ndot
                         sum(reghol_rd) as leghol_rd,
                         sum(reghol_rdot) as leghol_rdot,
                         sum(reghol_nd) as leghol_nd,
+                        sum(reghol_rdnd) as leghol_rdnd,
                         sum(reghol_ndot) as leghol_ndot,
                         sum(reghol_rdndot) as leghol_rdndot,
 
@@ -107,6 +108,7 @@ rd_ndot
                         sum(sphol_rd) as sphol_rd,
                         sum(sphol_rdot) as sphol_rdot,
                         sum(sphol_nd) as sphol_nd,
+                        sum(sphol_rdnd) as sphol_rdnd,
                         sum(sphol_ndot) as sphol_ndot,
                         sum(sphol_rdndot) as sphol_rdndot,
 
@@ -115,6 +117,7 @@ rd_ndot
                         sum(dblhol_ot) as dblhol_ot,
                         sum(dblhol_rd) as dblhol_rd,
                         sum(dblhol_rdot) as dblhol_rdot,
+                        sum(dblhol_rdnd) as dblhol_rdnd,
                         sum(dblhol_nd) as dblhol_nd,
                         sum(dblhol_ndot) as dblhol_ndot,
                         sum(dblhol_rdndot) as dblhol_rdndot

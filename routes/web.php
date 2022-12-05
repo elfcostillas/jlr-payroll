@@ -395,6 +395,10 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::post('post',[PayrollRegisterController::class,'postPayroll']);
         
     }); 
+    //PayslipController
+    Route::prefix('payslip')->group(function(){
+        Route::get('/',[PayslipController::class,'index']);
+    });
 });
 
 Route::middleware('auth')->prefix('compensations')->group(function(){
