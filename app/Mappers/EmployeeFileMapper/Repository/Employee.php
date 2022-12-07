@@ -211,15 +211,17 @@ class Employee
             $this->payreg['semi_monthly_allowance'] = round($this->data['monthly_allowance']/2,2);
         }
 
-        $this->payreg['gross_pay'] = $this->repo->getBasicPay($this->payreg) + $this->payreg['vl_wpay_amount'] + $this->payreg['sl_wpay_amount'] +
-                        $this->payreg['reg_ot_amount'] +  $this->payreg['reg_nd_amount'] + $this->payreg['reg_ndot_amount'] 
-                        + $this->payreg['rd_hrs_amount'] + $this->payreg['rd_ot_amount'] + $this->payreg['rd_nd_amount'] + $this->payreg['rd_ndot_amount'] 
-                        + $this->payreg['leghol_count_amount'] + $this->payreg['leghol_hrs_amount'] + $this->payreg['leghol_ot_amount'] + $this->payreg['leghol_nd_amount']
-                        + $this->payreg['leghol_rd_amount'] + $this->payreg['leghol_rdot_amount'] + $this->payreg['leghol_ndot_amount'] + $this->payreg['leghol_rdndot_amount']
-                        + $this->payreg['sphol_count_amount'] + $this->payreg['sphol_hrs_amount'] + $this->payreg['sphol_ot_amount'] + $this->payreg['sphol_nd_amount']
-                        + $this->payreg['sphol_rd_amount'] + $this->payreg['sphol_rdot_amount'] + $this->payreg['sphol_ndot_amount'] + $this->payreg['sphol_rdndot_amount']
-                        + $this->payreg['dblhol_count_amount'] + $this->payreg['dblhol_hrs_amount'] + $this->payreg['dblhol_ot_amount'] + $this->payreg['dblhol_nd_amount']
-                        + $this->payreg['dblhol_rd_amount'] + $this->payreg['dblhol_rdot_amount'] + $this->payreg['dblhol_ndot_amount'] + $this->payreg['dblhol_rdndot_amount'] + $this->data['monthly_allowance'] + $this->data['daily_allowance'];
+        // $this->payreg['gross_pay'] = $this->repo->getBasicPay($this->payreg) + $this->payreg['vl_wpay_amount'] + $this->payreg['sl_wpay_amount'] +
+        //                 $this->payreg['reg_ot_amount'] +  $this->payreg['reg_nd_amount'] + $this->payreg['reg_ndot_amount'] 
+        //                 + $this->payreg['rd_hrs_amount'] + $this->payreg['rd_ot_amount'] + $this->payreg['rd_nd_amount'] + $this->payreg['rd_ndot_amount'] 
+        //                 + $this->payreg['leghol_count_amount'] + $this->payreg['leghol_hrs_amount'] + $this->payreg['leghol_ot_amount'] + $this->payreg['leghol_nd_amount']
+        //                 + $this->payreg['leghol_rd_amount'] + $this->payreg['leghol_rdot_amount'] + $this->payreg['leghol_ndot_amount'] + $this->payreg['leghol_rdndot_amount']
+        //                 + $this->payreg['sphol_count_amount'] + $this->payreg['sphol_hrs_amount'] + $this->payreg['sphol_ot_amount'] + $this->payreg['sphol_nd_amount']
+        //                 + $this->payreg['sphol_rd_amount'] + $this->payreg['sphol_rdot_amount'] + $this->payreg['sphol_ndot_amount'] + $this->payreg['sphol_rdndot_amount']
+        //                 + $this->payreg['dblhol_count_amount'] + $this->payreg['dblhol_hrs_amount'] + $this->payreg['dblhol_ot_amount'] + $this->payreg['dblhol_nd_amount']
+        //                 + $this->payreg['dblhol_rd_amount'] + $this->payreg['dblhol_rdot_amount'] + $this->payreg['dblhol_ndot_amount'] + $this->payreg['dblhol_rdndot_amount'] + $this->payreg['semi_monthly_allowance'] + $this->payreg['daily_allowance'];
+
+        $this->payreg['gross_pay'] = $this->repo->getGrossPay($this->payreg);
 
 
         /*

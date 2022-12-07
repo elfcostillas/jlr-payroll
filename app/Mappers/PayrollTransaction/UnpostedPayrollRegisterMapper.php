@@ -349,7 +349,11 @@ rd_ndot
 
     public function getHeaders($period)
     {
-       
+        if(is_object($period)){
+            $period = $period->id;
+        }else {
+            $period = $period;
+        }
         $result = $this->model->select(DB::raw("SUM(reg_ot) AS reg_ot, 
         SUM(reg_ot_amount) AS reg_ot_amount,
         SUM(reg_nd) AS reg_nd,
@@ -418,7 +422,7 @@ rd_ndot
         SUM(dblhol_rdnd_amount) AS dblhol_rdnd_amount,
         SUM(dblhol_rdndot) AS dblhol_rdndot,
         SUM(dblhol_rdndot_amount) AS dblhol_rdndot_amount"))
-        ->where('period_id',$period->id);
+        ->where('period_id',$period);
 
 
         return $result->first();

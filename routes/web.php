@@ -398,6 +398,11 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
     //PayslipController
     Route::prefix('payslip')->group(function(){
         Route::get('/',[PayslipController::class,'index']);
+
+        Route::get('posted-period',[PayslipController::class,'getPostedPeriods']);
+        Route::get('get-employees/{period}/{div}/{dept}',[PayslipController::class,'getEmployees']);
+        Route::get('web-view/{period}/{div}/{dept}/{bio_id}',[PayslipController::class,'webView']);
+        Route::get('print/{period}/{div}/{dept}/{bio_id}',[PayslipController::class,'print']);
     });
 });
 
