@@ -102,18 +102,24 @@ class PayslipMapper extends AbstractMapper {
 
         $data = $result->get();
 
-        foreach($data as $e)
+       
+        foreach($data as $epay)
         {
-            $e->basic = $this->basic($e);
-            $e->gov_loan = $this->paySlipGovLoan($period_id,$e->biometric_id);
-            $e->reg_earnings = $this->regEarnings($e);
-            $e->restday = $this->restDay($e);
-            $e->legalHol = $this->legalHol($e);
-            $e->specialHol = $this->specialHol($e);
-            $e->dblLegHol = $this->dblLegHol($e);
-            $e->allowances = $this->allowances($e);
-            $e->otherEearnings = $this->otherEearnings($period_id,$e->biometric_id);
-            $e->slvl = $this->slvl($e);
+            if(is_object($epay)){
+                $epay->basic = $this->basic($epay);
+                $epay->gov_loan = $this->paySlipGovLoan($period_id,$epay->biometric_id);
+                $epay->reg_earnings = $this->regEarnings($epay);
+                $epay->restday = $this->restDay($epay);
+                $epay->legalHol = $this->legalHol($epay);
+                $epay->specialHol = $this->specialHol($epay);
+                $epay->dblLegHol = $this->dblLegHol($epay);
+                $epay->allowances = $this->allowances($epay);
+                $epay->otherEearnings = $this->otherEearnings($period_id,$epay->biometric_id);
+                $epay->slvl = $this->slvl($epay);
+                $epay->fixedDeduction = $this->fixedDeduction($period_id,$epay->biometric_id);
+                $epay->installments = $this->installments($period_id,$epay->biometric_id);
+            }
+            
             
         }
 
@@ -502,7 +508,58 @@ class PayslipMapper extends AbstractMapper {
         );
     }
 
+    public function fixedDeduction($period_id,$biometric_id)
+    {
+        $total = 0;
 
+        $query = "SELECT description,amount FROM posted_fixed_deductions 
+        INNER JOIN deduction_types ON deduction_type = deduction_types.id
+        WHERE biometric_id = $biometric_id AND period_id = $period_id
+        UNION ALL
+        SELECT description,amount FROM posted_onetime_deductions 
+        INNER JOIN deduction_types ON deduction_type = deduction_types.id
+        WHERE biometric_id = $biometric_id AND period_id = $period_id";
+
+        $result = DB::select($query); 
+
+        foreach($result as $earn)
+        {
+            $total += $earn->amount;
+        }
+        
+        return array(
+            'total' => $total,
+            'list' => $result
+        );
+
+    }
+
+    public function installments($period_id,$biometric_id)
+    {
+        $loantotal = 0;
+        $result = $this->model->select(DB::raw("deduction_types.description,posted_installments.amount,total_amount-SUM(posted_installments.amount) AS balance"))
+        ->from('deduction_installments')
+        ->join('posted_installments',function($join){
+            $join->on('deduction_installments.id','=','posted_installments.deduction_id');
+            $join->on('deduction_installments.biometric_id','=','posted_installments.biometric_id');
+            $join->on('deduction_installments.deduction_type','=','posted_installments.deduction_type');
+        })
+        ->join('deduction_types','deduction_types.id','=','deduction_installments.deduction_type')
+        ->where('posted_installments.biometric_id',$biometric_id)
+        ->where('posted_installments.period_id',$period_id)
+        ->groupByRaw('description,total_amount')
+        ->get();
+
+        foreach($result as $loan){
+            $loantotal += $loan->amount;
+        }
+
+        return array(
+            'total' => $loantotal,
+            'list' => $result
+        );
+        
+    }
 
 
 

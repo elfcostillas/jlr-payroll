@@ -37,7 +37,7 @@
 <body>
 
     @foreach($data as $e)
-        <table class="payslipTable" border=1 style="border-collapse:collapse;page-break-inside: avoid;" width="920px">
+        <table class="payslipTable" border=1 style="border-collapse:collapse;page-break-inside: avoid;font-size:8pt;" width="920px">
             <tr>
                 <td colspan="2"> 
                     <table border=1 style="border-collapse:collapse;width:100%;">
@@ -274,14 +274,52 @@
                                     <tr>
                                         <tr>
                                             <td class="pad4" width="45%" ></td>
-                                            <td class="pad4" width="25%"  style="text-align:right;padding-center:4px;font-size:9pt;">Running Bal.</td>
-                                            <td class="pad4" width="30%"  style="text-align:right;padding-center:4px;font-size:9pt;">Current Deduction</td>
+                                            <td class="pad4" width="25%"  style="text-align:center;font-size:9pt;">Running Bal.</td>
+                                            <td class="pad4" width="30%"  style="text-align:center;font-size:9pt;">Current Deduction</td>
                                         </tr>
                                     </tr>
                                     <tr>
                                         <td class="pad4" >{{ $govLoan->description }}</td>
                                         <td class="pad4"  style="text-align:right;padding-right:4px;">{{ number_format($govLoan->balance,2) }}</td>
                                         <td class="pad4"  style="text-align:right;padding-right:4px;">{{ number_format($govLoan->amount,2) }}</td>
+                                    </tr>
+                                @endif
+                            @endforeach
+                        </table>
+                    @endif
+                    @if($e->fixedDeduction['total']>0)
+                    <table border=1 style="border-collapse:collapse;width:100%">
+                        <tr>
+                            <td colspan="3" class="pad4 headings"><b>Fixed and Onetime Deductions</b></td>
+                        </tr>
+                        @foreach($e->fixedDeduction['list'] as $deduction)
+                            @if($deduction->amount>0)
+                                <tr>
+                                    <td class="pad4" width="70%" >{{ $deduction->description }}</td>
+                                    <td class="pad4" width="30%" style="text-align:right;padding-right:4px;">{{ number_format($deduction->amount,2) }}</td>
+                                </tr>
+                            @endif
+                        @endforeach
+                    </table>
+                    @endif
+                    @if($e->installments['total']>0)
+                        <table border=1 style="border-collapse:collapse;width:100%">
+                            <tr>
+                                <td colspan="3" class="pad4 headings"><b>Installments</b></td>
+                            </tr>
+                            @foreach($e->installments['list'] as $inst)
+                                @if($inst->amount>0)
+                                    <tr>
+                                        <tr>
+                                            <td class="pad4" width="45%" ></td>
+                                            <td class="pad4" width="25%"  style="text-align:center;font-size:9pt;">Running Bal.</td>
+                                            <td class="pad4" width="30%"  style="text-align:center;font-size:9pt;">Current Deduction</td>
+                                        </tr>
+                                    </tr>
+                                    <tr>
+                                        <td class="pad4" >{{ $inst->description }}</td>
+                                        <td class="pad4"  style="text-align:right;padding-right:4px;">{{ number_format($inst->balance,2) }}</td>
+                                        <td class="pad4"  style="text-align:right;padding-right:4px;">{{ number_format($inst->amount,2) }}</td>
                                     </tr>
                                 @endif
                             @endforeach
@@ -310,10 +348,10 @@
             <tr>
                 <td></td>
                 <td>
-                    <table border=1 style="border-collapse:collapse;width:100%;margin-bottom:1px;">
+                    <table border=1 style="border-collapse:collapse;width:100%;margin-bottom:1px;font-size:9pt;">
                         <tr>
-                            <td class="pad4" colspan="2" width="70%" style="font-size:12pt !important;" ><b>Net Pay </b> </td>
-                            <td class="pad4" style="text-align:right;padding-right:4px;font-size:12pt !important;"><b> {{ number_format($e->net_pay,2) }} </b></td>
+                            <td class="pad4" colspan="2" width="70%" ><b>Net Pay </b> </td>
+                            <td class="pad4" style="text-align:right;padding-right:4px;"><b> {{ number_format($e->net_pay,2) }} </b></td>
                         </tr>
                     </table>
                 </td>

@@ -69,7 +69,7 @@ class PayrollRegisterController extends Controller
 
         foreach($employees as $employee)
         {
-
+            
             //dd($employee);
             $employee->under_time_amount = 0;
             $employee->vl_wpay = 0;
@@ -107,6 +107,7 @@ class PayrollRegisterController extends Controller
                             break;
         
                         case 'BL' :
+                            dd($employee->date_hired);
                             //$employee->bl_wpay += $leave->with_pay;
                             //$employee->bl_wopay += $leave->without_pay;
                             break;

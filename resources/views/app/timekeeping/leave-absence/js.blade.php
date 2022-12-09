@@ -480,7 +480,7 @@
                         width : 80,    
                     },
                     {
-                        title : "ID",
+                        title : "Name",
                         field : "employee_name",
                        // width : 80,    
                     },
