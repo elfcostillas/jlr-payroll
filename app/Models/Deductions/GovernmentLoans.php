@@ -25,6 +25,7 @@ class GovernmentLoans extends Model
         'is_stopped',
         //'deduction_sched',
         'encoded_by',
-        'encoded_on'
+        'encoded_on',
+        'loan_amount'
     ];
 }

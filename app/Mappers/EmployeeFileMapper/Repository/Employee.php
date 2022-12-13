@@ -154,6 +154,7 @@ class Employee
 
         $this->payreg['vl_wpay_amount'] = round($this->rates['hourly_rate'] * $this->payreg['vl_wpay'],2);
         $this->payreg['sl_wpay_amount'] = round($this->rates['hourly_rate'] * $this->payreg['sl_wpay'],2);
+        $this->payreg['bl_wpay_amount'] = round($this->rates['hourly_rate'] * $this->payreg['bl_wpay'],2);
 
         //dd($this->payreg);
         $this->computeContribution($period);

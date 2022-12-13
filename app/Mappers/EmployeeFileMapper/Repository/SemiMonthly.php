@@ -13,12 +13,12 @@ class SemiMonthly
     {
         //dd($data);
         return (float) round($data['basic_salary']/2,2) - $data['late_eq_amount'] - $data['under_time_amount'] - $data['vl_wpay_amount'] - $data['sl_wpay_amount']
-        - $data['absences_amount'] - $data['leghol_count_amount'] - $data['sphol_count_amount'];
+        - $data['absences_amount'] - $data['leghol_count_amount'] - $data['sphol_count_amount'] - $data['bl_wpay_amount'];
     }
 
     function getGrossPay($payreg){
-        return $this->getBasicPay($payreg) + $payreg['vl_wpay_amount'] + $payreg['sl_wpay_amount'] +
-                        $payreg['reg_ot_amount'] +  $payreg['reg_nd_amount'] + $payreg['reg_ndot_amount'] 
+        return $this->getBasicPay($payreg) + $payreg['vl_wpay_amount'] + $payreg['sl_wpay_amount'] + $data['bl_wpay_amount']
+                        + $payreg['reg_ot_amount'] +  $payreg['reg_nd_amount'] + $payreg['reg_ndot_amount'] 
                         + $payreg['rd_hrs_amount'] + $payreg['rd_ot_amount'] + $payreg['rd_nd_amount'] + $payreg['rd_ndot_amount'] 
                         + $payreg['leghol_count_amount'] + $payreg['leghol_hrs_amount'] + $payreg['leghol_ot_amount'] + $payreg['leghol_nd_amount']
                         + $payreg['leghol_rd_amount'] + $payreg['leghol_rdot_amount'] + $payreg['leghol_ndot_amount'] + $payreg['leghol_rdndot_amount']

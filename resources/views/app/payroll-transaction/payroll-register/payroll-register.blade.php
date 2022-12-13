@@ -151,6 +151,9 @@
                         <th style="padding : 0px 4px;min-width:110px;" >SL</th>
                         <th style="padding : 0px 4px;min-width:110px;" >SL Amount</th>
 
+                        <th style="padding : 0px 4px;min-width:110px;" >BL</th>
+                        <th style="padding : 0px 4px;min-width:110px;" >BL Amount</th>
+
                         <th style="padding : 0px 4px;min-width:110px;" >Absent</th>
                         <th style="padding : 0px 4px;min-width:110px;" >Absent Amount</th>
 
@@ -218,6 +221,9 @@
                                     
                                     <td style="text-align:right;"> {{ ($employee->sl_wpay>0) ? number_format($employee->sl_wpay,2) : ''; }}</td>
                                     <td style="text-align:right;"> {{ ($employee->sl_wpay_amount>0) ? number_format($employee->sl_wpay_amount,2) : ''; }}</td>
+
+                                    <td style="text-align:right;"> {{ ($employee->bl_wpay>0) ? number_format($employee->bl_wpay,2) : ''; }}</td>
+                                    <td style="text-align:right;"> {{ ($employee->bl_wpay_amount>0) ? number_format($employee->bl_wpay_amount,2) : ''; }}</td>
                                     
                                     <td style="text-align:right;"> {{ ($employee->absences_amount>0) ? number_format($employee->absences,2) : ''; }}</td>
                                     <td style="text-align:right;"> {{ ($employee->absences_amount>0) ? number_format($employee->absences_amount,2) : ''; }}</td>

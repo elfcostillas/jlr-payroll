@@ -11,6 +11,7 @@ use App\Mappers\EmployeeFileMapper\Repository\SemiMonthly;
 use App\Mappers\EmployeeFileMapper\Repository\Daily;
 use App\Mappers\EmployeeFileMapper\EmployeeMapper;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class PayrollRegisterController extends Controller
 {
@@ -107,7 +108,18 @@ class PayrollRegisterController extends Controller
                             break;
         
                         case 'BL' :
-                            dd($employee->date_hired);
+                            //dd($employee->date_hired);
+                            if($employee->date_hired==null || $employee->date_hired == ''){
+                                $employee->absences += $leave->without_pay;
+                            }else {
+                                $withPayDate = Carbon::createFromFormat('Y-m-d',$employee->date_hired)->addyear();
+                                if($withPayDate<now()){
+                                    $employee->bl_wpay += $leave->without_pay + $leave->with_pay;
+                                }else {
+                                    $employee->absences += $leave->without_pay + $leave->with_pay;
+                                }
+
+                            }
                             //$employee->bl_wpay += $leave->with_pay;
                             //$employee->bl_wopay += $leave->without_pay;
                             break;

@@ -24,6 +24,7 @@
                         terms: null,
                         ammortization: null,
                         is_stopped: null,
+                        loan_amount: null,
                        //deduction_sched: null,
                     }
                 },
@@ -249,6 +250,7 @@
                         viewModel.form.model.set('terms',null);
                         viewModel.form.model.set('ammortization',null);
                         viewModel.form.model.set('is_stopped','N');
+                        viewModel.form.model.set('loan_amount',null);
                         //viewModel.form.model.set('deduction_sched',1);
                     },
                     post : function()
@@ -448,6 +450,8 @@
             $("#ammortization").kendoNumericTextBox({format : "n2"});
 
             $("#remarks").kendoTextBox({ });
+
+            $("#loan_amount").kendoNumericTextBox({ });
             
             $("#is_stopped").kendoDropDownList({
                 dataTextField: "text",

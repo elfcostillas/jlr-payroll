@@ -16,8 +16,8 @@ class Daily implements EmployeeInterface
     }
 
     function getGrossPay($payreg){
-        return $this->getBasicPay($payreg) - $payreg['late_eq_amount'] - $payreg['under_time_amount'] + $payreg['vl_wpay_amount'] + $payreg['sl_wpay_amount'] +
-                        $payreg['reg_ot_amount'] +  $payreg['reg_nd_amount'] + $payreg['reg_ndot_amount'] 
+        return $this->getBasicPay($payreg) - $payreg['late_eq_amount'] - $payreg['under_time_amount'] + $payreg['vl_wpay_amount'] + $payreg['sl_wpay_amount'] + $payreg['bl_wpay_amount']
+                        + $payreg['reg_ot_amount'] +  $payreg['reg_nd_amount'] + $payreg['reg_ndot_amount'] 
                         + $payreg['rd_hrs_amount'] + $payreg['rd_ot_amount'] + $payreg['rd_nd_amount'] + $payreg['rd_ndot_amount'] 
                         + $payreg['leghol_count_amount'] + $payreg['leghol_hrs_amount'] + $payreg['leghol_ot_amount'] + $payreg['leghol_nd_amount']
                         + $payreg['leghol_rd_amount'] + $payreg['leghol_rdot_amount'] + $payreg['leghol_ndot_amount'] + $payreg['leghol_rdndot_amount']

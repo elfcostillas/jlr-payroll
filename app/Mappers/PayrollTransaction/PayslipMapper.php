@@ -436,6 +436,12 @@ class PayslipMapper extends AbstractMapper {
             'days'=> $e->sl_wpay,
             'amount' => $e->sl_wpay_amount
         ]);
+
+        array_push($earnings, (object) [
+            'name' => 'Birthday Leave',
+            'days'=> $e->bl_wpay,
+            'amount' => $e->bl_wpay_amount
+        ]);
         
         return collect($earnings);
     }

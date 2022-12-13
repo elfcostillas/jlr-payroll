@@ -73,6 +73,7 @@ rd_ndot
                         middlename,
                         suffixname,
                         basic_salary,
+                        date_hired,
                         is_daily,
                         deduct_phic,
                         deduct_sss,
@@ -671,6 +672,14 @@ WHERE period_id = 1 AND total_amount > 0;*/
                 'name' => 'SL w/ Pay',
                 'hours'=> $employee->sl_wpay,
                 'amount' => $employee->sl_wpay_amount,
+            ]);
+        }
+
+        if($employee->bl_wpay>0 && $employee->pay_type!=2){
+            array_push($earnings, (object) [
+                'name' => 'Birthday Leave',
+                'hours'=> $employee->bl_wpay,
+                'amount' => $employee->bl_wpay_amount,
             ]);
         }
 
