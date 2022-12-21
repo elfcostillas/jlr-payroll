@@ -113,6 +113,13 @@ class ManageDTRController extends Controller
         return response()->json(true);
     }
 
+    public function onetimebigtime(Request $request){
+        /*
+        SELECT DISTINCT biometric_id FROM edtr_raw 
+LEFT JOIN payroll_period ON edtr_raw.punch_date BETWEEN date_from AND date_to WHERE payroll_period.id = 1
+*/
+    }
+
     public function clearLogs(Request $request)
     {   
         $biometric_id = $request->biometric_id;

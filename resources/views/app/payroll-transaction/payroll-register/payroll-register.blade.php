@@ -122,7 +122,7 @@
         </table>
     </div> --}}
     <?php
-        $colspan=22;
+        $colspan=24;
        //ndays,basic_pay,late_eq,late_eq_amount,under_time,under_time_amount
     ?>
     <div id="" >

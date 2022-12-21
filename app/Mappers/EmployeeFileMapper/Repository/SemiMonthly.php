@@ -17,7 +17,7 @@ class SemiMonthly
     }
 
     function getGrossPay($payreg){
-        return $this->getBasicPay($payreg) + $payreg['vl_wpay_amount'] + $payreg['sl_wpay_amount'] + $data['bl_wpay_amount']
+        return $this->getBasicPay($payreg) + $payreg['vl_wpay_amount'] + $payreg['sl_wpay_amount'] + $payreg['bl_wpay_amount']
                         + $payreg['reg_ot_amount'] +  $payreg['reg_nd_amount'] + $payreg['reg_ndot_amount'] 
                         + $payreg['rd_hrs_amount'] + $payreg['rd_ot_amount'] + $payreg['rd_nd_amount'] + $payreg['rd_ndot_amount'] 
                         + $payreg['leghol_count_amount'] + $payreg['leghol_hrs_amount'] + $payreg['leghol_ot_amount'] + $payreg['leghol_nd_amount']
@@ -29,6 +29,7 @@ class SemiMonthly
     }
 
     function getMonthlyCredit($data){
+        //dd($data);
         if($data['is_daily']=='Y'){
             $monthly_credit = $data['basic_salary'] * 26;
         }else{
