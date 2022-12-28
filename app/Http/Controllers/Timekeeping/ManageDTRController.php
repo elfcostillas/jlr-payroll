@@ -115,9 +115,28 @@ class ManageDTRController extends Controller
 
     public function onetimebigtime(Request $request){
         /*
-        SELECT DISTINCT biometric_id FROM edtr_raw 
-LEFT JOIN payroll_period ON edtr_raw.punch_date BETWEEN date_from AND date_to WHERE payroll_period.id = 1
-*/
+            SELECT DISTINCT biometric_id FROM edtr_raw 
+            LEFT JOIN payroll_period ON edtr_raw.punch_date BETWEEN date_from AND date_to WHERE payroll_period.id = 1
+        */
+        //dd($request->period_id);
+        $result = $this->mapper->onetimebigtime($request->period_id);
+        $period_id = $request->period_id;
+        foreach($result as $bio_id)
+        {
+        //    dd($bio_id);
+
+             
+            $dtr = $this->mapper->getSemiDTR($bio_id->biometric_id,$period_id);
+            $this->mapper->mapRawLogs2($dtr);
+
+            $dtr2 = $this->mapper->putLeavesUT($bio_id->biometric_id,$period_id);
+
+            $dtr3 = $this->mapper->getSemiDTRforComputation($bio_id->biometric_id,$period_id);
+
+            $this->mapper->computeLogs($dtr3,'semi');
+
+        }
+
     }
 
     public function clearLogs(Request $request)

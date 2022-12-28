@@ -718,7 +718,8 @@
 
 
             $("#date_from").kendoDatePicker({
-                format: "MM/dd/yyyy"
+                format: "MM/dd/yyyy",
+               
             });
 
             $("#date_to").kendoDatePicker({

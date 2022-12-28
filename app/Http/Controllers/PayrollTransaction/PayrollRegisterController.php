@@ -12,6 +12,8 @@ use App\Mappers\EmployeeFileMapper\Repository\Daily;
 use App\Mappers\EmployeeFileMapper\EmployeeMapper;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Excel\UnpostedPayrollRegister;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PayrollRegisterController extends Controller
 {
@@ -19,12 +21,14 @@ class PayrollRegisterController extends Controller
     private $unposted;
     private $posted;
     private $employee;
+    private $excel;
 
-    public function __construct(UnpostedPayrollRegisterMapper $unposted,PostedPayrollRegisterMapper $posted,EmployeeMapper $employee)
+    public function __construct(UnpostedPayrollRegister $excel,UnpostedPayrollRegisterMapper $unposted,PostedPayrollRegisterMapper $posted,EmployeeMapper $employee)
     {
         $this->unposted = $unposted;
         $this->posted = $posted;
         $this->employee = $employee;
+        $this->excel = $excel;
     }
 
     public function index()
@@ -188,6 +192,40 @@ class PayrollRegisterController extends Controller
         //dd($headers);
         
         return view('app.payroll-transaction.payroll-register.payroll-register',['data' => $collections,'no_pay' => $noPay,'headers' => $headers , 'labels' => $label,'deductionLabel' => $deductions,'govLoan' => $gov,'compensation' => $compensation]);
+    }
+
+    public function downloadExcelUnposted(Request $request)
+    {
+        //dd($request->id);
+        $period = $this->unposted->getPeriod($request->id);
+        
+        if($period){
+            $noPay = $this->unposted->semiEmployeeNoPayroll($period->id);
+
+            $collections = $this->unposted->getPprocessed($period);
+            $headers =  $this->unposted->getHeaders($period)->toArray();
+            $colHeaders = $this->unposted->getColHeaders();
+
+            $deductions = $this->unposted->getDeductionLabel($period);
+            $gov = $this->unposted->getGovLoanLabel($period);
+            $compensation = $this->unposted->getUsedCompensation($period);
+            //dd($compensation);
+            $label = [];
+
+            foreach($headers as $key => $value){
+                if($value==0){
+                    unset($headers[$key]);
+                }
+            }
+
+            foreach($colHeaders  as  $value ){
+                //dd($value->var_name,$vaue->col_label);
+                $label[$value->var_name] = $value->col_label;
+            }
+
+            $this->excel->setValues($collections,$noPay,$headers,$deductions,$gov,$compensation,$label);
+            return Excel::download($this->excel,'PayrollRegister'.$period->id.'.xlsx');
+        }
     }
 
     public function postPayroll(Request $request)

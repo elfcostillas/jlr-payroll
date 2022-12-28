@@ -45,6 +45,7 @@ class EmployeeController extends Controller
             'pageSize' => $request->input('pageSize'),
             'filter' => $request->input('filter'),
             'sort' => $request->input('sort'),
+            'search' => $request->input('search'),
         ];
 
         $result = $this->mapper->list($filter);

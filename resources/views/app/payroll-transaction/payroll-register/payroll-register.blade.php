@@ -50,7 +50,7 @@
                 position: -webkit-sticky; /* for Safari */
                 position: sticky;
                 top: 0;
-                background: #ebecf0;
+                background: #e3e3e3;
                 color: #000;
                 
             
@@ -60,7 +60,7 @@
                 position: -webkit-sticky; /* for Safari */
                 position: sticky;
                 left: 0;
-                background: #fff; /* dont remove */
+                background: #acacac; /* dont remove */
                 /* border-right: 1px solid #CCC; */
                 vertical-align: middle;
                 
@@ -122,7 +122,7 @@
         </table>
     </div> --}}
     <?php
-        $colspan=24;
+        $colspan=26;
        //ndays,basic_pay,late_eq,late_eq_amount,under_time,under_time_amount
     ?>
     <div id="" >
@@ -133,6 +133,8 @@
                         <th style="padding : 0px 4px; width : 240px;" >Name</th>
                         <th style="padding : 0px 4px;min-width:110px;" >Basic Rate</th>
                         <th style="padding : 0px 4px;min-width:110px;" >Daily Rate</th>
+                        <th style="padding : 0px 4px;min-width:110px;" >Allowance (Monthly)</th>
+                        <th style="padding : 0px 4px;min-width:110px;" >Allowance (Daily)</th>
                         <th style="padding : 0px 4px;min-width:110px;" >No Days</th>
                         <th style="padding : 0px 4px;min-width:110px;" >Basic Pay</th>
                         
@@ -200,11 +202,15 @@
                             @foreach($department->employees as $employee)
                                {{-- @php dd($employee->absences); @endphp --}}
                                 <tr style="vertical-align: top;">
-                                    <th style+="width:120px;"> {{ $employee->biometric_id }} </th> 
+                                    <th style="width:120px;"> {{ $employee->biometric_id }} </th> 
                                     <th style="text-align:left; width : 240px;"> {{ $employee->employee_name }} </th> 
-                                    <td style="text-align:right;"> {{ number_format($employee->basic_salary,2) }}</td>
-                                    <td style="text-align:right;"> {{ number_format($employee->daily_rate,2) }}</td>
+                                    <td style="text-align:right;background-color:#acacac;"> {{ number_format($employee->basicpay,2) }}</td>
+                                    <td style="text-align:right;background-color:#acacac;"> {{ number_format($employee->daily_rate,2) }}</td>
 
+                                    <td style="text-align:right;background-color:#acacac;"> {{ ($employee->mallowance>0) ? number_format(round($employee->mallowance/2),2) : '' }}</td>
+                                    <td style="text-align:right;background-color:#acacac;"> {{ ($employee->dallowance>0) ? number_format($employee->dallowance,2) : '' }}</td>
+                                    
+                                    
                                     <td style="text-align:right;"> {{ number_format($employee->ndays,2) }}</td>
                                     <td style="text-align:right;"> {{ number_format($employee->basic_pay,2) }}</td>
 
@@ -250,7 +256,7 @@
                                         <td style="text-align:right;" >{{ (array_key_exists($label->id,$employee->deductions)) ? number_format($employee->deductions[$label->id],2) : ''; }}</td> 
                                     @endforeach
                                     <td style="text-align:right;font-weight:bold;border-bottom:1px solid;" >{{ ($employee->total_deduction>0) ? number_format($employee->total_deduction,2) : ''; }}</td>
-                                    <td style="text-align:right;font-weight:bold;border-bottom:double;" >{{ ($employee->net_pay>0) ? number_format($employee->net_pay,2) : ''; }}</td>
+                                    <td style="text-align:right;font-weight:bold;border-bottom:double;{{ ($employee->net_pay < ($employee->gross_total*0.3)) ? 'color:red'  : '' }};" >{{ ($employee->net_pay>0) ? number_format($employee->net_pay,2) :  number_format($employee->net_pay,2) }}</td>
                                 </tr>
                             @endforeach
                         @endforeach
@@ -260,17 +266,22 @@
         @if(count($no_pay)>0)
         <table border="1" style="border-collapse:collapse;margin-top : 12px;">
             <tr>
-                <td colspan="2"> Employees not in computation</td>
+                <td colspan="5"> Employees not in computation</td>
             </tr>
             <tr>
                 <td>Biometric ID</td>
                 <td>Employee Name</td>
+                <td>Division</td>
+                <td>Department</td>
             </tr>
 
             @foreach($no_pay as $e)
                 <tr>
                     <td> {{ $e->biometric_id }}</td>
                     <td> {{ $e->employee_name }}</td>
+                    <td> {{ $e->div_code }}</td>
+                    <td> {{ $e->dept_code }}</td>
+                    <td> {{ $e->job_title_name }}</td>
                     
                 </tr>
             @endforeach

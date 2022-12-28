@@ -81,6 +81,13 @@ class EmployeeMapper extends AbstractMapper {
 			{
 				$result->where($f['field'],'like','%'.$f['value'].'%');
 			}
+			
+		}
+
+		if(trim($filter['search'])!=''){
+			$result = $result->orWhere('firstname','like','%'.$filter['search'].'%')
+			->orWhere('lastname','like','%'.$filter['search'].'%')
+			->orWhere('middlename','like','%'.$filter['search'].'%');
 		}
 
 		$total = $result->count();

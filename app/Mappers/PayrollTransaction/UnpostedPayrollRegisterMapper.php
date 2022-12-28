@@ -467,7 +467,8 @@ rd_ndot
 
     public function getEmployees($location,$division,$department,$period) /* Earnings and Deductions here */
     {   
-        $employees = $this->model->select(DB::raw("employee_names_vw.employee_name,payrollregister_unposted_s.*,employees.pay_type"))
+        $employees = $this->model->select(DB::raw("employee_names_vw.employee_name,payrollregister_unposted_s.*,employees.pay_type,employees.monthly_allowance as mallowance,
+        employees.daily_allowance as dallowance,IF(employees.pay_type=1,employees.basic_salary/2,employees.basic_salary) AS basicpay"))
                                 ->from("payrollregister_unposted_s")
                                 ->join("employees",'employees.biometric_id','=','payrollregister_unposted_s.biometric_id')
                                 ->join("employee_names_vw",'employee_names_vw.biometric_id','=','payrollregister_unposted_s.biometric_id')
@@ -476,7 +477,7 @@ rd_ndot
                                     ['dept_id','=',$department->id],
                                     ['location_id','=',$location->id],
                                     ['payrollregister_unposted_s.period_id','=',$period->id]
-                                ])->get();
+                                ])->orderBy('employees.pay_type','DESC')->orderBy('employee_names_vw.employee_name','ASC')->get();
         foreach($employees as $employee)
         {   
             $deductions = $this->getDeductions($employee->biometric_id,$period->id);
@@ -763,12 +764,16 @@ WHERE period_id = 1 AND total_amount > 0;*/
     {
         $empInPayroll = $this->model->select('biometric_id')->from('payrollregister_unposted_s')->where('period_id',$period_id);
 
-        $result = $this->model->select('employees.biometric_id','employee_name')
+        $result = $this->model->select('employees.biometric_id','employee_name','div_code','dept_code','job_title_name')
                                 ->from('employees')
                                 ->join('employee_names_vw','employees.biometric_id','=','employee_names_vw.biometric_id')
+                                ->leftJoin('departments','departments.id','=','employees.dept_id')
+                                ->leftJoin('divisions','divisions.id','=','employees.division_id')
+                                ->leftJoin('job_titles','job_titles.id','=','employees.job_title_id')
                                 ->whereNotIn('employees.biometric_id',$empInPayroll)
-                                ->where('employees.exit_status',1);
-
+                                ->where('employees.exit_status',1)
+                                ->where('employees.pay_type','!=',3);
+                                
         return $result->get();
     }   
 

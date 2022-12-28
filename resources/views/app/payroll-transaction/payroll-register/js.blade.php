@@ -74,7 +74,9 @@
                     },
 
                     download : function(){
-                        alert('download');
+                        let period = $("#unposted_period").data("kendoDropDownList");
+                        let url = `payroll-register/download-unposted/${period.value()}`;
+                        window.open(url)
                     },
 
                     post : function(){

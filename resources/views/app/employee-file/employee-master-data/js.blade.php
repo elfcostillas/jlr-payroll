@@ -11,6 +11,19 @@
             let pay_type =<?php echo json_encode($pay_type) ?>;
             let emp_level =<?php echo json_encode($level_desc) ?>;
 
+            $("#employee_search").kendoTextBox({
+                change : function (e){
+                        let value = e.sender.value();
+
+                        if(value.trim()!='')
+                        {
+                            viewModel.ds.maingrid.read({search : $("#employee_search").data('kendoTextBox').value() });
+                            
+                        }
+                }
+               
+            });
+
             let genderOptions = [
                     { text: "Male", value: "M" },
                     { text: "Female", value: "F" },
@@ -131,6 +144,7 @@
                         transport : {
                             read : {
                                 url : 'employee-master-data/list',
+                                //data : { search : $("#employee_search").data('kendoTextBox').value() },
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -490,6 +504,8 @@
             $("#bank_acct").kendoTextBox({ });
             $("#secondary_addr").kendoTextBox({ });
 
+           
+            
             $("#gender").kendoDropDownList({
                 dataTextField: "text",
                 dataValueField: "value",

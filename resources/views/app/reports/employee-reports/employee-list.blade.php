@@ -21,6 +21,8 @@
         <td>Employment Status</td>
         <td>Status</td>
         <td>Employee Type</td>
+        <td>Daily Allowance</td>
+        <td>Monthly Allowance</td>
     </tr>
     
     @foreach($data as $emp)
@@ -46,7 +48,11 @@
             <td>{{ $emp->estatus_desc }}  </td>
             <td>{{ $emp->status_desc }}  </td>
             <td>{{ $emp->pay_description }}  </td>
+
+            <td>{{ $emp->monthly_allowance }}  </td>
+            <td>{{ $emp->daily_allowance }}  </td>
         </tr>
     @endforeach
 </table>
+
 

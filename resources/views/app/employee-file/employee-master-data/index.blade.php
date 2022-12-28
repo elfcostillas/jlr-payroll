@@ -68,6 +68,7 @@
                     <div class="card card-secondary">
                         <div class="card-header"> </div>
                         <div class="card-body"> 
+                            <input type="text" id="employee_search" style="margin-bottom : 4px" placeholder="Search name here...">
                             <div id="maingrid"></div>   
                         </div>
                     </div>

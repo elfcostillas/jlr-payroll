@@ -393,7 +393,7 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::get('/',[PayrollRegisterController::class,'index']);
         Route::get('unposted-payroll',[PayrollRegisterController::class,'getUnpostedPeriod']);
         Route::get('compute/{id}',[PayrollRegisterController::class,'compute']);
-
+        Route::get('download-unposted/{id}',[PayrollRegisterController::class,'downloadExcelUnposted']);
         Route::post('post',[PayrollRegisterController::class,'postPayroll']);
         
     }); 
@@ -405,6 +405,12 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::get('get-employees/{period}/{div}/{dept}',[PayslipController::class,'getEmployees']);
         Route::get('web-view/{period}/{div}/{dept}/{bio_id}',[PayslipController::class,'webView']);
         Route::get('print/{period}/{div}/{dept}/{bio_id}',[PayslipController::class,'print']);
+    });
+
+    Route::prefix('bank-transmittal')->group(function(){
+        Route::get('/',[BankTransmittalController::class,'index']);
+        Route::get('get-periods',[BankTransmittalController::class,'postedPeriods']);
+        Route::get('download/{period_id}',[BankTransmittalController::class,'generateExcel']);
     });
 });
 

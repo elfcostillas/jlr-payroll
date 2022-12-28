@@ -104,7 +104,15 @@
                     buttonCount : 5
                 },
                 noRecords: true,
-                filterable : true,
+                filterable : {
+                    extra: false,
+                    operators: {
+                        string: {
+                            contains : "Contains"
+                        },
+                       
+                    }
+                },
                 sortable : true,
                 height : 550,
                 scrollable: true,
