@@ -187,11 +187,8 @@
                         <th style="padding : 0px 4px;min-width:110px;" >Net Pay</th>
                 </tr>
             </thead>
-            @foreach($data as $location)
-                <tr>
-                    <td colspan={{$colspan}} class="location"> {{ $location->location_name }} </td>
-                </tr>
-                    @foreach($location->divisions as $division)  
+           
+                    @foreach($data as $division)  
                         <tr>
                             <td colspan={{$colspan}}  class="division"> {{ $division->div_name }} </td>
                         </tr>
@@ -261,7 +258,7 @@
                             @endforeach
                         @endforeach
                     @endforeach
-            @endforeach
+            
         </table>
         @if(count($no_pay)>0)
         <table border="1" style="border-collapse:collapse;margin-top : 12px;">

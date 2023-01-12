@@ -319,33 +319,33 @@ rd_ndot
     }
 
     public function getPprocessed($period){
-        $locations = $this->model->select('locations.id','location_name')
-                    ->from("employees")
-                    ->join('locations','locations.id','=','employees.location_id')
-                    ->where('exit_status','=','1')
-                    ->distinct()->get();
-            if($locations){
-                foreach($locations as $location)
-                {
+        // $locations = $this->model->select('locations.id','location_name')
+        //             ->from("employees")
+        //             ->join('locations','locations.id','=','employees.location_id')
+        //             ->where('exit_status','=','1')
+        //             ->distinct()->get();
+            // if($locations){
+            //     foreach($locations as $location)
+            //     {
                     //SELECT DISTINCT division_id FROM employees WHERE exit_status = 1 AND location_id=1;
-                    $divisions = $this->getDivisions($location);
+                    $divisions = $this->getDivisions(0);
 
                     foreach($divisions as $division){
-                        $departments = $this->getDepartments($location,$division);
+                        $departments = $this->getDepartments(0,$division);
 
                         foreach($departments as $department){
-                            $employees = $this->getEmployees($location,$division,$department,$period);
+                            $employees = $this->getEmployees(0,$division,$department,$period);
                             $department->employees =  $employees;
                         }
 
                         $division->departments = $departments;
                     }
 
-                    $location->divisions = $divisions;
-                }
-            }
+                    //$location->divisions = $divisions;
+            //     }
+            // }
 
-        return $locations;
+        return $divisions;
     }
 
     public function getHeaders($period)
@@ -435,7 +435,7 @@ rd_ndot
                         ->from("employees")
                         ->join('divisions','divisions.id','=','employees.division_id')
                         ->where('exit_status','=','1')
-                        ->where('location_id',$location->id)
+                        //->where('location_id',$location->id)
                         ->distinct()->get();
         return $divisions;
     }
@@ -453,9 +453,9 @@ rd_ndot
                         ->from("employees")
                         ->join('departments','departments.id','=','employees.dept_id')
                         ->where('exit_status','=','1')
-                        ->where('location_id',$location->id)
                         ->where('division_id',$division->id)
                         ->distinct()->get();
+            // ->where('location_id',$location->id)
 
         return $departments;
     }
@@ -475,7 +475,7 @@ rd_ndot
                                 ->where([
                                     ['division_id','=',$division->id],
                                     ['dept_id','=',$department->id],
-                                    ['location_id','=',$location->id],
+                                    //['location_id','=',$location->id],
                                     ['payrollregister_unposted_s.period_id','=',$period->id]
                                 ])->orderBy('employees.pay_type','DESC')->orderBy('employee_names_vw.employee_name','ASC')->get();
         foreach($employees as $employee)
@@ -958,8 +958,8 @@ WHERE period_id = 1 AND total_amount > 0;*/
         TRUNCATE payrollregister_posted_s;
         TRUNCATE posted_fixed_compensations;
         TRUNCATE posted_other_compensations;
-        TRUNCATE posted_fixed_compensations;
-        TRUNCATE posted_other_compensations;
+        TRUNCATE posting_info;
+        
 
 
         SELECT period_id,biometric_id,deduction_type,amount,deduction_id FROM unposted_fixed_deductions WHERE period_id = 1;

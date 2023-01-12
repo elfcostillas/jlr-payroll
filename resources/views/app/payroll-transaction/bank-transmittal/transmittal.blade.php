@@ -11,7 +11,7 @@
             <tr>
                 <td>{{ $row->bank_acct }}</td>
                 <td>{{ $row->net_pay }}</td>
-                <td>{{ $row->employee_name }}</td>
+                <td>{{ strtoupper($row->employee_name) }}</td>
             </tr>
         @endforeach
     @endif

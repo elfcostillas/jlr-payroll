@@ -21,6 +21,7 @@
         <td>Employment Status</td>
         <td>Status</td>
         <td>Employee Type</td>
+        <td>Bank Account</td>
         <td>Daily Allowance</td>
         <td>Monthly Allowance</td>
     </tr>
@@ -48,7 +49,7 @@
             <td>{{ $emp->estatus_desc }}  </td>
             <td>{{ $emp->status_desc }}  </td>
             <td>{{ $emp->pay_description }}  </td>
-
+            <td>{{ $emp->bank_acct }}</td>
             <td>{{ $emp->monthly_allowance }}  </td>
             <td>{{ $emp->daily_allowance }}  </td>
         </tr>

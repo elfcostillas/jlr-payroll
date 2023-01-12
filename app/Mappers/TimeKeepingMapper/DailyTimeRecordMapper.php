@@ -460,6 +460,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                 ])
                 ->orderBy('punch_time')
                 ->first();
+                
                 if($in){
                     //->whereRaw("punch_time<'$nextIn->punch_time'")
 
@@ -473,6 +474,8 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                     ->whereRaw("punch_time>'$in->punch_time'")
                     ->orderBy('punch_time')
                     ->first();
+
+                   
                 }else {
                     $out =  $this->model->select()
                     ->from('edtr_raw')
@@ -488,6 +491,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                
 
                 if($out==null){
+                  
                     $nextDay = Carbon::createFromFormat('Y-m-d',$dtr->dtr_date)->addDay(); //addDays(n days) // subDay // subDays(n days)
 
                     $nextIn =  $this->model->select()
@@ -511,6 +515,18 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                                 ->whereRaw("punch_time<'$nextIn->punch_time'")
                                 //->whereBetween('punch_date',[$dtr->dtr_date,$nextDay->format('Y-m-d')])
                                 ->first();
+                    }
+                    if($out==null){
+                        $out =  $this->model->select()
+                        ->from('edtr_raw')
+                        ->where([
+                            ['punch_date',$nextDay->format('Y-m-d')],
+                            ['biometric_id',$dtr->biometric_id],
+                            ['cstate','C/Out']
+                        ])
+                        //->whereRaw("punch_time<'$nextIn->punch_time'")
+                        //->whereBetween('punch_date',[$dtr->dtr_date,$nextDay->format('Y-m-d')])
+                        ->first();
                     }
 
                 }
@@ -544,7 +560,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                             ['biometric_id',$dtr->biometric_id],
                             ['cstate','C/Out']
                         ])
-                        ->orderBy('punch_time')
+                        ->orderBy('punch_time','desc')
                         ->first();
                 }
                 

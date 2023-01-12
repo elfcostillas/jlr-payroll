@@ -71,9 +71,10 @@ class UnpostedPayrollRegister implements ShouldAutoSize,WithColumnFormatting,Fro
 
         $col = 'C';
         for($x=3;$x<100;$x++){
-            $col++;
+            
          
             $cols[$col]=NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2;
+            $col++;
         }
     
         return $cols;

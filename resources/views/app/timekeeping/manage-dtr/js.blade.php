@@ -506,7 +506,7 @@
                     {
                         title : "Date",
                         field : "dtr_date",
-                        template : "#= (data.dtr_date) ? kendo.toString(data.dtr_date,'MM/dd/yyyy') : ''  #",
+                        template : "#= (data.dtr_date) ? kendo.toString(data.dtr_date,'MM/dd/yyyy')  : ''  #",
                         width : 90,
                          attributes: {
                             style: "font-size: 9pt;text-align:center",
@@ -543,12 +543,14 @@
                         width : 70,
                          attributes: {
                             style: "font-size: 9pt;text-align:center",
+
                             
                         },
                         headerAttributes: {
                             style: "font-size: 9pt;text-align:center",
                             
-                        }    
+                        },    
+                        
                     },
                     {
                         title : "Time Out",
