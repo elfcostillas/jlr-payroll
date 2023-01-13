@@ -35,6 +35,10 @@
         page-break-after:auto 
     }
 
+    td {
+        padding : 2px;
+    }
+
     @page { margin: 40px 40px 60px 40px; border:1px solid green } /* top right bottom left */
 
 
@@ -43,23 +47,23 @@
     @foreach($employees as $employee)
         <table border=1 style="border-collapse:collapse;margin-bottom : 16px;width:100%;">
             <tr>
-                <td colspan=15> {{ $employee->empname }}</td>
+                <td colspan=15 style="font-size:12pt;font-weight:bold;"> {{ $employee->empname }}</td>
             </tr>
             <tr>
-                <td>Day</td>
-                <td>Date</td>
-                <td>Schedule</td>
-                <td>Time In</td>
-                <td>Time Out</td>
+                <td style="text-align:center;font-weight:bold;">Day</td>
+                <td style="text-align:center;font-weight:bold;">Date</td>
+                <td style="text-align:center;font-weight:bold;">Schedule</td>
+                <td style="text-align:center;font-weight:bold;">Time In</td>
+                <td style="text-align:center;font-weight:bold;">Time Out</td>
 
-                <td>Days</td>
-                <td>Late</td>
-                <td>Late Hrs</td>
-                <td>OT</td>
-                <td>UT</td>
+                <td style="text-align:center;font-weight:bold;">Days</td>
+                <td style="text-align:center;font-weight:bold;">Late</td>
+                <td style="text-align:center;font-weight:bold;">Late Hrs</td>
+                <td style="text-align:center;font-weight:bold;">OT</td>
+                <td style="text-align:center;font-weight:bold;">UT</td>
                 
-                <td>ND</td>
-                <td>HOL</td>
+                <td style="text-align:center;font-weight:bold;">ND</td>
+                <td style="text-align:center;font-weight:bold;">HOL</td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -70,11 +74,11 @@
 					$dtrdate = Carbon::createFromFormat('Y-m-d',$log->dtr_date);	
 				?>
                 <tr>
-                    <td>{{ $log->day_name }}</td>
-                    <td> {{ date_format($dtrdate,'m/d/Y')}}</td>
-                    <td> {{ $log->schedule_desc }}</td>
-                    <td> {{ $log->time_in }} </td>
-                    <td> {{ $log->time_out }} </td>
+                    <td style="text-align:center;" > {{ strtoupper($log->day_name) }}</td>
+                    <td style="text-align:center;" > {{ date_format($dtrdate,'m/d/Y')}}</td>
+                    <td style="text-align:center;"> {{ $log->schedule_desc }}</td>
+                    <td style="text-align:center;"> {{ $log->time_in }} </td>
+                    <td style="text-align:center;"> {{ $log->time_out }} </td>
 
                     <td></td>
                     <td></td>

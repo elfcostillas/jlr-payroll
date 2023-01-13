@@ -145,6 +145,7 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::post('compute-logs',[ManageDTRController::class,'computeLogs']);
         Route::post('clear-logs',[ManageDTRController::class,'clearLogs']);
         Route::get('print/{period_id}',[ManageDTRController::class,'print']);
+        Route::get('iprint/{period_id}/{biometric_id}',[ManageDTRController::class,'iprint']);
 
         Route::get('onetimebigtime/{period_id}',[ManageDTRController::class,'onetimebigtime']);
     });

@@ -162,8 +162,28 @@ class ManageDTRController extends Controller
         
         $canvas = $dom_pdf ->get_canvas();
         $canvas->page_text(510, 800, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+        //return $pdf->download('JLR-DTR-Print.pdf'); 
         return $pdf->stream('JLR-DTR-Print.pdf'); 
         //return view('app.timekeeping.manage-dtr.print',['employees' => $result]);
+    }
+
+    public function iprint(Request $request)
+    {
+        $period_id = $request->period_id;
+        $biometric_id = $request->biometric_id;
+
+        $result = $this->mapper->getEmployeeForiPrint($period_id,$biometric_id,'semi');
+
+        $pdf = PDF::loadView('app.timekeeping.manage-dtr.print',['employees' => $result])->setPaper('A4','portrait');
+
+        //$pdf->output();
+        $pdf->output();
+        $dom_pdf = $pdf->getDomPDF();
+        
+        $canvas = $dom_pdf ->get_canvas();
+        $canvas->page_text(510, 800, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+        //return $pdf->download('JLR-DTR-Print.pdf'); 
+        return $pdf->stream('JLR-DTR-Print.pdf'); 
     }
     
 }

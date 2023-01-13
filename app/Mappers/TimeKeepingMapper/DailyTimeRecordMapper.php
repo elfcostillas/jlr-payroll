@@ -659,6 +659,44 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
     }
 
+    public function getEmployeeForiPrint($period_id,$biometric_id,$type)
+    {
+        if($type=='semi')
+        {
+            $result = $this->model->select(DB::raw("employees.id,employees.biometric_id,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) as empname"))
+            ->from('edtr')
+            ->join('employees','edtr.biometric_id','=','employees.biometric_id')
+            ->join('payroll_period',function($join){
+                $join->whereRaw('dtr_date between payroll_period.date_from and payroll_period.date_to');
+            })
+            ->whereIn('pay_type',[1,2])
+            ->where('exit_status',1)
+            ->where('edtr.biometric_id',$biometric_id)
+            ->where('payroll_period.id',$period_id)
+            ->distinct();
+        }else{
+            $result = $this->model->select(DB::raw("employees.id,employees.biometric_id,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) as empname"))
+            ->from('edtr')
+            ->join('employees','edtr.biometric_id','=','employees.biometric_id')
+            ->join('payroll_period_weekly',function($join){
+                $join->whereRaw('dtr_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
+            })
+            ->where('pay_type',3)
+            ->where('exit_status',1)
+            ->where('edtr.biometric_id',$biometric_id)
+            ->where('payroll_period_weekly.id',$period_id)
+            ->distinct();
+        }
+        $employees = $result->get();
+        foreach($employees as $employee){
+            $dtr = $this->getSemiDTR($employee->biometric_id,$period_id);
+            $employee->dtr = $dtr;
+        }
+
+        return $employees;
+
+    }
+
     function clearLogs($biometric_id,$period_id){
         DB::statement("UPDATE edtr INNER JOIN payroll_period ON dtr_date BETWEEN date_from AND date_to 
         SET time_in=NULL,time_out=NULL 

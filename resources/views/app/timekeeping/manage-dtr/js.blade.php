@@ -8,9 +8,12 @@
         </span>&nbsp; Compute
     </button>
 
-      <button class="k-grid-save-changes k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="events: { click: buttonHandler.clear }">
+    <button class="k-grid-save-changes k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="events: { click: buttonHandler.clear }">
         </span>&nbsp; Clear
     </button>
+    <button class="k-grid-save-changes k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="events: { click: buttonHandler.iPrint }">
+    </span>&nbsp; Print
+</button>
 </script>	
 
 <script type="text/x-kendo-template" id="subgidcommand">
@@ -323,7 +326,13 @@
                         },function(){
                             viewModel.ds.dtrgrid.read();
                         });
+                    },
+                    iPrint : function()
+                    {
+                        let url = `manage-dtr/iprint/${viewModel.selectedPeriod.id}/${viewModel.selectedEmployee}`;
+                        window.open(url);
                     }
+
                 },
                 functions : {
                     showPop : function(data)
