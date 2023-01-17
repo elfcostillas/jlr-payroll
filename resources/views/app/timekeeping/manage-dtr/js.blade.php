@@ -560,7 +560,7 @@
                             
                         },    
                         template : "# if(time_in=='00:00'||time_in==null){#  #} else{# #= time_in #  #}#",
-                        
+                        locked : true,
                     },
                     {
                         title : "Time Out",
@@ -575,6 +575,7 @@
                             
                         },
                         template : "# if(time_out=='00:00'||time_out==null){#  #} else{# #= time_out #  #}#",
+                        locked : true,
                     },
                     {
                         title : "Days",
