@@ -559,6 +559,7 @@
                             style: "font-size: 9pt;text-align:center",
                             
                         },    
+                        template : "# if(time_in=='00:00'||time_in==null){#  #} else{# #= time_in #  #}#",
                         
                     },
                     {
@@ -572,7 +573,8 @@
                         headerAttributes: {
                             style: "font-size: 9pt;text-align:center"
                             
-                        }    
+                        },
+                        template : "# if(time_out=='00:00'||time_out==null){#  #} else{# #= time_out #  #}#",
                     },
                     {
                         title : "Days",

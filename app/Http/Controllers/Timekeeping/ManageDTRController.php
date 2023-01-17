@@ -75,6 +75,7 @@ class ManageDTRController extends Controller
     {
         $logs = $request->models;
         foreach($logs as $log){
+           
             $result = $this->mapper->updateValid($log);
             if(is_object($result)){
                 return response()->json($result)->setStatusCode(500, 'Error');
