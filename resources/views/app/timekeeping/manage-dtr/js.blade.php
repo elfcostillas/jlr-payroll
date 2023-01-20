@@ -258,6 +258,14 @@
 
                         });
                     },
+                    download : function(e){
+                        let tr = $(e.target).closest("tr");
+                        let data = this.dataItem(tr);
+
+                        let url = `manage-dtr/download/${data.id}`;
+                        window.open(url);
+
+                    },
                     manage : function(e){
                         let tr = $(e.target).closest("tr");
                         let data = this.dataItem(tr);
@@ -405,9 +413,12 @@
                         width : 110,    
                     },
                     {
-                        command: { text : 'Prepare',click : viewModel.buttonHandler.prepare , },
+                        command: [
+                            { text : 'Prepare',click : viewModel.buttonHandler.prepare , },
+                            { text : 'Download',click : viewModel.buttonHandler.download , }
+                        ],
                         attributes : { style : 'font-size:10pt !important;'},
-                        width : 85
+                        width : 160
                     },
                   
                 ],
@@ -544,7 +555,8 @@
                             style: "font-size: 9pt;text-align:center",
                             
                         },
-                        editor : scheduleEditor 
+                        editor : scheduleEditor ,
+                        locked : true,
                     },
                     {
                         title : "Time In",

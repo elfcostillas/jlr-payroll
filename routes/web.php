@@ -148,6 +148,8 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::get('iprint/{period_id}/{biometric_id}',[ManageDTRController::class,'iprint']);
 
         Route::get('onetimebigtime/{period_id}',[ManageDTRController::class,'onetimebigtime']);
+
+        Route::get('download/{period_id}',[ManageDTRController::class,'exportSemiDTR']);
     });
 
     Route::prefix('upload-log')->group(function(){

@@ -84,7 +84,7 @@
     <div class="container">
         <div id="viewModel" >
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-7">
                     <div class="card card-secondary">
                         <div class="card-header"> Payroll Period </div>
                         <div class="card-body"> 
@@ -92,7 +92,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <div class="card card-secondary">
                         <div class="card-header"> Employee List </div>
                         <div class="card-body"> 

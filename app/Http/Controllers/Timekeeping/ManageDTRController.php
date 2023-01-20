@@ -6,15 +6,19 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mappers\TimeKeepingMapper\DailyTimeRecordMapper;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Excel\DTRExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ManageDTRController extends Controller
 {
     //
     private $mapper;
+    private $excel;
 
-    public function __construct(DailyTimeRecordMapper $mapper)
+    public function __construct(DailyTimeRecordMapper $mapper,DTRExport $excel)
     {
         $this->mapper = $mapper;
+        $this->excel = $excel;
     }
 
     public function index()
@@ -65,6 +69,21 @@ class ManageDTRController extends Controller
         $result = $this->mapper->getSemiDTR($biometric_id,$period_id);
         return response()->json($result);
     }
+
+    public function exportSemiDTR(Request $request)
+    {
+        $biometric_id = $request->biometric_id;
+        $period_id = $request->period_id;
+      
+        $result = $this->mapper->getSemiDTRexp($period_id);
+
+        $this->excel->setValues($result);
+        return Excel::download($this->excel,'DTR'.$period_id.'.xlsx');
+
+        //return view('app.timekeeping.manage-dtr.dtr-download',['data' => $result ]);
+        //return response()->json($result);
+    }
+
     public function getSchedules()
     {
         $result = $this->mapper->getSchedules();
