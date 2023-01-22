@@ -63,6 +63,7 @@
         <td> DBL Hol ND	</td>
         <td> DBL Hol ND OT	</td>
         <td> DBL Hol RD ND OT</td>
+        <td> Command </td>
     </tr>
     @foreach($data as $row)
        
@@ -121,6 +122,7 @@
                     <td></td> 
                     <td></td> 
                     <td></td> 
+                    <td></td>
                 </tr>
         <?php
                 $prev = $row->biometric_id;
@@ -177,7 +179,7 @@
             <td> {{ nformat($row->dblhol_nd) }}</td>
             <td> {{ nformat($row->dblhol_ndot) }}</td>
             <td> {{ nformat($row->dblhol_rdndot) }}</td>
-
+            <td>Y</td>
         </tr>
     @endforeach
 </table>

@@ -482,7 +482,7 @@
                     }
                 }
                
-                if (e.altKey && e.keyCode == 48) {
+                if (e.altKey && e.keyCode == 48) { // ALT + 0
                     
                     if(viewModel.form.model.document_status!='POSTED'){
                         viewModel.buttonHandler.recreate();
