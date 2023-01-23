@@ -138,7 +138,7 @@
             <td> {{ $row->work_sched }}</td>
             <td> {{ $row->time_in }}</td>
             <td> {{ $row->time_out }}</td>
-            <td> {{ nformat($row->nday) }}</td>
+            <td> {{ nformat($row->ndays) }}</td>
             <td> {{ nformat($row->late) }}</td>
             <td> {{ nformat($row->late_eq) }}</td>
             <td> {{ nformat($row->under_time) }}</td>

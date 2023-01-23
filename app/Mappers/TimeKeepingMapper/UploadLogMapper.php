@@ -20,5 +20,14 @@ class UploadLogMapper extends AbstractMapper {
         $result = DB::table('edtr_raw')->insertOrIgnore($logs);
     }
 
+    // public function insertDB_CSV($logs)
+    // {
+    //     $result = DB::table('edtr_raw')->insertOrIgnore($logs);
+    // }
+
+    public function updatefromCSV($key,$data)
+    {
+        DB::table('edtr')->where($key)->update($data);
+    }
 
 }

@@ -157,6 +157,11 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::post('upload',[UploadLogController::class,'upload']);
     });
 
+     Route::prefix('upload-csv')->group(function(){
+        Route::get('/',[UploadLogController::class,'index_csv']);
+        Route::post('upload',[UploadLogController::class,'upload_csv']);
+    });
+
     Route::prefix('manual-dtr')->middleware('access:timekeeping/manual-dtr')->group(function(){
         Route::get('/',[ManualDTRController::class,'index']);
         Route::get('list',[ManualDTRController::class,'list']);
