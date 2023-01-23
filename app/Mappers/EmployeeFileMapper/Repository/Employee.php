@@ -336,8 +336,9 @@ class Employee
 
     public function setPayRates(){
         if($this->data['is_daily']=='Y'){
-            $this->rates["daily_rate"] = $this->data['basic_salary'];
-            $this->rates["hourly_rate"] = (float) round($this->rates['daily_rate']/8,4);
+            //dd($this->data);
+            $this->rates["daily_rate"] = $this->data['basic_salary'] ;//+ $this->data['daily_allowance'];
+            $this->rates["hourly_rate"] = (float) round(($this->rates['daily_rate'] + $this->data['daily_allowance'])/8,4);
         }else{
             $this->rates["daily_rate"] = (float) round(($this->data['basic_salary']*12)/313,4);
             $this->rates["hourly_rate"] = (float) round($this->rates['daily_rate']/8,4);
