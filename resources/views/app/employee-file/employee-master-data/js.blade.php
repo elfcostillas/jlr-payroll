@@ -79,6 +79,8 @@
                     emergency_relation: null,
                     emergency_phone: null,
                     date_regularized: null,
+                    sched_mtwtf: null,
+                    sched_sat: null,
                     
 
             };
@@ -129,6 +131,8 @@
                         emergency_relation: null,
                         emergency_phone: null,
                         date_regularized: null,
+                        sched_mtwtf: null,
+                        sched_sat: null,
                     },
                     mirror : {
                         is_daily : false,
@@ -256,6 +260,28 @@
                             }
                         }
                     }),
+                    sched : new kendo.data.DataSource({
+                        transport : {
+                            read : {
+                                url : '../timekeeping/manage-dtr/get-employee-schedules',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },
+                           
+                        },
+                        schema : {
+                            model : {
+                                id : 'schedule_id',
+                                fields : {
+                                    schedule_id : { type:'number',  },
+                                    schedule_desc : { type:'string',  },
+                                }
+                            }
+                        }
+                    })
                     
                 },
                 buttonHandler : {  
@@ -378,6 +404,8 @@
                         viewModel.form.model.set('exit_date',kendo.toString($('#exit_date').data('kendoDatePicker').value(),'yyyy-MM-dd'));
                         viewModel.form.model.set('date_regularized',kendo.toString($('#exit_date').data('kendoDatePicker').value(),'yyyy-MM-dd'));
                         viewModel.form.model.set('location_id',($('#location_id').data('kendoDropDownList').value()!='') ? $('#location_id').data('kendoDropDownList').value() : 0 );
+                        viewModel.form.model.set('sched_mtwtf',($('#sched_mtwtf').data('kendoDropDownList').value()!='') ? $('#sched_mtwtf').data('kendoDropDownList').value() : null );
+                        viewModel.form.model.set('sched_sat',($('#sched_sat').data('kendoDropDownList').value()!='') ? $('#sched_sat').data('kendoDropDownList').value() : null );
                         //viewModel.form.model.set('deduct_sss',(viewModel.form.model.deduct_sss) ? 'Y':'N');
                         
 
@@ -645,8 +673,35 @@
                 //change: onChange
             });
 
-            
-            
+            $("#sched_mtwtf").kendoDropDownList({
+                dataTextField: "schedule_desc",
+                dataValueField: "schedule_id",
+                dataSource: viewModel.ds.sched,
+                index: 1,
+                optionLabel: {
+                    schedule_desc: "",
+                    schedule_id: null
+                },
+                dataBound : function(e){
+                  
+                }
+                //change: onChange ":3,"
+            });
+
+            $("#sched_sat").kendoDropDownList({
+                dataTextField: "schedule_desc",
+                dataValueField: "schedule_id",
+                dataSource: viewModel.ds.sched,
+                index: 1,
+                optionLabel: {
+                    schedule_desc: "",
+                    schedule_id: null
+                },
+                dataBound : function(e){
+                  
+                }
+                //change: onChange
+            });
 
             $("#contact_no").kendoTextBox({ });
 

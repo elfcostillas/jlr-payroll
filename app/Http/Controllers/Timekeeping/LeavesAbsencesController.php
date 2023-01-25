@@ -71,6 +71,7 @@ class LeavesAbsencesController extends Controller
 
         return response()->json($result);
     }
+
 	public function getLeavesFrom100(){
         $result = $this->mapper->getLeavesFrom100();
 
@@ -116,6 +117,24 @@ class LeavesAbsencesController extends Controller
 
            
         }
+    }
+
+    public function makeQueryfor100(Request $request)
+    {
+        $credits = $this->mapper->getEncodedLeaveCredits(2023);
+
+        foreach($credits as $emp)
+        {
+            $old_id = $this->mapper->getOldId($emp->biometric_id);
+            $bal = $emp->vacation_leave + $emp->sick_leave;
+
+            //echo var_dump($old_id).' - '.$emp->biometric_id.'-'.$emp->employee_name."<hr>";
+           
+            $qry = "insert into hr_leavecredits (o201_id,credits,year,balance) values (".$old_id->o1_id.",".$bal.",2023,".$bal.");<br>";
+
+            echo $qry;
+        }
+
     }
 }
 

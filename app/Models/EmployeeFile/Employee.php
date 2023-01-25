@@ -49,6 +49,8 @@ class Employee extends Model
         'job_title_id',
         'daily_allowance',
         'monthly_allowance',
+        'sched_mtwtf',
+        'sched_sat'
 
     ];
 

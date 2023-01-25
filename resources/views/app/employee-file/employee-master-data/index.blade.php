@@ -232,6 +232,20 @@
                                 <td></td>
                                 <td></td>
                             </tr>
+                            <tr>
+                                <td colspan=2>Mon - Fri</td>
+                                <td colspan=2>Saturday</td>
+                                <td colspan=2></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan=2><input type="text" id="sched_mtwtf" data-bind="value:form.model.sched_mtwtf"></td>
+                                <td colspan=2><input type="text" id="sched_sat" data-bind="value:form.model.sched_sat"></td>
+                                <td colspan=2></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
                         </table>
                     </div>
                 </div>

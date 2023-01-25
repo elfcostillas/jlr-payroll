@@ -195,6 +195,7 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::post('update-detail',[LeavesAbsencesController::class,'updateDetail']);
         
         Route::get('copy',[LeavesAbsencesController::class,'getLeavesFrom100']);
+        Route::get('get-encode-leave-credits',[LeavesAbsencesController::class,'makeQueryfor100']);
 
 
     });

@@ -57,4 +57,20 @@ class LeavesAbsenceMapper extends AbstractMapper {
 		return $leaves;
 	}
 
+	public function getEncodedLeaveCredits($year)
+	{
+		$result = $this->model->select()->from('leave_credits')->where('fy_year',$year)
+		->leftJoin('employee_names_vw','leave_credits.biometric_id','=','employee_names_vw.biometric_id');
+		
+		return $result->get();
+	}
+
+	public function getOldId($biomettic_id)
+	{
+		$id = DB::connection('dps')->table('jlr_employees')->select('o1_id')->where('biometrics_id',$biomettic_id)->first();
+
+		return $id;
+
+	}
+
 }
