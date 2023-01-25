@@ -677,7 +677,7 @@
                 dataTextField: "schedule_desc",
                 dataValueField: "schedule_id",
                 dataSource: viewModel.ds.sched,
-                index: 1,
+                index: 0,
                 optionLabel: {
                     schedule_desc: "",
                     schedule_id: null
@@ -692,7 +692,7 @@
                 dataTextField: "schedule_desc",
                 dataValueField: "schedule_id",
                 dataSource: viewModel.ds.sched,
-                index: 1,
+                index: 0,
                 optionLabel: {
                     schedule_desc: "",
                     schedule_id: null
