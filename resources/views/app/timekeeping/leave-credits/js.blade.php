@@ -1,12 +1,13 @@
 @section('jquery')
+
+<script id="template" type="text/x-kendo-template">
+    <button class="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="click:toolbarHandler.downloadBal" > <span class="k-icon k-i-plus k-button-icon"></span>Download Balance</button>
+</script>
+
     <script>
+
         $(document).ready(function(){
-
-           
-
-
             var viewModel = kendo.observable({ 
-
                 ds : {
                     fy : new kendo.data.DataSource({
                         transport : {
@@ -104,8 +105,15 @@
                         }
                     }),
                 },
-                toolbarHandler : {
+                toolbarHandler : {  
+                    downloadBal : function(e){
+                        let year = ($("#fy").data("kendoDropDownList").value()=='') ? 2022 : $("#fy").data("kendoDropDownList").value();
+                        
+                        let url = `leave-credits/download-balance/${year}`;
 
+                        window.open(url);
+                    }
+                   
                 }
             });
 
@@ -121,7 +129,7 @@
                 height : 550,
                 scrollable: true,
                 //toolbar : [{ name :'create',text:'Add Payroll Period'}],
-                toolbar : [{ name :'save',text:'Save Changes'}],
+                toolbar : [{ name :'save',text:'Save Changes'},{ template: kendo.template($("#template").html())  }],
                 editable : true,
                 navigatable : true,
                 columns : [
@@ -176,6 +184,10 @@
             kendo.bind($("#viewModel"),viewModel);
 
         });
+
+        function downloadBal(){
+             
+        }
     </script>
 
 @endsection

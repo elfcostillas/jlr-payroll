@@ -208,6 +208,8 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         
         Route::post('save',[LeaveCreditsController::class,'save']);
 
+        Route::get('download-balance/{year}',[LeaveCreditsController::class,'download']);
+
     });
 
     

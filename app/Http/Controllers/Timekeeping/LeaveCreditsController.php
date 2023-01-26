@@ -53,5 +53,17 @@ class LeaveCreditsController extends Controller
         }
     }
 
+    public function download(Request $request)
+    {
+        $year = $request->year;
+
+        $start = $year.'-01-01';
+        $end = $year.'-12-31';
+
+        $data = $this->mapper->process($year,$start,$end);
+
+        return view('app.timekeeping.leave-credits.year-balance',['data'=>$data,'year'=>$year,'start'=>$start,'end'=>$end]);
+    }   
+
     
 }

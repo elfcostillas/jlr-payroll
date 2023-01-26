@@ -74,5 +74,36 @@ class LeaveCreditsMapper extends AbstractMapper {
         return $result->get();
     }
 
+    public function process($year,$start,$end)
+    {
+        $qry = "SELECT employees.biometric_id,lastname,firstname,suffixname,IFNULL(vacation_leave,0) vacation_leave,IFNULL(sick_leave,0) sick_leave,IFNULL(VL_PAY,0) VL_PAY,IFNULL(SL_PAY,0) SL_PAY FROM leave_credits
+        INNER JOIN employees ON leave_credits.biometric_id = employees.biometric_id
+        LEFT JOIN (
+        SELECT biometric_id,ROUND(SUM(with_pay)/8,2) AS total,
+        CASE
+            WHEN leave_type = 'VL' THEN ROUND(SUM(with_pay)/8,2)
+            ELSE 0
+        END AS VL_PAY,
+        CASE
+            WHEN leave_type = 'SL' THEN ROUND(SUM(with_pay)/8,2)
+            ELSE 0
+        END AS SL_PAY
+        FROM leave_request_header INNER JOIN leave_request_detail ON leave_request_header.id = leave_request_detail.header_id WHERE
+        leave_date BETWEEN '$start' AND '$end'
+        AND with_pay > 0
+        AND is_canceled = 'N'
+        AND leave_type IN ('VL','SL')
+        GROUP BY biometric_id
+        ) AS consumed ON employees.biometric_id = consumed.biometric_id
+        WHERE fy_year = '$year'
+        ORDER BY lastname,firstname";
+
+        echo $qry;
+
+        $result = DB::select($qry);
+
+        return $result;
+    }
+
 
 }

@@ -129,8 +129,8 @@ class LeavesAbsencesController extends Controller
             $bal = $emp->vacation_leave + $emp->sick_leave;
 
             //echo var_dump($old_id).' - '.$emp->biometric_id.'-'.$emp->employee_name."<hr>";
-           
-            $qry = "insert into hr_leavecredits (o201_id,credits,year,balance) values (".$old_id->o1_id.",".$bal.",2023,".$bal.");<br>";
+            $qry = "update hr_leavecredits set credits = ".$bal." Where year=2023 and o201_id=".$old_id->o1_id.";<br>";
+            //$qry = "insert into hr_leavecredits (o201_id,credits,year,balance) values (".$old_id->o1_id.",".$bal.",2023,".$bal.");<br>";
 
             echo $qry;
         }
