@@ -210,6 +210,8 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
 
         Route::get('download-balance/{year}',[LeaveCreditsController::class,'download']);
 
+        Route::get('show-leaves/{biometric_id}/{year}',[LeaveCreditsController::class,'showLeaves']);
+
     });
 
     

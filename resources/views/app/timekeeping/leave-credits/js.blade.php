@@ -112,6 +112,17 @@
                         let url = `leave-credits/download-balance/${year}`;
 
                         window.open(url);
+                    },
+                    showLeaves : function(e){
+                        let tr = $(e.target).closest("tr");
+                        let data = this.dataItem(tr);
+
+                        let year = ($("#fy").data("kendoDropDownList").value()=='') ? 2022 : $("#fy").data("kendoDropDownList").value();
+                       
+
+                        let url = `leave-credits/show-leaves/${data.biometric_id}/${year}`;
+
+                        window.open(url);
                     }
                    
                 }
@@ -154,8 +165,13 @@
                         width : 140,
                     },
                     {
-
-                    }
+                        command: [
+                            { text : 'Show Leaves',click : viewModel.toolbarHandler.showLeaves , },
+                            //{ text : 'Download',click : viewModel.buttonHandler.download , }
+                        ],
+                        attributes : { style : 'font-size:10pt !important;'},
+                        width : 160
+                    },
                   
                 ]
             });

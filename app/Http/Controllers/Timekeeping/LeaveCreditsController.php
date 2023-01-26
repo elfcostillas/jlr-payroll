@@ -5,15 +5,20 @@ namespace App\Http\Controllers\Timekeeping;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mappers\TimeKeepingMapper\LeaveCreditsMapper;
+use App\Excel\CreditBalance;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class LeaveCreditsController extends Controller
 {
     //
     private $mapper;
+    private $excel;
 
-    public function __construct(LeaveCreditsMapper $mapper)
+    public function __construct(LeaveCreditsMapper $mapper, CreditBalance $excel)
     {
         $this->mapper = $mapper;
+        $this->excel = $excel;
     }
 
     public function index()
@@ -62,8 +67,35 @@ class LeaveCreditsController extends Controller
 
         $data = $this->mapper->process($year,$start,$end);
 
-        return view('app.timekeeping.leave-credits.year-balance',['data'=>$data,'year'=>$year,'start'=>$start,'end'=>$end]);
+        $this->excel->setValues($data,$year,$start,$end);
+
+        return Excel::download($this->excel,'LeaveCreditBalance.xlsx');
+
+        //return view('app.timekeeping.leave-credits.year-balance',['data'=>$data,'year'=>$year,'start'=>$start,'end'=>$end]);
     }   
+
+    public function showLeaves(Request $request)
+    {
+        $year = $request->year;
+        $biometric_id = $request->biometric_id;
+
+        $start = $year.'-01-01';
+        $end = $year.'-12-31';
+
+        $data = $this->mapper->showLeaves($biometric_id,$start,$end);
+
+        $pdf = PDF::loadView('app.timekeeping.leave-credits.print',['data' => $data])->setPaper('A4','portrait');
+
+        return $pdf->stream('JLR-DTR-Print.pdf'); 
+        // //$pdf->output();
+        // $pdf->output();
+        // $dom_pdf = $pdf->getDomPDF();
+        
+        // $canvas = $dom_pdf ->get_canvas();
+        // $canvas->page_text(510, 800, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+        // //return $pdf->download('JLR-DTR-Print.pdf'); 
+        // return $pdf->stream('JLR-DTR-Print.pdf'); 
+    }
 
     
 }

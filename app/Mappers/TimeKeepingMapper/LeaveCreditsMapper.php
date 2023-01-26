@@ -104,5 +104,17 @@ class LeaveCreditsMapper extends AbstractMapper {
         return $result;
     }
 
+    public function showLeaves($biometric_id,$from,$to)
+    {
+        $qry = "SELECT leave_date,leave_type,remarks,ROUND(with_pay/8,2) with_pay,ROUND(without_pay/8,2) without_pay FROM leave_request_header INNER JOIN leave_request_detail ON leave_request_header.id = leave_request_detail.header_id
+        WHERE leave_request_header.biometric_id = $biometric_id
+        AND leave_date BETWEEN '$from' AND '$to'
+        ORDER BY leave_date;";
+        
+       $result = DB::select($qry);
+
+        return $result;
+    }
+
 
 }
