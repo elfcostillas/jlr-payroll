@@ -10,7 +10,18 @@
     }
 ?>
 
-<table border=1>
+<style>
+    * {
+        font-size: 9pt;
+        font-family: Consolas;
+    }
+
+    table tr td {
+        padding : 2px;
+    }
+</style>
+
+<table border=1 style="border-collapse:collapse">
     <tr>
         <td>Biometric ID</td>
         <td>Lastname</td>

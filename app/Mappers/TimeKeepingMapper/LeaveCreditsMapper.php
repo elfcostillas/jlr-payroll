@@ -98,7 +98,6 @@ class LeaveCreditsMapper extends AbstractMapper {
         WHERE fy_year = '$year'
         ORDER BY lastname,firstname";
 
-        echo $qry;
 
         $result = DB::select($qry);
 
