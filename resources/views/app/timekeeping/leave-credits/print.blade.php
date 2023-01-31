@@ -1,5 +1,18 @@
 @php
     use Carbon\Carbon;
+
+    function nformat($n)
+    {
+        if($n!=0)
+        {
+            return $n;
+        } else {
+            return '';
+        }
+    }
+
+    $total_wpay = 0;
+    $total_wopay = 0;
 @endphp
 <!DOCTYPE html>
 <html lang="en">
@@ -33,19 +46,26 @@
             @foreach($data as $row)
             @php
                 $leave_date = Carbon::createFromFormat('Y-m-d',$row->leave_date);
+                $total_wpay += $row->with_pay;
+                $total_wopay +=  $row->without_pay;
             @endphp
                 <tr>
                     <td>{{ $leave_date->format('m/d/Y') }}</td>
                     <td>{{ $row->leave_type }}</td>
                     <td>{{ $row->remarks }}</td>
-                    <td>{{ $row->with_pay }}</td>
-                    <td>{{ $row->without_pay }}</td>
+                    <td>{{ nformat($row->with_pay) }}</td>
+                    <td>{{ nformat($row->without_pay) }}</td>
                 </tr>
             @endforeach
+            <tr>
+                <td colspan=3></td>
+                <td>{{ number_format($total_wpay,2) }}</td>
+                <td>{{ number_format($total_wopay,2) }}</td>
+            </tr>
 
         @else
             <tr>
-                <td colspan='5' >*** NO DATA FOUND *** </td>
+                <td colspan='5' style="text-align:center;">*** NO DATA FOUND *** </td>
             </tr>
         @endif
     </table>

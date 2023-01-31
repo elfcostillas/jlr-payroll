@@ -39,7 +39,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
             ->distinct()
             ->get();
             */
-            $empWithPunch = $this->model->select('employees.biometric_id','schedule_id','schedule_sat')->from('employees')
+            $empWithPunch = $this->model->select('employees.biometric_id','sched_mtwtf','sched_sat')->from('employees')
             ->leftJoin('work_schedules_default','employees.dept_id','=','work_schedules_default.dept_id')
             ->whereIn('pay_type',[1,2])
             ->where('exit_status',1)
@@ -75,11 +75,11 @@ class DailyTimeRecordMapper extends AbstractMapper {
             foreach ($period as $date) {
                 switch ($date->format('D')){
                     case 'Mon': case 'Tue': case 'Wed': case 'Thu': case 'Fri':
-                            $sched = $emp->schedule_id;
+                            $sched = $emp->sched_mtwtf;
                         break;
                         
                     case 'Sat' :
-                            $sched = $emp->schedule_sat;
+                            $sched = $emp->sched_sat;
                         break;
                     
                     default : 
