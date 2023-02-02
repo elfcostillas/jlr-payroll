@@ -28,6 +28,7 @@ use App\Http\Controllers\EmployeeFile\EmployeeController;
 use App\Http\Controllers\EmployeeFile\DepartmentController;
 use App\Http\Controllers\EmployeeFile\JobTitleController;
 use App\Http\Controllers\Reports\EmployeeReportController;
+use App\Http\Controllers\Reports\LeaveReportsController;
 use Carbon\CarbonPeriod;
 
 use App\Http\Controllers\PayrollTransaction\PayrollRegisterController;
@@ -373,6 +374,13 @@ Route::middleware('auth')->prefix('reports')->group(function(){
     Route::prefix('employee-report')->group(function(){
         Route::get('/',[EmployeeReportController::class,'index']);
         Route::get('generate',[EmployeeReportController::class,'generate']);
+    });
+
+    Route::prefix('leave-reports')->group(function(){
+        Route::get('/',[LeaveReportsController::class,'index']);
+        Route::get('generate/{from}/{to}',[LeaveReportsController::class,'getLeavesFromTo']);
+        Route::get('view/{from}/{to}',[LeaveReportsController::class,'getLeavesFromToWeb']);
+        //Route::get('generate',[LeaveReportsController::class,'generate']);
     });
 });
 
