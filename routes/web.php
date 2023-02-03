@@ -380,6 +380,8 @@ Route::middleware('auth')->prefix('reports')->group(function(){
         Route::get('/',[LeaveReportsController::class,'index']);
         Route::get('generate/{from}/{to}',[LeaveReportsController::class,'getLeavesFromTo']);
         Route::get('view/{from}/{to}',[LeaveReportsController::class,'getLeavesFromToWeb']);
+        Route::get('generate-summary/{from}/{to}',[LeaveReportsController::class,'getLeaveSumamry']);
+        Route::get('generate-by-employee/{from}/{to}',[LeaveReportsController::class,'getLeaveByEmployee']);
         //Route::get('generate',[LeaveReportsController::class,'generate']);
     });
 });

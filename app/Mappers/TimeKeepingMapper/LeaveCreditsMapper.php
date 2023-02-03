@@ -116,5 +116,12 @@ class LeaveCreditsMapper extends AbstractMapper {
         return $result;
     }
 
+    public function getLeaveCredits($biometric_id,$year)
+    {   
+        //SELECT vacation_leave,sick_leave FROM leave_credits WHERE fy_year,biometric_id
+        $result = $this->model->select('vacation_leave','sick_leave')->from('leave_credits')->where('fy_year',$year)->where('biometric_id',$biometric_id)->first();
+        return $result;
+    }
+
 
 }

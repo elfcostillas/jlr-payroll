@@ -84,7 +84,9 @@ class LeaveCreditsController extends Controller
 
         $data = $this->mapper->showLeaves($biometric_id,$start,$end);
 
-        $pdf = PDF::loadView('app.timekeeping.leave-credits.print',['data' => $data])->setPaper('A4','portrait');
+        $leave_credits = $this->mapper->getLeaveCredits($biometric_id,$year);
+        
+        $pdf = PDF::loadView('app.timekeeping.leave-credits.print',['data' => $data,'leave_credits'=>$leave_credits])->setPaper('A4','portrait');
 
         return $pdf->stream('JLR-DTR-Print.pdf'); 
         // //$pdf->output();

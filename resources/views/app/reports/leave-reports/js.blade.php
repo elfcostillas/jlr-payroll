@@ -134,6 +134,22 @@
 
                         window.open(url);
                     },
+                    summarize : function()
+                    {
+                        let from =  kendo.toString($('#date_from').data('kendoDatePicker').value(),'yyyy-MM-dd');
+                        let to =  kendo.toString($('#date_to').data('kendoDatePicker').value(),'yyyy-MM-dd');
+                        let url = `leave-reports/generate-summary/${from}/${to}`;
+
+                        window.open(url);
+                    },
+                    leaveByEmployee : function()
+                    {
+                        let from =  kendo.toString($('#date_from').data('kendoDatePicker').value(),'yyyy-MM-dd');
+                        let to =  kendo.toString($('#date_to').data('kendoDatePicker').value(),'yyyy-MM-dd');
+                        let url = `leave-reports/generate-by-employee/${from}/${to}`;
+
+                        window.open(url);
+                    }
             
                 },
                 functions : {

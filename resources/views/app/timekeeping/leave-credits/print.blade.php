@@ -58,10 +58,22 @@
                 </tr>
             @endforeach
             <tr>
-                <td colspan=3></td>
+                <td colspan=3>Total Consumed</td>
                 <td>{{ number_format($total_wpay,2) }}</td>
                 <td>{{ number_format($total_wopay,2) }}</td>
             </tr>
+            <?php
+          
+                $bal_wpay = $leave_credits->vacation_leave - $total_wpay;
+                $bal_wopay = $leave_credits->sick_leave - $total_wopay;
+                
+            ?>
+            <tr>
+                <td colspan=3>Balance</td>
+                <td>{{ number_format($bal_wpay,2) }}</td>
+                <td>{{ number_format($bal_wopay,2) }}</td>
+            </tr>
+
 
         @else
             <tr>
