@@ -143,6 +143,14 @@
                 toolbar : [{ name :'save',text:'Save Changes'},{ template: kendo.template($("#template").html())  }],
                 editable : true,
                 navigatable : true,
+                filterable : {
+                    extra: false,
+                    operators: {
+                        string: {
+                            contains : "Contains"
+                        }
+                    }
+                },
                 columns : [
                     {
                         title : 'Bio ID',
