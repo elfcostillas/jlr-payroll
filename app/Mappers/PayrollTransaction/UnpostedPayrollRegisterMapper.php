@@ -491,6 +491,7 @@ rd_ndot
             $employee->gov_deductions = collect(
                 [
                     'SSS Premium' => $employee->sss_prem,
+                    'SSS WISP' => $employee->sss_wisp,
                     'PhilHealt Premium' => $employee->phil_prem,
                     'PAG IBIG Contri' => $employee->hdmf_contri,
                 ]

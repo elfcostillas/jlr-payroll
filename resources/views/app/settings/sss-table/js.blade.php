@@ -86,7 +86,8 @@
                         field : "range1",
                         template : "#=kendo.toString(range1,'n2')#",
                         attributes : {
-                            style : 'font-size:9pt;'
+                            style : 'font-size:9pt;text-align:right',
+                           
                         },
                     },
                     {
@@ -94,7 +95,7 @@
                         field : "range2",
                         template : "#=kendo.toString(range2,'n2')#",
                         attributes : {
-                            style : 'font-size:9pt;'
+                            style : 'font-size:9pt;text-align:right',
                         },
                     },
                     {
@@ -102,7 +103,7 @@
                         field : "salary_credit",
                         template : "#=kendo.toString(salary_credit,'n2')#",
                         attributes : {
-                            style : 'font-size:9pt;'
+                            style : 'font-size:9pt;text-align:right',
                         },
                     },
                     {
@@ -110,7 +111,7 @@
                         field : "mpf",
                         template : "#=kendo.toString(mpf,'n2')#",
                         attributes : {
-                            style : 'font-size:9pt;'
+                            style : 'font-size:9pt;text-align:right',
                         },
                     },
                     {
@@ -118,7 +119,7 @@
                         field : "er_share",
                         template : "#=kendo.toString(er_share,'n2')#",
                         attributes : {
-                            style : 'font-size:9pt;'
+                            style : 'font-size:9pt;text-align:right',
                         },
                     },
                     {
@@ -126,20 +127,23 @@
                         field : "ee_share",
                         template : "#=kendo.toString(ee_share,'n2')#",
                         attributes : {
-                            style : 'font-size:9pt;'
+                            style : 'font-size:9pt;text-align:right',
                         },
                     },
                     {
                         title : "EC",
                         field : "ec",
                         template : "#=kendo.toString(ec,'n2')#",
+                        attributes : {
+                            style : 'font-size:9pt;text-align:right',
+                        },
                     },
                     {
                         title : "WISP ER",
                         field : "mpf_er",
                         template : "#=kendo.toString(mpf_er,'n2')#",
                         attributes : {
-                            style : 'font-size:9pt;'
+                            style : 'font-size:9pt;text-align:right',
                         },
                     },
                     {
@@ -147,7 +151,7 @@
                         field : "mpf_ee",
                         template : "#=kendo.toString(mpf_ee,'n2')#",
                         attributes : {
-                            style : 'font-size:9pt;'
+                            style : 'font-size:9pt;text-align:right',
                         },
                     },
                     

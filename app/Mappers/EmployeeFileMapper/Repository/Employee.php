@@ -114,6 +114,7 @@ class Employee
         'gross_total' => 0.00,
         'total_deduction' => 0.00,
         'net_pay' => 0.0,
+        'sss_wisp' => 0.00
 
 
 
@@ -330,7 +331,7 @@ class Employee
             $this->payreg['hdmf_contri'] = 0.00;
             $this->payreg['sss_prem'] = ($this->data['deduct_sss']=='Y') ?  $this->computeSSSPrem() : 0.00;
             $this->payreg['phil_prem'] = ($this->data['deduct_phic']=='Y') ?  round(($this->rates['monthly_credit'] * ($this->philrate/100))/2,2) : 0.00;
-        
+            $this->payreg['sss_wisp'] = ($this->data['deduct_sss']=='Y') ?  $this->computeWISP() : 0.00;
         }
     }
 
@@ -354,6 +355,13 @@ class Employee
         $prem = DB::table('hris_sss_table')->select('ee_share')
                 ->whereRaw($this->rates['monthly_credit']." between range1 and range2")->first();
         return (float)$prem->ee_share;
+    }
+
+    public function computeWISP()
+    {
+        $prem = DB::table('hris_sss_table')->select('mpf_ee')
+                ->whereRaw($this->rates['monthly_credit']." between range1 and range2")->first();
+        return (float)$prem->mpf_ee;
     }
 
     public function setDaysWorked()

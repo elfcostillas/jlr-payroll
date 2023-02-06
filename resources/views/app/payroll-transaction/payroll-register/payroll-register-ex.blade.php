@@ -65,6 +65,7 @@
                         @endforeach
                         <td >Gross Total</td>
                         <td >SSS Premium</td>
+                        <td >SSS WISP</td>
                         <td >PhilHealt Premium</td>
                         <td >PAG IBIG Contri</td>  @php $colspan+=3; @endphp
                         @foreach($govLoan as $glabel)
@@ -136,6 +137,7 @@
                                     @endforeach
                                         <td >{{ ($employee->gross_total>0) ? $employee->gross_total : ''; }}</td>
                                         <td  >{{ ($employee->gov_deductions['SSS Premium']>0) ? $employee->gov_deductions['SSS Premium'] : ''; }}</td>
+                                        <td  >{{ ($employee->gov_deductions['SSS WISP']>0) ? $employee->gov_deductions['SSS WISP'] : ''; }}</td>
                                         <td  >{{ ($employee->gov_deductions['PhilHealt Premium']>0) ? $employee->gov_deductions['PhilHealt Premium'] : ''; }}</td>
                                         <td  >{{ ($employee->gov_deductions['PAG IBIG Contri']>0) ? $employee->gov_deductions['PAG IBIG Contri'] : ''; }}</td>
 

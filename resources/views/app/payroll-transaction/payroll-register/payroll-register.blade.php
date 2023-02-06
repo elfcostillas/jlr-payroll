@@ -171,8 +171,9 @@
                         @endforeach
                         <th style="padding : 0px 4px;min-width:110px;" >Gross Total</th>
                         <th style="padding : 0px 4px;" >SSS Premium</th>
+                        <th style="padding : 0px 4px;" >SSS WISP</th>
                         <th style="padding : 0px 4px;" >PhilHealt Premium</th>
-                        <th style="padding : 0px 4px;" >PAG IBIG Contri</th>  @php $colspan+=3; @endphp
+                        <th style="padding : 0px 4px;" >PAG IBIG Contri</th>  @php $colspan+=4; @endphp
                         @foreach($govLoan as $glabel)
                             <th style="padding : 0px 4px;min-width:100px;" >{{ $glabel->description }}</th>
                             @php $colspan++; @endphp
@@ -242,6 +243,7 @@
                                     @endforeach
                                         <td style="text-align:right;font-weight:bold;border-bottom:1px solid;" >{{ ($employee->gross_total>0) ? number_format($employee->gross_total,2) : ''; }}</td>
                                         <td style="text-align:right;" >{{ ($employee->gov_deductions['SSS Premium']>0) ? number_format($employee->gov_deductions['SSS Premium'],2) : ''; }}</td>
+                                        <td style="text-align:right;" >{{ ($employee->gov_deductions['SSS WISP']>0) ? number_format($employee->gov_deductions['SSS WISP'],2) : ''; }}</td>
                                         <td style="text-align:right;" >{{ ($employee->gov_deductions['PhilHealt Premium']>0) ? number_format($employee->gov_deductions['PhilHealt Premium'],2) : ''; }}</td>
                                         <td style="text-align:right;" >{{ ($employee->gov_deductions['PAG IBIG Contri']>0) ? number_format($employee->gov_deductions['PAG IBIG Contri'],2) : ''; }}</td>
 
