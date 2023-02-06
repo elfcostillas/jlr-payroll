@@ -116,7 +116,7 @@ class LeaveRequestHeaderMapper extends AbstractMapper {
 				->leftJoin('departments','leave_request_header.dept_id','=','departments.id')
 				->leftJoin('job_titles','leave_request_header.job_title_id','=','job_titles.id')
 				->where('leave_request_header.id',$id);
-
+		
 		return $result->first();
 	}
 

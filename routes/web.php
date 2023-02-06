@@ -22,6 +22,7 @@ use App\Http\Controllers\Settings\LocationController;
 use App\Http\Controllers\Settings\DefaultScheduleController;
 use App\Http\Controllers\Settings\DeductionTypeController;
 use App\Http\Controllers\Settings\LoanTypeController;
+use App\Http\Controllers\Settings\SSSTableController;
 
 use App\Http\Controllers\EmployeeFile\DivisionController;
 use App\Http\Controllers\EmployeeFile\EmployeeController;
@@ -304,6 +305,15 @@ Route::middleware('auth')->prefix('settings')->group(function(){
         Route::post('create',[LoanTypeController::class,'create']);
         Route::post('update',[LoanTypeController::class,'update']);
        
+    });
+
+    Route::prefix('sss-table')->group(function(){
+        Route::get('/',[SSSTableController::class,'index']);
+        Route::get('list',[SSSTableController::class,'list']);
+        // Route::get('create',[SSSTableController::class,'create']);
+        // Route::get('update',[SSSTableController::class,'update']);
+        Route::post('save',[SSSTableController::class,'save']);
+        
     });
 
     

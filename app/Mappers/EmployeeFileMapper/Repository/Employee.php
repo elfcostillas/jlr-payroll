@@ -351,7 +351,7 @@ class Employee
 
     public function computeSSSPrem()
     {
-        $prem = DB::table('hris_sss_table_2021')->select('ee_share')
+        $prem = DB::table('hris_sss_table')->select('ee_share')
                 ->whereRaw($this->rates['monthly_credit']." between range1 and range2")->first();
         return (float)$prem->ee_share;
     }
