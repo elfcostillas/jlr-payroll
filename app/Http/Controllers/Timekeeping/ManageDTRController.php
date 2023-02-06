@@ -159,6 +159,27 @@ class ManageDTRController extends Controller
 
     }
 
+    
+    public function computeAllDTR(Request $request){
+       
+        $period_id = $request->input('period_id');
+
+        $result = $this->mapper->onetimebigtime($period_id);
+        foreach($result as $bio_id)
+        {
+            $dtr = $this->mapper->getSemiDTR($bio_id->biometric_id,$period_id);
+            $this->mapper->mapRawLogs2($dtr);
+
+            $dtr2 = $this->mapper->putLeavesUT($bio_id->biometric_id,$period_id);
+
+            $dtr3 = $this->mapper->getSemiDTRforComputation($bio_id->biometric_id,$period_id);
+
+            $this->mapper->computeLogs($dtr3,'semi');
+        }
+
+        return response()->json(true);
+    }
+
     public function clearLogs(Request $request)
     {   
         $biometric_id = $request->biometric_id;

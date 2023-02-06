@@ -152,6 +152,8 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::get('onetimebigtime/{period_id}',[ManageDTRController::class,'onetimebigtime']);
 
         Route::get('download/{period_id}',[ManageDTRController::class,'exportSemiDTR']);
+
+        Route::post('computeAll',[ManageDTRController::class,'computeAllDTR']);
     });
 
     Route::prefix('upload-log')->group(function(){

@@ -24,6 +24,10 @@
     <button class="k-grid-save-changes k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="events: { click: buttonHandler.print }">
         </span>&nbsp; Print
     </button>
+
+    <button class="k-grid-save-changes k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="events: { click: buttonHandler.computeAll }">
+        </span>&nbsp; Compute All
+    </button>
 </script>	
 
     <script>
@@ -326,6 +330,17 @@
                         let url = `manage-dtr/print/${viewModel.selectedPeriod.id}`;
                         window.open(url);
                     },   
+                    computeAll : function() {
+                        //alert(viewModel.selectedPeriod.id);
+                        if(viewModel.selectedPeriod!=null){
+                            $.post('manage-dtr/computeAll',{
+                                period_id : viewModel.selectedPeriod.id
+                            });
+                                                    }
+                        else {
+                            alert('');
+                        }
+                    },
                     clear : function()
                     {
                         $.post('manage-dtr/clear-logs',{
