@@ -157,8 +157,7 @@ class Employee
         $this->payreg['sl_wpay_amount'] = round($this->rates['hourly_rate'] * $this->payreg['sl_wpay'],2);
         $this->payreg['bl_wpay_amount'] = round($this->rates['hourly_rate'] * $this->payreg['bl_wpay'],2);
 
-        //dd($this->payreg);
-        $this->computeContribution($period);
+        
         //dd($this->rates['hourly_rate']);
         /* Regular Days */
         $this->payreg['reg_ot_amount'] = round(($this->rates['hourly_rate'] * 1.25) * $this->payreg['reg_ot'],2);
@@ -224,6 +223,9 @@ class Employee
         //                 + $this->payreg['dblhol_rd_amount'] + $this->payreg['dblhol_rdot_amount'] + $this->payreg['dblhol_ndot_amount'] + $this->payreg['dblhol_rdndot_amount'] + $this->payreg['semi_monthly_allowance'] + $this->payreg['daily_allowance'];
 
         $this->payreg['gross_pay'] = $this->repo->getGrossPay($this->payreg);
+
+        //dd($this->payreg);
+        $this->computeContribution($period);
 
 
         /*
@@ -329,7 +331,7 @@ class Employee
         }else{
             //dd($period->period_type);
             $this->payreg['hdmf_contri'] = 0.00;
-            $this->payreg['sss_prem'] = ($this->data['deduct_sss']=='Y') ?  $this->computeSSSPrem() : 0.00;
+            $this->payreg['sss_prem'] = ($this->data['deduct_sss']=='Y') ?  $this->computeSSSPrem($period) : 0.00;
             $this->payreg['phil_prem'] = ($this->data['deduct_phic']=='Y') ?  round(($this->rates['monthly_credit'] * ($this->philrate/100))/2,2) : 0.00;
             $this->payreg['sss_wisp'] = ($this->data['deduct_sss']=='Y') ?  $this->computeWISP() : 0.00;
         }
@@ -350,11 +352,37 @@ class Employee
         $this->philrate = $rate;
     }
 
-    public function computeSSSPrem()
+    public function computeSSSPrem($period)
     {
+
+        $gross = $this->getMonthGross($period);
+        //dd($gross);
         $prem = DB::table('hris_sss_table')->select('ee_share')
-                ->whereRaw($this->rates['monthly_credit']." between range1 and range2")->first();
+                //->whereRaw($this->rates['monthly_credit']." between range1 and range2")->first();
+                ->whereRaw($gross." between range1 and range2")->first();
         return (float)$prem->ee_share;
+    }
+
+    public function getMonthGross($period)
+    {
+        //SELECT gross_pay FROM payrollregister_posted_s WHERE period_id = '' AND biometric_id = '';
+        if($period['period_type']==2){
+            $prev_period = $period['id'] -1;
+            $prev = DB::table('payrollregister_posted_s')->select('gross_pay')
+            ->where('period_id',$prev_period)
+            ->where('biometric_id',$this->payreg['biometric_id'])->first();
+
+            if($prev){
+                $prev_gross = $prev->gross_pay;
+            }else{
+                $prev_gross = 0;
+            }
+            
+        }
+
+        return $this->payreg['gross_pay'] + $prev_gross;
+
+        
     }
 
     public function computeWISP()
