@@ -27,19 +27,19 @@
                         <td  >Name</td>
                         <td >Basic Rate</td>
                         <td >Daily Rate</td>
-                        <td >Allowance (Montdly)</td>
-                        <td >Allowance (Daily)</td>
+                        <td >Allowance  <br> (Monthly)</td>
+                        <td >Allowance  <br> (Daily)</td>
                         <td >No Days</td>
                         <td >Basic Pay</td>
                         
-                        <td >Daily Allowance</td>
-                        <td >Semi Montdly Allowance</td>
+                        <td >Daily <br> Allowance</td>
+                        <td >Semi Montdly <br> Allowance</td>
 
-                        <td >Late (Hrs)</td>
+                        <td >Late <br>(Hrs)</td>
                         <td >Late Amount</td>
 
-                        <td >Undertime (Hrs)</td>
-                        <td >Undertime Amount</td>
+                        <td >Undertime <br>(Hrs)</td>
+                        <td >Undertime <br>Amount</td>
 
                         <td >VL</td>
                         <td >VL Amount</td>
@@ -51,30 +51,30 @@
                         <td >BL Amount</td>
 
                         <td >Absent</td>
-                        <td >Absent Amount</td>
+                        <td >Absent <br> Amount</td>
 
 
                         @foreach($headers as $key => $val)
-                            <td  >{{ $labels[$key] }}</td>
+                            <td  width ="90px" ><p>{{ $labels[$key] }}</p></td>
                             @php $colspan++; @endphp
                         @endforeach
                         <td >Gross Pay</td>
                         @foreach($compensation as $comp)
-                            <td  >{{ $comp->description }}</td>
+                            <td  width ="90px" style="white-space:normal"><p>{{ $comp->description }}</p></td>
                             @php $colspan++; @endphp
                         @endforeach
                         <td >Gross Total</td>
                         <td >SSS Premium</td>
                         <td >SSS WISP</td>
-                        <td >PhilHealt Premium</td>
-                        <td >PAG IBIG Contri</td>  @php $colspan+=3; @endphp
+                        <td >PhilHealt <br> Premium</td>
+                        <td >PAG IBIG <br> Contri</td>  @php $colspan+=3; @endphp
                         @foreach($govLoan as $glabel)
-                            <td  >{{ $glabel->description }}</td>
+                            <td width ="90px" style="white-space:normal"><p>{{ $glabel->description }}</p></td>
                             @php $colspan++; @endphp
                         @endforeach
                         
                         @foreach($deductionLabel as $label)
-                            <td >{{ $label->description }}</td>
+                            <td width ="90px" style="white-space:normal"><p>{{ $label->description }}</p></td>
                             @php $colspan++; @endphp
                         @endforeach
 
@@ -94,7 +94,7 @@
                             @foreach($department->employees as $employee)
                               
                                 <tr >
-                                    <td > {{ $employee->biometric_id }} </td> 
+                                    <td> {{ $employee->biometric_id }} </td> 
                                     <td > {{ $employee->employee_name }} </td> 
                                     <td > {{ $employee->basic_salary }}</td>
                                     <td > {{ $employee->daily_rate }}</td>

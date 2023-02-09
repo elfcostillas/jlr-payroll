@@ -6,18 +6,22 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mappers\Accounts\LeaveRequestHeaderMapper;
 use App\Mappers\Accounts\LeaveRequestDetailMapper;
+use App\Mappers\TimeKeepingMapper\LeaveCreditsMapper;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class LeaveRequestController extends Controller
 {
     //
     private $header;
     private $detail;
+    private $credits;
 
-    public function __construct(LeaveRequestHeaderMapper $header,LeaveRequestDetailMapper $detail)
+    public function __construct(LeaveRequestHeaderMapper $header,LeaveRequestDetailMapper $detail,LeaveCreditsMapper $credits)
     {
         $this->header = $header;
         $this->detail = $detail;
+        $this->credits = $credits;
     }
 
     public function index()
@@ -116,6 +120,21 @@ class LeaveRequestController extends Controller
         $this->detail->createDates($dates,$result->id);
 
         return response()->json($result);
+    }
+
+    public function showBalance(Request $request)
+    {
+        $year = Carbon::createFromFormat('Y-m-d',$request->from)->format('Y');
+        $biometric_id = $request->biometric_id;
+       
+        $start = $year.'-01-01';
+        $end = $year.'-12-31';
+
+        $data = $this->credits->showLeaves($biometric_id,$start,$end);
+
+        $leave_credits = $this->credits->getLeaveCredits($biometric_id,$year);
+
+        return view('app.accounts.leave-request.print',['data' => $data,'leave_credits'=>$leave_credits]);
     }
 }
 

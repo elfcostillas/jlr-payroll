@@ -23,6 +23,7 @@ use App\Http\Controllers\Settings\DefaultScheduleController;
 use App\Http\Controllers\Settings\DeductionTypeController;
 use App\Http\Controllers\Settings\LoanTypeController;
 use App\Http\Controllers\Settings\SSSTableController;
+use App\Http\Controllers\Settings\PhilHealthController;
 
 use App\Http\Controllers\EmployeeFile\DivisionController;
 use App\Http\Controllers\EmployeeFile\EmployeeController;
@@ -318,6 +319,13 @@ Route::middleware('auth')->prefix('settings')->group(function(){
         
     });
 
+    Route::prefix('philhealth')->group(function(){
+        Route::get('/',[PhilHealthController::class,'index']);
+        Route::post('save',[PhilHealthController::class,'save']);
+        Route::get('get-rate',[PhilHealthController::class,'getPhicRate']);
+        
+    });
+    
     
 });
 
@@ -416,6 +424,8 @@ Route::middleware('auth')->prefix('accounts')->group(function(){
         Route::get('read-detail/{id}',[LeaveRequestController::class,'readDetails']);
         Route::post('update-detail',[LeaveRequestController::class,'updateDetail']);
         Route::post('recreate',[LeaveRequestController::class,'recreate']);
+        
+        Route::get('showBalance/{from}/{biometric_id}',[LeaveRequestController::class,'showBalance']);
         
     });
 

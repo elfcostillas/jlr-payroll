@@ -318,6 +318,40 @@
                             }
                         });
                     },
+                    showBalance : function(e){
+                        //kendo.toString($('#date_from').data('kendoDatePicker').value(),'yyyy-MM-dd')
+                        //let year = kendo.toString($('#date_from').data('kendoDatePicker').value(),'yyyy');
+                        //alert(year);
+                        //console.log(viewModel.form.model.date_from);
+
+                        let url = `leave-request/showBalance/${viewModel.form.model.date_from}/${viewModel.form.model.biometric_id}`;
+                        //window.open(url);
+
+                        var myWindow = $("#pop_sub");
+
+                        $.get(url, function( data ) {
+                            $("#leave_data").html(data);
+                        
+                        });
+                        
+                        myWindow.kendoWindow({
+                            width: "820", //1124 - 1152
+                            height: "650",
+                            title: "Leave Balance",
+                            visible: false,
+                            animation: false,
+                            actions: [
+                                "Pin",
+                                "Minimize",
+                                "Maximize",
+                                "Close"
+                            ],
+                            //close: viewModel.buttonHandler.closePop,
+                            position : {
+                                top : 0
+                            }
+                        }).data("kendoWindow").center().open();
+                    },
                     recreate : function(){
                         if(viewModel.form.model.id!=null){
                                 Swal.fire({
@@ -759,6 +793,7 @@
                     { id : 'saveBtn', type: "button", text: "Save", icon: 'save', click : viewModel.buttonHandler.save },
                     { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
                     { id : 'postBtn', type: "button", text: "Post", icon: 'print', click : viewModel.buttonHandler.post },
+                    { id : 'showBalance', type: "button", text: "Show Balance", icon: 'print', click : viewModel.buttonHandler.showBalance },
                 ]
             });
 
@@ -767,6 +802,8 @@
                     //{ id : 'saveBtn', type: "button", text: "Save", icon: 'save', click : viewModel.buttonHandler.save },
                     { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
                     //{ id : 'postBtn', type: "button", text: "Post", icon: 'print', click : viewModel.buttonHandler.post },
+                    { id : 'showBalance', type: "button", text: "Show Balance", icon: 'print', click : viewModel.buttonHandler.showBalance },
+                
                 ]
             });
 
