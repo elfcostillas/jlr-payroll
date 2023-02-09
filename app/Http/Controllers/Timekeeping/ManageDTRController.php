@@ -226,5 +226,44 @@ class ManageDTRController extends Controller
         //return $pdf->download('JLR-DTR-Print.pdf'); 
         return $pdf->stream('JLR-DTR-Print.pdf'); 
     }
+
+    public function scheduleSetter(Request $request)
+    {
+        
+        $period_id = (int) $request->period_id;
+        $result = $this->mapper->mapSchedtoDTR($period_id);
+
+        foreach($result as $line){
+            switch($line->wday)
+            {
+                case 'Mon' : 
+                case 'Tue' : 
+                case 'Wed' : 
+                case 'Thu' : 
+                case 'Fri' : 
+                    
+                        $qry = "UPDATE edtr SET schedule_id = $line->sched_mtwtf WHERE biometric_id = $line->biometric_id AND dtr_date = '$line->dtr_date';"; 
+                    break;
+                    
+                case 'Sat' : 
+                        $qry = "UPDATE edtr SET schedule_id = $line->sched_sat WHERE biometric_id = $line->biometric_id AND dtr_date = '$line->dtr_date';"; 
+                    break;
+            }
+            //DB::statement()
+            echo $qry.'<br>';
+        }
+    }
     
 }
+
+/*
+  +"biometric_id": "4"
+  +"schedule_id": "0"
+  +"dtr_date": "2023-01-02"
+  +"sched_mtwtf": "1"
+  +"sched_sat": "6"
+  +"wday": "Mon"
+
+  SELECT time_in,time_out,(TIME_TO_SEC(time_out)-TIME_TO_SEC(time_in))/3600 FROM edtr INNER JOIN payroll_period ON edtr.dtr_date BETWEEN date_from AND date_to 
+
+  */

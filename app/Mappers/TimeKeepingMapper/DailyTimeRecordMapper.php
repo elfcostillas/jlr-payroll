@@ -744,6 +744,21 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
         return $result;
     }
 
+    public function mapSchedtoDTR($period_id)
+    {
+        $qry = "SELECT employees.biometric_id,schedule_id,dtr_date,sched_mtwtf,sched_sat,DATE_FORMAT(dtr_date,'%a') AS wday FROM edtr 
+        INNER JOIN payroll_period ON edtr.dtr_date BETWEEN date_from AND date_to 
+        INNER JOIN employees ON edtr.biometric_id = employees.biometric_id
+        WHERE payroll_period.id = $period_id
+        AND schedule_id = 0 AND DATE_FORMAT(dtr_date,'%a') != 'Sun'
+        AND (sched_mtwtf IS NOT NULL OR sched_sat IS NOT NULL)
+        ORDER BY employees.biometric_id,dtr_date;";
+
+        $result = DB::select($qry);
+
+        return $result;
+    }
+
    
 
 }
