@@ -18,6 +18,9 @@
     $total_vlwpay= 0;
     $total_slwpay= 0;
 
+    $vlc = ($leave_credits) ? $leave_credits->vacation_leave : 0;
+    $slc = ($leave_credits) ? $leave_credits->sick_leave : 0;
+
 @endphp
 <!DOCTYPE html>
 <html lang="en">
@@ -51,8 +54,8 @@
             <td></td>
             <td></td>
             <td></td>
-            <td><b> {{ $leave_credits->vacation_leave }} </b> </td>
-            <td><b> {{ $leave_credits->sick_leave }} </b> </td>
+            <td><b> {{ ($leave_credits) ? $leave_credits->vacation_leave : 0 }} </b> </td>
+            <td><b> {{ ($leave_credits) ? $leave_credits->sick_leave : 0 }} </b> </td>
             <td></td>
         </tr>
         @if($data!=null)
@@ -79,9 +82,9 @@
                 <td>{{ number_format($total_wopay,2) }}</td>
             </tr>
             <?php
-          
-                $bal_vlwpay = $leave_credits->vacation_leave - $total_vlwpay;
-                $bal_slwpay = $leave_credits->sick_leave - $total_slwpay;
+                
+                $bal_vlwpay = $vlc - $total_vlwpay;
+                $bal_slwpay = $slc - $total_slwpay;
                 $bal_wopay =  0 ;
                 
             ?>
@@ -95,7 +98,7 @@
 
         @else
             <tr>
-                <td colspan='5' style="text-align:center;">*** NO DATA FOUND *** </td>
+                <td colspan='6' style="text-align:center;">*** NO DATA FOUND *** </td>
             </tr>
         @endif
     </table>

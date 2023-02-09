@@ -328,7 +328,7 @@
                         //window.open(url);
 
                         var myWindow = $("#pop_sub");
-
+                        $("#leave_data").html('');
                         $.get(url, function( data ) {
                             $("#leave_data").html(data);
                         
