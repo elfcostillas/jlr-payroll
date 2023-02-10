@@ -164,21 +164,53 @@ class ManageDTRController extends Controller
        
         $period_id = $request->input('period_id');
 
-        $result = $this->mapper->onetimebigtime($period_id);
+        $result = $this->mapper->getBioIDinDTR($period_id);
+        
         foreach($result as $bio_id)
         {
-            $dtr = $this->mapper->getSemiDTR($bio_id->biometric_id,$period_id);
-            $this->mapper->mapRawLogs2($dtr);
+            $dtr = $this->mapper->getSemiDTRsTTS($bio_id->biometric_id,$period_id);
 
-            $dtr2 = $this->mapper->putLeavesUT($bio_id->biometric_id,$period_id);
+            //dd($bio_id->biometric_id,$period_id,$dtr);
+           
+            if($dtr->count()>0)
+            {
+               
+                foreach($dtr as $line)
+                {
+                    switch($line->day_name)
+                    {
+                        case 'Mon' :
+                        case 'Tue' :
+                        case 'Wed' :
+                        case 'Thu' :
+                        case 'Fri' :
+                        case 'Sat' :
+                            if($line->seconds_in && $line->seconds_out){
+                                $processed = $this->mapper->alignDataMontoSat($line);
+                            }
+                            break;
+                        
+                        case 'Sun' :
 
-            $dtr3 = $this->mapper->getSemiDTRforComputation($bio_id->biometric_id,$period_id);
+                            break;
+                    }
+                }
+                
+            }
+            //$this->mapper->mapRawLogs2($dtr);
 
-            $this->mapper->computeLogs($dtr3,'semi');
+            //$dtr2 = $this->mapper->putLeavesUT($bio_id->biometric_id,$period_id);
+
+            //$dtr3 = $this->mapper->getSemiDTRforComputation($bio_id->biometric_id,$period_id);
+
+            //$this->mapper->computeLogs($dtr3,'semi');
+            echo $bio_id->biometric_id. "<br>";
         }
 
         return response()->json(true);
     }
+
+
 
     public function clearLogs(Request $request)
     {   
@@ -265,5 +297,61 @@ class ManageDTRController extends Controller
   +"wday": "Mon"
 
   SELECT time_in,time_out,(TIME_TO_SEC(time_out)-TIME_TO_SEC(time_in))/3600 FROM edtr INNER JOIN payroll_period ON edtr.dtr_date BETWEEN date_from AND date_to 
+
+
+  "sched_in_sec" => null
+    "sched_out_sec" => null
+    "seconds_in" => null
+    "seconds_out" => null
+    "id" => "19987"
+    "biometric_id" => "1"
+    "day_name" => "Sun"
+    "dtr_date" => "2023-01-01"
+    "time_in" => null
+    "time_out" => null
+    "late" => "0"
+    "late_eq" => "0.00"
+    "ndays" => "0.00"
+    "under_time" => "0.00"
+    "over_time" => "0.00"
+    "night_diff" => "0.00"
+    "night_diff_ot" => "0.00"
+    "schedule_id" => "0"
+    "schedule_desc" => null
+    "holiday_type" => ""
+    "ot_in" => null
+    "ot_out" => null
+    "restday_hrs" => "0.00"
+    "restday_ot" => "0.00"
+    "restday_nd" => "0.00"
+    "restday_ndot" => "0.00"
+    "reghol_pay" => "0.00"
+    "reghol_hrs" => "0.00"
+    "reghol_ot" => "0.00"
+    "reghol_rd" => "0.00"
+    "reghol_rdnd" => "0.00"
+    "reghol_nd" => "0.00"
+    "reghol_ndot" => "0.00"
+    "sphol_pay" => "0.00"
+    "sphol_hrs" => "0.00"
+    "sphol_ot" => "0.00"
+    "sphol_rd" => "0.00"
+    "sphol_rdnd" => "0.00"
+    "sphol_nd" => "0.00"
+    "sphol_ndot" => "0.00"
+    "dblhol_pay" => "0.00"
+    "dblhol_hrs" => "0.00"
+    "dblhol_ot" => "0.00"
+    "dblhol_rd" => "0.00"
+    "dblhol_rdnd" => "0.00"
+    "dblhol_nd" => "0.00"
+    "dblhol_ndot" => "0.00"
+    "dblhol_rdot" => "0.00"
+    "sphol_rdot" => "0.00"
+    "reghol_rdot" => "0.00"
+    "reghol_rdndot" => "0.00"
+    "sphol_rdndot" => "0.00"
+    "dblhol_rdndot" => "0.00"
+
 
   */
