@@ -822,7 +822,50 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
             }
         }
         $hrs = ($tmp_timeout-$tmp_timein) / 3600;
-        dd($hrs);
+
+        $time = array( //79200
+            '82800',
+            '86400',
+            '3600',
+            '7200',
+            '10800',
+            '14400',
+            '18000',
+            '21600',
+        );
+        /*
+            82800 11
+            86400 12
+            3600 1
+            7200 2
+            10800 3
+            14400 4
+            18000 5
+            21600 6
+        */
+
+        if($tmp_timeout > $tmp_timein){
+            //if(($tmp_timein >= 79200 && $tmp_timein <= 86400) || ($tmp_timeout >= 82800 && $tmp_timeout <= 86400)){
+            if($tmp_timeout >= 82800 && $tmp_timeout <= 86400){
+                $nd = ($tmp_timeout - 82800)/3600;
+            }
+        } else { /* timeout the next day*/
+            $night_nd = 0 ; $morning_nd = 0;
+            /* Night ND */
+            if($tmp_timein<=79200){
+                $night_nd = (86400 - 79200) / 3600;
+            }
+
+            if($tmp_timein<=82800){
+                $night_nd = (86400 - 82800) / 3600;
+            }
+
+            /* Morning ND */
+
+
+
+            $nd = $night_nd + $morning_nd;
+        }
        
         return $line;
     }
