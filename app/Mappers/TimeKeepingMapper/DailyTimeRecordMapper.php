@@ -861,13 +861,15 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
       
         if($tmp_timeout > $tmp_timein){  
             //if(($tmp_timein >= 79200 && $tmp_timein <= 86400) || ($tmp_timeout >= 82800 && $tmp_timeout <= 86400)){
-            if($tmp_timeout >= 82800 && $tmp_timeout <= 86400){
-                $nd = ($tmp_timeout - 82800)/3600;
+            if($tmp_timeout >= 79200 && $tmp_timeout <= 86400){
+                $night_nd = ($tmp_timeout - 79200);
             }
             else {
-                $nd = 0;
+                $night_nd = 0;
                
             }
+
+            $morning_nd =0;
         } else { /* timeout the next day*/
             $night_nd = 0 ; $morning_nd = 0;
             /* Night ND */
@@ -888,8 +890,10 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
             /* Morning ND */
             
-            $nd = ( (($night_nd + $morning_nd) - ($night_nd + $morning_nd) % 1800) /3600)  ;
+            
         }
+
+        $nd = ( (($night_nd + $morning_nd) - ($night_nd + $morning_nd) % 1800) /3600)  ;
         
         if($line->day_name =='Sun'){
             switch($line->holiday_type){
