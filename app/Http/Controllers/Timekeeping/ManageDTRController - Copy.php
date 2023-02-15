@@ -159,14 +159,13 @@ class ManageDTRController extends Controller
 
     }
 
+    
     public function computeAllDTR(Request $request){
        
         $period_id = $request->input('period_id');
 
         $result = $this->mapper->getBioIDinDTR($period_id);
         
-        $count = 0;
-
         foreach($result as $bio_id)
         {
             $dtr = $this->mapper->getSemiDTRsTTS($bio_id->biometric_id,$period_id);
@@ -197,29 +196,31 @@ class ManageDTRController extends Controller
                                 $processed = $this->mapper->alignDataMontoSat($line);
                             }
                             break;
-                        default :
-                            
-                        break;
-                    }
-                    
-                    if(isset($processed)){
-                        $this->mapper->updateValid($processed->toArray());
                     }
                 }
-                
-                //$result =  $this->mapper->updateValid($processed->toArray());
 
-                $count++;
-        
+               
+                $result =  $this->mapper->updateValid($processed->toArray());
+
+                echo $result;
+               
+               
+                
             }
-           
-           
-            //echo $bio_id->biometric_id. "<br>";
+            //$this->mapper->mapRawLogs2($dtr);
+
+            //$dtr2 = $this->mapper->putLeavesUT($bio_id->biometric_id,$period_id);
+
+            //$dtr3 = $this->mapper->getSemiDTRforComputation($bio_id->biometric_id,$period_id);
+
+            //$this->mapper->computeLogs($dtr3,'semi');
+            echo $bio_id->biometric_id. "<br>";
         }
-        echo $count;
 
         return response()->json(true);
     }
+
+
 
     public function clearLogs(Request $request)
     {   

@@ -300,6 +300,10 @@ class DailyTimeRecordMapper extends AbstractMapper {
                                 $join->on('holidays.location_id','=','employees.location_id');
                                 $join->on('holidays.holiday_date','=','edtr.dtr_date');
                             })
+                            // ->where([
+                            //     ['edtr.biometric_id',5],
+                            //     ['dtr_date','2023-01-04']
+                            // ])
                             ->leftJoin('work_schedules','schedule_id','=','work_schedules.id')
                             ->where('payroll_period.id',$period_id)
                             ->orderBy('dtr_date');
@@ -804,15 +808,19 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
         $tmp_timeout = null;
 
         // check in vs sched in
+        /**** 
         if($line->sched_in_sec){
             if($line->seconds_in > $line->sched_in_sec){
                 // late
             }else {
                 $tmp_timein = $line->sched_in_sec;
             }
+        }else {
+            $tmp_timein = $line->seconds_in;
         }
 
         // check out vs sched out
+       
         if($line->sched_out_sec)
         {
             if($line->seconds_out > $line->sched_out_sec){
@@ -821,7 +829,13 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                 // undertime
             }
         }
+        else {
+            $tmp_timeout = $line->seconds_out;
+        }
         $hrs = ($tmp_timeout-$tmp_timein) / 3600;
+        ****/
+        $tmp_timein = $line->seconds_in;
+        $tmp_timeout = $line->seconds_out;
 
         $time = array( //79200
             '82800',
@@ -843,28 +857,76 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
             18000 5
             21600 6
         */
-
-        if($tmp_timeout > $tmp_timein){
+        $nd = 0;
+      
+        if($tmp_timeout > $tmp_timein){  
             //if(($tmp_timein >= 79200 && $tmp_timein <= 86400) || ($tmp_timeout >= 82800 && $tmp_timeout <= 86400)){
             if($tmp_timeout >= 82800 && $tmp_timeout <= 86400){
                 $nd = ($tmp_timeout - 82800)/3600;
+            }
+            else {
+                $nd = 0;
+               
             }
         } else { /* timeout the next day*/
             $night_nd = 0 ; $morning_nd = 0;
             /* Night ND */
             if($tmp_timein<=79200){
-                $night_nd = (86400 - 79200) / 3600;
+                $night_nd = (86400 - 79200);
             }
 
-            if($tmp_timein<=82800){
-                $night_nd = (86400 - 82800) / 3600;
+            if($tmp_timein<=82800 && $tmp_timein > 79200){
+                $night_nd = (86400 - 82800);
+            }
+
+            /* Check if timeout is greater than 6AM */
+            if($tmp_timeout>=21600){
+                $morning_nd = 21600;
+            }else{
+                $morning_nd = $tmp_timeout;
             }
 
             /* Morning ND */
+            
+            $nd = ( (($night_nd + $morning_nd) - ($night_nd + $morning_nd) % 1800) /3600)  ;
+        }
+        
+        if($line->day_name =='Sun'){
+            switch($line->holiday_type){
+                case 'SH': 
+                        $line->sphol_rdnd = $nd;
+                    break;
+                
+                case 'LH': 
+                        $line->reghol_rdnd = $nd;
+                    break; 
+                
+                case 'DBL': 
+                        $line->dblhol_rdnd = $nd;
+                    break; 
 
+                default : 
+                        $line->restday_nd = $nd;
+                    break;
+            }
+        }else{
+            switch($line->holiday_type){
+                case 'SH': 
+                        $line->sphol_nd = $nd;
+                    break;
+                
+                case 'LH': 
+                        $line->reghol_nd = $nd;
+                    break; 
+                
+                case 'DBL': 
+                        $line->dblhol_nd = $nd;
+                    break; 
 
-
-            $nd = $night_nd + $morning_nd;
+                default : 
+                        $line->night_diff = $nd;
+                    break;
+            }
         }
        
         return $line;
