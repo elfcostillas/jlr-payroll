@@ -131,6 +131,8 @@
                                     time_out : { type: "string" },
                                     overtime_in : { type: "string" },
                                     overtime_out : { type: "string" },
+                                    overtime_in2 : { type: "string" },
+                                    overtime_out2 : { type: "string" },
                                     overtime_hrs : { type: "number" },
                                     reg_hrs : { type: "number" },
                                     reg_day : { type: "number" },
@@ -153,7 +155,7 @@
                         var myWindow = $("#pop");
                         
                         myWindow.kendoWindow({
-                            width: "884", //1124 - 1152
+                            width: "924", //1124 - 1152
                             height: "750",
                             title: "Manual DTR Form",
                             visible: false,
@@ -406,41 +408,51 @@
                         width : 90,    
                     },
                     {
+                        title : "IN (OT)",
+                        field : "overtime_in2",
+                        width : 90,    
+                    },
+                    {
+                        title : "OUT (OT)",
+                        field : "overtime_out2",
+                        width : 90,    
+                    },
+                    {
                         title : "HRS (OT)",
                         field : "overtime_hrs",
                         width : 90,    
                     },
 
-                    {
-                        title : "RD Hrs",
-                        field : "rd_hrs",
-                        width : 90,    
-                    },
-                    {
-                        title : "RD OT",
-                        field : "rd_ot",
-                        width : 90,    
-                    },
-                    {
-                        title : "SH Hrs",
-                        field : "sh_hrs",
-                        width : 90,    
-                    },
-                    {
-                        title : "SH OT",
-                        field : "sh_ot",
-                        width : 90,    
-                    },
-                    {
-                        title : "LH hrs",
-                        field : "lh_hrs",
-                        width : 90,    
-                    },
-                    {
-                        title : "LH OT",
-                        field : "lh_ot",
-                        width : 90,    
-                    },
+                    // {
+                    //     title : "RD Hrs",
+                    //     field : "rd_hrs",
+                    //     width : 90,    
+                    // },
+                    // {
+                    //     title : "RD OT",
+                    //     field : "rd_ot",
+                    //     width : 90,    
+                    // },
+                    // {
+                    //     title : "SH Hrs",
+                    //     field : "sh_hrs",
+                    //     width : 90,    
+                    // },
+                    // {
+                    //     title : "SH OT",
+                    //     field : "sh_ot",
+                    //     width : 90,    
+                    // },
+                    // {
+                    //     title : "LH hrs",
+                    //     field : "lh_hrs",
+                    //     width : 90,    
+                    // },
+                    // {
+                    //     title : "LH OT",
+                    //     field : "lh_ot",
+                    //     width : 90,    
+                    // },
 
                     {
                         title : "Remarks",
