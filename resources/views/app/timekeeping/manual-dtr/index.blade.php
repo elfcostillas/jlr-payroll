@@ -99,18 +99,28 @@
                                 <td colspan=3></td>
                                 <td><input type="text" id="doc_id" data-bind="value:form.model.id" readonly></td>
                             </tr>
+                             {{--
                             <tr>
                                 <td colspan=2>Date From</td>
                                 <td colspan=2>Date To</td>
-                            </tr>
-                            <tr>
+                                <td colspan="4"></td>
+                            </tr> 
+                             <tr>
                                 <td colspan=2><input type="text" id="date_from" data-bind="value:form.model.date_from"></td>
                                 <td colspan=2><input type="text" id="date_to" data-bind="value:form.model.date_to"></td>
                                 <td colspan="4"></td>
                             </tr>
+                            --}}
+                            <tr>
+                                <td colspan="2">Payroll Period</td>
+                                <td colspan="6"></td>
+                            </tr>
+                            <tr>
+                                <td colspan=2> <input type="text" id="period_id"> </td>
+                                <td colspan=6></td>
+                            </tr>
                             <tr>
                                 <td colspan=8>Remarks</td>
-                               
                             </tr>
                             <tr>
                                 <td colspan=8><input type="text" id="remarks" data-bind="value:form.model.remarks"></td>

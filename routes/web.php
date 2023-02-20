@@ -177,6 +177,7 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::get('details/{id}',[ManualDTRController::class,'details']);
         Route::post('detail-update',[ManualDTRController::class,'detailUpdate']);
         Route::get('print/{id}',[ManualDTRController::class,'print']);
+        Route::get('weekly-period',[ManualDTRController::class,'weeklyPeriod']);
 
         
     });

@@ -24,7 +24,7 @@
     }
 
     table {
-        font-size :8pt;
+        font-size :9pt;
         page-break-inside: avoid; 
         border-collapse:collapse;
         margin-bottom : 4px;
@@ -43,7 +43,6 @@
 
     td {
         padding : 3px;
-         font-size :8pt;
     }
 </style>
 
@@ -53,9 +52,6 @@
 
         return ($n==0) ? '' : round($n);
     }
-
-    $gTreg_day =0;
-    $gTovertime_hrs =0;
 
 ?>
 <body>
@@ -81,65 +77,99 @@
    <div>SHIFT SCHEDULE</div>
    <table border=1 style="border-collapse:collapse;width:100%;margin-top:20px;">
     <tr class="docHeader" >
-        <td width="45px" rowspan=2>DATE</td>
-        <td width="45px" rowspan=2>DAYS</td>
-        <td colspan=2 >MORNING</td>
-        <td colspan=2 >AFTERNOON</td>
-        <td colspan=2 >OVERTIME</td>
-        <td colspan=2 >OVERTIME</td>
-        <td width="40px" rowspan=2>REG <br> DAY</td>
-        <td width="40px" rowspan=2>ROT</td>
-        <td width="40px" rowspan=2>Rest <br> Day <br> Duty</td>
-        <td width="40px" rowspan=2>Rest <br> Day <br> OT</td>
-        <td rowspan=2>REMARKS</td>
-        <td width="60px" rowspan=2>SIGNATURE <br> (IN) </td>
-        <td width="60px" rowspan=2>SIGNATURE <br> (OUT) </td>
+        <td colspan=5></td>
+        <td rowspan="2">REG <br> DAY</td>
+        <td colspan=3>OVERTIME</td>
+        <td colspan=2>Rest Day</td>
+        <td colspan=2>Spec Hol</td>
+        <td colspan=2>Legal Hol</td>
+        <td colspan=3></td>
     </tr>
-    <tr>
-        <td width="45px" style="text-align:center;" >In</td>
-        <td width="45px" style="text-align:center;" >Out</td>
-        <td width="45px" style="text-align:center;" >In</td>
-        <td width="45px" style="text-align:center;" >Out</td>
-        <td width="45px" style="text-align:center;" >In</td>
-        <td width="45px" style="text-align:center;" >Out</td>
-        <td width="45px" style="text-align:center;" >In</td>
-        <td width="45px" style="text-align:center;" >Out</td>
-    </tr>
-    @foreach($detail as $dtr)
+    <tr class="docHeader" >
+        <td>DAY</td>
+        <td>DATE</td>
 
-    <?php 
+        <td width="40px">IN</td>
+        <td width="40px">OUT</td>
+        <td>Hrs</td>
+        
+        <td width="40px">IN</td>
+        <td width="40px">OUT</td>
+        <td>Hrs</td>
+        <td>Hrs</td>
+        <td>OT</td>
+        <td> Hrs</td>
+        <td> OT</td>
+        <td> Hrs</td>
+        <td> OT</td>
+        <td>REMARKS</td>
+        <td style="width:75px;">Signature In</td>
+        <td style="width:80px;">Signature Out</td>
+    </tr>
+        <?php
+        
+            $gTreg_hrs =0;
+            $gTreg_day =0;
+            $gTovertime_hrs =0;
+            $gTrd_hrs =0;
+            $gTrd_ot =0;
+            $gTsh_hrs =0;
+            $gTsh_ot =0;
+            $gTlh_hrs =0;
+            $gTlh_ot =0;
+            ?>
+  
+    @foreach($detail as $dtr)
+        <?php 
             $date = Carbon::createFromFormat('Y-m-d',$dtr->dtr_date);
+
+            $gTreg_hrs += $dtr->reg_hrs;
             $gTreg_day += $dtr->reg_day;
             $gTovertime_hrs += $dtr->overtime_hrs;
-    ?>
-   
+            $gTrd_hrs += $dtr->rd_hrs;
+            $gTrd_ot += $dtr->rd_ot;
+            $gTsh_hrs += $dtr->sh_hrs;
+            $gTsh_ot += $dtr->sh_ot;
+            $gTlh_hrs += $dtr->lh_hrs;
+            $gTlh_ot += $dtr->lh_ot;
+        ?>
+        <tr>
+            <td> {{ $dtr->dayname }}</td>
+            <td> {{ date_format($date,'m/d') }}</td>
+            <td> {{ $dtr->time_in }} </td>
+            <td> {{ $dtr->time_out }} </td>
+            <td> {{ zformat($dtr->reg_hrs) }} </td>
+            <td> {{ zformat($dtr->reg_day) }} </td>
+            <td> {{ $dtr->overtime_in }} </td>
+            <td> {{ $dtr->overtime_out }} </td>
+            <td> {{ zformat($dtr->overtime_hrs) }} </td>
+            <td> {{ zformat($dtr->rd_hrs) }} </td>
+            <td> {{ zformat($dtr->rd_ot) }} </td>
+            <td> {{ zformat($dtr->sh_hrs) }} </td>
+            <td> {{ zformat($dtr->sh_ot) }} </td>
+            <td> {{ zformat($dtr->lh_hrs) }} </td>
+            <td> {{ zformat($dtr->lh_ot) }} </td>
+            <td style="font-size : 8pt"> {{ $dtr->remarks }}</td>
+
+            <td></td>
+            <td></td>
+        </tr>
+    @endforeach
     <tr>
-        <td style="text-align:center;" >{{ $dtr->dayname }}</td>
-        <td style="text-align:center;" > {{ date_format($date,'m/d') }}</td>
-        <td style="text-align:center;" > {{ $dtr->time_in }} </td>
-        <td style="text-align:center;" > {{ $dtr->time_out }} </td>
-        <td style="text-align:center;" > {{ $dtr->time_in2 }} </td>
-        <td style="text-align:center;" > {{ $dtr->time_out2 }} </td>
-        <td style="text-align:center;" > {{ $dtr->overtime_in }} </td>
-        <td style="text-align:center;" > {{ $dtr->overtime_out }} </td>
-        <td style="text-align:center;" > {{ $dtr->overtime_in2 }} </td>
-        <td style="text-align:center;" > {{ $dtr->overtime_out2 }} </td>
-        <td style="text-align:center;" > {{ $dtr->reg_day }} </td>
-        <td style="text-align:center;" > {{ zformat($dtr->overtime_hrs) }} </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-@endforeach
-    <tr>
-        <td colspan=10 >TOTAL</td>
-        <td style="text-align:center;" >{{ zformat($gTreg_day) }}</td>
-        <td style="text-align:center;" >{{ zformat($gTovertime_hrs) }}</td>
-        <td></td>
-        <td></td>
-        <td colspan="3"></td>
+        <td>Total :</td>
+        <td colspan=3></td>
+      
+        <td>{{ zformat($gTreg_hrs) }}</td>
+        <td>{{ zformat($gTreg_day) }}</td>
+        <td colspan=2></td>
+        <td>{{ zformat($gTovertime_hrs) }}</td>
+        <td>{{ zformat($gTrd_hrs) }}</td>
+        <td>{{ zformat($gTrd_ot) }}</td>
+        <td>{{ zformat($gTsh_hrs) }}</td>
+        <td>{{ zformat($gTsh_ot) }}</td>
+        <td>{{ zformat($gTlh_hrs) }}</td>
+        <td>{{ zformat($gTlh_ot) }}</td>
+        <td colspan=3></td>
     </tr>
    </table>
 

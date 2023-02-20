@@ -10,9 +10,11 @@
                     model : {
                         id : null,
                         remarks : null,
-                        date_from : null,
-                        date_to : null,
-                        biometric_id : null
+                        // date_from : null,
+                        // date_to : null,
+                        biometric_id : null,
+                        period_id : null,
+
                     }
                 },
                 ds : {
@@ -40,8 +42,8 @@
                                     biometric_id : {type : 'number',editable :false },
                                     name : { type:'string' },
                                     remarks: { type:'string' },
-                                    date_from: { type:'date' },
-                                    date_to: { type:'date' },
+                                    //date_from: { type:'date' },
+                                    //date_to: { type:'date' },
                                     empname: { type:'string' },
                                 }
                             }
@@ -112,6 +114,26 @@
                                         data.overtime_out = pad(data.overtime_out,4);
                                         data.overtime_out = (data.overtime_out.includes(':')) ? data.overtime_out : data.overtime_out.substring(0,2)+':'+ data.overtime_out.substring(2,4);
                                     }
+
+                                    if(data.time_in2!=null){
+                                        data.time_in2 = pad(data.time_in2,4);
+                                        data.time_in2 = (data.time_in2.includes(':')) ? data.time_in2 : data.time_in2.substring(0,2)+':'+ data.time_in2.substring(2,4);
+                                    }
+
+                                    if(data.time_out2!=null){
+                                        data.time_out2 = pad(data.time_out2,4);
+                                        data.time_out2 = (data.time_out2.includes(':')) ? data.time_out2 : data.time_out2.substring(0,2)+':'+ data.time_out2.substring(2,4);
+                                    }
+
+                                    if(data.overtime_in2!=null){
+                                        data.overtime_in2 = pad(data.overtime_in2,4);
+                                        data.overtime_in2 = (data.overtime_in2.includes(':')) ? data.overtime_in2 : data.overtime_in2.substring(0,2)+':'+ data.overtime_in2.substring(2,4);
+                                    }
+
+                                    if(data.overtime_out2!=null){
+                                        data.overtime_out2 = pad(data.overtime_out2,4);
+                                        data.overtime_out2 = (data.overtime_out2.includes(':')) ? data.overtime_out2 : data.overtime_out2.substring(0,2)+':'+ data.overtime_out2.substring(2,4);
+                                    }
                                     
                                 }
 
@@ -148,6 +170,28 @@
                             }
                         }
                     }),
+                    periods : new kendo.data.DataSource({
+                        transport : {
+                            read : {
+                                url : 'manual-dtr/weekly-period',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },
+                        },
+                        schema : {
+                            model : {
+                                id : 'id',
+                                fields : {
+                                    date_from : { type: "date" },
+                                    date_to : { type: "date" },
+                                    template : { type: "string" },
+                                }
+                            }
+                        }
+                    })
                 },
                 functions : {
                     showPOP : function()
@@ -173,8 +217,10 @@
                         }).data("kendoWindow").center().open();
                     },
                     reAssignValues : function (){
-                        viewModel.form.model.set('date_from',kendo.toString($('#date_from').data('kendoDatePicker').value(),'yyyy-MM-dd'));
-                        viewModel.form.model.set('date_to',kendo.toString($('#date_to').data('kendoDatePicker').value(),'yyyy-MM-dd'));
+                        //viewModel.form.model.set('date_from',kendo.toString($('#date_from').data('kendoDatePicker').value(),'yyyy-MM-dd'));
+                        //viewModel.form.model.set('date_to',kendo.toString($('#date_to').data('kendoDatePicker').value(),'yyyy-MM-dd'));
+                        viewModel.form.model.set('period_id',$("#period_id").data('kendoDropDownList').value());
+                        
                         viewModel.form.model.set('biometric_id',$('#biometric_id').data('kendoComboBox').value());
                     },
                     prepareForm :function(data){
@@ -239,8 +285,9 @@
                     clear : function(e){
                         viewModel.form.model.set('id',null);
                         viewModel.form.model.set('remarks',null);
-                        viewModel.form.model.set('date_from',null);
-                        viewModel.form.model.set('date_to',null);
+                        //viewModel.form.model.set('date_from',null);
+                        //viewModel.form.model.set('date_to',null);
+                        viewModel.form.model.set('period_id',0);
                         viewModel.form.model.set('biometric_id',null);
                         
                     },
@@ -266,6 +313,16 @@
 
             $("#date_to").kendoDatePicker({
                 format: "MM/dd/yyyy"
+            });
+
+            $("#period_id").kendoDropDownList({
+                dataSource : viewModel.ds.periods,
+                dataTextField: "template",
+                dataValueField: "id",
+                optionLabel: {
+                    template: "Select Period",
+                    id: 0
+                }
             });
 
             $("#doc_id").kendoTextBox({ });
@@ -355,15 +412,16 @@
                     buttonCount : 5
                 },
                 noRecords: true,
-                filterable : true,
-                sortable : true,
+                //filterable : true,
+                //sortable : true,
                 height : 374,
                 scrollable: true,
                 editable : "inline",
                 columns : [
                     {
                         width : 190,
-                        command : ['edit']  
+                        command : ['edit'],
+                        locked: true,
                     },
                     {
                         title : "Day",
@@ -377,15 +435,28 @@
                         template : "#= (data.dtr_date) ? kendo.toString(data.dtr_date,'MM/dd/yyyy') : ''  #",
                     },
                     {
-                        title : "IN",
+                        title : "IN A.M.",
                         field : "time_in",
                         width : 90,    
                         editor : timeEdior
                     },
                     {
-                        title : "OUT",
+                        title : "OUT A.M.",
                         field : "time_out",
                         width : 90,    
+                        editor : timeEdior
+                    },
+                    {
+                        title : "IN P.M.",
+                        field : "time_in2",
+                        width : 90,    
+                        editor : timeEdior
+                    },
+                    {
+                        title : "OUT P.M.",
+                        field : "time_out2",
+                        width : 90,    
+                        editor : timeEdior
                     },
                     {
                         title : "Hrs",
@@ -459,12 +530,12 @@
                         field : "remarks",
                         width : 400,    
                     },
-                    {
-                        //command: { text : 'View',icon : 'edit' ,click : viewModel.buttonHandler.view },
-                        // attributes : { style : 'font-size:10pt !important;'},
-                        width : 190,
-                        command : ['edit']  
-                    },
+                    // {
+                    //     //command: { text : 'View',icon : 'edit' ,click : viewModel.buttonHandler.view },
+                    //     // attributes : { style : 'font-size:10pt !important;'},
+                    //     width : 190,
+                    //     command : ['edit']  
+                    // },
                     
                 ]
             });

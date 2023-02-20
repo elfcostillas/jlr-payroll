@@ -18,7 +18,8 @@ class ManualDTRHeader extends Model
         'remarks',
         'encoded_by',
         'encoded_on',
-        'date_from',
-        'date_to',
+        // 'date_from',
+        // 'date_to',
+        'period_id'
     ];
 }

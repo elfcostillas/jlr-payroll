@@ -67,15 +67,15 @@ class ManualDTRController extends Controller
             $data_arr['encoded_by'] = $user->id;
             $data_arr['encoded_on'] = now();
     
-            $first = $this->header->validateDate($data_arr['date_from'],$data_arr['biometric_id']);
-            if($first){
-                return response()->json(['Error' => 'Date from already used.'])->setStatusCode(500, 'Error');
-            }
+            // $first = $this->header->validateDate($data_arr['date_from'],$data_arr['biometric_id']);
+            // if($first){
+            //     return response()->json(['Error' => 'Date from already used.'])->setStatusCode(500, 'Error');
+            // }
     
-            $second = $this->header->validateDate($data_arr['date_to'],$data_arr['biometric_id']);
-            if($second){
-                return response()->json(['Error' => 'Date to already used.'])->setStatusCode(500, 'Error');
-            }
+            // $second = $this->header->validateDate($data_arr['date_to'],$data_arr['biometric_id']);
+            // if($second){
+            //     return response()->json(['Error' => 'Date to already used.'])->setStatusCode(500, 'Error');
+            // }
     
             $result = $this->header->insertValid($data_arr);
     
@@ -91,8 +91,11 @@ class ManualDTRController extends Controller
             $result = $this->header->updateValid($data_arr);
         }
         
+        $range = $this->header->getPeriodByID($data_arr['period_id']);
+        //dd($range['date_from'],$range['date_to']);
 
-        $dates = new CarbonPeriod($data_arr['date_from'],'1 day',$data_arr['date_to']);
+        //$dates = new CarbonPeriod($data_arr['date_from'],'1 day',$data_arr['date_to']);
+        $dates = new CarbonPeriod($range['date_from'],'1 day',$range['date_to']);
 
         foreach($dates as $date){
             array_push($blank,[
@@ -147,5 +150,12 @@ class ManualDTRController extends Controller
         $canvas->page_text(700, 570, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
         return $pdf->stream('JLR-DTR-Print.pdf'); 
        
+    }
+
+    public function weeklyPeriod(Request $request)
+    {
+        $result = $this->header->openWeeklyPeriod();
+
+        return response()->json($result);
     }
 }

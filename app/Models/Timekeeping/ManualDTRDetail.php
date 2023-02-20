@@ -19,6 +19,8 @@ class ManualDTRDetail extends Model
         'dtr_date',
         'time_in',
         'time_out',
+        'time_in2',
+        'time_out2',
         'overtime_in',
         'overtime_out',
         'overtime_hrs',
