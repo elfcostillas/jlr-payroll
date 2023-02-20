@@ -60,6 +60,7 @@ class ManualDTRHeaderMapper extends AbstractMapper {
         $result = $this->model->select(DB::raw("biometric_id,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) AS empname"))
                 ->from('employees')
                 ->where('exit_status',1)
+                ->where('pay_type',3)
                 ->orderBy('lastname')
                 ->orderBy('firstname');
 
