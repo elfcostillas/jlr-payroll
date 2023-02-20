@@ -35,10 +35,33 @@
             font-size : 8pt;
             padding : 3px;
         }
+
+        #leave_header tr td {
+            font-size : 9pt;
+            padding : 3px;
+        }
+
     </style>
 </head>
 <body>
-
+    <table id ="leave_header" border=0 style="width:100%">
+        <tr>
+            <td width="33%">Name : <u> {{ $employee->empname }} </u> </td>
+            <td width="33%">Division : <u> {{ $employee->div_name }} </u>  </td>
+            <td width="33%">Department : <u> {{ $employee->dept_name }} </u> </td>
+        </tr>
+        <tr>
+            <td> {{ $employee->job_title_name }} </td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+    <br>
+        <div style="font-size:9pt;">
+            <b>Leave(s) for the period 01/01/{{$year}} - 12/31/{{$year}}</b>
+        </div>
+    <br>
+   
     <table id="leave_tb" border=1 style="border-collapse:collapse;" width="100%">
         <tr>
             <td>DATE</td>

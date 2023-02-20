@@ -81,14 +81,14 @@ class LeaveCreditsController extends Controller
 
         $start = $year.'-01-01';
         $end = $year.'-12-31';
-
+        $employee = $this->mapper->getEmployeeInfo($biometric_id);
         $data = $this->mapper->showLeaves($biometric_id,$start,$end);
-
+       
         $leave_credits = $this->mapper->getLeaveCredits($biometric_id,$year);
         
-        $pdf = PDF::loadView('app.timekeeping.leave-credits.print',['data' => $data,'leave_credits'=>$leave_credits])->setPaper('A4','portrait');
+        $pdf = PDF::loadView('app.timekeeping.leave-credits.print',['data' => $data,'leave_credits'=>$leave_credits,'employee' => $employee,'year' => $year])->setPaper('A4','portrait');
 
-        return $pdf->stream('JLR-DTR-Print.pdf'); 
+        return $pdf->stream('JLR-Leaves-Print.pdf'); 
         // //$pdf->output();
         // $pdf->output();
         // $dom_pdf = $pdf->getDomPDF();

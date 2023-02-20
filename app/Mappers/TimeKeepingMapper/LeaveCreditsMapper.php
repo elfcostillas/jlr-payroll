@@ -118,6 +118,17 @@ class LeaveCreditsMapper extends AbstractMapper {
         return $result;
     }
 
+    public function getEmployeeInfo($biometric_id)
+    {
+        $result = $this->model->select(DB::raw("CONCAT(lastname,', ',firstname) empname,job_title_name,div_name,dept_name"))
+            ->from('employees')
+            ->leftJoin('departments','employees.dept_id','=','departments.id')
+            ->leftJoin('divisions','divisions.id','=','division_id')
+            ->leftJoin('job_titles','job_titles.id','=','employees.job_title_id')
+            ->where('biometric_id',$biometric_id);
+        return $result->first();
+    }
+
     public function getLeaveCredits($biometric_id,$year)
     {   
         //SELECT vacation_leave,sick_leave FROM leave_credits WHERE fy_year,biometric_id
@@ -127,3 +138,9 @@ class LeaveCreditsMapper extends AbstractMapper {
 
 
 }
+
+/*
+SELECT * FROM employees LEFT JOIN departments ON employees.dept_id = departments.id
+LEFT JOIN divisions ON divisions.id = division_id
+LEFT JOIN job_titles ON job_titles.id = employees.job_title_id
+*/
