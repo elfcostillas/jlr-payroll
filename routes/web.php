@@ -34,6 +34,7 @@ use App\Http\Controllers\Reports\LeaveReportsController;
 use Carbon\CarbonPeriod;
 
 use App\Http\Controllers\PayrollTransaction\PayrollRegisterController;
+use App\Http\Controllers\PayrollTransaction\PayrollRegisterWeeklyController;
 use App\Http\Controllers\PayrollTransaction\BankTransmittalController;
 use App\Http\Controllers\PayrollTransaction\PayslipController;
 
@@ -458,6 +459,14 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::get('/',[BankTransmittalController::class,'index']);
         Route::get('get-periods',[BankTransmittalController::class,'postedPeriods']);
         Route::get('download/{period_id}',[BankTransmittalController::class,'generateExcel']);
+    });
+
+    Route::prefix('payroll-register-weekly')->middleware('access:payroll-transaction/payroll-register-weekly')->group(function(){
+        Route::get('/',[PayrollRegisterWeeklyController::class,'index']);
+        Route::get('unposted-payroll',[PayrollRegisterWeeklyController::class,'getUnpostedPeriod']);
+        Route::get('compute/{id}',[PayrollRegisterWeeklyController::class,'compute']);
+        Route::get('download-unposted/{id}',[PayrollRegisterWeeklyController::class,'downloadExcelUnposted']);
+        Route::post('post',[PayrollRegisterWeeklyController::class,'postPayroll']);
     });
 });
 

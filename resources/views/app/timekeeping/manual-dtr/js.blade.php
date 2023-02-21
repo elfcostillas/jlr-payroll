@@ -199,7 +199,7 @@
                         var myWindow = $("#pop");
                         
                         myWindow.kendoWindow({
-                            width: "924", //1124 - 1152
+                            width: "1124", //1124 - 1152
                             height: "750",
                             title: "Manual DTR Form",
                             visible: false,
@@ -289,6 +289,10 @@
                         //viewModel.form.model.set('date_to',null);
                         viewModel.form.model.set('period_id',0);
                         viewModel.form.model.set('biometric_id',null);
+
+                        let detailUrl = `manual-dtr/details/0`;
+                        viewModel.ds.dtrgrid.transport.options.read.url = detailUrl;
+                        viewModel.ds.dtrgrid.read();
                         
                     },
                     print : function(){
@@ -363,6 +367,7 @@
                         title : "ID",
                         field : "id",
                         width : 80,    
+                        
                     },
                     {
                         title : "BIO ID",
@@ -427,71 +432,111 @@
                         title : "Day",
                         field : "dayname",
                         width : 80,    
+                        
+                        headerAttributes: {
+                            style: "font-size: 11px"
+                        }
                     },
                     {
                         title : "Date From",
                         field : "dtr_date",
                         width : 100,    
                         template : "#= (data.dtr_date) ? kendo.toString(data.dtr_date,'MM/dd/yyyy') : ''  #",
+                        headerAttributes: {
+                            style: "font-size: 11px"
+                        }
                     },
                     {
                         title : "IN A.M.",
                         field : "time_in",
-                        width : 90,    
-                        editor : timeEdior
+                        width : 80,    
+                        editor : timeEdior,
+                        headerAttributes: {
+                            style: "font-size: 11px"
+                        }
                     },
                     {
                         title : "OUT A.M.",
                         field : "time_out",
-                        width : 90,    
-                        editor : timeEdior
+                        width : 80,    
+                        editor : timeEdior,
+                        headerAttributes: {
+                            style: "font-size: 11px"
+                        }
                     },
                     {
                         title : "IN P.M.",
                         field : "time_in2",
-                        width : 90,    
-                        editor : timeEdior
+                        width : 80,    
+                        editor : timeEdior,
+                        headerAttributes: {
+                            style: "font-size: 11px"
+                        }
                     },
                     {
                         title : "OUT P.M.",
                         field : "time_out2",
-                        width : 90,    
-                        editor : timeEdior
+                        width : 80,    
+                        editor : timeEdior,
+                        headerAttributes: {
+                            style: "font-size: 11px"
+                        }
                     },
-                    {
-                        title : "Hrs",
-                        field : "reg_hrs",
-                        width : 90,    
-                    },
+                    // {
+                    //     title : "Hrs",
+                    //     field : "reg_hrs",
+                    //     width : 80,
+                    //     headerAttributes: {
+                    //         style: "font-size: 11px"
+                    //     }
+                    // },
                     {
                         title : "Reg Day",
                         field : "reg_day",
-                        width : 90,    
+                        width : 80,
+                        headerAttributes: {
+                            style: "font-size: 11px"
+                        }
                     },
                     {
                         title : "IN (OT)",
                         field : "overtime_in",
-                        width : 90,    
+                        width : 80,    
+                        headerAttributes: {
+                            style: "font-size: 11px"
+                        }
                     },
                     {
                         title : "OUT (OT)",
                         field : "overtime_out",
-                        width : 90,    
+                        width : 80,    
+                        headerAttributes: {
+                            style: "font-size: 11px"
+                        }
                     },
                     {
                         title : "IN (OT)",
                         field : "overtime_in2",
-                        width : 90,    
+                        width : 80,    
+                        headerAttributes: {
+                            style: "font-size: 11px"
+                        }
                     },
                     {
                         title : "OUT (OT)",
                         field : "overtime_out2",
-                        width : 90,    
+                        width : 80,    
+                        headerAttributes: {
+                            style: "font-size: 11px"
+                        }
                     },
                     {
                         title : "HRS (OT)",
                         field : "overtime_hrs",
-                        width : 90,    
+                        width : 80,    
+                        headerAttributes: {
+                            style: "font-size: 11px"
+                        }
                     },
 
                     // {
@@ -529,6 +574,9 @@
                         title : "Remarks",
                         field : "remarks",
                         width : 400,    
+                        headerAttributes: {
+                            style: "font-size: 11px"
+                        }
                     },
                     // {
                     //     //command: { text : 'View',icon : 'edit' ,click : viewModel.buttonHandler.view },

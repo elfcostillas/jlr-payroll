@@ -116,15 +116,16 @@
     <tr>
         <td style="text-align:center;" >{{ $dtr->dayname }}</td>
         <td style="text-align:center;" > {{ date_format($date,'m/d') }}</td>
-        <td style="text-align:center;" > {{ $dtr->time_in }} </td>
-        <td style="text-align:center;" > {{ $dtr->time_out }} </td>
-        <td style="text-align:center;" > {{ $dtr->time_in2 }} </td>
-        <td style="text-align:center;" > {{ $dtr->time_out2 }} </td>
-        <td style="text-align:center;" > {{ $dtr->overtime_in }} </td>
-        <td style="text-align:center;" > {{ $dtr->overtime_out }} </td>
-        <td style="text-align:center;" > {{ $dtr->overtime_in2 }} </td>
-        <td style="text-align:center;" > {{ $dtr->overtime_out2 }} </td>
-        <td style="text-align:center;" > {{ $dtr->reg_day }} </td>
+        <td style="text-align:center;" > {{ ($dtr->time_in!='00:00') ? $dtr->time_in : '' }} </td>
+        <td style="text-align:center;" > {{ ($dtr->time_out!='00:00') ? $dtr->time_out : '' }} </td>
+        <td style="text-align:center;" > {{ ($dtr->time_in2!='00:00') ? $dtr->time_in2 : '' }} </td>
+        <td style="text-align:center;" > {{ ($dtr->time_out2!='00:00') ? $dtr->time_out2 : '' }} </td>
+
+        <td style="text-align:center;" > {{ ($dtr->overtime_in!='00:00') ? $dtr->overtime_in : '' }} </td>
+        <td style="text-align:center;" > {{ ($dtr->overtime_out!='00:00') ? $dtr->overtime_out : '' }} </td>
+        <td style="text-align:center;" > {{ ($dtr->overtime_in2!='00:00') ? $dtr->overtime_in2 : '' }} </td>
+        <td style="text-align:center;" > {{ ($dtr->overtime_out2!='00:00') ? $dtr->overtime_out2 : '' }} </td>
+        <td style="text-align:center;" > {{ zformat($dtr->reg_day) }} </td>
         <td style="text-align:center;" > {{ zformat($dtr->overtime_hrs) }} </td>
         <td></td>
         <td></td>
