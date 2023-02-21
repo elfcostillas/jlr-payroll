@@ -129,7 +129,7 @@
         <td style="text-align:center;" > {{ zformat($dtr->overtime_hrs) }} </td>
         <td></td>
         <td></td>
-        <td></td>
+        <td>{{ $dtr->remarks }}</td>
         <td></td>
         <td></td>
     </tr>
