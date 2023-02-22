@@ -17,7 +17,7 @@ class EmployeeMapper extends AbstractMapper {
 		//'middlename' => 'required|sometimes',
 		//'suffixname' => 'required|sometimes',
 		'biometric_id' => 'required|sometimes|unique:employees',
-		'bank_acct' => 'required|sometimes|unique:employees',
+		//'bank_acct' => 'required|sometimes|unique:employees',
 		'division_id' => 'required|sometimes',
 		'dept_id' => 'required|sometimes|gt:0',
 		'location_id' => 'required|sometimes|gt:0',
