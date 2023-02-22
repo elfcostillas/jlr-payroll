@@ -88,6 +88,12 @@ class EmployeeController extends Controller
         }
 
         if($data_arr['id']==null){
+
+            if($data_arr['biometric_id']==''){
+                $biometric_id = $this->mapper->biometricIDGenerator();
+                $data_arr['biometric_id']=$biometric_id;
+            }
+
             $result = $this->mapper->insertValid($data_arr);
 
             if(is_object($result)){
@@ -200,6 +206,7 @@ class EmployeeController extends Controller
     public function bioAssignment()
     {
         $data = $this->mapper->generateBiometricAssignment();
+        //$data = $this->mapper->biometricIDGenerator();
 
         $emp_array = [];
         foreach($data['empname'] as $key => $value)

@@ -193,10 +193,40 @@ class EmployeeMapper extends AbstractMapper {
 		$empname = $this->model->select(DB::raw("biometric_id,CONCAT(lastname,', ',firstname) as empname"))->from('employees')->get();
 		//dd($range->r1,$range->r2);
 
+		// for($i=1;$i<=100000;$i++){
+		// 	DB::table('biometric_series')->insert([
+		// 		'biometric_id' => $i,
+				
+		// 	]);
+		// }
+
 		return array(
 			'range' => $range,
 			'empname' => $empname
 		);
+	}
+
+	public function biometricIDGenerator()
+	{
+		$empname = $this->model->select(DB::raw("biometric_id,CONCAT(lastname,', ',firstname) as empname"))->from('employees')->get();
+		
+		$id_array = [];
+
+		foreach($empname as $e){
+			array_push($id_array,$e->biometric_id);
+		}
+
+		$flag = false;
+		$index = 1;
+
+		while($flag==false){
+			if(in_array($index,$id_array)){
+				$index++;
+			}else{
+				$flag = true;
+			}
+		}
+		return $index;
 	}
 
 
