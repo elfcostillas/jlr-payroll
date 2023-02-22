@@ -186,6 +186,20 @@ class EmployeeMapper extends AbstractMapper {
 		return $result->first();
     }
 
+	public function generateBiometricAssignment()
+	{
+		//SELECT MIN(biometric_id),MAX(biometric_id) FROM employees;
+		$range = $this->model->select(DB::raw("MIN(biometric_id) as r1,MAX(biometric_id) as r2"))->from('employees')->first();
+		$empname = $this->model->select(DB::raw("biometric_id,CONCAT(lastname,', ',firstname) as empname"))->from('employees')->get();
+		//dd($range->r1,$range->r2);
+
+		return array(
+			'range' => $range,
+			'empname' => $empname
+		);
+	}
+
+
 
 
 }

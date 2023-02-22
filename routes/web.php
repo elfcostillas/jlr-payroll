@@ -237,7 +237,8 @@ Route::middleware('auth')->prefix('employee-files')->group(function(){
         //Route::post('update',[EmployeeController::class,'update']);
         Route::post('save',[EmployeeController::class,'save']);
         Route::get('job-titles/{id}',[EmployeeController::class,'getJobTitles']);
-        
+
+        Route::get('biometric-assignment',[EmployeeController::class,'bioAssignment']);
         
     });
 

@@ -197,6 +197,21 @@ class EmployeeController extends Controller
         return $string;
     }
 
+    public function bioAssignment()
+    {
+        $data = $this->mapper->generateBiometricAssignment();
+
+        $emp_array = [];
+        foreach($data['empname'] as $key => $value)
+        {
+            //dd($value->biometric_id,$value->empname);
+            $emp_array[$value->biometric_id] = $value->empname;
+        }
+
+        return view('app.employee-file.employee-master-data.bio-assignment',['data' => $data,'emp' => $emp_array]);
+
+    }
+
 
 
     // public function getEmploymentStat()
