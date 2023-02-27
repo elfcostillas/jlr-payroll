@@ -19,5 +19,7 @@ class LeaveCredits extends Model
         'biometric_id',
         'vacation_leave',
         'sick_leave',
+        'summer_vacation_leave',
+        'paternity_leave',
     ];
 }

@@ -94,6 +94,8 @@
                                     fy_year: { type : 'number',editable :false },
                                     vacation_leave: { type : 'number' },
                                     sick_leave: { type : 'number' },
+                                    summer_vacation_leave: { type : 'number' },
+                                    paternity_leave: { type : 'number' },
                                     //fy : { type : 'number',editable :false },   
                                     // id : {ype : 'number',editable :false },
                                     // date_from : { type : 'date' },
@@ -160,17 +162,27 @@
                     {
                         title : 'Empployee Name',
                         field : 'employee_name',
-                        width : 320,
+                        //width : 320,
                     },
                     {
                         title : 'Vacation Leave',
                         field : 'vacation_leave',
-                        width : 140,
+                        width : 120,
                     },
                     {
                         title : 'Sick Leave',
                         field : 'sick_leave',
-                        width : 140,
+                        width : 110,
+                    },
+                    {
+                        title : 'Summer VL',
+                        field : 'summer_vacation_leave',
+                        width : 120,
+                    },
+                    {
+                        title : 'Paternity Leave',
+                        field : 'paternity_leave',
+                        width : 130,
                     },
                     {
                         command: [
@@ -178,7 +190,7 @@
                             //{ text : 'Download',click : viewModel.buttonHandler.download , }
                         ],
                         attributes : { style : 'font-size:10pt !important;'},
-                        width : 160
+                        width : 130
                     },
                   
                 ]

@@ -24,6 +24,7 @@ use App\Http\Controllers\Settings\DeductionTypeController;
 use App\Http\Controllers\Settings\LoanTypeController;
 use App\Http\Controllers\Settings\SSSTableController;
 use App\Http\Controllers\Settings\PhilHealthController;
+use App\Http\Controllers\Settings\OtherIncomeWeeklyController;
 
 use App\Http\Controllers\EmployeeFile\DivisionController;
 use App\Http\Controllers\EmployeeFile\EmployeeController;
@@ -329,7 +330,18 @@ Route::middleware('auth')->prefix('settings')->group(function(){
         Route::get('get-rate',[PhilHealthController::class,'getPhicRate']);
         
     });
-    
+
+    Route::prefix('other-income-weekly')->group(function(){
+        Route::get('/',[OtherIncomeWeeklyController::class,'index']);
+        Route::get('list',[OtherIncomeWeeklyController::class,'list']);
+
+        Route::post('create',[OtherIncomeWeeklyController::class,'create']);
+        Route::post('update',[OtherIncomeWeeklyController::class,'update']);
+
+        //Route::post('save',[OtherIncomeWeeklyController::class,'save']);
+        //Route::get('get-rate',[OtherIncomeWeeklyController::class,'getPhicRate']);
+        
+    });
     
 });
 

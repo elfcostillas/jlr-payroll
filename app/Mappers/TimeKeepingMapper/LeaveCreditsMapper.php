@@ -57,7 +57,7 @@ class LeaveCreditsMapper extends AbstractMapper {
 
     public function empList($year)
     {
-        $result = $this->model->select(DB::raw("employee_names_vw.*,line_id,fy_year,vacation_leave,sick_leave"))
+        $result = $this->model->select(DB::raw("employee_names_vw.*,line_id,fy_year,vacation_leave,sick_leave,summer_vacation_leave,paternity_leave"))
             ->from('employee_names_vw')
             //->leftJoin('leave_credits','leave_credits.biometric_id','=','employee_names_vw.biometric_id')
             ->leftJoin('leave_credits',function($join) use ($year){
