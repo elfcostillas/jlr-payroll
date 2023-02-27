@@ -178,11 +178,13 @@
                         title : 'Summer VL',
                         field : 'summer_vacation_leave',
                         width : 120,
+                        template : "# if(summer_vacation_leave==0){#  #} else{# #= summer_vacation_leave #  #}#",
                     },
                     {
                         title : 'Paternity Leave',
                         field : 'paternity_leave',
                         width : 130,
+                        template : "# if(paternity_leave==0){#  #} else{# #= paternity_leave #  #}#",
                     },
                     {
                         command: [

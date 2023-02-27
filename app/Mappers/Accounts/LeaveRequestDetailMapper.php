@@ -20,10 +20,11 @@ class LeaveRequestDetailMapper extends AbstractMapper {
     {
         $period = CarbonPeriod::create($arr['date_from'],$arr['date_to']);
        
+        dd($period);
         $leave_details = [];
         foreach($period as $date)
         {
-            if($date->format('D')!='Sun'){
+            //if($date->format('D')!='Sun'){
                 array_push($leave_details,[
                     'header_id' => $id,
                     'leave_date' => $date,
@@ -34,7 +35,7 @@ class LeaveRequestDetailMapper extends AbstractMapper {
                     'with_pay' => 0,
                     'without_pay' => 0
                 ]);
-            }
+           // }
            
         }
 
