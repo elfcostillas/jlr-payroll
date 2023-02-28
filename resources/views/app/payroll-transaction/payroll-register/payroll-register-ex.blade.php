@@ -132,7 +132,7 @@
                                     @endforeach
                                         <td>{{ ($employee->gross_pay > 0) ? $employee->gross_pay : '' }}</td>
                                     @foreach($compensation as $comp)
-                                        <td  > {{ (array_key_exists($comp->id,$employee->otderEarnings)) ? $employee->otderEarnings[$comp->id] : ''; }}</td>
+                                        <td  > {{ (array_key_exists($comp->id,$employee->otherEarnings)) ? $employee->otherEarnings[$comp->id] : ''; }}</td>
                                        
                                     @endforeach
                                         <td >{{ ($employee->gross_total>0) ? $employee->gross_total : ''; }}</td>

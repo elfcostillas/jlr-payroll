@@ -512,6 +512,7 @@ Route::middleware('auth')->prefix('compensations')->group(function(){
 
     Route::prefix('other-income-app-weekly')->group(function(){
         Route::get('/',[OtherIncomeWeeklyAppController::class,'index']);
+        Route::get('list',[OtherIncomeWeeklyAppController::class,'list']);
     });
     
 });

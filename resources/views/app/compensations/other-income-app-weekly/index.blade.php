@@ -42,4 +42,4 @@
     </div>
 @endsection
 
-@include('app.timekeeping.payroll-period-weekly.js')
+@include('app.compensations.other-income-app-weekly.js')

@@ -7,7 +7,7 @@
                     maingrid : new kendo.data.DataSource({
                         transport : {
                             read : {
-                                url : 'payroll-period-weekly/list',
+                                url : 'other-income-app-weekly/list',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -86,22 +86,9 @@
                         width : 80,    
                     },
                     {
-                        title : "Start Date",
-                        field : "date_from",
-                        template : "#= (data.date_from) ? kendo.toString(data.date_from,'MM/dd/yyyy') : ''  #",
-                        //width : 120,    
-                    },
-                    {
-                        title : "End Date",
-                        field : "date_to",
-                        template : "#= (data.date_to) ? kendo.toString(data.date_to,'MM/dd/yyyy') : ''  #",
-                        //width : 120,    
-                    },
-                    {
-                        title : "Man Hours",
-                        field : "man_hours",
-                        //template : "#=  : ''  #",
-                        width : 120,    
+                        title : "Date Range",
+                        field : "drange",
+                        width : 80,  
                     },
                     {
                         command : ['edit'],
