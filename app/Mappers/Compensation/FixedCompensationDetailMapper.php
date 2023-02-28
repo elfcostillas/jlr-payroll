@@ -17,7 +17,7 @@ class FixedCompensationDetailMapper extends AbstractMapper {
     public function list($id)
     {
         //SELECT * FROM job_titles WHERE ;
-        $driver = $this->model->select('id')->from('job_titles')->whereRaw("job_title_name LIKE '%Driver%'");
+        $driver = $this->model->select('id')->from('job_titles')->whereRaw("job_title_name LIKE '%Driver%'")->orWhereRaw("job_title_name LIKE '%Operator%'");
        
         $result = $this->model->select(DB::raw("employee_names_vw.*,compensation_fixed_details.line_id,IFNULL(compensation_fixed_details.total_amount,0.00) AS total_amount,header_id"))
         ->from('employee_names_vw')
@@ -33,7 +33,7 @@ class FixedCompensationDetailMapper extends AbstractMapper {
     public function createDetails($header_id)
     {   
         //SELECT biometric_id FROM employees WHERE job_title_id = 26;
-        $driver = $this->model->select('id')->from('job_titles')->whereRaw("job_title_name LIKE '%Driver%'");
+        $driver = $this->model->select('id')->from('job_titles')->whereRaw("job_title_name LIKE '%Driver%'")->orWhereRaw("job_title_name LIKE '%Operator%'");
         //$result = $this->model->select('biometric_id')->from('employees')->whereRaw('job_title_id=26')->get();
         $result = $this->model->select('biometric_id')
                                 ->from('employees')
