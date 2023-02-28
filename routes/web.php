@@ -49,6 +49,7 @@ use  App\Http\Controllers\Deductions\GovernmentLoanController;
 
 use App\Http\Controllers\Compentsations\OtherCompensationController;
 use App\Http\Controllers\Compentsations\FixCompensationController;
+use App\Http\Controllers\Compentsations\OtherIncomeWeeklyAppController;
 
 /*
 |--------------------------------------------------------------------------
@@ -508,6 +509,11 @@ Route::middleware('auth')->prefix('compensations')->group(function(){
 
         Route::post('update-detail',[OtherCompensationController::class,'updateDetail']);
     }); 
+
+    Route::prefix('other-income-app-weekly')->group(function(){
+        Route::get('/',[OtherIncomeWeeklyAppController::class,'index']);
+    });
+    
 });
 
 

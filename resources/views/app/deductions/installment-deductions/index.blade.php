@@ -103,7 +103,7 @@
                             <tr>
                                 <td colspan=1><input type="text" id="total_amount" data-bind="value:form.model.total_amount"> </td>
                                 <td colspan=1><input type="text" id="terms" data-bind="value:form.model.terms"> </td>
-                                <td colspan=1><input type="text" id="ammortization" data-bind="value:form.model.ammortization" readonly > </td>
+                                <td colspan=1><input type="text" id="ammortization" data-bind="value:form.model.ammortization" > </td>
                                 <td colspan=1><input type="text" id="is_stopped" data-bind="value:form.model.is_stopped"> </td>
                                 <td colspan=1></td>
                                 {{-- <td colspan=1><input type="text" id="deduction_sched" data-bind="value:form.model.deduction_sched"></td> --}}
