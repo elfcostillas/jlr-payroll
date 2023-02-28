@@ -20,7 +20,7 @@ class LeaveRequestDetailMapper extends AbstractMapper {
     {
         $period = CarbonPeriod::create($arr['date_from'],$arr['date_to']);
        
-        dd($period);
+       
         $leave_details = [];
         foreach($period as $date)
         {
