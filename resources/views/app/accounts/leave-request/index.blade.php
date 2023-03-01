@@ -44,7 +44,7 @@
         padding : 4px;
     }
 
-    #toolbar,#toolbar2 {
+    #toolbar,#toolbar2,#leave_data {
         font-size:10pt !important;
         background-color:  #6c757d !important;
     }
@@ -82,7 +82,7 @@
                 <div id="toolbar"></div>
                 <div id="toolbar2"></div>
                 <div class="card card-secondary mt-1">
-                    <div class="card-header"> Leave Details </div>
+                    {{-- <div class="card-header"> Leave Details </div> --}}
                     <form id="leaveRequestForm">
                         <input type="hidden" id="id" data-bind="value:form.model.id" >
                         <div class="card-body">
@@ -133,13 +133,15 @@
                             </table>
 
                             <div id="subgrid"></div>
-                            
+                            <div id="leave_data" style="margin-top:2px">
+                               
+                            </div>
                         </div>
                     </form>
                 </div>
 
             </div>
-            <div id="pop_sub"  style="display: none;"> <div id="leave_data" ></div> </div>
+            {{-- <div id="pop_sub"  style="display: none;"> <div id="leave_data" ></div> </div> --}}
         </div>
     </div>
 @endsection

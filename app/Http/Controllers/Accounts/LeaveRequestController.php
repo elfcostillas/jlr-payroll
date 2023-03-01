@@ -58,8 +58,6 @@ class LeaveRequestController extends Controller
 
             $result = $this->header->insertValid($data_arr);
 
-           
-
             $this->detail->createDates($data_arr,$result);
             
         }else{

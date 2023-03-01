@@ -264,6 +264,8 @@
                         viewModel.ds.leaveDetails.transport.options.read.url = detailUrl;
                         viewModel.ds.leaveDetails.read();
 
+                        
+
                         //await viewModel.functions.prepareForm(data);
                         
                         //console.log(data);
@@ -334,23 +336,23 @@
                         
                         });
                         
-                        myWindow.kendoWindow({
-                            width: "820", //1124 - 1152
-                            height: "650",
-                            title: "Leave Balance",
-                            visible: false,
-                            animation: false,
-                            actions: [
-                                "Pin",
-                                "Minimize",
-                                "Maximize",
-                                "Close"
-                            ],
-                            //close: viewModel.buttonHandler.closePop,
-                            position : {
-                                top : 0
-                            }
-                        }).data("kendoWindow").center().open();
+                        // myWindow.kendoWindow({
+                        //     width: "820", //1124 - 1152
+                        //     height: "650",
+                        //     title: "Leave Balance",
+                        //     visible: false,
+                        //     animation: false,
+                        //     actions: [
+                        //         "Pin",
+                        //         "Minimize",
+                        //         "Maximize",
+                        //         "Close"
+                        //     ],
+                        //     //close: viewModel.buttonHandler.closePop,
+                        //     position : {
+                        //         top : 0
+                        //     }
+                        // }).data("kendoWindow").center().open();
                     },
                     recreate : function(){
                         if(viewModel.form.model.id!=null){
@@ -442,7 +444,8 @@
 
                 },
                 callBack : function()
-                {
+                {   
+                    viewModel.buttonHandler.showBalance();
                   
                     // viewModel.form.mirror.set('deduct_sss',(viewModel.form.model.deduct_sss=='Y') ? true:false);
                     // viewModel.form.mirror.set('deduct_phic',(viewModel.form.model.deduct_phic=='Y') ? true:false);
@@ -802,7 +805,7 @@
                     //{ id : 'saveBtn', type: "button", text: "Save", icon: 'save', click : viewModel.buttonHandler.save },
                     { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
                     //{ id : 'postBtn', type: "button", text: "Post", icon: 'print', click : viewModel.buttonHandler.post },
-                    { id : 'showBalance', type: "button", text: "Show Balance", icon: 'print', click : viewModel.buttonHandler.showBalance },
+                    // { id : 'showBalance', type: "button", text: "Show Balance", icon: 'print', click : viewModel.buttonHandler.showBalance },
                 
                 ]
             });
