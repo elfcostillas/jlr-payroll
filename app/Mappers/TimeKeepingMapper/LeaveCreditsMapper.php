@@ -102,6 +102,24 @@ class LeaveCreditsMapper extends AbstractMapper {
         $result = DB::select($qry);
 
         return $result;
+
+        /*
+        SELECT biometric_id,ROUND(SUM(with_pay)/8,2) 
+        FROM leave_request_header INNER JOIN leave_request_detail ON leave_request_header.id = leave_request_detail.header_id WHERE
+        leave_date BETWEEN '2023-01-01' AND '2023-12-31'
+        AND with_pay > 0
+        AND is_canceled = 'N'
+        AND leave_type = 'VL'
+        GROUP BY biometric_id
+
+SELECT biometric_id,ROUND(SUM(with_pay)/8,2) 
+        FROM leave_request_header INNER JOIN leave_request_detail ON leave_request_header.id = leave_request_detail.header_id WHERE
+        leave_date BETWEEN '2023-01-01' AND '2023-12-31'
+        AND with_pay > 0
+        AND is_canceled = 'N'
+        AND leave_type = 'SL'
+        GROUP BY biometric_id
+        */
     }
 
     public function showLeaves($biometric_id,$from,$to)
