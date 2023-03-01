@@ -202,6 +202,7 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::get('/',[LeavesAbsencesController::class,'index']);
         Route::get('list',[LeavesAbsencesController::class,'list']);
         Route::post('receive',[LeavesAbsencesController::class,'receive']);
+        Route::post('unpost',[LeavesAbsencesController::class,'unpost']);
         Route::post('update-detail',[LeavesAbsencesController::class,'updateDetail']);
         
         Route::get('copy',[LeavesAbsencesController::class,'getLeavesFrom100']);

@@ -61,6 +61,23 @@ class LeavesAbsencesController extends Controller
 
     }
 
+    public function unpost(Request $request)
+    {
+        $user = Auth::user();
+        $leave = $this->mapper->header($request->id);
+
+        if($leave!=null){
+            $leave->received_by= null;
+            $leave->received_time= null;
+            $leave->document_status = 'DRAFT';
+        }
+
+        $result = $this->mapper->updateValid($leave->toArray());
+
+        return response()->json($result);
+
+    }
+
     public function updateDetail(Request $request)
     {
         if($request->with_pay+$request->without_pay>9)

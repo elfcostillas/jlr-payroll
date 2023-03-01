@@ -326,6 +326,28 @@
                             }).always(function() {
                                 
                             });
+                    },
+                    unpost : function(e){
+                        $.post('leaves-absences/unpost',{
+                                id : viewModel.form.model.id
+                            },function(data,staus){
+                                swal_success(data);
+                               
+                                let url = `../accounts/leave-request/read-header/${data}`;
+                                read(url,viewModel);
+                                viewModel.ds.maingrid.read();
+
+                                // let detailUrl = `leave-request/read-detail/${data}`;
+                                // viewModel.ds.leaveDetails.transport.options.read.url = detailUrl;
+                                // viewModel.ds.leaveDetails.read();
+
+                                //viewModel.maingrid.formReload(data);
+                            })
+                            .fail(function(data){
+                            swal_error(data);
+                            }).always(function() {
+                                
+                            });
                     }
                 },
                 functions : {
@@ -431,9 +453,12 @@
 
                         if(viewModel.form.model.received_by==null || viewModel.form.model.received_by=='' ){
                             toolbar.show($("#setReceived"));
+                            toolbar.hide($("#unpostBtn"));
                             //console.log('show');
                         }else{
                             toolbar.hide($("#setReceived"));
+                            toolbar.show($("#unpostBtn"));
+                            
                             //console.log('hide');
                         }
 
@@ -707,7 +732,7 @@
                     //{ id : 'saveBtn', type: "button", text: "Save", icon: 'save', click : viewModel.buttonHandler.save },
                     { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
                     { id : 'setReceived', type: "button", text: "Set as Received", icon: 'save', click : viewModel.buttonHandler.receive },
-                 
+                    { id : 'unpostBtn', type: "button", text: "Unpost", icon: 'save', click : viewModel.buttonHandler.unpost },
                     //{ id : 'postBtn', type: "button", text: "Post", icon: 'print', click : viewModel.buttonHandler.post },
                 ]
             });
