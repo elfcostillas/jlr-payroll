@@ -60,9 +60,78 @@
                             }
                         }
                     }),
+                    compgrid : new kendo.data.DataSource({
+                        transport : {
+                            read : {
+                                url : 'other-income-app-weekly/emp-list/0',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },
+                            update : {
+                                url : 'other-income-app-weekly/update',
+                                type : 'post',
+                                dataType : 'json',
+                                complete : function(e){
+                                    swal_success(e);
+                                    viewModel.ds.compgrid.read();
+                                }
+                            },
+                            
+                        },
+                         pageSize :999,
+                        // serverPaging : true,
+                        // serverFiltering : true,
+                        schema : {
+                            // data : "data",
+                            // total : "total",
+                            model : {
+                                id : 'line_id',
+                                fields : {
+                                    line_id : { type: 'number', editable:false },
+                                    period_id : { type: 'number', editable:false },
+                                    employee_name : { type: 'string', editable:false },
+                                    earnings : { type: 'number', },
+                                    deductions : { type: 'number', },
+                                }
+                            }
+                        }
+                    }),
                 },
-                toolbarHandler : {
+                buttonHandler : {
+                    viewDeductions : function(e){
+                        
+                        let tr = $(e.target).closest("tr");
+                        let data = this.dataItem(tr);
 
+                        let url = `other-income-app-weekly/emp-list/${data.id}`;
+                        viewModel.ds.compgrid.options.transport.url = url;
+                        viewModel.ds.compgrid.read();
+
+                        $("#period_id").val(data.drange)
+                        
+                        var myWindow = $("#pop");
+                       
+                        myWindow.kendoWindow({
+                            width: "810", //1124 - 1152
+                            height: "700",
+                            title: "Weekly Empolyees - Other Income & Dedictions",
+                            visible: false,
+                            animation: false,
+                            actions: [
+                                "Pin",
+                                "Minimize",
+                                "Maximize",
+                                "Close"
+                            ],
+                            close: viewModel.buttonHandler.closePop,
+                            position : {
+                                top : 0
+                            }
+                        }).data("kendoWindow").center().open();
+                    }
                 }
             });
 
@@ -77,26 +146,89 @@
                 sortable : true,
                 height : 550,
                 scrollable: true,
-                toolbar : [{ name :'create',text:'Add Payroll Period'}],
+                //toolbar : [{ name :'create',text:'Add Payroll Period'}],
+               
                 editable : "inline",
                 columns : [
                     {
                         title : "ID",
                         field : "id",
-                        width : 80,    
+                        width : 100,    
                     },
                     {
                         title : "Date Range",
                         field : "drange",
-                        width : 80,  
+                        
                     },
+                    // {
+                    //     command : ['edit'],
+                    //     width : 190,    
+                    // },
                     {
-                        command : ['edit'],
-                        width : 190,    
+                        command: [
+                            { text : 'View',click : viewModel.buttonHandler.viewDeductions , },
+                           
+                        ],
+                        //attributes : { style : 'font-size:10pt !important;'},
+                        width : 90
                     },
                   
                 ]
             });
+
+            $("#compgrid").kendoGrid({
+                dataSource : viewModel.ds.compgrid,
+                pageable : {
+                    refresh : true,
+                    buttonCount : 5
+                },
+                noRecords: true,
+                filterable : {
+                    extra: false,
+                    operators: {
+                        string: {
+                            contains : "Contains"
+                        }
+                    }
+                },
+                sortable : true,
+                height : 550,
+                scrollable: true,
+                toolbar : ['save'],
+                editable : true,
+                columns : [
+                    {
+                        title : "ID",
+                        field : "biometric_id",
+                        width : 100,    
+                    },
+                    {
+                        title : "Name",
+                        field : "employee_name",
+                        
+                    },
+                    {
+                        title : "Earnings",
+                        field : "earnings",
+                        width : 130,
+                        attributes : {
+                            style : "text-align:right"
+                        },
+                        template : "# if(earnings==0){#  #} else{# #= kendo.toString(earnings,'n2') #  #}#",
+                    },
+                    {
+                        title : "Deduction",
+                        field : "deductions",
+                        width : 130,
+                        attributes : {
+                            style : "text-align:right"
+                        },
+                        template : "# if(deductions==0){#  #} else{# #= kendo.toString(deductions,'n2') #  #}#",
+                    }
+                ]
+            });
+
+            $("#period_id").kendoTextBox();
 
             kendo.bind($("#viewModel"),viewModel);
 

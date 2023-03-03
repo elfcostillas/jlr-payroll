@@ -23,17 +23,26 @@
     
 </style>
 @section('title')
-    <h4> Payroll Period <h4>
+    <h4> Other Income - Weekly <h4>
 @endsection
 @section('content')
     <div class="container">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <div class="card card-default">
-                    <div class="card-header"> <h5>Weekly</h5> </div>
+                    <div class="card-header"> <h5>Payroll Period</h5> </div>
                     <div class="card-body"> 
                         <div id="viewModel" >
                             <div id="maingrid"></div>
+                        </div>
+                        <div id="pop" style="display:none;background-color:#212529;">
+                            <div class="card-body">
+                                <input type="text" id ="period_id" readonly>
+                            </div>
+
+                            <div id = "compgrid" >
+
+                            </div>
                         </div>
                     </div>
                 </div>
