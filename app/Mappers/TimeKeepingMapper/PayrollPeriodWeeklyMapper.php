@@ -34,8 +34,16 @@ class PayrollPeriodWeeklyMapper extends AbstractMapper {
 			'data' => $result->get()
 		];
 
-        return $result->get();
+       
     }
+
+	public function listforDropDown()
+	{	
+		// /SELECT id,CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) AS drange FROM payroll_period_weekly ORDER BY id DESC
+		$result = $this->model->select(DB::raw("id,CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) AS drange"))->orderBy('id','DESC');
+
+		return $result->get();
+	}
 
 
 }

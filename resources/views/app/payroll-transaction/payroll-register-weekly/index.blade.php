@@ -78,7 +78,7 @@
 
 </style>
 @section('title')
-    <h4> Payroll Register <h4>
+    <h4> Payroll Register - Weekly <h4>
 @endsection
 @section('content')
     <div class="container">

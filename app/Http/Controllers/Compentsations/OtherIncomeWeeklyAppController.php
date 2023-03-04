@@ -42,4 +42,23 @@ class OtherIncomeWeeklyAppController extends Controller
 
         return response()->json($result);
     }
+
+    public function update(Request $request)
+    {
+        $data = $request->models;
+        
+        foreach($data as $line)
+        {
+            $result = $this->mapper->updateOrCreate([
+                                                        'period_id'=>$line['period_id'],
+                                                        'biometric_id'=>$line['biometric_id']
+                                                    ],
+                                                    [
+                                                        "earnings" => $line['earnings'],
+                                                        "deductions" => $line['deductions']
+                                                    ]);
+        }
+
+        return response()->json(true);
+    }
 }

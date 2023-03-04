@@ -31,7 +31,7 @@
                                 id : 'id',
                                 fields : {
                                     id : { type : 'number',editable : false },
-                                    period_range : {type:'string'}
+                                    drange : {type:'string'}
                                 }
                             }
                         }
@@ -147,7 +147,7 @@
             });
 
             $("#unposted_period").kendoDropDownList({
-                dataTextField: "period_range",
+                dataTextField: "drange",
                 dataValueField: "id",
                 dataSource: viewModel.ds.unposted,
                 //index: 0,

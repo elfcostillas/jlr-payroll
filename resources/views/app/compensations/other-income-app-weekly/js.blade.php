@@ -43,6 +43,7 @@
                             // }
                         },
                         pageSize :11,
+                       
                         serverPaging : true,
                         serverFiltering : true,
                         schema : {
@@ -81,7 +82,8 @@
                             },
                             
                         },
-                         pageSize :999,
+                        batch : true,
+                        pageSize :999,
                         // serverPaging : true,
                         // serverFiltering : true,
                         schema : {
@@ -107,7 +109,7 @@
                         let data = this.dataItem(tr);
 
                         let url = `other-income-app-weekly/emp-list/${data.id}`;
-                        viewModel.ds.compgrid.options.transport.url = url;
+                        viewModel.ds.compgrid.transport.options.read.url = url;
                         viewModel.ds.compgrid.read();
 
                         $("#period_id").val(data.drange)
@@ -191,6 +193,7 @@
                         }
                     }
                 },
+                navigatable : true,
                 sortable : true,
                 height : 550,
                 scrollable: true,

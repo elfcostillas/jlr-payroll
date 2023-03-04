@@ -50,15 +50,32 @@ INNER JOIN employees ON employee_names_vw.biometric_id = employees.biometric_id
 LEFT JOIN unposted_weekly_compensation ON employees.biometric_id = unposted_weekly_compensation.biometric_id
 WHERE employees.exit_status = 1 AND employees.pay_type = 3
 AND unposted_weekly_compensation.period_id IN 1;
+
+SELECT period_id,earnings,deductions,biometric_id FROM unposted_weekly_compensation WHERE period_id = 1
 */
-        $employees = $this->model->select(DB::raw("employee_names_vw.biometric_id,employee_names_vw.employee_name,0 as period_id,0.00 as earnings,0.00 as deductions"))
+        $data = $this->model->select('period_id','earnings','deductions','biometric_id')
+                    ->from('unposted_weekly_compensation')
+                    ->where('period_id','=',$period_id);
+
+        $employees = $this->model->select(DB::raw("employee_names_vw.biometric_id,employee_names_vw.employee_name,$period_id as period_id,ifnull(d.earnings,0.00) earnings,ifnull(d.deductions,0.00) deductions"))
                     ->from('employee_names_vw')
                     ->join('employees','employee_names_vw.biometric_id','=','employees.biometric_id')
                     ->leftJoin('unposted_weekly_compensation','employees.biometric_id','=','unposted_weekly_compensation.biometric_id')
+                    ->leftJoinSub($data,'d',function($join) use ($period_id){
+                        $join->on('d.biometric_id','=','employees.biometric_id');
+                        //$join->on('d.period_id','=',DB::raw("'$period_id'"));
+                    })
                     ->where('employees.exit_status',1)
                     ->where('employees.pay_type',3);
 
         return $employees->get();
     }   
+
+    public function updateOrCreate($key,$data)
+    {
+        $result = DB::table('unposted_weekly_compensation')->updateOrInsert($key,$data);
+       
+        return $result;
+    }
 
 }

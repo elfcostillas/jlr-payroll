@@ -515,7 +515,7 @@ Route::middleware('auth')->prefix('compensations')->group(function(){
         Route::get('/',[OtherIncomeWeeklyAppController::class,'index']);
         Route::get('list',[OtherIncomeWeeklyAppController::class,'list']);
         Route::get('emp-list/{period_id}',[OtherIncomeWeeklyAppController::class,'employeeList']);
-        Route::get('update',[OtherIncomeWeeklyAppController::class,'update']);
+        Route::post('update',[OtherIncomeWeeklyAppController::class,'update']);
     });
     
 });
