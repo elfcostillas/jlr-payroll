@@ -24,12 +24,20 @@
             }
 
             thead th:first-child {
+
                 left: 0;
                 z-index: 3;
             }
 
             thead th:nth-child(2) {
-                left: 100px;
+                left: 30px;
+                z-index: 3;
+                
+            }
+
+
+            thead th:nth-child(3) {
+                left: 130px;
                 z-index: 3;
                 
             }
@@ -39,9 +47,16 @@
                 z-index: 1;
                
             } 
-          
+            
             tbody th:nth-child(2) {
-                left: 100px;
+                left: 30px;
+                z-index: 1;
+                
+            } 
+
+          
+            tbody th:nth-child(3) {
+                left: 130px;
                 z-index: 1;
                 
             } 
@@ -123,12 +138,14 @@
     </div> --}}
     <?php
         $colspan=26;
+        $rcount = 1;
        //ndays,basic_pay,late_eq,late_eq_amount,under_time,under_time_amount
     ?>
     <div id="" >
         <table style="border-collapse:collapse;white-space:nowrap;" border=1 >
             <thead>
                 <tr>
+                        <th style="padding : 0px 4px;min-width: 30px">No.</th>
                         <th style="padding : 0px 4px;min-width: 100px" > Bio ID</th>
                         <th style="padding : 0px 4px; width : 240px;" >Name</th>
                         <th style="padding : 0px 4px;min-width:110px;" >Basic Rate</th>
@@ -200,6 +217,7 @@
                             @foreach($department->employees as $employee)
                                {{-- @php dd($employee->absences); @endphp --}}
                                 <tr style="vertical-align: top;">
+                                    <th>{{ $rcount }}</th>
                                     <th style="width:120px;"> {{ $employee->biometric_id }} </th> 
                                     <th style="text-align:left; width : 240px;"> {{ $employee->employee_name }} </th> 
                                     <td style="text-align:right;background-color:#acacac;"> {{ number_format($employee->basicpay,2) }}</td>
@@ -257,6 +275,7 @@
                                     <td style="text-align:right;font-weight:bold;border-bottom:1px solid;" >{{ ($employee->total_deduction>0) ? number_format($employee->total_deduction,2) : ''; }}</td>
                                     <td style="text-align:right;font-weight:bold;border-bottom:double;{{ ($employee->net_pay < ($employee->gross_total*0.3)) ? 'color:red'  : '' }};" >{{ ($employee->net_pay>0) ? number_format($employee->net_pay,2) :  number_format($employee->net_pay,2) }}</td>
                                 </tr>
+                                <?php $rcount++; ?>
                             @endforeach
                         @endforeach
                     @endforeach

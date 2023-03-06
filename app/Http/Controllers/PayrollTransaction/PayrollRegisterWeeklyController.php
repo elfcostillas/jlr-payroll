@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Mappers\EmployeeFileMapper\EmployeeMapper;
 use Illuminate\Support\Facades\Auth;
 use App\Mappers\TimeKeepingMapper\PayrollPeriodWeeklyMapper;
+use App\Mappers\PayrollTransaction\UnpostedPayrollRegisterWeeklyMapper;
 
 class PayrollRegisterWeeklyController extends Controller
 {
@@ -14,11 +15,13 @@ class PayrollRegisterWeeklyController extends Controller
 
     private $employee;
     private $period;
+    private $mapper;
 
-    public function __construct(EmployeeMapper $employee,PayrollPeriodWeeklyMapper $period)
+    public function __construct(EmployeeMapper $employee,PayrollPeriodWeeklyMapper $period,UnpostedPayrollRegisterWeeklyMapper $mapper)
     {
         $this->employee = $employee;
         $this->period = $period;
+        $this->mapper = $mapper;
     }
 
     public function index()
@@ -42,6 +45,14 @@ class PayrollRegisterWeeklyController extends Controller
 
     public function compute(Request $request)
     {
+        $period = $request->id;
 
+        $result = $this->mapper->compute($period);
+
+        $data = $this->mapper->showComputed($period);
+
+        return view('app.payroll-transaction.payroll-register-weekly.payroll-register',['data' => $data]);
     }
+
+    
 }
