@@ -23,7 +23,11 @@ class TardinessReportMapper extends AbstractMapper {
         ->join('work_schedules','schedule_id','=','work_schedules.id')
         ->join('employee_names_vw','employee_names_vw.biometric_id','=','edtr.biometric_id')
         ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
-        ->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)');
+        //->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)');
+        ->whereRaw('(
+            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) <= TIME_TO_SEC(work_schedules.out_am)) OR
+            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm))
+            )');
 
         if($filter['div_id']!=0)
         {
@@ -76,7 +80,11 @@ class TardinessReportMapper extends AbstractMapper {
         ->join('work_schedules','schedule_id','=','work_schedules.id')
         ->join('employee_names_vw','employee_names_vw.biometric_id','=','edtr.biometric_id')
         ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
-        ->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)')
+        //->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)')
+        ->whereRaw('(
+            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) <= TIME_TO_SEC(work_schedules.out_am)) OR
+            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm))
+            )')
         ->groupBy(DB::raw("employees.biometric_id,lastname,firstname"));
 
         if($filter['div_id']!=0)
@@ -98,7 +106,11 @@ class TardinessReportMapper extends AbstractMapper {
                     ->from('edtr')
                     ->leftJoin('work_schedules','schedule_id','=','work_schedules.id')
                     ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
-                    ->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)')
+                    ///->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)')
+                    ->whereRaw('(
+                        (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) <= TIME_TO_SEC(work_schedules.out_am)) OR
+                        (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm))
+                        )')
                     ->where('biometric_id',$e->biometric_id)
                     ->get();
 
@@ -139,4 +151,19 @@ AND TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)
 AND dtr_date BETWEEN '2023-02-01' AND '2023-02-28' 
 GROUP BY employees.biometric_id,lastname,firstname
 ORDER BY lastname,dtr_date
+
+
+SELECT employees.biometric_id,employee_name,COUNT(dtr_date) late_count FROM edtr 
+INNER JOIN employees ON edtr.biometric_id = employees.biometric_id
+INNER JOIN work_schedules ON schedule_id = work_schedules.id
+INNER JOIN employee_names_vw ON employee_names_vw.biometric_id = edtr.biometric_id
+WHERE employees.dept_id = 11 
+AND (
+	(TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) <= TIME_TO_SEC(work_schedules.out_am)) OR
+	(TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm))
+    )
+AND dtr_date BETWEEN '2023-02-01' AND '2023-02-28' 
+GROUP BY employees.biometric_id,lastname,firstname
+ORDER BY lastname,dtr_date;
+
 */
