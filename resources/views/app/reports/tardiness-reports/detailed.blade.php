@@ -61,7 +61,7 @@
                         <td>{{ $dtr_date->format('m/d/Y') }}</td>
                         <td>{{ $late->time_in }}</td>
                         <td>{{ $late->in_minutes }}</td>
-                        <td> </td>
+                        <td style="text-align:center;">{{ round($late->in_minutes/60,2) }} </td>
                         
                     </tr>
                 @endforeach
