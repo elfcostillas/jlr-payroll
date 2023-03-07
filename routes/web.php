@@ -51,6 +51,8 @@ use App\Http\Controllers\Compentsations\OtherCompensationController;
 use App\Http\Controllers\Compentsations\FixCompensationController;
 use App\Http\Controllers\Compentsations\OtherIncomeWeeklyAppController;
 
+use App\Http\Controllers\Reports\TardinessReportsController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -421,6 +423,13 @@ Route::middleware('auth')->prefix('reports')->group(function(){
         Route::get('generate-summary/{from}/{to}',[LeaveReportsController::class,'getLeaveSumamry']);
         Route::get('generate-by-employee/{from}/{to}',[LeaveReportsController::class,'getLeaveByEmployee']);
         //Route::get('generate',[LeaveReportsController::class,'generate']);
+    });
+
+    Route::prefix('tardiness-reports')->group(function(){
+        Route::get('/',[TardinessReportsController::class,'index']);
+
+        Route::get('generate-detailed/{from}/{to}/{div}/{dept}',[TardinessReportsController::class,'detailedReport']);
+        Route::get('generate-summary/{from}/{to}/{div}/{dept}',[TardinessReportsController::class,'summarizedReport']);
     });
 });
 
