@@ -17,33 +17,73 @@ class TardinessReportMapper extends AbstractMapper {
 
     public function summary($filter)
     {
-        $result = $this->model->select(DB::raw("employees.biometric_id,employee_name,COUNT(dtr_date) late_count"))
-        ->from('edtr')
-        ->join('employees','edtr.biometric_id','=','employees.biometric_id')
-        ->join('work_schedules','schedule_id','=','work_schedules.id')
-        ->join('employee_names_vw','employee_names_vw.biometric_id','=','edtr.biometric_id')
-        ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
-        //->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)');
-        ->whereRaw('(
-            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) <= TIME_TO_SEC(work_schedules.out_am)) OR
-            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm))
-            )');
+
+        //SELECT id,div_name FROM divisions;
+
+        $divisions = $this->model->select('id','div_name' )->from('divisions');
 
         if($filter['div_id']!=0)
         {
-            $result->where('division_id',$filter['div_id']);
+            $divisions->where('id',$filter['div_id']);
+        }else{
+
         }
 
-        if($filter['dept_id']!=0)
-        {
-            $result->where('dept_id',$filter['dept_id']);
+        $div = $divisions->get();
+
+        foreach($div as $d){
+             $result = $this->model->select(DB::raw("employees.biometric_id,employee_name,COUNT(dtr_date) late_count"))
+                ->from('edtr')
+                ->join('employees','edtr.biometric_id','=','employees.biometric_id')
+                ->join('work_schedules','schedule_id','=','work_schedules.id')
+                ->join('employee_names_vw','employee_names_vw.biometric_id','=','edtr.biometric_id')
+                ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
+                //->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)');
+                ->whereRaw('(
+                    (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) <= TIME_TO_SEC(work_schedules.out_am)) OR
+                    (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm))
+                    )')
+                ->where('division_id',$d->id);
+                 
+            if($filter['dept_id']!=0)
+            {
+                $result->where('dept_id',$filter['dept_id']);
+            }
+
+            $d->emp = $result->groupBy(DB::raw("employees.biometric_id,lastname,firstname"))
+            ->orderBy('lastname','asc')->get();
         }
 
-        $result = $result->groupBy(DB::raw("employees.biometric_id,lastname,firstname"))
-        ->orderBy('lastname','asc');
+        return $div;
+
+
+        // $result = $this->model->select(DB::raw("employees.biometric_id,employee_name,COUNT(dtr_date) late_count"))
+        // ->from('edtr')
+        // ->join('employees','edtr.biometric_id','=','employees.biometric_id')
+        // ->join('work_schedules','schedule_id','=','work_schedules.id')
+        // ->join('employee_names_vw','employee_names_vw.biometric_id','=','edtr.biometric_id')
+        // ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
+        // //->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)');
+        // ->whereRaw('(
+        //     (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) <= TIME_TO_SEC(work_schedules.out_am)) OR
+        //     (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm))
+        //     )');
+
+        // if($filter['div_id']!=0)
+        // {
+        //     $result->where('division_id',$filter['div_id']);
+        // }
+
+        // if($filter['dept_id']!=0)
+        // {
+        //     $result->where('dept_id',$filter['dept_id']);
+        // }
+
+        // $result = $result->groupBy(DB::raw("employees.biometric_id,lastname,firstname"))
+        // ->orderBy('lastname','asc');
 
        
-        return $result->get();
+        // return $result->get();
 
     }
 

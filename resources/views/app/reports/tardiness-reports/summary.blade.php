@@ -11,6 +11,8 @@
             return '';
         }
     }
+
+   
 ?>
 <style>
     * {
@@ -23,23 +25,36 @@
     }
 </style>
 
-<table style="border-collapse:collapse;" border=1>
-    <tr>
+
+    {{-- <tr>
         <td>Biometric ID</td>
         <td>Name</td>
         <td>Count</td>
        
-    </tr>
+    </tr> --}}
     @if($data)
-
-        @foreach($data as $late)
-            <tr>
-                <td>{{ $late->biometric_id }}</td>
-                <td>{{ $late->employee_name }}</td>
-                <td style="text-align:center">{{ $late->late_count }}</td>
-            </tr>
-
+    
+        @foreach($data as $div)
+            <table style="border-collapse:collapse;" border=1>
+                <tr>
+                    <td colspan=4>{{ $div->div_name }}</td>
+                    
+                </tr>
+                @php  $ctr = 1;  @endphp
+            
+                @foreach($div->emp as $e)
+                    <tr>
+                        <td style="min-width:40px">{{ $ctr++ }}</td>
+                        <td style="min-width:55px">{{ $e->biometric_id }}</td>
+                        <td style="min-width:330px" >{{ $e->employee_name }}</td>
+                        <td style="text-align:center;min-width:40px">{{ $e->late_count }}</td>
+                    </tr>
+                @endforeach
+            </table>
+            <br>
         @endforeach
-
+            
+    <br>            
     @endif
-</table>
+    
+
