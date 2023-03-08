@@ -51,7 +51,7 @@ class TardinessReportMapper extends AbstractMapper {
             }
 
             $d->emp = $result->groupBy(DB::raw("employees.biometric_id,lastname,firstname"))
-            ->orderBy('lastname','asc')->get();
+            ->orderBy('late_count','desc')->get();
         }
 
         return $div;

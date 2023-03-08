@@ -14,7 +14,7 @@
 
 <style>
     @font-face {
-        font-family: arial;
+        font-family: Helvetica;
         src: url({{storage_path('/fonts/Helvetica.ttf')}}) format('truetype');
 
     }
