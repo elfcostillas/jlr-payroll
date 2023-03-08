@@ -40,6 +40,12 @@
                     <td colspan=4>{{ $div->div_name }}</td>
                     
                 </tr>
+                <tr>
+                    <td>No.</td>
+                    <td>Biometric ID</td>
+                    <td>Employee Name</td>
+                    <td>Frequency</td>
+                </tr>
                 @php  $ctr = 1;  @endphp
             
                 @foreach($div->emp as $e)
