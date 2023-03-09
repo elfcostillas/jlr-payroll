@@ -101,7 +101,7 @@ class LeaveReportsMapper extends AbstractMapper {
     public function getData($start,$end)
     {
         $qry = "SELECT employees.biometric_id,IFNULL(sl_count,0) sl_count,IFNULL(vl_count,0) vl_count,IFNULL(el_count,0) el_count,IFNULL(ut_count,0) ut_count,
-        IFNULL(bl_count,0) bl_count,IFNULL(mp_count,0) mp_count,IFNULL(o_count,0) o_count,IFNULL(svl_count,0) svl_count,IFNULL(late_count,0) late_count
+        IFNULL(bl_count,0) bl_count,IFNULL(mp_count,0) mp_count,IFNULL(o_count,0) o_count,IFNULL(svl_count,0) svl_count,IFNULL(late_count,0) late_count,IFNULL(in_minutes,0) in_minutes
         FROM employees LEFT JOIN 
         (
         SELECT biometric_id,COUNT(leave_date) AS sl_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
@@ -177,7 +177,7 @@ class LeaveReportsMapper extends AbstractMapper {
         GROUP BY biometric_id
         ) AS svl ON employees.biometric_id = svl.biometric_id
         LEFT JOIN (
-        SELECT employees.biometric_id,COUNT(dtr_date) late_count FROM edtr 
+        SELECT employees.biometric_id,COUNT(dtr_date) late_count,SUM((TIME_TO_SEC(edtr.time_in)- TIME_TO_SEC(work_schedules.time_in))/60) AS in_minutes FROM edtr 
         INNER JOIN employees ON edtr.biometric_id = employees.biometric_id
         INNER JOIN work_schedules ON schedule_id = work_schedules.id
         INNER JOIN employee_names_vw ON employee_names_vw.biometric_id = edtr.biometric_id

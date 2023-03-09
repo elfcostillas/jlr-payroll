@@ -135,6 +135,7 @@ class LeaveReportsController extends Controller
                     $tableData[$row->biometric_id][$i]['o_count'] = $row->o_count;
                     $tableData[$row->biometric_id][$i]['svl_count'] = $row->svl_count;
                     $tableData[$row->biometric_id][$i]['late_count'] = $row->late_count;
+                    $tableData[$row->biometric_id][$i]['in_minutes'] = $row->in_minutes;
                 }
             }
             

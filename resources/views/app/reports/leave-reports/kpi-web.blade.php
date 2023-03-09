@@ -26,6 +26,24 @@
                 return '';
             }
         }
+
+        function convert($total){
+            if($total>0){
+                if($total%60 > 0){
+                    $mins = $total % 60;
+                    $hrs = floor($total /60);
+                    $str = ($hrs>0) ? $hrs.' Hr(s) ' : '';
+                    $str .= ($mins>0) ? $mins.' Min(s)' : '';
+                } else {    
+                    $str = floor($total / 60) .'Hr(s)';
+                }
+            } else {
+                $str = '';
+            }
+           
+
+            return $str;
+        }
     
     
     ?>
@@ -40,7 +58,7 @@
                 <td rowspan=2>Biometric ID</td>
                 <td rowspan=2>Employee Name</td>
                 @for($i = $index;$i<=$limit;$i++)
-                    <td colspan=9>{{ $month[$i] }}</td>
+                    <td colspan=10>{{ $month[$i] }}</td>
                 @endfor
             </tr>
             <tr>
@@ -55,13 +73,14 @@
                     <td>MP</td>
                     <td>SVL</td>
                     <td>Other</td>
+                    <td>Total Tardy</td>
                 @endfor
             </tr>
             @foreach($div->emp as $emp)
                 <tr>
                     <td> {{ $ctr++ }} </td>
                     <td> {{ $emp->biometric_id }} </td>
-                    <td> {{ $emp->employee_name }} </td>
+                    <td style="white-space:nowrap"> {{ $emp->employee_name }} </td>
                     @for($i = $index;$i<=$limit;$i++)
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['late_count']) }}</td>
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['sl_count']) }}</td>
@@ -72,6 +91,7 @@
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['mp_count']) }}</td>
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['svl_count']) }}</td>
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['o_count']) }}</td>
+                        <td style="white-space:nowrap" >{{ convert($tableData[$emp->biometric_id][$i]['in_minutes']) }}</td>
                        
                     @endfor
                 </tr>
