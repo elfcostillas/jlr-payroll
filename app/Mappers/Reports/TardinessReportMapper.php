@@ -32,7 +32,7 @@ class TardinessReportMapper extends AbstractMapper {
         $div = $divisions->get();
 
         foreach($div as $d){
-             $result = $this->model->select(DB::raw("employees.biometric_id,employee_name,COUNT(dtr_date) late_count"))
+             $result = $this->model->select(DB::raw("employees.biometric_id,employee_name,COUNT(dtr_date) late_count,SUM((TIME_TO_SEC(edtr.time_in)- TIME_TO_SEC(work_schedules.time_in))/60) AS in_minutes"))
                 ->from('edtr')
                 ->join('employees','edtr.biometric_id','=','employees.biometric_id')
                 ->join('work_schedules','schedule_id','=','work_schedules.id')

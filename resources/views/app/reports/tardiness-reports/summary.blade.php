@@ -45,15 +45,30 @@
                     <td>Biometric ID</td>
                     <td>Employee Name</td>
                     <td>Frequency</td>
+                    <td> Late </td>
                 </tr>
                 @php  $ctr = 1;  @endphp
             
                 @foreach($div->emp as $e)
+                @php 
+                    $total = $e->in_minutes;
+
+                    if($total%60 > 0){
+                        $mins = $total % 60;
+                        $hrs = floor($total /60);
+                        $str = ($hrs>0) ? $hrs.' Hr(s) ' : '';
+                        $str .= ($mins>0) ? $mins.' Min(s)' : '';
+                    } else {    
+                        $str = floor($total / 60) .'Hr(s)';
+                    }
+                @endphp
+                
                     <tr>
                         <td style="min-width:40px">{{ $ctr++ }}</td>
                         <td style="min-width:55px">{{ $e->biometric_id }}</td>
                         <td style="min-width:330px" >{{ $e->employee_name }}</td>
                         <td style="text-align:center;min-width:40px">{{ $e->late_count }}</td>
+                        <td style="text-align:left;min-width:40px">{{ $str }}</td>
                     </tr>
                 @endforeach
             </table>

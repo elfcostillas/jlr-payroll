@@ -52,6 +52,7 @@ use App\Http\Controllers\Compentsations\FixCompensationController;
 use App\Http\Controllers\Compentsations\OtherIncomeWeeklyAppController;
 
 use App\Http\Controllers\Reports\TardinessReportsController;
+use App\Http\Controllers\Memo\TardinessController;
 
 /*
 |--------------------------------------------------------------------------
@@ -493,6 +494,14 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::post('post',[PayrollRegisterWeeklyController::class,'postPayroll']);
     });
 });
+
+
+Route::middleware('auth')->prefix('memo')->group(function(){
+   
+    Route::prefix('tardiness-to-employee')->middleware('access:memo/tardiness-to-employee')->group(function(){
+        Route::get('/',[FixCompensationController::class,'index']);
+    }); 
+}); 
 
 Route::middleware('auth')->prefix('compensations')->group(function(){
     Route::prefix('fixed-compensations')->middleware('access:compensations/fixed-compensations')->group(function(){
