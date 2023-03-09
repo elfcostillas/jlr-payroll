@@ -40,20 +40,21 @@
                 <td rowspan=2>Biometric ID</td>
                 <td rowspan=2>Employee Name</td>
                 @for($i = $index;$i<=$limit;$i++)
-                    <td colspan=8>{{ $month[$i] }}</td>
+                    <td colspan=9>{{ $month[$i] }}</td>
                 @endfor
             </tr>
             <tr>
                 
                 @for($i = $index;$i<=$limit;$i++)
+                    <td>Tardy</td>
                     <td>SL</td>
                     <td>VL</td>
                     <td>EL</td>
                     <td>UT</td>
                     <td>BL</td>
                     <td>MP</td>
-                    <td>Other</td>
                     <td>SVL</td>
+                    <td>Other</td>
                 @endfor
             </tr>
             @foreach($div->emp as $emp)
@@ -62,14 +63,16 @@
                     <td> {{ $emp->biometric_id }} </td>
                     <td> {{ $emp->employee_name }} </td>
                     @for($i = $index;$i<=$limit;$i++)
+                        <td >{{ nformat($tableData[$emp->biometric_id][$i]['late_count']) }}</td>
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['sl_count']) }}</td>
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['vl_count']) }}</td>
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['el_count']) }}</td>
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['ut_count']) }}</td>
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['bl_count']) }}</td>
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['mp_count']) }}</td>
-                        <td >{{ nformat($tableData[$emp->biometric_id][$i]['o_count']) }}</td>
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['svl_count']) }}</td>
+                        <td >{{ nformat($tableData[$emp->biometric_id][$i]['o_count']) }}</td>
+                       
                     @endfor
                 </tr>
             @endforeach
