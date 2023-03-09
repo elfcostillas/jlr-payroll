@@ -50,4 +50,6 @@ class TardinessReportsController extends Controller
 
         return view('app.reports.tardiness-reports.summary',['data'=> $result]);
     }
+
+
 }

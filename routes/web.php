@@ -52,7 +52,7 @@ use App\Http\Controllers\Compentsations\FixCompensationController;
 use App\Http\Controllers\Compentsations\OtherIncomeWeeklyAppController;
 
 use App\Http\Controllers\Reports\TardinessReportsController;
-use App\Http\Controllers\Memo\TardinessController;
+use App\Http\Controllers\Memo\TardinessMemoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -423,6 +423,9 @@ Route::middleware('auth')->prefix('reports')->group(function(){
         Route::get('view/{from}/{to}',[LeaveReportsController::class,'getLeavesFromToWeb']);
         Route::get('generate-summary/{from}/{to}',[LeaveReportsController::class,'getLeaveSumamry']);
         Route::get('generate-by-employee/{from}/{to}',[LeaveReportsController::class,'getLeaveByEmployee']);
+
+        Route::get('view-kpi/{from}/{to}',[LeaveReportsController::class,'viewKPI']);
+
         //Route::get('generate',[LeaveReportsController::class,'generate']);
     });
 
@@ -499,7 +502,9 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
 Route::middleware('auth')->prefix('memo')->group(function(){
    
     Route::prefix('tardiness-to-employee')->middleware('access:memo/tardiness-to-employee')->group(function(){
-        Route::get('/',[FixCompensationController::class,'index']);
+        Route::get('/',[TardinessMemoController::class,'index']);
+        Route::get('list',[TardinessMemoController::class,'list']);
+        Route::get('read/{id}',[TardinessMemoController::class,'readMemo']);
     }); 
 }); 
 

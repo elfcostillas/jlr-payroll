@@ -149,6 +149,18 @@
                         let url = `leave-reports/generate-by-employee/${from}/${to}`;
 
                         window.open(url);
+                    },
+                    viewKPI : function()
+                    {
+                        let from =  kendo.toString($('#date_from2').data('kendoDatePicker').value(),'yyyy-MM-dd');
+                        let to =  kendo.toString($('#date_to2').data('kendoDatePicker').value(),'yyyy-MM-dd');
+                        let url = `leave-reports/view-kpi/${from}/${to}`;
+
+                         if(from==null || to ==null){
+                            custom_error('Please select date from and date to.');
+                        } else {
+                            window.open(url);
+                        }
                     }
             
                 },
@@ -183,6 +195,14 @@
             });
 
             $("#date_to").kendoDatePicker({
+                format: "MM/dd/yyyy"
+            });
+
+            $("#date_from2").kendoDatePicker({
+                format: "MM/dd/yyyy"
+            });
+
+            $("#date_to2").kendoDatePicker({
                 format: "MM/dd/yyyy"
             });
 

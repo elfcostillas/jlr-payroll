@@ -85,6 +85,7 @@
                                     <td><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.leaveByEmployee'><i class="fas fa-download"></i> Sort By Employee</button></td>
                                     <td><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download'><i class="fas fa-download"></i> Download Excel</button></td>
                                     <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.view'><i class="fas fa-table"></i> View Page</button></td>
+                                    {{-- <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.view'><i class="fas fa-table"></i> KPI </button></td> --}}
                                 </tr>
                               
                             </table>
@@ -92,7 +93,35 @@
                     </div>
                 </div>
             </div>
-           
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-secondary">
+                        <div class="card-header"> K P I</div>
+                        <div class="card-body"> 
+                            <table class="formTable" border=0 style="width:100%">
+                                <tr>
+                                    <td>Date From</td>
+                                    <td>Date To</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td> <input type="text" name="" id="date_from2"> </td>
+                                    <td> <input type="text" name="" id="date_to2"> </td>
+                                    <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.viewKPI'><i class="fas fa-table"></i> View Page</button></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                              
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection

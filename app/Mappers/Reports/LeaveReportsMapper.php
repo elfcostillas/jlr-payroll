@@ -72,4 +72,112 @@ class LeaveReportsMapper extends AbstractMapper {
 
         return $result;
     }
+
+    public function getDivisions()
+    {
+
+        //INNER JOIN `employee_names_vw` ON `employee_names_vw`.`biometric_id` = `edtr`.`biometric_id` 
+        $result = $this->model->select('id','div_name')->from('divisions');
+
+        $divisios = $result->get();
+
+        foreach($divisios as $div)
+        {
+            $emp = $this->model->select('employees.biometric_id','employee_names_vw.employee_name')
+                                ->from('employees')
+                                ->join('employee_names_vw','employee_names_vw.biometric_id','=','employees.biometric_id')
+                                ->where('employees.division_id',$div->id)
+                                ->where('employees.exit_status',1)
+                                ->orderBy('lastname','asc')
+                                ->orderBy('firstname','asc')
+                                ->get();
+            $div->emp = $emp;
+        }
+
+        return $divisios;
+    }
+
+    public function getData($start,$end)
+    {
+        $qry = "SELECT employees.biometric_id,IFNULL(sl_count,0) sl_count,IFNULL(vl_count,0) vl_count,IFNULL(el_count,0) el_count,IFNULL(ut_count,0) ut_count,
+        IFNULL(bl_count,0) bl_count,IFNULL(mp_count,0) mp_count,IFNULL(o_count,0) o_count,IFNULL(svl_count,0) svl_count
+        FROM employees LEFT JOIN 
+        (
+        SELECT biometric_id,COUNT(leave_date) AS sl_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
+        WHERE leave_request_header.received_by IS NOT NULL
+        AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
+        AND leave_type = 'SL'
+        AND leave_date BETWEEN '$start' AND '$end'
+        AND (IFNULL(with_pay,0) + IFNULL(without_pay,0)) > 0
+        GROUP BY biometric_id
+        ) AS sl ON employees.biometric_id = sl.biometric_id
+        LEFT JOIN (
+        SELECT biometric_id,COUNT(leave_date) AS vl_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
+        WHERE leave_request_header.received_by IS NOT NULL
+        AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
+        AND leave_type = 'VL'
+        AND leave_date BETWEEN '$start' AND '$end'
+        AND (IFNULL(with_pay,0) + IFNULL(without_pay,0)) > 0
+        GROUP BY biometric_id
+        )
+        AS vl ON employees.biometric_id = vl.biometric_id
+        LEFT JOIN (
+        SELECT biometric_id,COUNT(leave_date) AS el_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
+        WHERE leave_request_header.received_by IS NOT NULL
+        AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
+        AND leave_type = 'EL'
+        AND leave_date BETWEEN '$start' AND '$end'
+        AND (IFNULL(with_pay,0) + IFNULL(without_pay,0)) > 0
+        GROUP BY biometric_id
+        ) AS el ON employees.biometric_id = el.biometric_id
+        LEFT JOIN (
+        SELECT biometric_id,COUNT(leave_date) AS ut_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
+        WHERE leave_request_header.received_by IS NOT NULL
+        AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
+        AND leave_type = 'UT'
+        AND leave_date BETWEEN '$start' AND '$end'
+        AND (IFNULL(with_pay,0) + IFNULL(without_pay,0)) > 0
+        GROUP BY biometric_id
+        ) AS ut ON employees.biometric_id = ut.biometric_id
+        LEFT JOIN (
+        SELECT biometric_id,COUNT(leave_date) AS bl_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
+        WHERE leave_request_header.received_by IS NOT NULL
+        AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
+        AND leave_type = 'BL'
+        AND leave_date BETWEEN '$start' AND '$end'
+        AND (IFNULL(with_pay,0) + IFNULL(without_pay,0)) > 0
+        GROUP BY biometric_id
+        ) AS bl ON employees.biometric_id = bl.biometric_id
+        LEFT JOIN (
+        SELECT biometric_id,COUNT(leave_date) AS mp_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
+        WHERE leave_request_header.received_by IS NOT NULL
+        AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
+        AND leave_type = 'MP'
+        AND leave_date BETWEEN '$start' AND '$end'
+        AND (IFNULL(with_pay,0) + IFNULL(without_pay,0)) > 0
+        GROUP BY biometric_id
+        ) AS mp ON employees.biometric_id = mp.biometric_id
+        LEFT JOIN (
+        SELECT biometric_id,COUNT(leave_date) AS o_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
+        WHERE leave_request_header.received_by IS NOT NULL
+        AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
+        AND leave_type = 'O'
+        AND leave_date BETWEEN '$start' AND '$end'
+        AND (IFNULL(with_pay,0) + IFNULL(without_pay,0)) > 0
+        GROUP BY biometric_id
+        ) AS o ON employees.biometric_id = o.biometric_id
+        LEFT JOIN (
+        SELECT biometric_id,COUNT(leave_date) AS svl_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
+        WHERE leave_request_header.received_by IS NOT NULL
+        AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
+        AND leave_type = 'SVL'
+        AND leave_date BETWEEN  '$start' AND '$end'
+        AND (IFNULL(with_pay,0) + IFNULL(without_pay,0)) > 0
+        GROUP BY biometric_id
+        ) AS svl ON employees.biometric_id = svl.biometric_id";
+
+        $result = DB::select($qry);
+
+        return $result;
+    }   
 }
