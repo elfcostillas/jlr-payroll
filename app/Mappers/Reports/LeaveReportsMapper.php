@@ -186,6 +186,7 @@ class LeaveReportsMapper extends AbstractMapper {
             (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) <= TIME_TO_SEC(work_schedules.time_out))
             )
         AND dtr_date BETWEEN '$start' AND '$end'
+        and emp_level >= 3
         GROUP BY employees.biometric_id,lastname,firstname
         ORDER BY lastname,dtr_date) AS tardy ON employees.biometric_id = tardy.biometric_id
         WHERE pay_type != 3";
