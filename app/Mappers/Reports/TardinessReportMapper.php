@@ -19,8 +19,9 @@ class TardinessReportMapper extends AbstractMapper {
     {
 
         //SELECT id,div_name FROM divisions;
+        $qa = $this->model->select(DB::raw("101 AS id,'Quality Assurance' div_name"));
 
-        $divisions = $this->model->select('id','div_name' )->from('divisions');
+        $divisions = $this->model->select('id','div_name' )->from('divisions')->union($qa);
 
         if($filter['div_id']!=0)
         {
@@ -32,7 +33,9 @@ class TardinessReportMapper extends AbstractMapper {
         $div = $divisions->get();
 
         foreach($div as $d){
-             $result = $this->model->select(DB::raw("employees.biometric_id,employee_name,COUNT(dtr_date) late_count,SUM((TIME_TO_SEC(edtr.time_in)- TIME_TO_SEC(work_schedules.time_in))/60) AS in_minutes"))
+
+            if($d->id != 101){
+                $result = $this->model->select(DB::raw("employees.biometric_id,employee_name,COUNT(dtr_date) late_count,SUM((TIME_TO_SEC(edtr.time_in)- TIME_TO_SEC(work_schedules.time_in))/60) AS in_minutes"))
                 ->from('edtr')
                 ->join('employees','edtr.biometric_id','=','employees.biometric_id')
                 ->join('work_schedules','schedule_id','=','work_schedules.id')
@@ -41,11 +44,32 @@ class TardinessReportMapper extends AbstractMapper {
                 //->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)');
                 ->where('emp_level','>',2) 
                 ->where('job_title_id','!=',12)
+                ->where('employees.dept_id','!=',5)
                 ->whereRaw('(
                     (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) <= TIME_TO_SEC(work_schedules.out_am)) OR
                     (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) <= TIME_TO_SEC(work_schedules.time_out) )
                     )')
                 ->where('division_id',$d->id);
+            } else {
+                $result = $this->model->select(DB::raw("employees.biometric_id,employee_name,COUNT(dtr_date) late_count,SUM((TIME_TO_SEC(edtr.time_in)- TIME_TO_SEC(work_schedules.time_in))/60) AS in_minutes"))
+                ->from('edtr')
+                ->join('employees','edtr.biometric_id','=','employees.biometric_id')
+                ->join('work_schedules','schedule_id','=','work_schedules.id')
+                ->join('employee_names_vw','employee_names_vw.biometric_id','=','edtr.biometric_id')
+                ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
+                //->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)');
+                ->where('emp_level','>',2) 
+                ->where('job_title_id','!=',12)
+                ->where('employees.dept_id','=',5)
+                ->whereRaw('(
+                    (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) <= TIME_TO_SEC(work_schedules.out_am)) OR
+                    (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) <= TIME_TO_SEC(work_schedules.time_out) )
+                    )')
+                ->where('division_id',2);
+            }
+            
+
+
                  
             if($filter['dept_id']!=0)
             {
