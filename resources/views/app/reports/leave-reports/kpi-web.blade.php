@@ -100,4 +100,4 @@
         <br>
     @endforeach
 </body>
-</html> rowspan=2
+</html>

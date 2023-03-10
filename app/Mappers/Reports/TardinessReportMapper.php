@@ -126,7 +126,7 @@ class TardinessReportMapper extends AbstractMapper {
         ->where('emp_level','>',2) 
         ->where('job_title_id','!=',12)
         ->whereRaw('(
-            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) <= TIME_TO_SEC(work_schedules.out_am)) OR
+            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
             (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) <= TIME_TO_SEC(work_schedules.time_out) )
             )')
         ->groupBy(DB::raw("employees.biometric_id,lastname,firstname"));
@@ -152,7 +152,7 @@ class TardinessReportMapper extends AbstractMapper {
                     ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
                     ///->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)')
                     ->whereRaw('(
-                        (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) <= TIME_TO_SEC(work_schedules.out_am)) OR
+                        (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
                         (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm))
                         )')
                     ->where('biometric_id',$e->biometric_id)

@@ -77,25 +77,41 @@ class LeaveReportsMapper extends AbstractMapper {
     {
 
         //INNER JOIN `employee_names_vw` ON `employee_names_vw`.`biometric_id` = `edtr`.`biometric_id` 
-        $result = $this->model->select('id','div_name')->from('divisions');
+        $qa = $this->model->select(DB::raw("101 AS id,'Quality Assurance' div_name")); // DB::select("SELECT 101 AS id,'QA' div_name");
+        $result = $this->model->select('id','div_name')->from('divisions')->union($qa);
 
-        $divisios = $result->get();
+        $divisions = $result->get();
 
-        foreach($divisios as $div)
+        foreach($divisions as $div)
         {
-            $emp = $this->model->select('employees.biometric_id','employee_names_vw.employee_name')
-                                ->from('employees')
-                                ->join('employee_names_vw','employee_names_vw.biometric_id','=','employees.biometric_id')
-                                ->where('employees.division_id',$div->id)
-                                ->where('employees.exit_status',1)
-                                ->where('employees.pay_type','!=',3)
-                                ->orderBy('lastname','asc')
-                                ->orderBy('firstname','asc')
-                                ->get();
+            if($div->id != 101){
+                $emp = $this->model->select('employees.biometric_id','employee_names_vw.employee_name')
+                    ->from('employees')
+                    ->join('employee_names_vw','employee_names_vw.biometric_id','=','employees.biometric_id')
+                    ->where('employees.division_id',$div->id)
+                    ->where('employees.exit_status',1)
+                    ->where('employees.pay_type','!=',3)
+                    ->where('employees.dept_id','!=',5)
+                    ->orderBy('lastname','asc')
+                    ->orderBy('firstname','asc')
+                    ->get();
+            }else{
+                $emp = $this->model->select('employees.biometric_id','employee_names_vw.employee_name')
+                    ->from('employees')
+                    ->join('employee_names_vw','employee_names_vw.biometric_id','=','employees.biometric_id')
+                    ->where('employees.division_id',2)
+                    ->where('employees.exit_status',1)
+                    ->where('employees.pay_type','!=',3)
+                    ->where('employees.dept_id','=',5)
+                    ->orderBy('lastname','asc')
+                    ->orderBy('firstname','asc')
+                    ->get();
+            }
+           
             $div->emp = $emp;
         }
 
-        return $divisios;
+        return $divisions;
     }
 
     public function getData($start,$end)
@@ -182,7 +198,7 @@ class LeaveReportsMapper extends AbstractMapper {
         INNER JOIN work_schedules ON schedule_id = work_schedules.id
         INNER JOIN employee_names_vw ON employee_names_vw.biometric_id = edtr.biometric_id
         AND (
-            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) <= TIME_TO_SEC(work_schedules.out_am)) OR
+            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
             (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) <= TIME_TO_SEC(work_schedules.time_out) )
             )
         AND dtr_date BETWEEN '$start' AND '$end'
