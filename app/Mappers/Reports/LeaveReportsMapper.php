@@ -183,10 +183,11 @@ class LeaveReportsMapper extends AbstractMapper {
         INNER JOIN employee_names_vw ON employee_names_vw.biometric_id = edtr.biometric_id
         AND (
             (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) <= TIME_TO_SEC(work_schedules.out_am)) OR
-            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) <= TIME_TO_SEC(work_schedules.time_out))
+            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) <= TIME_TO_SEC(work_schedules.time_out) )
             )
         AND dtr_date BETWEEN '$start' AND '$end'
         and emp_level >= 3
+        and job_title_id != 12
         GROUP BY employees.biometric_id,lastname,firstname
         ORDER BY lastname,dtr_date) AS tardy ON employees.biometric_id = tardy.biometric_id
         WHERE pay_type != 3";
