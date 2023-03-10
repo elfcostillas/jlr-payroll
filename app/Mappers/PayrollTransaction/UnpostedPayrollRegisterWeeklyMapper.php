@@ -36,7 +36,7 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
             $hr_rate =  ($line->basic_salary/8);
             $ot_amount = round($line->n_ot * $hr_rate ,2);
             $basic_pay = round($line->basic_salary * $line->n_days,2);
-            $gross_pay = $ot_amount + $basic_pay;
+            $gross_pay = $ot_amount + $basic_pay + $line->earnings;
 
             array_push($tmp_payreg,[
                 'biometric_id' => $line->biometric_id,
