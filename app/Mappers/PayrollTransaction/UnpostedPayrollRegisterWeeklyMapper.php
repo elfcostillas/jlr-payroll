@@ -24,7 +24,7 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         INNER JOIN manual_dtr_details d ON m.id = d.header_id
         INNER JOIN employee_names_vw AS name_vw ON m.biometric_id = name_vw.biometric_id
         INNER JOIN employees AS e ON m.biometric_id = e.biometric_id
-        LEFT JOIN unposted_weekly_compensation AS comp ON m.biometric_id = comp.biometric_id AND m.period_id = comp.biometric_id
+        LEFT JOIN unposted_weekly_compensation AS comp ON m.biometric_id = comp.biometric_id AND m.period_id = comp.period_id
         WHERE m.period_id = $period_id
         GROUP BY m.biometric_id,m.period_id,e.basic_salary,name_vw.employee_name,e.lastname,e.firstname,earnings,deductions
         ORDER BY e.lastname,e.firstname;");
