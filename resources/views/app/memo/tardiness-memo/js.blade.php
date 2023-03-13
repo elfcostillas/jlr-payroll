@@ -9,12 +9,22 @@
                 form : {
                     model : {
                         id : null,
-                        remarks : null,
-                        // date_from : null,
-                        // date_to : null,
                         biometric_id : null,
-                        period_id : null,
-
+                        memo_to : null,
+                        memo_from : null,
+                        memo_date : null,
+                        memo_subject : null,
+                        memo_upper_body : null,
+                        memo_lower_body : null,
+                        prep_by_text : null,
+                        prep_by_name : null,
+                        prep_by_position : null,
+                        noted_by_text : null,
+                        noted_by_name : null,
+                        noted_by_position : null,
+                        noted_by_text_dept : null,
+                        noted_by_name_dept : null,
+                        noted_by_position_dept : null,
                     }
                 },
                 ds : {
@@ -73,103 +83,7 @@
                             }
                         }
                     }),
-                    dtrgrid : new kendo.data.DataSource({
-                        transport : {
-                            read : {
-                                url : 'manual-dtr/details/0',
-                                type : 'get',
-                                dataType : 'json',
-                                complete : function(e){
-                                    
-                                }
-                            },
-                            update : {
-                                url : 'manual-dtr/detail-update',
-                                type : 'post',
-                                dataType : 'json',
-                                complete : function(e){
-                                    viewModel.ds.dtrgrid.read();
-                                }
-                            },
-                            parameterMap: function (data, type) {
-                                if(type=='update'){
-                                    data.dtr_date = kendo.toString(data.dtr_date,'yyyy-MM-dd');
-                                    
-                                    if(data.time_in!=null){
-                                        data.time_in = pad(data.time_in,4);
-                                        data.time_in = (data.time_in.includes(':')) ? data.time_in : data.time_in.substring(0,2)+':'+ data.time_in.substring(2,4);
-                                    }
-
-                                    if(data.time_out!=null){
-                                        data.time_out = pad(data.time_out,4);
-                                        data.time_out = (data.time_out.includes(':')) ? data.time_out : data.time_out.substring(0,2)+':'+ data.time_out.substring(2,4);
-                                    }
-
-                                    if(data.overtime_in!=null){
-                                        data.overtime_in = pad(data.overtime_in,4);
-                                        data.overtime_in = (data.overtime_in.includes(':')) ? data.overtime_in : data.overtime_in.substring(0,2)+':'+ data.overtime_in.substring(2,4);
-                                    }
-
-                                    if(data.overtime_out!=null){
-                                        data.overtime_out = pad(data.overtime_out,4);
-                                        data.overtime_out = (data.overtime_out.includes(':')) ? data.overtime_out : data.overtime_out.substring(0,2)+':'+ data.overtime_out.substring(2,4);
-                                    }
-
-                                    if(data.time_in2!=null){
-                                        data.time_in2 = pad(data.time_in2,4);
-                                        data.time_in2 = (data.time_in2.includes(':')) ? data.time_in2 : data.time_in2.substring(0,2)+':'+ data.time_in2.substring(2,4);
-                                    }
-
-                                    if(data.time_out2!=null){
-                                        data.time_out2 = pad(data.time_out2,4);
-                                        data.time_out2 = (data.time_out2.includes(':')) ? data.time_out2 : data.time_out2.substring(0,2)+':'+ data.time_out2.substring(2,4);
-                                    }
-
-                                    if(data.overtime_in2!=null){
-                                        data.overtime_in2 = pad(data.overtime_in2,4);
-                                        data.overtime_in2 = (data.overtime_in2.includes(':')) ? data.overtime_in2 : data.overtime_in2.substring(0,2)+':'+ data.overtime_in2.substring(2,4);
-                                    }
-
-                                    if(data.overtime_out2!=null){
-                                        data.overtime_out2 = pad(data.overtime_out2,4);
-                                        data.overtime_out2 = (data.overtime_out2.includes(':')) ? data.overtime_out2 : data.overtime_out2.substring(0,2)+':'+ data.overtime_out2.substring(2,4);
-                                    }
-                                    
-                                }
-
-                                return data;
-                            }
-                        },
-                        pageSize :11,
-                        schema : {
-                          
-                            model : {
-                                id : 'line_id',
-                                fields : {
-                                    header_id : { type: "number",editable:false },
-                                    biometric_id : { type: "number",editable:false  },
-                                    dtr_date : { type: "date",editable:false  },
-                                    time_in : { type: "string" },
-                                    time_out : { type: "string" },
-                                    overtime_in : { type: "string" },
-                                    overtime_out : { type: "string" },
-                                    overtime_in2 : { type: "string" },
-                                    overtime_out2 : { type: "string" },
-                                    overtime_hrs : { type: "number" },
-                                    reg_hrs : { type: "number" },
-                                    reg_day : { type: "number" },
-                                    rd_hrs : { type: "number" },
-                                    rd_ot : { type: "number" },
-                                    sh_hrs : { type: "number" },
-                                    sh_ot : { type: "number" },
-                                    lh_hrs : { type: "number" },
-                                    lh_ot : { type: "number" },
-                                    remarks : { type: "string" },
-                                    dayname : { type: "string",editable:false },
-                                }
-                            }
-                        }
-                    }),
+                    
                     periods : new kendo.data.DataSource({
                         transport : {
                             read : {
@@ -200,7 +114,7 @@
                         
                         myWindow.kendoWindow({
                             width: "1124", //1124 - 1152
-                            height: "750",
+                            height: "660",
                             title: "Memo Form",
                             visible: false,
                             animation: false,
@@ -235,6 +149,11 @@
                     {
                         viewModel.buttonHandler.clear();
                         viewModel.functions.showPOP();
+
+                        let url = `tardiness-to-employee/read/0`;
+                        read(url,viewModel);
+
+                        console.log(viewModel.form.model);
                     },
                     view : async function (e)
                     {
@@ -242,57 +161,57 @@
 
                         viewModel.functions.showPOP();
 
-                        var tr = $(e.target).closest("tr");
-                        var data = this.dataItem(tr);
+                        // var tr = $(e.target).closest("tr");
+                        // var data = this.dataItem(tr);
 
-                        // viewModel.set('selected',data);
+                        // // viewModel.set('selected',data);
 
-                        let url  = `manual-dtr/header/${data.id}`;
-                        await viewModel.functions.prepareForm(data);
-                        read(url,viewModel);
+                        // let url  = `manual-dtr/header/${data.id}`;
+                        // await viewModel.functions.prepareForm(data);
+                        // read(url,viewModel);
 
-                        let detailUrl = `manual-dtr/details/${data.id}`;
-                        viewModel.ds.dtrgrid.transport.options.read.url = detailUrl;
-                        viewModel.ds.dtrgrid.read();
+                        // let detailUrl = `manual-dtr/details/${data.id}`;
+                        // viewModel.ds.dtrgrid.transport.options.read.url = detailUrl;
+                        // viewModel.ds.dtrgrid.read();
                     },
                     save : async function(e){
 
-                        await viewModel.functions.reAssignValues(); 
+                        // await viewModel.functions.reAssignValues(); 
 
-                        var json_data = JSON.stringify(viewModel.form.model);
+                        // var json_data = JSON.stringify(viewModel.form.model);
 
-                        $.post('manual-dtr/save',{
-                            data : json_data
-                        },function(data,staus){
-                            swal_success(data);
+                        // $.post('manual-dtr/save',{
+                        //     data : json_data
+                        // },function(data,staus){
+                        //     swal_success(data);
 
-                            let url  = `manual-dtr/header/${data}`;
-                            read(url,viewModel);
+                        //     let url  = `manual-dtr/header/${data}`;
+                        //     read(url,viewModel);
 
-                            let detailUrl = `manual-dtr/details/${data}`;
-                            viewModel.ds.dtrgrid.transport.options.read.url = detailUrl;
-                            viewModel.ds.dtrgrid.read();
+                        //     let detailUrl = `manual-dtr/details/${data}`;
+                        //     viewModel.ds.dtrgrid.transport.options.read.url = detailUrl;
+                        //     viewModel.ds.dtrgrid.read();
 
-                            viewModel.ds.maingrid.read();
-                            //viewModel.maingrid.formReload(data);
-                        })
-                        .fail(function(data){
-                           swal_error(data);
-                        }).always(function() {
-                            //viewModel.maingrid.ds.read();
-                        });
+                        //     viewModel.ds.maingrid.read();
+                        //     //viewModel.maingrid.formReload(data);
+                        // })
+                        // .fail(function(data){
+                        //    swal_error(data);
+                        // }).always(function() {
+                        //     //viewModel.maingrid.ds.read();
+                        // });
                     },
                     clear : function(e){
-                        viewModel.form.model.set('id',null);
-                        viewModel.form.model.set('remarks',null);
-                        //viewModel.form.model.set('date_from',null);
-                        //viewModel.form.model.set('date_to',null);
-                        viewModel.form.model.set('period_id',0);
-                        viewModel.form.model.set('biometric_id',null);
+                        // viewModel.form.model.set('id',null);
+                        // viewModel.form.model.set('remarks',null);
+                        // //viewModel.form.model.set('date_from',null);
+                        // //viewModel.form.model.set('date_to',null);
+                        // viewModel.form.model.set('period_id',0);
+                        // viewModel.form.model.set('biometric_id',null);
 
-                        let detailUrl = `manual-dtr/details/0`;
-                        viewModel.ds.dtrgrid.transport.options.read.url = detailUrl;
-                        viewModel.ds.dtrgrid.read();
+                        // let detailUrl = `manual-dtr/details/0`;
+                        // viewModel.ds.dtrgrid.transport.options.read.url = detailUrl;
+                        // viewModel.ds.dtrgrid.read();
                         
                     },
                     print : function(){
@@ -311,7 +230,7 @@
                 }
             });
 
-            $("#date_from").kendoDatePicker({
+            $("#memo_date").kendoDatePicker({
                 format: "MM/dd/yyyy"
             });
 
@@ -319,7 +238,7 @@
                 format: "MM/dd/yyyy"
             });
 
-            $("#period_id").kendoDropDownList({
+            $("#biometric_id").kendoComboBox({
                 dataSource : viewModel.ds.periods,
                 dataTextField: "template",
                 dataValueField: "id",
@@ -329,15 +248,20 @@
                 }
             });
 
-            $("#doc_id").kendoTextBox({ });
-            $("#remarks").kendoTextBox({ });
+            $("#memo_to").kendoTextBox({ });
+            $("#memo_subject").kendoTextBox({ });
 
-            $("#biometric_id").kendoComboBox({ 
-                dataTextField: "empname",
-                dataValueField: "biometric_id",
-                filter: "contains",
-                dataSource: viewModel.ds.employees,
-            });
+            $("#memo_upper_body").kendoTextArea({ rows: 2 });
+            $("#memo_lower_body").kendoTextArea({ rows : 10 });
+    
+            $("#prep_by_name").kendoTextBox({ });
+            $("#prep_by_position").kendoTextBox({ });
+
+            $("#noted_by_name").kendoTextBox({ });
+            $("#noted_by_position").kendoTextBox({ });
+
+            $("#noted_by_name_dept").kendoTextBox({ });
+            $("#noted_by_position_dept").kendoTextBox({ });
 
             var activeToolbar = $("#toolbar").kendoToolBar({
                 items : [
@@ -409,213 +333,6 @@
                     
                 ]
             });
-
-            $("#dtrgrid").kendoGrid({
-                dataSource : viewModel.ds.dtrgrid,
-                pageable : {
-                    refresh : true,
-                    buttonCount : 5
-                },
-                noRecords: true,
-                //filterable : true,
-                //sortable : true,
-                height : 374,
-                scrollable: true,
-                editable : "inline",
-                columns : [
-                    {
-                        width : 190,
-                        command : ['edit'],
-                        locked: true,
-                    },
-                    {
-                        title : "Day",
-                        field : "dayname",
-                        width : 80,    
-                        
-                        headerAttributes: {
-                            style: "font-size: 11px"
-                        }
-                    },
-                    {
-                        title : "Date From",
-                        field : "dtr_date",
-                        width : 100,    
-                        template : "#= (data.dtr_date) ? kendo.toString(data.dtr_date,'MM/dd/yyyy') : ''  #",
-                        headerAttributes: {
-                            style: "font-size: 11px"
-                        }
-                    },
-                    {
-                        title : "IN A.M.",
-                        field : "time_in",
-                        width : 80,    
-                        editor : timeEdior,
-                        headerAttributes: {
-                            style: "font-size: 11px"
-                        }
-                    },
-                    {
-                        title : "OUT A.M.",
-                        field : "time_out",
-                        width : 80,    
-                        editor : timeEdior,
-                        headerAttributes: {
-                            style: "font-size: 11px"
-                        }
-                    },
-                    {
-                        title : "IN P.M.",
-                        field : "time_in2",
-                        width : 80,    
-                        editor : timeEdior,
-                        headerAttributes: {
-                            style: "font-size: 11px"
-                        }
-                    },
-                    {
-                        title : "OUT P.M.",
-                        field : "time_out2",
-                        width : 80,    
-                        editor : timeEdior,
-                        headerAttributes: {
-                            style: "font-size: 11px"
-                        }
-                    },
-                    // {
-                    //     title : "Hrs",
-                    //     field : "reg_hrs",
-                    //     width : 80,
-                    //     headerAttributes: {
-                    //         style: "font-size: 11px"
-                    //     }
-                    // },
-                    {
-                        title : "Reg Day",
-                        field : "reg_day",
-                        width : 80,
-                        headerAttributes: {
-                            style: "font-size: 11px"
-                        }
-                    },
-                    {
-                        title : "IN (OT)",
-                        field : "overtime_in",
-                        width : 80,    
-                        headerAttributes: {
-                            style: "font-size: 11px"
-                        }
-                    },
-                    {
-                        title : "OUT (OT)",
-                        field : "overtime_out",
-                        width : 80,    
-                        headerAttributes: {
-                            style: "font-size: 11px"
-                        }
-                    },
-                    {
-                        title : "IN (OT)",
-                        field : "overtime_in2",
-                        width : 80,    
-                        headerAttributes: {
-                            style: "font-size: 11px"
-                        }
-                    },
-                    {
-                        title : "OUT (OT)",
-                        field : "overtime_out2",
-                        width : 80,    
-                        headerAttributes: {
-                            style: "font-size: 11px"
-                        }
-                    },
-                    {
-                        title : "HRS (OT)",
-                        field : "overtime_hrs",
-                        width : 80,    
-                        headerAttributes: {
-                            style: "font-size: 11px"
-                        }
-                    },
-
-                    // {
-                    //     title : "RD Hrs",
-                    //     field : "rd_hrs",
-                    //     width : 90,    
-                    // },
-                    // {
-                    //     title : "RD OT",
-                    //     field : "rd_ot",
-                    //     width : 90,    
-                    // },
-                    // {
-                    //     title : "SH Hrs",
-                    //     field : "sh_hrs",
-                    //     width : 90,    
-                    // },
-                    // {
-                    //     title : "SH OT",
-                    //     field : "sh_ot",
-                    //     width : 90,    
-                    // },
-                    // {
-                    //     title : "LH hrs",
-                    //     field : "lh_hrs",
-                    //     width : 90,    
-                    // },
-                    // {
-                    //     title : "LH OT",
-                    //     field : "lh_ot",
-                    //     width : 90,    
-                    // },
-
-                    {
-                        title : "Remarks",
-                        field : "remarks",
-                        width : 400,    
-                        headerAttributes: {
-                            style: "font-size: 11px"
-                        }
-                    },
-                    // {
-                    //     //command: { text : 'View',icon : 'edit' ,click : viewModel.buttonHandler.view },
-                    //     // attributes : { style : 'font-size:10pt !important;'},
-                    //     width : 190,
-                    //     command : ['edit']  
-                    // },
-                    
-                ]
-            });
-
-            function timeEdior(container, options)
-            {
-                $('<input name="' + options.field + '" />')
-                .appendTo(container)
-                .kendoTextBox({
-                    change : function(e)
-                    {
-                        // let v = e.sender.value();
-                        // let nv = v.substring(0,2)+':'+ v.substring(2,4);
-                        // e.sender.value = nv;
-                        // e.sender.text = nv;
-                   
-
-                        // console.log(e.model);
-
-                        // let grid = $("#dtrgrid").data("kendoGrid");
-                        // let selectedRow = grid.dataItem(grid.select());
-                        // //console.log(e.sender);
-                        // //console.log(e.sender.text());
-                        // //console.log(selectedRow.set("schedule_desc"));
-                        // selectedRow.set("schedule_desc",e.sender.text());
-                    },
-                    edit : function(e){
-                        console.log(e.model);
-                    }
-                    
-                });
-            }
 
             /*
              change : function(e){

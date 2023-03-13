@@ -88,34 +88,78 @@
                     <div id="toolbar"></div>
                     <input type="hidden" id="id" data-bind="value:form.model.id" >
                     <div class="card-body">
-                        <table class="formTable mb-1" border=1 style="width:100%">
+                        <table class="formTable mb-1" border=0 style="width:100%">
                             <tr>
-                                <td colspan=4>Employee <span class="require">*Required </span></td>
-                                <td colspan="3"></td>
-                                <td>Doc ID</td>
+                                <td>Bio ID</td>
+                                <td>Employee Name</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>Date</td>
                             </tr>
                             <tr>
-                                <td colspan=4><input type="text" id="biometric_id" data-bind="value:form.model.biometric_id"></td>
-                                <td colspan=3></td>
-                                <td><input type="text" id="doc_id" data-bind="value:form.model.id" readonly></td>
+                                <td> <input id="biometric_id" type="text" data-bind="value:form.model.biometric_id"> </td>
+                                <td colspan=3> <input id="memo_to" type="text" data-bind="value:form.model.memo_to"> </td>
+                               
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td> <input id="memo_date" type="text"  data-bind="value:form.model.memo_date"> </td>
+                            </tr>
+                            <tr>
+                                <td>Subject</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan="8" > <input id="memo_subject" type="text"  data-bind="value:form.model.memo_subject"> </td>
                             </tr>
                             
                             <tr>
-                                <td colspan="2">Payroll Period</td>
-                                <td colspan="6"></td>
+                                <td colspan="8" > <textarea id="memo_upper_body" type="text"  data-bind="value:form.model.memo_upper_body"> </textarea> </td>
                             </tr>
                             <tr>
-                                <td colspan=2> <input type="text" id="period_id"> </td>
-                                <td colspan=6></td>
+                                <td colspan="8" > <textarea id="memo_lower_body" type="text"  data-bind="value:form.model.memo_lower_body">  </textarea> </td>
                             </tr>
                             <tr>
-                                <td colspan=8>Remarks</td>
+                                <td> Prepared By </td>
+                                <td> </td>
+                                <td> </td>
+                                <td>Noted By </td>
+                                <td> </td>
+                                <td> </td>
+                                <td>Noted By</td>
+                                <td> </td>
                             </tr>
                             <tr>
-                                <td colspan=8><input type="text" id="remarks" data-bind="value:form.model.remarks"></td>
-                          </tr>
+                                <td><input id="prep_by_name" type="text" data-bind="value:form.model.prep_by_name" colspan="2"></td>
+                               
+                                <td></td>
+                                <td><input id="noted_by_name" type="text" data-bind="value:form.model.noted_by_name" colspan="2"></td>
+                                
+                                <td></td>
+                                <td><input id="noted_by_name_dept" type="text" data-bind="value:form.model.noted_by_name_dept" colspan="2"></td>
+                                
+                            </tr>
+                            <tr>
+                                <td><input id="prep_by_position" type="text" data-bind="value:form.model.prep_by_position" colspan=2></td>
+                               
+                                <td></td>
+                                <td><input id="noted_by_position" type="text" data-bind="value:form.model.noted_by_position" colspan=2></td>
+                                
+                                <td></td>
+                                <td><input id="noted_by_position_dept" type="text" data-bind="value:form.model.noted_by_position_dept" colspan=2></td>
+                                
+                            </tr>
                         </table>
-                        <div id="dtrgrid" ></div>
+                        
                     </div>
                 </div>
             </div>
