@@ -177,7 +177,7 @@ class TardinessReportMapper extends AbstractMapper {
                     ///->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)')
                     ->whereRaw('(
                         (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
-                        (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm))
+                        (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out) )
                         )')
                     ->where('biometric_id',$e->biometric_id)
                     ->get();
