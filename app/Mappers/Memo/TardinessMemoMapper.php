@@ -15,10 +15,15 @@ class TardinessMemoMapper extends AbstractMapper {
 
     ];
 
+    public function find($id){
+        $result = $this->model->find($id);
+        return $result;
+    }
+
     public function list($filter)
     {
         //SELECT id,description FROM deduction_types
-        $result = $this->model->select('id','memo_to','memo_from','memo_date','memo_subject')->from('tardiness_memo');
+        $result = $this->model->select('id','biometric_id','memo_to','memo_from','memo_date','memo_subject')->from('tardiness_memo');
 
         if($filter['filter']!=null){
 			foreach($filter['filter']['filters'] as $f)
@@ -42,7 +47,7 @@ class TardinessMemoMapper extends AbstractMapper {
     public function readMemo($id)
     {
         if($id==0){
-            $result = $this->model->select('id',
+            $result = $this->model->select(DB::raw('0 as id'),
             'biometric_id',
             'memo_to',
             'memo_from',
@@ -58,7 +63,10 @@ class TardinessMemoMapper extends AbstractMapper {
             'noted_by_position',
             'noted_by_text_dept',
             'noted_by_name_dept',
-            'noted_by_position_dept')
+            'noted_by_position_dept',
+            'memo_month',
+            'memo_year'
+            )
             ->from('tardiness_memo_template')
             ->where('id',1);
 
@@ -86,6 +94,33 @@ class TardinessMemoMapper extends AbstractMapper {
         $result = DB::select($qry);
 
         return $result;
+    }
+
+    public function getYear()
+    {
+        //SELECT DISTINCT YEAR(dtr_date) AS dtr_year FROM edtr;
+        $result = $this->model->select(DB::raw("YEAR(dtr_date) as dtr_year"))
+                    ->from('edtr')
+                    ->orderBy('dtr_year','desc')
+                    ->distinct();
+        return $result->get();
+    }
+
+    public function getLates($biometric_id,$filter)
+    {
+        $lates = $this->model->select(DB::raw("dtr_date, edtr.time_in,edtr.time_out,ROUND((TIME_TO_SEC(edtr.time_in) - TIME_TO_SEC(work_schedules.time_in))/60,0) AS in_minutes"))
+        ->from('edtr')
+        ->leftJoin('work_schedules','schedule_id','=','work_schedules.id')
+        ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
+        ///->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)')
+        ->whereRaw('(
+            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
+            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out) )
+            )')
+        ->where('biometric_id',$biometric_id)
+        ->get();
+
+        return $lates;
     }
 
 }

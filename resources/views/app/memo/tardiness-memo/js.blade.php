@@ -5,6 +5,21 @@
     <script>
         $(document).ready(function(){
 
+            let monthOptions = [
+                { text: "January", value: "1" },
+                { text: "February", value: "2" },
+                { text: "March", value: "3" },
+                { text: "April", value: "4" },
+                { text: "May", value: "5" },
+                { text: "June", value: "6" },
+                { text: "July", value: "7N" },
+                { text: "August", value: "8" },
+                { text: "September", value: "9" },
+                { text: "October", value: "10" },
+                { text: "November", value: "11" },
+                { text: "December", value: "12" },
+            ];
+
             var viewModel = kendo.observable({ 
                 form : {
                     model : {
@@ -87,7 +102,7 @@
                     periods : new kendo.data.DataSource({
                         transport : {
                             read : {
-                                url : 'manual-dtr/weekly-period',
+                                url : 'tardiness-to-employee/year',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -97,11 +112,10 @@
                         },
                         schema : {
                             model : {
-                                id : 'id',
+                                id : 'dtr_year',
                                 fields : {
-                                    date_from : { type: "date" },
-                                    date_to : { type: "date" },
-                                    template : { type: "string" },
+                                    dtr_year : { type: "number" },
+                                  
                                 }
                             }
                         }
@@ -133,9 +147,16 @@
                     reAssignValues : function (){
                         //viewModel.form.model.set('date_from',kendo.toString($('#date_from').data('kendoDatePicker').value(),'yyyy-MM-dd'));
                         //viewModel.form.model.set('date_to',kendo.toString($('#date_to').data('kendoDatePicker').value(),'yyyy-MM-dd'));
-                        viewModel.form.model.set('period_id',$("#period_id").data('kendoDropDownList').value());
+                        //viewModel.form.model.set('period_id',$("#period_id").data('kendoDropDownList').value());
                         
                         viewModel.form.model.set('biometric_id',$('#biometric_id').data('kendoComboBox').value());
+                        viewModel.form.model.set('memo_to',$('#biometric_id').data('kendoComboBox').text());
+                        //viewModel.form.model.set('memo_to',$('#memo_to').data('kendoComboBox').text());
+                        viewModel.form.model.set('memo_date',kendo.toString($('#memo_date').data('kendoDatePicker').value(),'yyyy-MM-dd'));
+                        viewModel.form.model.set('memo_month',$("#memo_month").data('kendoDropDownList').value());
+                        viewModel.form.model.set('memo_year',$("#memo_year").data('kendoDropDownList').value());
+                        // console.log($('#memo_to').data('kendoComboBox').value());
+                        // console.log($('#memo_to').data('kendoComboBox').text());
                     },
                     prepareForm :function(data){
 
@@ -161,14 +182,14 @@
 
                         viewModel.functions.showPOP();
 
-                        // var tr = $(e.target).closest("tr");
-                        // var data = this.dataItem(tr);
+                        var tr = $(e.target).closest("tr");
+                        var data = this.dataItem(tr);
 
                         // // viewModel.set('selected',data);
 
-                        // let url  = `manual-dtr/header/${data.id}`;
-                        // await viewModel.functions.prepareForm(data);
-                        // read(url,viewModel);
+                        let url  = `tardiness-to-employee/read/${data.id}`;
+                        //await viewModel.functions.prepareForm(data);
+                        read(url,viewModel);
 
                         // let detailUrl = `manual-dtr/details/${data.id}`;
                         // viewModel.ds.dtrgrid.transport.options.read.url = detailUrl;
@@ -176,30 +197,26 @@
                     },
                     save : async function(e){
 
-                        // await viewModel.functions.reAssignValues(); 
+                        await viewModel.functions.reAssignValues(); 
 
-                        // var json_data = JSON.stringify(viewModel.form.model);
+                        var json_data = JSON.stringify(viewModel.form.model);
 
-                        // $.post('manual-dtr/save',{
-                        //     data : json_data
-                        // },function(data,staus){
-                        //     swal_success(data);
+                        $.post('tardiness-to-employee/save',{
+                            data : json_data
+                        },function(data,staus){
+                            swal_success(data);
 
-                        //     let url  = `manual-dtr/header/${data}`;
-                        //     read(url,viewModel);
+                            let url  = `tardiness-to-employee/read/${data}`;
+                            read(url,viewModel);
 
-                        //     let detailUrl = `manual-dtr/details/${data}`;
-                        //     viewModel.ds.dtrgrid.transport.options.read.url = detailUrl;
-                        //     viewModel.ds.dtrgrid.read();
-
-                        //     viewModel.ds.maingrid.read();
-                        //     //viewModel.maingrid.formReload(data);
-                        // })
-                        // .fail(function(data){
-                        //    swal_error(data);
-                        // }).always(function() {
-                        //     //viewModel.maingrid.ds.read();
-                        // });
+                            viewModel.ds.maingrid.read();
+                            //viewModel.maingrid.formReload(data);
+                        })
+                        .fail(function(data){
+                           swal_error(data);
+                        }).always(function() {
+                            //viewModel.maingrid.ds.read();
+                        });
                     },
                     clear : function(e){
                         // viewModel.form.model.set('id',null);
@@ -216,7 +233,7 @@
                     },
                     print : function(){
 
-                        let url = `manual-dtr/print/${viewModel.form.model.id}`;
+                        let url = `tardiness-to-employee/print/${viewModel.form.model.id}`;
                         window.open(url);
                     },
                 },
@@ -238,9 +255,9 @@
                 format: "MM/dd/yyyy"
             });
 
-           $("#biometric_id").kendoTextBox({ });
+        //    $("#biometric_id").kendoTextBox({ });
 
-            $("#memo_to").kendoComboBox({
+            $("#biometric_id").kendoComboBox({
                 dataSource : viewModel.ds.employees,
                 dataTextField: "employee_name",
                 dataValueField: "biometric_id",
@@ -265,6 +282,30 @@
 
             $("#noted_by_name_dept").kendoTextBox({ });
             $("#noted_by_position_dept").kendoTextBox({ });
+
+            $("#memo_month").kendoDropDownList({
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: monthOptions,
+                index: 1,
+                dataBound : function(e){
+                  
+                }
+                //change: onChange
+            });
+
+            $("#memo_year").kendoDropDownList({
+                dataTextField: "dtr_year",
+                dataValueField: "dtr_year",
+                dataSource: viewModel.ds.periods,
+                index: 1,
+                dataBound : function(e){
+                  
+                }
+                //change: onChange
+            });
+
+            
 
             var activeToolbar = $("#toolbar").kendoToolBar({
                 items : [
@@ -303,24 +344,13 @@
                     },
                     {
                         title : "Employee Name",
-                        field : "empname",
-                        width : 135,    
+                        field : "memo_to",
+                        width : 180,    
                     },
+                   
                     {
-                        title : "Date From",
-                        field : "date_from",
-                        width : 100,    
-                        template : "#= (data.date_from) ? kendo.toString(data.date_from,'MM/dd/yyyy') : ''  #",
-                    },
-                    {
-                        title : "Date To",
-                        field : "date_to",
-                        width : 100,    
-                        template : "#= (data.date_to) ? kendo.toString(data.date_to,'MM/dd/yyyy') : ''  #",
-                    },
-                    {
-                        title : "Remarks",
-                        field : "remarks",
+                        title : "Subject",
+                        field : "memo_subject",
                            
                     },
                      {

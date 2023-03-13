@@ -506,6 +506,10 @@ Route::middleware('auth')->prefix('memo')->group(function(){
         Route::get('list',[TardinessMemoController::class,'list']);
         Route::get('read/{id}',[TardinessMemoController::class,'readMemo']);
         Route::get('employee-list',[TardinessMemoController::class,'getNames']);
+
+        Route::get('print/{id}',[TardinessMemoController::class,'print']);
+        Route::get('year',[TardinessMemoController::class,'getYear']);
+        Route::post('save',[TardinessMemoController::class,'save']);
     }); 
 }); 
 

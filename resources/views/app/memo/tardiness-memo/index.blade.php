@@ -90,21 +90,22 @@
                     <div class="card-body">
                         <table class="formTable mb-1" border=0 style="width:100%">
                             <tr>
-                                <td>Bio ID</td>
+                                <!-- <td>Bio ID</td> -->
                                 <td>Employee Name</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td></td>
+                                <td>Month</td>
+                                <td>Year</td>
                                 <td></td>
                                 <td>Date</td>
                             </tr>
                             <tr>
-                                <td> <input id="biometric_id" type="text" data-bind="value:form.model.biometric_id"> </td>
-                                <td colspan=3> <input id="memo_to" type="text" data-bind="value:form.model.memo_to"> </td>
-                               
+                                <!-- <td> <input id="biometric_id" type="text" data-bind="value:form.model.biometric_id"> </td> -->
+                                <td colspan=3> <input id="biometric_id" type="text" data-bind="value:form.model.biometric_id"> </td>
                                 <td></td>
-                                <td></td>
+                                <td> <input id="memo_month" type="text"  data-bind="value:form.model.memo_month"> </td>
+                                <td> <input id="memo_year" type="text"  data-bind="value:form.model.memo_year"> </td>
                                 <td></td>
                                 <td> <input id="memo_date" type="text"  data-bind="value:form.model.memo_date"> </td>
                             </tr>
