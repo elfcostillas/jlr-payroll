@@ -62,7 +62,7 @@
                     employees : new kendo.data.DataSource({
                         transport : {
                             read : {
-                                url : 'manual-dtr/employee-list',
+                                url : 'tardiness-to-employee/employee-list',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -78,7 +78,7 @@
                                 id : 'biometric_id',
                                 fields : {
                                     biometric_id : {type : 'number',editable :false },
-                                    empname : { type:'string' },
+                                    employee_name : { type:'string' },
                                 }
                             }
                         }
@@ -238,17 +238,20 @@
                 format: "MM/dd/yyyy"
             });
 
-            $("#biometric_id").kendoComboBox({
-                dataSource : viewModel.ds.periods,
-                dataTextField: "template",
-                dataValueField: "id",
-                optionLabel: {
-                    template: "Select Period",
-                    id: 0
-                }
+           $("#biometric_id").kendoTextBox({ });
+
+            $("#memo_to").kendoComboBox({
+                dataSource : viewModel.ds.employees,
+                dataTextField: "employee_name",
+                dataValueField: "biometric_id",
+                autoWidth: true,
+                filter : "contains",
+                // optionLabel: {
+                //     template: "Select Period",
+                //     id: 0
+                // }
             });
 
-            $("#memo_to").kendoTextBox({ });
             $("#memo_subject").kendoTextBox({ });
 
             $("#memo_upper_body").kendoTextArea({ rows: 2 });

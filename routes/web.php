@@ -505,6 +505,7 @@ Route::middleware('auth')->prefix('memo')->group(function(){
         Route::get('/',[TardinessMemoController::class,'index']);
         Route::get('list',[TardinessMemoController::class,'list']);
         Route::get('read/{id}',[TardinessMemoController::class,'readMemo']);
+        Route::get('employee-list',[TardinessMemoController::class,'getNames']);
     }); 
 }); 
 

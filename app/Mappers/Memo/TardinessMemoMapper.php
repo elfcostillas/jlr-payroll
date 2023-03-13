@@ -73,4 +73,19 @@ class TardinessMemoMapper extends AbstractMapper {
         return $result->first();
     }
 
+    public function getNames()
+    {
+        $qry = "SELECT biometric_id,CONCAT(TRIM(lastname),', ',TRIM(firstname),' ',CASE 
+        WHEN middlename IS NULL THEN ''
+        WHEN middlename = '' THEN ''
+        ELSE CONCAT(SUBSTR(middlename,1,1),'. ') 
+        END,IFNULL(suffixname,'') ) AS employee_name
+        FROM employees WHERE exit_status = 1
+        ORDER BY lastname,firstname";
+
+        $result = DB::select($qry);
+
+        return $result;
+    }
+
 }

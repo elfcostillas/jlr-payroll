@@ -43,4 +43,11 @@ class TardinessMemoController extends Controller
 
         return response()->json($result);
     }
+
+    public function getNames(Request $request)
+    {
+        $result = $this->mapper->getNames();
+
+        return response()->json($result);
+    }
 }

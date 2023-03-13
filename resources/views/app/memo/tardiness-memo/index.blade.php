@@ -139,23 +139,23 @@
                                 <td> </td>
                             </tr>
                             <tr>
-                                <td><input id="prep_by_name" type="text" data-bind="value:form.model.prep_by_name" colspan="2"></td>
+                                <td  colspan="2"><input id="prep_by_name" type="text" data-bind="value:form.model.prep_by_name"></td>
                                
                                 <td></td>
-                                <td><input id="noted_by_name" type="text" data-bind="value:form.model.noted_by_name" colspan="2"></td>
+                                <td  colspan="2"><input id="noted_by_name" type="text" data-bind="value:form.model.noted_by_name"></td>
                                 
                                 <td></td>
-                                <td><input id="noted_by_name_dept" type="text" data-bind="value:form.model.noted_by_name_dept" colspan="2"></td>
+                                <td  colspan="2"><input id="noted_by_name_dept" type="text" data-bind="value:form.model.noted_by_name_dept"></td>
                                 
                             </tr>
                             <tr>
-                                <td><input id="prep_by_position" type="text" data-bind="value:form.model.prep_by_position" colspan=2></td>
+                                <td  colspan=2><input id="prep_by_position" type="text" data-bind="value:form.model.prep_by_position"></td>
                                
                                 <td></td>
-                                <td><input id="noted_by_position" type="text" data-bind="value:form.model.noted_by_position" colspan=2></td>
+                                <td  colspan=2><input id="noted_by_position" type="text" data-bind="value:form.model.noted_by_position"></td>
                                 
                                 <td></td>
-                                <td><input id="noted_by_position_dept" type="text" data-bind="value:form.model.noted_by_position_dept" colspan=2></td>
+                                <td  colspan=2><input id="noted_by_position_dept" type="text" data-bind="value:form.model.noted_by_position_dept"></td>
                                 
                             </tr>
                         </table>
