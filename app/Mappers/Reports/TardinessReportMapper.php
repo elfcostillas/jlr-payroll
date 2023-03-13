@@ -65,14 +65,14 @@ class TardinessReportMapper extends AbstractMapper {
                     (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
                     (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out) )
                 )')
-                ->where('division_id',$d->id);
+                ->where('division_id',2);
             }
                  
             if($filter['dept_id']!=0)
             {
                 $result->where('dept_id',$filter['dept_id']);
             }
-
+           
             $d->emp = $result->groupBy(DB::raw("employees.biometric_id,lastname,firstname"))
             ->orderBy('late_count','desc')->get();
         }
