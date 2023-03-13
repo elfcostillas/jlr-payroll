@@ -49,25 +49,23 @@ class DailyTimeRecordMapper extends AbstractMapper {
 
             $range = $this->model->select('date_from','date_to')->from('payroll_period')->where('payroll_period.id',$period_id)->first();
         }else{
-            $empWithPunch = $this->model->select('edtr_raw.biometric_id','schedule_id')->from('edtr_raw')
-            ->join('employees','edtr_raw.biometric_id','=','employees.biometric_id')
-            ->join('payroll_period_weekly',function($join){
-                //$join->whereBetween('punch_date',['payroll_period_weekly.date_from','payroll_period_weekly.date_to']);
-                $join->whereRaw('punch_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
-            })
+            $empWithPunch = $this->model->select('edtr_raw.biometric_id','schedule_id')->from('employees')
+            ->leftJoin('edtr_raw','edtr_raw.biometric_id','=','employees.biometric_id')
+            // ->join('payroll_period_weekly',function($join){
+            //     //$join->whereBetween('punch_date',['payroll_period_weekly.date_from','payroll_period_weekly.date_to']);
+            //     $join->whereRaw('punch_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
+            // })
             ->leftJoin('work_schedules_default','employees.dept_id','=','work_schedules_default.dept_id')
             ->where('pay_type',3)
             ->where('exit_status',1)
-            ->where('payroll_period_weekly.id',$period_id)
+            //->where('payroll_period_weekly.id',$period_id)
             ->distinct()
             ->get();
             $range = $this->model->select('date_from','date_to')->from('payroll_period_weekly')->where('payroll_period_weekly.id',$period_id)->first();
 
         }
 
-       
-
-       
+    
         $period = CarbonPeriod::create($range['date_from'],$range['date_to']);
 
         foreach($empWithPunch as $emp)
@@ -135,9 +133,16 @@ class DailyTimeRecordMapper extends AbstractMapper {
 			{
 				
                 //$result->where($f['field'],'like','%'.$f['value'].'%');
+                // if($f['field']=='empname'){
+                //     $result->where('lastname','like','%'.$f['value'].'%')
+                //     ->orWhere('firstname','like','%'.$f['value'].'%');
+                // }
+
                 if($f['field']=='empname'){
-                    $result->where('lastname','like','%'.$f['value'].'%')
-                    ->orWhere('firstname','like','%'.$f['value'].'%');
+                    $result->where(function($query) use ($f) {
+                        $query->where('lastname','like','%'.$f['value'].'%')
+                            ->orWhere('firstname','like','%'.$f['value'].'%');
+                    });
                 }
 			}
 		}

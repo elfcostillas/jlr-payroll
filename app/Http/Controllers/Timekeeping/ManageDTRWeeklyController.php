@@ -108,8 +108,3 @@ class ManageDTRWeeklyController extends Controller
     }
     
 }
-
-/*
-
-*/
-
