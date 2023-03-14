@@ -11,6 +11,11 @@
 <?php
     use Carbon\Carbon;
 
+    if($data->memo_date){
+
+    }else {
+        dd("Please select memo date.");
+    }
     $memo_date = Carbon::createFromFormat('Y-m-d',$data->memo_date);
 ?>
 

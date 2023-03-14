@@ -289,7 +289,7 @@
                 dataTextField: "text",
                 dataValueField: "value",
                 dataSource: monthOptions,
-                index: 1,
+                index: 0,
                 dataBound : function(e){
                   
                 }
@@ -300,7 +300,7 @@
                 dataTextField: "dtr_year",
                 dataValueField: "dtr_year",
                 dataSource: viewModel.ds.periods,
-                index: 1,
+                index: 0,
                 dataBound : function(e){
                   
                 }
