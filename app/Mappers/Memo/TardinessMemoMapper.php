@@ -71,9 +71,24 @@ class TardinessMemoMapper extends AbstractMapper {
             ->where('id',1);
 
         }else{
-            $result = $this->model->select('id','biometric_id','memo_to','memo_from','memo_date','memo_subject',
-            'memo_upper_body','memo_lower_body','prep_by_text','prep_by_name','prep_by_position','noted_by_name_dept',
-            'noted_by_text','noted_by_name','noted_by_position','noted_by_text_dept','noted_by_position_dept')
+            $result = $this->model->select('id',  'biometric_id',
+            'memo_to',
+            'memo_from',
+            'memo_date',
+            'memo_subject',
+            'memo_upper_body',
+            'memo_lower_body',
+            'prep_by_text',
+            'prep_by_name',
+            'prep_by_position',
+            'noted_by_text',
+            'noted_by_name',
+            'noted_by_position',
+            'noted_by_text_dept',
+            'noted_by_name_dept',
+            'noted_by_position_dept',
+            'memo_month',
+            'memo_year')
             ->from('tardiness_memo')
             ->where('id',$id);
         }
@@ -121,6 +136,13 @@ class TardinessMemoMapper extends AbstractMapper {
         ->get();
 
         return $lates;
+    }
+
+    public function getManualTardy($biometric_id)
+    {
+        $result = $this->model->select('tardy_count')->from('manual_tardy')->where('biometric_id',$biometric_id);
+
+        return $result->first();
     }
 
 }

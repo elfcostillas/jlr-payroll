@@ -82,7 +82,95 @@ class TardinessMemoController extends Controller
         );
 
         $details = $this->mapper->getLates($memo->biometric_id,$filter);
-        $pdf = PDF::loadView('app.memo.tardiness-memo.print',['data' => $memo,'details' => $details])->setPaper('letter','portrait');
+       
+        if($memo->memo_year==2023)
+        {
+            $manual = $this->mapper->getManualTardy($memo->biometric_id);
+
+            if($manual)
+            {
+                $mtardy = (int) $manual->tardy_count;
+            }else {
+                $mtardy = 0;
+            }
+            $breakdown = '';
+
+            switch($memo->memo_month)
+            {
+                case 1 :
+                        $total = $mtardy;
+                        $months = "January";
+
+                    break;
+                case 2 :
+                        // $iStart = date('Y-m-d',strtotime($memo->memo_year.'-02-01'));
+
+                        // $ifilter = array(
+                        //     'from' => $iStart,
+                        //     'to' => date('Y-m-t',strtotime($iStart)),
+                        // );
+
+                        // $secondMonth =  $this->mapper->getLates($memo->biometric_id,$ifilter);
+                        if($mtardy>0){
+                            $breakdown = "Last January you incurred a total of ($mtardy) tardiness occurrence.";
+                        }
+                        $total = $mtardy + count($details);
+                        $months = "January, February";
+                       
+                    break;
+                case 3 :
+
+                        $iStart = date('Y-m-d',strtotime($memo->memo_year.'-02-01'));
+
+                        $ifilter = array(
+                            'from' => $iStart,
+                            'to' => date('Y-m-t',strtotime($iStart)),
+                        );
+
+                        if($mtardy>0){
+                            $breakdown = "Last January you incurred a total of ($mtardy) tardiness occurrence.";
+                        }
+
+                        $secondMonth =  $this->mapper->getLates($memo->biometric_id,$ifilter);
+
+                        $total = $mtardy + count($secondMonth) + count($details);
+                        $months = "January, February, March";
+                    break;
+                case 4 :
+
+                    break;
+                case 5 :
+
+                    break;
+                case 6 :
+
+                    break;
+                case 7 :
+
+                    break;
+                case 8 :
+
+                    break;
+                case 9 :
+
+                    break;
+                case 10 :
+
+                    break;
+                case 11 :
+
+                    break;
+                case 12 :
+
+                    break;
+            }
+        }else{
+            dd('oh no');
+        }
+
+        $total_str = "A total of ($total) occurrence for ($months) period(s).";
+      
+        $pdf = PDF::loadView('app.memo.tardiness-memo.print',['data' => $memo,'details' => $details,'total' => $total_str,'breakdown' => $breakdown, 'total_count' => $total ])->setPaper('letter','portrait');
 
         //$pdf->output();
         $pdf->output();

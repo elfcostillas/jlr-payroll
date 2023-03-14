@@ -23,11 +23,11 @@
 
     * {
         font-family : "Helvetica";
-        font-size : 12pt;
+        font-size : 10pt;
     }
 
     table {
-        font-size :12pt;
+        font-size :10pt;
         page-break-inside: avoid; 
         border-collapse:collapse;
         margin-bottom : 4px;
@@ -42,7 +42,7 @@
         padding : 2px;
     }
 
-    @page { margin: 30px 80px 20px 80px; border:1px solid green } /* top right bottom left */
+    @page { margin: 30px 75px 20px 75px; border:1px solid green } /* top right bottom left */
 
 </style>
 <body>
@@ -75,8 +75,8 @@
         </tr>
     </table>
     <hr>
-    <p>{{ $data->memo_upper_body }}</p>
-
+        <p style="white-space:pre-line;">{{ $data->memo_upper_body }}</p>
+ 
         <table border=1 style="width:80%;border-collapse:collapse">
             <tr>
                 <td style="width:10%;padding-left:9px;">No</td>
@@ -97,8 +97,50 @@
                 </tr>
             @endforeach
         </table>
-    <p style="white-space: pre">{{ $data->memo_lower_body }}</p>
+    {{-- <p style="white-space: pre-line">
+        {{ $breakdown.$total }}
+        {{ $total }}
+    </p> --}}
+   
+    
+    <?php
+        //dd(count($details));
 
+        if($total_count <= 10){
+            $action = "Disciplinary action is corrective counseling.";
+        }
+
+        if($total_count >= 11 && $total_count <=15){
+            $action = "Corrective action is written warning.";
+        }
+
+        if($total_count >= 16 && $total_count <=18){
+            $action = "Corrective action is Suspension of three (3) days.";
+        }
+
+        if($total_count == 19){
+            $action = "Corrective action is Suspension of seven (7) days.";
+        }
+
+        if($total_count == 20){
+            $action = "Corrective action is Suspension of fifteen (15) days or dismissal.";
+        }
+
+        if($total_count >= 21){
+            $action = "Corrective action is dismissal.";
+        }
+
+        $str = "Further commission of the same offense within a quarter shall progress to a corrective action including written warning, suspension from work without pay up to dismissal from employment.";
+    ?>
+
+    <p style="white-space: pre-line">
+        {{ $breakdown.' '.$total }}
+        
+        {{ $data->memo_lower_body.$action }}
+    </p>
+
+    <p style="white-space: pre-line">{{ $str }}</p>
+    <p style="white-space: pre-line">This is for your guidance.</p>
     <table border=0 style="width:100%;font-size :11px !important" >
         <tr>
             <td style="width:25%">{{ $data->prep_by_text }}</td>

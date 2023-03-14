@@ -40,6 +40,8 @@
                         noted_by_text_dept : null,
                         noted_by_name_dept : null,
                         noted_by_position_dept : null,
+                        memo_month : null,
+                        memo_year : null
                     }
                 },
                 ds : {
