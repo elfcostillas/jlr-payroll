@@ -175,7 +175,9 @@
 
                         let url = `tardiness-to-employee/read/0`;
                         read(url,viewModel);
-
+                        // viewModel.form.model.set('memo_month',null);
+                        // viewModel.form.model.set('memo_year',null);
+                        //console.log(viewModel.form.model);
                         console.log(viewModel.form.model);
                     },
                     view : async function (e)
@@ -231,6 +233,8 @@
                         // let detailUrl = `manual-dtr/details/0`;
                         // viewModel.ds.dtrgrid.transport.options.read.url = detailUrl;
                         // viewModel.ds.dtrgrid.read();
+                        //console.log(viewModel.form.model);
+                        $("#memo_year").data('kendoDropDownList').select(0)
                         
                     },
                     print : function(){
@@ -303,8 +307,12 @@
                 index: 0,
                 dataBound : function(e){
                   
-                }
+                },
                 //change: onChange
+                optionLabel: {
+                    dtr_year: "",
+                    dtr_year: ""
+                }
             });
 
             

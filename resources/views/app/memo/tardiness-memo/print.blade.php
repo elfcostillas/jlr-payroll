@@ -116,26 +116,26 @@
         }
 
         if($total_count >= 11 && $total_count <=15){
-            $action = "Corrective action is written warning.";
+            $action = "Disciplinary action is written warning.";
         }
 
         if($total_count >= 16 && $total_count <=18){
-            $action = "Corrective action is Suspension of three (3) days.";
+            $action = "Disciplinary action is Suspension of three (3) days.";
         }
 
         if($total_count == 19){
-            $action = "Corrective action is Suspension of seven (7) days.";
+            $action = "Disciplinary action is Suspension of seven (7) days.";
         }
 
         if($total_count == 20){
-            $action = "Corrective action is Suspension of fifteen (15) days or dismissal.";
+            $action = "Disciplinary action is Suspension of fifteen (15) days or dismissal.";
         }
 
         if($total_count >= 21){
-            $action = "Corrective action is dismissal.";
+            $action = "Disciplinary action is dismissal.";
         }
 
-        $str = "Further commission of the same offense within a quarter shall progress to a corrective action including written warning, suspension from work without pay up to dismissal from employment.";
+        $str = "Further commission of the same offense within a quarter shall progress to a disciplinary action including written warning, suspension from work without pay up to dismissal from employment.";
     ?>
 
     <p style="white-space: pre-line">
