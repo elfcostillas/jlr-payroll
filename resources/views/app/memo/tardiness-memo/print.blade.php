@@ -47,7 +47,7 @@
 </style>
 <body>
     <div style="top:0;height:68px;width:100%;text-align:center;">
-        <img src="{{ asset('images/header-logo.jpg') }}" style="height:66px;" class="center" >
+        <img src="{{ public_path('images/header-logo.jpg') }}" style="height:66px;" class="center" >
     </div>
 <main>
     <table style="width:100%" border=0 >
