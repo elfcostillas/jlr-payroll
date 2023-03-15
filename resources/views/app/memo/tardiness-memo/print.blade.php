@@ -71,7 +71,7 @@
         <tr>
             <td style="width:80px" >Date</td>
             <td>:</td>
-            <td colspan=6>{{ $memo_date->format('M  d, Y') }}</td>         
+            <td colspan=6>{{ $memo_date->format('F  d, Y') }}</td>         
         </tr>
         <tr>
             <td style="width:80px" >Subject</td>
