@@ -171,12 +171,16 @@ class DailyTimeRecordMapper extends AbstractMapper {
                     ->orderBy('punch_date')
                     ->orderBy('punch_time');
         }else{
+           // $range = $this->model->select('date_from','date_to')->from('payroll_period_weekly')->where('id',$period_id)->first();
+          
             $result = $this->model->select('biometric_id','punch_date','punch_time','cstate')
                     ->from('edtr_raw')
-                    ->where('biometric_id',$biometric_id)
+                   
                     ->join('payroll_period_weekly',function($join){
-                        $join->whereRaw('punch_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
+                         $join->whereRaw('punch_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
+                        //$join->on(DB::raw('punch_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to'));
                     })
+                    ->where('biometric_id',$biometric_id)
                     ->where('payroll_period_weekly.id',$period_id)
                     ->orderBy('punch_date')
                     ->orderBy('punch_time');
@@ -521,7 +525,8 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
     public function mapRawLogs2($dtr_log)
     {
         foreach($dtr_log as $dtr){
-            if($dtr->schedule_id>=5 || $dtr->schedule_id == null || $dtr->schedule_id == 'null' || $dtr->schedule_id == ''  ){
+            // if($dtr->schedule_id>=5 || $dtr->schedule_id == null || $dtr->schedule_id == 'null' || $dtr->schedule_id == ''  ){
+            if($dtr->schedule_id>=5 ){
                 $in =  $this->model->select()
                 ->from('edtr_raw')
                 ->where([
@@ -603,6 +608,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                 }
                 
             }else{
+                /**/
                 $in =  $this->model->select()
                 ->from('edtr_raw')
                 ->where([

@@ -116,6 +116,29 @@ class LeaveReportsMapper extends AbstractMapper {
 
     public function getData($start,$end)
     {
+
+        if($start == '2023-01-01'){
+            $sub_qry = "SELECT employees.biometric_id, tardy_count as late_count,0 as in_minutes FROM employees 
+            INNER JOIN manual_tardy ON employees.biometric_id = manual_tardy.biometric_id
+            WHERE  emp_level >= 3
+            and job_title_id != 12";
+        }
+        else{
+            $sub_qry = " SELECT employees.biometric_id,COUNT(dtr_date) late_count,SUM((TIME_TO_SEC(edtr.time_in)- TIME_TO_SEC(work_schedules.time_in))/60) AS in_minutes FROM edtr 
+            INNER JOIN employees ON edtr.biometric_id = employees.biometric_id
+            INNER JOIN work_schedules ON schedule_id = work_schedules.id
+            INNER JOIN employee_names_vw ON employee_names_vw.biometric_id = edtr.biometric_id
+            AND (
+                (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
+                (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) <= TIME_TO_SEC(work_schedules.time_out) )
+                )
+            AND dtr_date BETWEEN '$start' AND '$end'
+            and emp_level >= 3
+            and job_title_id != 12
+            GROUP BY employees.biometric_id,lastname,firstname
+            ORDER BY lastname,dtr_date";
+        }
+
         $qry = "SELECT employees.biometric_id,IFNULL(sl_count,0) sl_count,IFNULL(vl_count,0) vl_count,IFNULL(el_count,0) el_count,IFNULL(ut_count,0) ut_count,
         IFNULL(bl_count,0) bl_count,IFNULL(mp_count,0) mp_count,IFNULL(o_count,0) o_count,IFNULL(svl_count,0) svl_count,IFNULL(late_count,0) late_count,IFNULL(in_minutes,0) in_minutes
         FROM employees LEFT JOIN 
@@ -193,19 +216,8 @@ class LeaveReportsMapper extends AbstractMapper {
         GROUP BY biometric_id
         ) AS svl ON employees.biometric_id = svl.biometric_id
         LEFT JOIN (
-        SELECT employees.biometric_id,COUNT(dtr_date) late_count,SUM((TIME_TO_SEC(edtr.time_in)- TIME_TO_SEC(work_schedules.time_in))/60) AS in_minutes FROM edtr 
-        INNER JOIN employees ON edtr.biometric_id = employees.biometric_id
-        INNER JOIN work_schedules ON schedule_id = work_schedules.id
-        INNER JOIN employee_names_vw ON employee_names_vw.biometric_id = edtr.biometric_id
-        AND (
-            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
-            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) <= TIME_TO_SEC(work_schedules.time_out) )
-            )
-        AND dtr_date BETWEEN '$start' AND '$end'
-        and emp_level >= 3
-        and job_title_id != 12
-        GROUP BY employees.biometric_id,lastname,firstname
-        ORDER BY lastname,dtr_date) AS tardy ON employees.biometric_id = tardy.biometric_id
+            $sub_qry
+       ) AS tardy ON employees.biometric_id = tardy.biometric_id
         WHERE pay_type != 3";
 
         $result = DB::select($qry);
