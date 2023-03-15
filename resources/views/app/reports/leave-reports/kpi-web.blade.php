@@ -60,6 +60,7 @@
                 @for($i = $index;$i<=$limit;$i++)
                     <td colspan=10>{{ $month[$i] }}</td>
                 @endfor
+                <td colspan="10" >Summary</td>
             </tr>
             <tr>
                 
@@ -75,13 +76,48 @@
                     <td>Other</td>
                     <td>Total Tardy</td>
                 @endfor
+                <td>Tardy</td>
+                    <td>SL</td>
+                    <td>VL</td>
+                    <td>EL</td>
+                    <td>UT</td>
+                    <td>BL</td>
+                    <td>MP</td>
+                    <td>SVL</td>
+                    <td>Other</td>
+                    <td>Total Tardy</td>
             </tr>
             @foreach($div->emp as $emp)
+                <?php
+                    $late_count = 0;
+                    $sl_count = 0;
+                    $vl_count = 0;
+                    $el_count = 0;
+                    $ut_count = 0;
+                    $bl_count = 0;
+                    $mp_count = 0;
+                    $svl_count = 0;
+                    $o_count = 0;
+                    $in_minutes =0;
+                ?>
                 <tr>
                     <td> {{ $ctr++ }} </td>
                     <td> {{ $emp->biometric_id }} </td>
                     <td style="white-space:nowrap"> {{ $emp->employee_name }} </td>
                     @for($i = $index;$i<=$limit;$i++)
+                        <?php
+                            $late_count  +=$tableData[$emp->biometric_id][$i]['late_count'];
+                            $sl_count  +=$tableData[$emp->biometric_id][$i]['sl_count'];
+                            $vl_count  +=$tableData[$emp->biometric_id][$i]['vl_count'];
+                            $el_count  +=$tableData[$emp->biometric_id][$i]['el_count'];
+                            $ut_count  +=$tableData[$emp->biometric_id][$i]['ut_count'];
+                            $bl_count  +=$tableData[$emp->biometric_id][$i]['bl_count'];
+                            $mp_count  +=$tableData[$emp->biometric_id][$i]['mp_count'];
+                            $svl_count  +=$tableData[$emp->biometric_id][$i]['svl_count'];
+                            $o_count  +=$tableData[$emp->biometric_id][$i]['o_count'];
+                            $in_minutes +=$tableData[$emp->biometric_id][$i]['in_minutes'];
+                        ?>
+
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['late_count']) }}</td>
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['sl_count']) }}</td>
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['vl_count']) }}</td>
@@ -94,6 +130,16 @@
                         <td style="white-space:nowrap" >{{ convert($tableData[$emp->biometric_id][$i]['in_minutes']) }}</td>
                        
                     @endfor
+                    <td> {{ nformat($late_count) }} </td>
+                    <td> {{ nformat($sl_count) }} </td>
+                    <td> {{ nformat($vl_count) }} </td>
+                    <td> {{ nformat($el_count) }} </td>
+                    <td> {{ nformat($ut_count) }} </td>
+                    <td> {{ nformat($bl_count) }} </td>
+                    <td> {{ nformat($mp_count) }} </td>
+                    <td> {{ nformat($svl_count) }} </td>
+                    <td> {{ nformat($o_count) }} </td>
+                    <td  style="white-space:nowrap" > {{ nformat(convert($in_minutes)) }} </td>
                 </tr>
             @endforeach
         </table>
