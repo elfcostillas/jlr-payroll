@@ -76,28 +76,50 @@ class LeaveCreditsMapper extends AbstractMapper {
 
     public function process($year,$start,$end)
     {
-        $qry = "SELECT employees.biometric_id,lastname,firstname,suffixname,IFNULL(vacation_leave,0) vacation_leave,IFNULL(sick_leave,0) sick_leave,IFNULL(VL_PAY,0) VL_PAY,IFNULL(SL_PAY,0) SL_PAY FROM leave_credits
-        INNER JOIN employees ON leave_credits.biometric_id = employees.biometric_id
+        $qry = "  SELECT employees.biometric_id,lastname,firstname,suffixname,IFNULL(vacation_leave,0) vacation_leave,IFNULL(sick_leave,0) sick_leave,IFNULL(summer_vacation_leave,0) summer_vacation_leave,IFNULL(paternity_leave,0) paternity_leave,
+        IFNULL(VL_PAY,0) VL_PAY,IFNULL(SL_PAY,0) SL_PAY,IFNULL(SVL_PAY,0) SVL_PAY,IFNULL(MP_PAY,0) MP_PAY
+        FROM employees LEFT JOIN leave_credits ON leave_credits.biometric_id = employees.biometric_id
         LEFT JOIN (
-        SELECT biometric_id,ROUND(SUM(with_pay)/8,2) AS total,
-        CASE
-            WHEN leave_type = 'VL' THEN ROUND(SUM(with_pay)/8,2)
-            ELSE 0
-        END AS VL_PAY,
-        CASE
-            WHEN leave_type = 'SL' THEN ROUND(SUM(with_pay)/8,2)
-            ELSE 0
-        END AS SL_PAY
-        FROM leave_request_header INNER JOIN leave_request_detail ON leave_request_header.id = leave_request_detail.header_id WHERE
-        leave_date BETWEEN '$start' AND '$end'
-        AND with_pay > 0
-        AND is_canceled = 'N'
-        AND leave_type IN ('VL','SL')
-        GROUP BY biometric_id
-        ) AS consumed ON employees.biometric_id = consumed.biometric_id
-        WHERE fy_year = '$year'
-        ORDER BY lastname,firstname";
-
+          SELECT biometric_id,ROUND(SUM(with_pay)/8,2) AS VL_PAY FROM leave_request_header 
+              INNER JOIN leave_request_detail ON leave_request_header.id = header_id
+          WHERE leave_date BETWEEN '$start' AND '$end'
+          AND with_pay > 0
+          AND is_canceled = 'N'
+          AND leave_type = 'VL'
+          AND leave_request_header.received_by IS NOT NULL
+          GROUP BY biometric_id
+      ) AS vl ON employees.biometric_id = vl.biometric_id
+       LEFT JOIN (
+          SELECT biometric_id,ROUND(SUM(with_pay)/8,2) AS SL_PAY FROM leave_request_header 
+              INNER JOIN leave_request_detail ON leave_request_header.id = header_id
+          WHERE leave_date BETWEEN '$start' AND '$end'
+          AND with_pay > 0
+          AND is_canceled = 'N'
+          AND leave_type = 'SL'
+          AND leave_request_header.received_by IS NOT NULL
+          GROUP BY biometric_id
+      ) AS sl ON employees.biometric_id = sl.biometric_id
+      LEFT JOIN (
+          SELECT biometric_id,ROUND(SUM(with_pay)/8,2) AS SVL_PAY FROM leave_request_header 
+              INNER JOIN leave_request_detail ON leave_request_header.id = header_id
+          WHERE leave_date BETWEEN '$start' AND '$end'
+          AND with_pay > 0
+          AND is_canceled = 'N'
+          AND leave_type = 'SVL'
+          AND leave_request_header.received_by IS NOT NULL
+          GROUP BY biometric_id
+      ) AS svl ON employees.biometric_id = svl.biometric_id
+      LEFT JOIN (
+          SELECT biometric_id,ROUND(SUM(with_pay)/8,2) AS MP_PAY FROM leave_request_header 
+              INNER JOIN leave_request_detail ON leave_request_header.id = header_id
+          WHERE leave_date BETWEEN '$start' AND '$end'
+          AND with_pay > 0
+          AND is_canceled = 'N'
+          AND leave_type = 'MP'
+          AND leave_request_header.received_by IS NOT NULL
+          GROUP BY biometric_id
+      ) AS mp ON employees.biometric_id = mp.biometric_id
+        WHERE leave_credits.fy_year = $year;";
 
         $result = DB::select($qry);
 
