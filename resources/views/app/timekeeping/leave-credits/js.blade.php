@@ -166,12 +166,12 @@
                     },
                     {
                         title : 'Vacation Leave',
-                        field : 'vacation_leave',
+                        field :  "# if(vacation_leave==0){#  #} else{# #= vacation_leave #  #}#", 
                         width : 120,
                     },
                     {
                         title : 'Sick Leave',
-                        field : 'sick_leave',
+                        template : "# if(sick_leave==0){#  #} else{# #= sick_leave #  #}#",
                         width : 110,
                     },
                     {
