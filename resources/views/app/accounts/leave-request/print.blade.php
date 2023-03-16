@@ -21,6 +21,7 @@
     $vlc = ($leave_credits) ? $leave_credits->vacation_leave : 0;
     $slc = ($leave_credits) ? $leave_credits->sick_leave : 0;
 
+
 @endphp
 <!DOCTYPE html>
 <html lang="en">
@@ -48,8 +49,9 @@
             <td>S.L.</td>
             <td></td>
         </tr>
-        @if($data!=null)
-       
+      
+        @if(count($data)>0)
+           
         @foreach($data as $row)
             @php
               
@@ -68,10 +70,11 @@
                 
             ?>
             
-
-
         @else
-           
+            <?php
+                $bal_vlwpay = $vlc;
+                $bal_slwpay = $slc;
+            ?>
         @endif
         <tr>
             <td colspan=3>Balance</td>
