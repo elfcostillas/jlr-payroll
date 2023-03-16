@@ -91,7 +91,7 @@
                     <td>{{ $leave_date->format('m/d/Y') }}</td>
                     <td>{{ $row->leave_type }}</td>
                     <td>{{ $row->remarks }}</td>
-                    <td>{{ ($row->leave_type=='VL') ? nformat($row->with_pay) : 0 }}</td>
+                    <td>{{ ($row->leave_type=='VL' || $row->leave_type=='EL') ? nformat($row->with_pay) : 0 }}</td>
                     <td>{{ ($row->leave_type=='SL') ? nformat($row->with_pay) : 0 }}</td>
                     <td>{{ nformat($row->without_pay) }}</td>
                 </tr>
