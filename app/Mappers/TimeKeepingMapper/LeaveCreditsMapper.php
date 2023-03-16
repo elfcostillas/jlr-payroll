@@ -85,7 +85,7 @@ class LeaveCreditsMapper extends AbstractMapper {
           WHERE leave_date BETWEEN '$start' AND '$end'
           AND with_pay > 0
           AND is_canceled = 'N'
-          AND leave_type = 'VL'
+          AND leave_type in ('VL','EL')
           AND leave_request_header.received_by IS NOT NULL
           GROUP BY biometric_id
       ) AS vl ON employees.biometric_id = vl.biometric_id
