@@ -143,9 +143,7 @@ class ManageDTRController extends Controller
         $period_id = $request->period_id;
         foreach($result as $bio_id)
         {
-        //    dd($bio_id);
-
-             
+      
             $dtr = $this->mapper->getSemiDTR($bio_id->biometric_id,$period_id);
             $this->mapper->mapRawLogs2($dtr);
 
