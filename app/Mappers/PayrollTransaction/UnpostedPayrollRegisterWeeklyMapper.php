@@ -18,7 +18,7 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
 
     public function compute($period_id)
     {
-
+        /*
         $result = DB::select("SELECT m.biometric_id,m.period_id,e.basic_salary,SUM(reg_day) AS n_days,SUM(overtime_hrs) n_ot,name_vw.employee_name,IFNULL(earnings,0.00) earnings,IFNULL(deductions,0.00) deductions
         FROM manual_dtr m 
         INNER JOIN manual_dtr_details d ON m.id = d.header_id
@@ -27,6 +27,18 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         LEFT JOIN unposted_weekly_compensation AS comp ON m.biometric_id = comp.biometric_id AND m.period_id = comp.period_id
         WHERE m.period_id = $period_id
         GROUP BY m.biometric_id,m.period_id,e.basic_salary,name_vw.employee_name,e.lastname,e.firstname,earnings,deductions
+        ORDER BY e.lastname,e.firstname;");
+        */
+        $result = DB::select("SELECT m.biometric_id,o.id AS period_id,e.basic_salary,SUM(ndays) AS n_days,SUM(over_time) n_ot,name_vw.employee_name,IFNULL(earnings,0.00) earnings,IFNULL(deductions,0.00) deductions
+        FROM edtr m
+        INNER JOIN payroll_period_weekly o ON m.dtr_date BETWEEN o.date_from AND o.date_to
+        INNER JOIN employee_names_vw AS name_vw ON m.biometric_id = name_vw.biometric_id
+        INNER JOIN employees AS e ON m.biometric_id = e.biometric_id
+        LEFT JOIN unposted_weekly_compensation AS comp ON m.biometric_id = comp.biometric_id AND o.id = comp.period_id
+        WHERE o.id =  $period_id
+        AND e.exit_status = 1
+        AND e.pay_type = 3
+        GROUP BY m.biometric_id,o.id,e.basic_salary,name_vw.employee_name,e.lastname,e.firstname,earnings,deductions
         ORDER BY e.lastname,e.firstname;");
 
         $tmp_payreg = [];

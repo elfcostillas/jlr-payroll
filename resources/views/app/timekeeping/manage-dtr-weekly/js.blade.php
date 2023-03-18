@@ -3,6 +3,9 @@
     <button class="k-grid-save-changes k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="events: { click: buttonHandler.drawLogs }">
         </span>&nbsp; Draw Logs
     </button>
+    <button class="k-grid-save-changes k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="events: { click: buttonHandler.compute }">
+        </span>&nbsp; Compute
+    </button>
 </script>	
     <script>
         $(document).ready(function(){
@@ -211,7 +214,17 @@
                         },function(){
                             viewModel.ds.dtrgrid.read();
                         });
-                    }
+                    },
+                    compute : function()
+                    {
+                        
+                        $.post('manage-dtr-weekly/compute-logs',{
+                            period_id : viewModel.selectedPeriod.id,
+                            biometric_id : viewModel.selectedEmployee
+                        },function(){
+                            viewModel.ds.dtrgrid.read();
+                        });
+                    },
                 },
                 functions : {
                     showPop : function(data)
@@ -342,6 +355,7 @@
                 //height : 550,
                 scrollable: true,
                 selectable : true,
+                navigatable :true,
                 toolbar : [
                     {
                         name : 'save'
@@ -449,6 +463,22 @@
                             
                         },
                         template : "# if(late_eq==0){#  #} else{# #= late_eq #  #}#",
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center"
+                            
+                        },
+                        aggregates : ['sum'], 
+                        footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+                    },
+                    {
+                        title : "Day(s)",
+                        field : "ndays",
+                        width : 70,
+                         attributes: {
+                            style: "font-size: 9pt;text-align:center"
+                            
+                        },
+                        template : "# if(ndays==0){#  #} else{# #= ndays #  #}#",
                         headerAttributes: {
                             style: "font-size: 9pt;text-align:center"
                             
