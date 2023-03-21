@@ -88,6 +88,66 @@
                         <tr>
                             <td colspan={{$colspan}}  class="division"> {{ $division->div_name }} </td>
                         </tr>
+                        <?php 
+                          
+                                $divTotal['basic_salary'] = 0;
+                                $divTotal['daily_rate'] = 0;
+
+                                $divTotal['mallowance'] = 0;
+                                $divTotal['dallowance'] = 0;
+
+                                $divTotal['ndays'] = 0;
+                                $divTotal['basic_pay'] = 0;
+                                $divTotal['daily_allowance'] = 0;
+                                $divTotal['semi_monthly_allowance'] = 0;
+
+                                $divTotal['late_eq'] = 0;
+                                $divTotal['late_eq_amount'] = 0;
+                                $divTotal['under_time'] = 0;
+                                $divTotal['under_time_amount'] = 0;
+
+                                $divTotal['vl_wpay'] = 0;
+                                $divTotal['vl_wpay_amount'] = 0;
+                                $divTotal['sl_wpay'] = 0;
+                                $divTotal['sl_wpay_amount'] = 0;
+                                $divTotal['bl_wpay'] = 0;
+                                $divTotal['bl_wpay_amount'] = 0;
+                                $divTotal['absences'] = 0;
+                                $divTotal['absences_amount'] = 0;
+
+                                $divTotal['gross_pay'] = 0;
+                                $divTotal['gross_total'] = 0;
+
+                                foreach($headers as $key => $val)
+                                {
+                                    $deptDIV[$key] = 0;
+                                }
+
+                                foreach($compensation as $comp)
+                                {
+                                    $deptCompDIV[$comp->id] = 0;
+                                }
+
+                                $divTotal['sss'] = 0;
+                                $divTotal['wisp'] = 0;
+                                $divTotal['phic'] = 0;
+                                $divTotal['hdmf'] = 0;
+
+                                foreach($govLoan as $gkey => $glabel)
+                                {
+                                    $govDedDIV[$glabel->id] = 0;
+                                }
+                                
+                                foreach($deductionLabel as $key => $label)
+                                {
+                                    $compDedDIV[$label->id] = 0;
+                                }
+
+                                $divTotal['total_deduction'] = 0;
+                                $divTotal['net_pay'] = 0;
+                                            
+                            ?>
+                        
                         @foreach($division->departments as $department)
                             <tr>
                                 <td colspan={{$colspan}}  class="department"> {{ $department->dept_name }} </td>
@@ -95,33 +155,33 @@
                             <?php 
                                 $ctr = 1;
 
-                                $dept['basic_salary'] = 0;
+                                $dept['basic_salary'] = 0; 
                                 $dept['daily_rate'] = 0;
 
                                 $dept['mallowance'] = 0;
                                 $dept['dallowance'] = 0;
 
-                                $dept['ndays'] = 0;
-                                $dept['basic_pay'] = 0;
-                                $dept['daily_allowance'] = 0;
-                                $dept['semi_monthly_allowance'] = 0;
+                                $dept['ndays'] = 0; 
+                                $dept['basic_pay'] = 0; 
+                                $dept['daily_allowance'] = 0; 
+                                $dept['semi_monthly_allowance'] = 0; 
 
                                 $dept['late_eq'] = 0;
-                                $dept['late_eq_amount'] = 0;
+                                $dept['late_eq_amount'] = 0; 
                                 $dept['under_time'] = 0;
                                 $dept['under_time_amount'] = 0;
 
                                 $dept['vl_wpay'] = 0;
-                                $dept['vl_wpay_amount'] = 0;
-                                $dept['sl_wpay'] = 0;
-                                $dept['sl_wpay_amount'] = 0;
+                                $dept['vl_wpay_amount'] = 0; 
+                                $dept['sl_wpay'] = 0; 
+                                $dept['sl_wpay_amount'] = 0; 
                                 $dept['bl_wpay'] = 0;
                                 $dept['bl_wpay_amount'] = 0;
-                                $dept['absences_amount'] = 0;
+                                $dept['absences'] = 0; 
                                 $dept['absences_amount'] = 0;
 
-                                $dept['gross_pay'] = 0 ;
-                                $dept['gross_total'] = 0 ;
+                                $dept['gross_pay'] = 0; 
+                                $dept['gross_total'] = 0;
 
                                 foreach($headers as $key => $val)
                                 {
@@ -133,10 +193,10 @@
                                     $deptComp[$comp->id] = 0;
                                 }
 
-                                $dept['sss'] = 0;
-                                $dept['wisp'] = 0;
-                                $dept['phic'] = 0;
-                                $dept['hdmf'] = 0;
+                                $dept['sss'] = 0; 
+                                $dept['wisp'] = 0; 
+                                $dept['phic'] = 0; 
+                                $dept['hdmf'] = 0; 
 
                                 foreach($govLoan as $gkey => $glabel)
                                 {
@@ -148,8 +208,8 @@
                                     $compDed[$label->id] = 0;
                                 }
 
-                                $dept['total_deduction'] = 0;
-                                $dept['net_pay'] = 0;
+                                $dept['total_deduction'] = 0; 
+                                $dept['net_pay'] = 0; 
                                             
                             ?>
                             @foreach($department->employees as $employee)
@@ -173,13 +233,11 @@
                                     $dept['sl_wpay_amount'] += $employee->sl_wpay_amount;
                                     $dept['bl_wpay'] += $employee->bl_wpay;
                                     $dept['bl_wpay_amount'] += $employee->bl_wpay_amount;
+                                    $dept['absences'] += $employee->absences;
                                     $dept['absences_amount'] += $employee->absences_amount;
 
                                     $dept['gross_pay'] += $employee->gross_pay;
                                     $dept['gross_total'] += $employee->gross_total;
-
-                                    $dept['absences_amount'] += $employee->absences_amount;
-                                    $dept['absences_amount'] += $employee->absences_amount;
 
                                     foreach($headers as $key => $val)
                                     {
@@ -208,6 +266,61 @@
 
                                     $dept['total_deduction'] += $employee->total_deduction;
                                     $dept['net_pay'] += $employee->net_pay;
+
+                                    $divTotal['basic_salary'] += $employee->basic_salary;
+                                    $divTotal['daily_rate'] += $employee->daily_rate;
+                                    $divTotal['mallowance'] += $employee->mallowance;
+                                    $divTotal['dallowance'] += $employee->dallowance;
+                                    $divTotal['ndays'] += $employee->ndays;
+                                    $divTotal['basic_pay'] += $employee->basic_pay;
+                                    $divTotal['daily_allowance'] += $employee->daily_allowance;
+                                    $divTotal['semi_monthly_allowance'] += $employee->semi_monthly_allowance;
+                                    $divTotal['late_eq'] += $employee->late_eq;
+                                    $divTotal['late_eq_amount'] += $employee->late_eq_amount;
+                                    $divTotal['under_time'] += $employee->under_time;
+                                    $divTotal['under_time_amount'] += $employee->under_time_amount;
+                                    $divTotal['vl_wpay'] += $employee->vl_wpay;
+                                    $divTotal['vl_wpay_amount'] += $employee->vl_wpay_amount;
+                                    $divTotal['sl_wpay'] += $employee->sl_wpay;
+                                    $divTotal['sl_wpay_amount'] += $employee->sl_wpay_amount;
+                                    $divTotal['bl_wpay'] += $employee->bl_wpay;
+                                    $divTotal['bl_wpay_amount'] += $employee->bl_wpay_amount;
+                                    $divTotal['absences'] += $employee->absences;
+                                    $divTotal['absences_amount'] += $employee->absences_amount;
+                                    $divTotal['gross_pay'] += $employee->gross_pay;
+                                    $divTotal['gross_total'] += $employee->gross_total;
+
+                                    foreach($headers as $key => $val)
+                                    {
+                                        $deptDIV[$key] += $employee->{$key};
+                                    }
+
+                                    foreach($compensation as $comp)
+                                    {
+                                        $deptCompDIV[$comp->id]  += (array_key_exists($comp->id,$employee->otherEarnings)) ? $employee->otherEarnings[$comp->id] : 0;
+                                    }
+
+                                    $divTotal['sss'] += $employee->gov_deductions['SSS Premium'];
+                                    $divTotal['wisp'] += $employee->gov_deductions['SSS WISP'];
+                                    $divTotal['phic'] += $employee->gov_deductions['PhilHealt Premium'];
+                                    $divTotal['hdmf'] += $employee->gov_deductions['PAG IBIG Contri'];
+
+                                    $dept['total_deduction'] += $employee->total_deduction;
+                                    $dept['net_pay'] += $employee->net_pay;
+
+                                    foreach($govLoan as $gkey => $glabel)
+                                    {
+                                        $govDedDIV[$glabel->id] += (array_key_exists($glabel->id,$employee->loans)) ? $employee->loans[$glabel->id] : 0;
+                                    }
+                                    
+                                    foreach($deductionLabel as $key => $label)
+                                    {
+                                        $compDedDIV[$label->id] +=(array_key_exists($label->id,$employee->deductions)) ? $employee->deductions[$label->id] : 0;
+                                    }
+
+                                    $divTotal['total_deduction'] += $employee->total_deduction;
+                                    $divTotal['net_pay'] += $employee->net_pay;
+
                                 ?>
                               
                                 <tr >
