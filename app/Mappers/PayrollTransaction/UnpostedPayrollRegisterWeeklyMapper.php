@@ -76,17 +76,63 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
 
     public function showComputed($period_id)
     {
-        $result = DB::select("SELECT name_vw.employee_name,m.* FROM payrollregister_unposted_weekly AS m
-        INNER JOIN employee_names_vw AS name_vw ON m.biometric_id = name_vw.biometric_id
-        INNER JOIN employees AS e ON m.biometric_id = e.biometric_id
-        WHERE m.period_id  = $period_id
-        ORDER BY e.lastname,e.firstname");
+        $division = $this->model->select('division_id','div_name')->from('employees')
+                    ->join('divisions','divisions.id','=','employees.division_id')
+                    ->where('exit_status',1)
+                    ->where('pay_type',3)
+                    ->orderBy('division_id','asc')
+                    ->distinct()
+                    ->get();
+        
+        foreach($division as $idiv)
+        {
+            $department = $this->model->select('departments.id','dept_name')->from('employees')
+                ->join('departments','departments.id','=','employees.dept_id')
+                ->where('exit_status',1)
+                ->where('pay_type',3)
+                ->where('employees.division_id',$idiv->division_id)
+                ->distinct()
+                ->get();
 
-        return $result;
+            $idiv->dept = $department;
+            
+            foreach($department as $dept)
+            {
+                $employees = DB::select("SELECT name_vw.employee_name,m.* FROM payrollregister_unposted_weekly AS m
+                INNER JOIN employee_names_vw AS name_vw ON m.biometric_id = name_vw.biometric_id
+                INNER JOIN employees AS e ON m.biometric_id = e.biometric_id
+                WHERE m.period_id  = $period_id AND e.division_id = $idiv->division_id AND e.dept_id = $dept->id
+                ORDER BY e.lastname,e.firstname");
+
+                $dept->employees = $employees;
+            }
+        }
+
+
+
+        // $result = DB::select("SELECT name_vw.employee_name,m.* FROM payrollregister_unposted_weekly AS m
+        // INNER JOIN employee_names_vw AS name_vw ON m.biometric_id = name_vw.biometric_id
+        // INNER JOIN employees AS e ON m.biometric_id = e.biometric_id
+        // WHERE m.period_id  = $period_id
+        // ORDER BY e.lastname,e.firstname");
+
+        return $division;
     }
 }
 
 /*
+
+SELECT DISTINCT departments.id,dept_name FROM employees 
+INNER JOIN departments ON departments.id = employees.dept_id
+WHERE exit_status = 1 AND pay_type = 3 AND employees.division_id = 1 
+ORDER BY dept_id; 
+
+
+SELECT DISTINCT division_id,div_name FROM employees 
+INNER JOIN divisions ON divisions.id = employees.division_id
+WHERE exit_status = 1 AND pay_type = 3 ORDER BY division_id; 
+
+
   +"biometric_id": "491"
   +"basic_salary": "435.00"
   +"n_days": "6"

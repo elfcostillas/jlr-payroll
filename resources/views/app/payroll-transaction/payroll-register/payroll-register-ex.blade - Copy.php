@@ -16,14 +16,13 @@
 <body>
  
     <?php
-        $colspan=25;
+        $colspan=24;
       
     ?>
     <div id="" >
         <table style="border-collapse:collapse;white-space:nowrap;" border=1 >
             <thead>
-                <tr>    
-                        <td> No. </td>
+                <tr>
                         <td  > Bio ID</td>
                         <td  >Name</td>
                         <td >Basic Rate</td>
@@ -92,11 +91,9 @@
                             <tr>
                                 <td colspan={{$colspan}}  class="department"> {{ $department->dept_name }} </td>
                             </tr>
-                            <?php $ctr = 1; ?>
                             @foreach($department->employees as $employee)
                               
                                 <tr >
-                                    <td> {{ $ctr++ }} </td>
                                     <td> {{ $employee->biometric_id }} </td> 
                                     <td > {{ $employee->employee_name }} </td> 
                                     <td > {{ $employee->basic_salary }}</td>
@@ -135,7 +132,7 @@
                                     @endforeach
                                         <td>{{ ($employee->gross_pay > 0) ? $employee->gross_pay : '' }}</td>
                                     @foreach($compensation as $comp)
-                                        <td  > {{ (array_key_exists($comp->id,$employee->otderEarnings)) ? $employee->otderEarnings[$comp->id] : ''; }}</td>
+                                        <td  > {{ (array_key_exists($comp->id,$employee->otherEarnings)) ? $employee->otherEarnings[$comp->id] : ''; }}</td>
                                        
                                     @endforeach
                                         <td >{{ ($employee->gross_total>0) ? $employee->gross_total : ''; }}</td>
