@@ -222,6 +222,31 @@
                             //viewModel.maingrid.ds.read();
                         });
                     },
+
+                    saveAsNew: async function(e){
+                        
+                        await viewModel.functions.reAssignValues(); 
+
+                        viewModel.form.model.set('id',null);
+                        var json_data = JSON.stringify(viewModel.form.model);
+
+                        $.post('tardiness-to-employee/save',{
+                            data : json_data
+                        },function(data,staus){
+                            swal_success(data);
+
+                            let url  = `tardiness-to-employee/read/${data}`;
+                            read(url,viewModel);
+
+                            viewModel.ds.maingrid.read();
+                            //viewModel.maingrid.formReload(data);
+                        })
+                        .fail(function(data){
+                        swal_error(data);
+                        }).always(function() {
+                            //viewModel.maingrid.ds.read();
+                        });
+                    },
                     clear : function(e){
                         // viewModel.form.model.set('id',null);
                         // viewModel.form.model.set('remarks',null);
@@ -322,6 +347,7 @@
                     { id : 'saveBtn', type: "button", text: "Save", icon: 'save', click : viewModel.buttonHandler.save },
                     { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
                     { id : 'clearBtn', type: "button", text: "Print", icon: 'print', click : viewModel.buttonHandler.print },
+                    { id : 'saveBtn', type: "button", text: "Save as New", icon: 'save', click : viewModel.buttonHandler.saveAsNew },
                 ]
             });
 
