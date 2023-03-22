@@ -83,71 +83,12 @@
                         <td >Net Pay</td>
                 </tr>
             </thead>
-            <?php 
-                            
-                $overALL['basic_salary'] = 0;
-                $overALL['daily_rate'] = 0;
-
-                $overALL['mallowance'] = 0;
-                $overALL['dallowance'] = 0;
-
-                $overALL['ndays'] = 0;
-                $overALL['basic_pay'] = 0;
-                $overALL['daily_allowance'] = 0;
-                $overALL['semi_monthly_allowance'] = 0;
-
-                $overALL['late_eq'] = 0;
-                $overALL['late_eq_amount'] = 0;
-                $overALL['under_time'] = 0;
-                $overALL['under_time_amount'] = 0;
-
-                $overALL['vl_wpay'] = 0;
-                $overALL['vl_wpay_amount'] = 0;
-                $overALL['sl_wpay'] = 0;
-                $overALL['sl_wpay_amount'] = 0;
-                $overALL['bl_wpay'] = 0;
-                $overALL['bl_wpay_amount'] = 0;
-                $overALL['absences'] = 0;
-                $overALL['absences_amount'] = 0;
-
-                $overALL['gross_pay'] = 0;
-                $overALL['gross_total'] = 0;
-
-                foreach($headers as $key => $val)
-                {
-                    $deptDIVALL[$key] = 0;
-                }
-
-                foreach($compensation as $comp)
-                {
-                    $deptCompDIVALL[$comp->id] = 0;
-                }
-
-                $overALL['sss'] = 0;
-                $overALL['wisp'] = 0;
-                $overALL['phic'] = 0;
-                $overALL['hdmf'] = 0;
-
-                foreach($govLoan as $gkey => $glabel)
-                {
-                    $govDedDIVALL[$glabel->id] = 0;
-                }
-                
-                foreach($deductionLabel as $key => $label)
-                {
-                    $compDedDIVALL[$label->id] = 0;
-                }
-
-                $overALL['total_deduction'] = 0;
-                $overALL['net_pay'] = 0;
-                            
-            ?>
 
                     @foreach($data as $division)  
                         <tr>
                             <td colspan={{$colspan}}  class="division"> {{ $division->div_name }} </td>
                         </tr>
-                            <?php 
+                        <?php 
                           
                                 $divTotal['basic_salary'] = 0;
                                 $divTotal['daily_rate'] = 0;
@@ -326,8 +267,6 @@
                                     $dept['total_deduction'] += $employee->total_deduction;
                                     $dept['net_pay'] += $employee->net_pay;
 
-                                    /* Per DIVISION */
-
                                     $divTotal['basic_salary'] += $employee->basic_salary;
                                     $divTotal['daily_rate'] += $employee->daily_rate;
                                     $divTotal['mallowance'] += $employee->mallowance;
@@ -366,8 +305,8 @@
                                     $divTotal['phic'] += $employee->gov_deductions['PhilHealt Premium'];
                                     $divTotal['hdmf'] += $employee->gov_deductions['PAG IBIG Contri'];
 
-                                    $divTotal['total_deduction'] += $employee->total_deduction;
-                                    $divTotal['net_pay'] += $employee->net_pay;
+                                    $dept['total_deduction'] += $employee->total_deduction;
+                                    $dept['net_pay'] += $employee->net_pay;
 
                                     foreach($govLoan as $gkey => $glabel)
                                     {
@@ -381,62 +320,6 @@
 
                                     $divTotal['total_deduction'] += $employee->total_deduction;
                                     $divTotal['net_pay'] += $employee->net_pay;
-
-                                    /* Over ALL Total*/
-
-                                    $overALL['basic_salary'] += $employee->basic_salary;
-                                    $overALL['daily_rate'] += $employee->daily_rate;
-                                    $overALL['mallowance'] += $employee->mallowance;
-                                    $overALL['dallowance'] += $employee->dallowance;
-                                    $overALL['ndays'] += $employee->ndays;
-                                    $overALL['basic_pay'] += $employee->basic_pay;
-                                    $overALL['daily_allowance'] += $employee->daily_allowance;
-                                    $overALL['semi_monthly_allowance'] += $employee->semi_monthly_allowance;
-                                    $overALL['late_eq'] += $employee->late_eq;
-                                    $overALL['late_eq_amount'] += $employee->late_eq_amount;
-                                    $overALL['under_time'] += $employee->under_time;
-                                    $overALL['under_time_amount'] += $employee->under_time_amount;
-                                    $overALL['vl_wpay'] += $employee->vl_wpay;
-                                    $overALL['vl_wpay_amount'] += $employee->vl_wpay_amount;
-                                    $overALL['sl_wpay'] += $employee->sl_wpay;
-                                    $overALL['sl_wpay_amount'] += $employee->sl_wpay_amount;
-                                    $overALL['bl_wpay'] += $employee->bl_wpay;
-                                    $overALL['bl_wpay_amount'] += $employee->bl_wpay_amount;
-                                    $overALL['absences'] += $employee->absences;
-                                    $overALL['absences_amount'] += $employee->absences_amount;
-                                    $overALL['gross_pay'] += $employee->gross_pay;
-                                    $overALL['gross_total'] += $employee->gross_total;
-
-                                    foreach($headers as $key => $val)
-                                    {
-                                        $deptDIVALL[$key] += $employee->{$key};
-                                    }
-
-                                    foreach($compensation as $comp)
-                                    {
-                                        $deptCompDIVALL[$comp->id]  += (array_key_exists($comp->id,$employee->otherEarnings)) ? $employee->otherEarnings[$comp->id] : 0;
-                                    }
-
-                                    $overALL['sss'] += $employee->gov_deductions['SSS Premium'];
-                                    $overALL['wisp'] += $employee->gov_deductions['SSS WISP'];
-                                    $overALL['phic'] += $employee->gov_deductions['PhilHealt Premium'];
-                                    $overALL['hdmf'] += $employee->gov_deductions['PAG IBIG Contri'];
-
-                                    $overALL['total_deduction'] += $employee->total_deduction;
-                                    $overALL['net_pay'] += $employee->net_pay;
-
-                                    foreach($govLoan as $gkey => $glabel)
-                                    {
-                                        $govDedDIVALL[$glabel->id] += (array_key_exists($glabel->id,$employee->loans)) ? $employee->loans[$glabel->id] : 0;
-                                    }
-                                    
-                                    foreach($deductionLabel as $key => $label)
-                                    {
-                                        $compDedDIVALL[$label->id] +=(array_key_exists($label->id,$employee->deductions)) ? $employee->deductions[$label->id] : 0;
-                                    }
-
-                                    $overALL['total_deduction'] += $employee->total_deduction;
-                                    $overALL['net_pay'] += $employee->net_pay;
 
                                 ?>
                               
@@ -602,53 +485,7 @@
                             <td></td>
                         </tr>
                     @endforeach
-                    <tr>
-                        <td>OVER ALL TOTAL</td>
-                        <td></td>
-                        <td></td>
-                        <td>{{ $overALL['basic_salary']}}</td>
-                        <td>{{ $overALL['daily_rate'] }}</td>
-                        <td>{{ $overALL['mallowance'] }}</td>
-                        <td>{{ $overALL['dallowance'] }}</td>
-                        <td>{{ $overALL['ndays'] }}</td>
-                        <td>{{ $overALL['basic_pay'] }}</td>
-                        <td>{{ $overALL['daily_allowance'] }}</td>
-                        <td>{{ $overALL['semi_monthly_allowance'] }}</td>
-                        <td>{{ $overALL['late_eq'] }}</td>
-                        <td>{{ $overALL['late_eq_amount'] }}</td>
-                        <td>{{ $overALL['under_time'] }}</td>
-                        <td>{{ $overALL['under_time_amount'] }}</td>
-                        <td>{{ $overALL['vl_wpay'] }}</td>
-                        <td>{{ $overALL['vl_wpay_amount'] }}</td>
-                        <td>{{ $overALL['sl_wpay'] }}</td>
-                        <td>{{ $overALL['sl_wpay_amount'] }}</td>
-                        <td>{{ $overALL['bl_wpay'] }}</td>
-                        <td>{{ $overALL['bl_wpay_amount'] }}</td>
-                        <td>{{ $overALL['absences_amount'] }}</td>
-                        <td>{{ $overALL['absences_amount'] }}</td>
-                        @foreach($headers as $key => $val)
-                           <td> {{ $deptDIVALL[$key] }} </td>
-                        @endforeach
-                        <td>{{ $overALL['gross_pay'] }}</td>
-                        @foreach($compensation as $comp)
-                            <td> {{ $deptCompDIVALL[$comp->id] }} </td>   
-                        @endforeach
-                        <td>{{ $overALL['gross_total'] }}</td>
-
-                        <td>{{ $overALL['sss'] }}</td>
-                        <td>{{ $overALL['wisp'] }}</td>
-                        <td>{{ $overALL['phic'] }}</td>
-                        <td>{{ $overALL['hdmf'] }}</td>
-                        @foreach($govLoan as $gkey => $glabel)
-                            <td  >{{ $govDedDIVALL[$glabel->id] }}</td>
-                        @endforeach
-
-                        @foreach($deductionLabel as $key => $label)
-                            <td  >{{ $compDedDIVALL[$label->id] }}</td>
-                        @endforeach
-                            <td>{{ $overALL['total_deduction'] }}</td>
-                            <td>{{ $overALL['net_pay'] }}</td>
-                    </tr>
+           
         </table>
         @if(count($no_pay)>0)
         <table>
