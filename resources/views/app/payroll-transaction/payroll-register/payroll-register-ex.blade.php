@@ -361,14 +361,6 @@
                                         $deptCompDIV[$comp->id]  += (array_key_exists($comp->id,$employee->otherEarnings)) ? $employee->otherEarnings[$comp->id] : 0;
                                     }
 
-                                    $divTotal['sss'] += $employee->gov_deductions['SSS Premium'];
-                                    $divTotal['wisp'] += $employee->gov_deductions['SSS WISP'];
-                                    $divTotal['phic'] += $employee->gov_deductions['PhilHealt Premium'];
-                                    $divTotal['hdmf'] += $employee->gov_deductions['PAG IBIG Contri'];
-
-                                    $divTotal['total_deduction'] += $employee->total_deduction;
-                                    $divTotal['net_pay'] += $employee->net_pay;
-
                                     foreach($govLoan as $gkey => $glabel)
                                     {
                                         $govDedDIV[$glabel->id] += (array_key_exists($glabel->id,$employee->loans)) ? $employee->loans[$glabel->id] : 0;
@@ -378,6 +370,11 @@
                                     {
                                         $compDedDIV[$label->id] +=(array_key_exists($label->id,$employee->deductions)) ? $employee->deductions[$label->id] : 0;
                                     }
+
+                                    $divTotal['sss'] += $employee->gov_deductions['SSS Premium'];
+                                    $divTotal['wisp'] += $employee->gov_deductions['SSS WISP'];
+                                    $divTotal['phic'] += $employee->gov_deductions['PhilHealt Premium'];
+                                    $divTotal['hdmf'] += $employee->gov_deductions['PAG IBIG Contri'];
 
                                     $divTotal['total_deduction'] += $employee->total_deduction;
                                     $divTotal['net_pay'] += $employee->net_pay;
@@ -417,14 +414,6 @@
                                         $deptCompDIVALL[$comp->id]  += (array_key_exists($comp->id,$employee->otherEarnings)) ? $employee->otherEarnings[$comp->id] : 0;
                                     }
 
-                                    $overALL['sss'] += $employee->gov_deductions['SSS Premium'];
-                                    $overALL['wisp'] += $employee->gov_deductions['SSS WISP'];
-                                    $overALL['phic'] += $employee->gov_deductions['PhilHealt Premium'];
-                                    $overALL['hdmf'] += $employee->gov_deductions['PAG IBIG Contri'];
-
-                                    $overALL['total_deduction'] += $employee->total_deduction;
-                                    $overALL['net_pay'] += $employee->net_pay;
-
                                     foreach($govLoan as $gkey => $glabel)
                                     {
                                         $govDedDIVALL[$glabel->id] += (array_key_exists($glabel->id,$employee->loans)) ? $employee->loans[$glabel->id] : 0;
@@ -435,9 +424,15 @@
                                         $compDedDIVALL[$label->id] +=(array_key_exists($label->id,$employee->deductions)) ? $employee->deductions[$label->id] : 0;
                                     }
 
+                                    $overALL['sss'] += $employee->gov_deductions['SSS Premium'];
+                                    $overALL['wisp'] += $employee->gov_deductions['SSS WISP'];
+                                    $overALL['phic'] += $employee->gov_deductions['PhilHealt Premium'];
+                                    $overALL['hdmf'] += $employee->gov_deductions['PAG IBIG Contri'];
+
                                     $overALL['total_deduction'] += $employee->total_deduction;
                                     $overALL['net_pay'] += $employee->net_pay;
 
+                                   
                                 ?>
                               
                                 <tr >
