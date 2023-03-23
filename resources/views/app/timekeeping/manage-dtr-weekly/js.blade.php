@@ -122,7 +122,9 @@
                                     night_diff : { type:'number', },
                                     schedule_id : { type:'number', },
                                     schedule_desc : { type: 'string' },
-                                    ndays: { type:'number', },
+                                    ndays : { type:'number', },
+                                    restday_hrs : { type:'number', },
+                                    reghol_hrs : { type:'number', }
                                 }
                             }
                         },
@@ -133,6 +135,8 @@
                             { field : "over_time" , aggregate: "sum" },
                             { field : "night_diff" , aggregate: "sum" },
                             { field : "ndays" , aggregate: "sum" },
+                            { field : "restday_hrs" , aggregate: "sum" },
+                            { field : "reghol_hrs" , aggregate: "sum" },
                            
                         ]
                     }),
@@ -371,7 +375,7 @@
                     {
                         title : "Day",
                         field : "day_name",
-                        width : 60,
+                        width : 50,
                          attributes: {
                             style: "font-size: 9pt"
                         },
@@ -383,7 +387,7 @@
                         title : "Date",
                         field : "dtr_date",
                         template : "#= (data.dtr_date) ? kendo.toString(data.dtr_date,'MM/dd/yyyy') : ''  #",
-                        width : 90,
+                        width : 75,
                          attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -401,7 +405,7 @@
                         //template : "#= schedule_desc #",  #=data.schedule_id #
                         //template : "#= if(data.schedule_desc==null) #"
                        
-                        width : 100,
+                        width : 90,
                          attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -415,7 +419,7 @@
                     {
                         title : "Time In",
                         field : "time_in",
-                        width : 90,
+                        width : 70,
                          attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -428,7 +432,7 @@
                     {
                         title : "Time Out",
                         field : "time_out",
-                        width : 90,
+                        width : 70,
                          attributes: {
                             style: "font-size: 9pt;text-align:center"
                             
@@ -438,26 +442,26 @@
                             
                         }    
                     },
-                    {
-                        title : "Late",
-                        field : "late",
-                        width : 60,
-                         attributes: {
-                            style: "font-size: 9pt;text-align:center"
+                    // {
+                    //     title : "Late",
+                    //     field : "late",
+                    //     width : 60,
+                    //      attributes: {
+                    //         style: "font-size: 9pt;text-align:center"
                             
-                        },
-                        template : "# if(late==0){#  #} else{# #= late #  #}#",
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center"
+                    //     },
+                    //     template : "# if(late==0){#  #} else{# #= late #  #}#",
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center"
                             
-                        },
-                        aggregates : ['sum'], 
-                        footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n0')#</div>" 
-                    },
+                    //     },
+                    //     aggregates : ['sum'], 
+                    //     footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n0')#</div>" 
+                    // },
                     {
                         title : "Late(Hrs)",
                         field : "late_eq",
-                        width : 70,
+                        width : 65,
                          attributes: {
                             style: "font-size: 9pt;text-align:center"
                             
@@ -473,7 +477,7 @@
                     {
                         title : "Day(s)",
                         field : "ndays",
-                        width : 70,
+                        width : 60,
                          attributes: {
                             style: "font-size: 9pt;text-align:center"
                             
@@ -489,7 +493,7 @@
                     {
                         title : "OT",
                         field : "over_time",
-                        width : 45,
+                        width : 60,
                          attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -505,7 +509,7 @@
                     {
                         title : "UT",
                         field : "under_time",
-                        width : 45,
+                        width : 60,
                         attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -518,15 +522,32 @@
                         aggregates : ['sum'], 
                         footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
                     },
+                    // {
+                    //     title : "ND",
+                    //     field : "night_diff",
+                    //     width : 45, 
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
+                            
+                    //     },
+                    //     template : "# if(night_diff==0){#  #} else{# #= night_diff #  #}#",
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
+                            
+                    //     },
+                    //     aggregates : ['sum'], 
+                    //     footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+
+                    // },
                     {
-                        title : "ND",
-                        field : "night_diff",
-                        width : 45, 
+                        title : "SOT",
+                        field : "restday_hrs",
+                        width : 60, 
                         attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
                         },
-                        template : "# if(night_diff==0){#  #} else{# #= night_diff #  #}#",
+                        template : "# if(restday_hrs==0){#  #} else{# #= restday_hrs #  #}#",
                         headerAttributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -535,6 +556,26 @@
                         footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
 
                     },
+                    {
+                        title : "LOT",
+                        field : "reghol_hrs",
+                        width : 60, 
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        template : "# if(reghol_hrs==0){#  #} else{# #= reghol_hrs #  #}#",
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        aggregates : ['sum'], 
+                        footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+
+                    },
+
+                    
+                    
                   
                 ],
                 
