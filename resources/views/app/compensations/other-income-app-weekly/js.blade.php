@@ -97,6 +97,7 @@
                                     employee_name : { type: 'string', editable:false },
                                     earnings : { type: 'number', },
                                     deductions : { type: 'number', },
+                                    retro_pay : { type: 'number', },
                                 }
                             }
                         }
@@ -218,6 +219,15 @@
                             style : "text-align:right"
                         },
                         template : "# if(earnings==0){#  #} else{# #= kendo.toString(earnings,'n2') #  #}#",
+                    },
+                    {
+                        title : "Retro Pay",
+                        field : "retro_pay",
+                        width : 130,
+                        attributes : {
+                            style : "text-align:right"
+                        },
+                        template : "# if(retro_pay==0){#  #} else{# #= kendo.toString(retro_pay,'n2') #  #}#",
                     },
                     {
                         title : "Deduction",

@@ -124,7 +124,13 @@
                                     schedule_desc : { type: 'string' },
                                     ndays : { type:'number', },
                                     restday_hrs : { type:'number', },
-                                    reghol_hrs : { type:'number', }
+                                    restday_ot : { type:'number', },
+                                    reghol_hrs : { type:'number', },
+                                    reghol_ot : { type:'number', },
+                                    restday_hrs : { type:'number', },
+                                    restday_ot : { type:'number', },
+                                    sphol_hrs : { type:'number', },
+                                    sphol_ot : { type:'number', },
                                 }
                             }
                         },
@@ -135,8 +141,15 @@
                             { field : "over_time" , aggregate: "sum" },
                             { field : "night_diff" , aggregate: "sum" },
                             { field : "ndays" , aggregate: "sum" },
+                            
                             { field : "restday_hrs" , aggregate: "sum" },
+                            { field : "restday_ot" , aggregate: "sum" },
+
                             { field : "reghol_hrs" , aggregate: "sum" },
+                            { field : "reghol_ot" , aggregate: "sum" },
+
+                            { field : "sphol_hrs" , aggregate: "sum" },
+                            { field : "sphol_ot" , aggregate: "sum" },
                            
                         ]
                     }),
@@ -237,7 +250,7 @@
                         
                         myWindow.kendoWindow({
                             width: "1124", //1124 - 1152
-                            height: "410",
+                            height: "460",
                             //title: "Employee Information",
                             visible: false,
                             animation: false,
@@ -375,19 +388,20 @@
                     {
                         title : "Day",
                         field : "day_name",
-                        width : 50,
+                        width : 60,
                          attributes: {
                             style: "font-size: 9pt"
                         },
                         headerAttributes: {
                             style: "font-size: 9pt"
-                        } 
+                        },
+                        locked : true,
                     },
                     {
                         title : "Date",
                         field : "dtr_date",
                         template : "#= (data.dtr_date) ? kendo.toString(data.dtr_date,'MM/dd/yyyy') : ''  #",
-                        width : 75,
+                        width : 80,
                          attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -395,7 +409,8 @@
                         headerAttributes: {
                             style: "font-size: 9pt;text-align:center",
                             
-                        }    
+                        },
+                        locked : true,
                     },
                     {
                         title : "Schedule",
@@ -414,12 +429,13 @@
                             style: "font-size: 9pt;text-align:center",
                             
                         },
-                        editor : scheduleEditor 
+                        editor : scheduleEditor,
+                        locked : true,
                     },
                     {
                         title : "Time In",
                         field : "time_in",
-                        width : 70,
+                        width : 75,
                          attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -427,12 +443,13 @@
                         headerAttributes: {
                             style: "font-size: 9pt;text-align:center",
                             
-                        }    
+                        },
+                        locked : true,
                     },
                     {
                         title : "Time Out",
                         field : "time_out",
-                        width : 70,
+                        width : 84,
                          attributes: {
                             style: "font-size: 9pt;text-align:center"
                             
@@ -440,7 +457,8 @@
                         headerAttributes: {
                             style: "font-size: 9pt;text-align:center"
                             
-                        }    
+                        },
+                        locked : true,
                     },
                     // {
                     //     title : "Late",
@@ -461,7 +479,7 @@
                     {
                         title : "Late(Hrs)",
                         field : "late_eq",
-                        width : 65,
+                        width : 80,
                          attributes: {
                             style: "font-size: 9pt;text-align:center"
                             
@@ -477,7 +495,7 @@
                     {
                         title : "Day(s)",
                         field : "ndays",
-                        width : 60,
+                        width : 75,
                          attributes: {
                             style: "font-size: 9pt;text-align:center"
                             
@@ -493,7 +511,7 @@
                     {
                         title : "OT",
                         field : "over_time",
-                        width : 60,
+                        width : 75,
                          attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -509,7 +527,7 @@
                     {
                         title : "UT",
                         field : "under_time",
-                        width : 60,
+                        width : 75,
                         attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -540,9 +558,9 @@
 
                     // },
                     {
-                        title : "SOT",
+                        title : "RD Hrs",
                         field : "restday_hrs",
-                        width : 60, 
+                        width : 75, 
                         attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -557,9 +575,60 @@
 
                     },
                     {
-                        title : "LOT",
+                        title : "RD OT",
+                        field : "restday_ot",
+                        width : 75, 
+                        template : "# if(restday_ot==0){#  #} else{# #= restday_ot #  #}#",
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        aggregates : ['sum'], 
+                        footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+
+                    },
+                    {
+                        title : 'SP Hol Hrs',
+                        field : 'sphol_hrs',
+                        template : "# if(sphol_hrs==0){#  #} else{# #= sphol_hrs #  #}#",
+                        width : 90, 
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                        aggregates : ['sum'], 
+                        footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+
+                    },
+                    {
+                        title : 'SP Hol OT',
+                        field : 'sphol_ot',
+                        template : "# if(sphol_ot==0){#  #} else{# #= sphol_ot #  #}#",
+                        width : 90, 
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                        aggregates : ['sum'], 
+                        footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+
+                    },
+                    {
+                        title : "Reg Hol",
                         field : "reghol_hrs",
-                        width : 60, 
+                        width : 75, 
                         attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -573,7 +642,25 @@
                         footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
 
                     },
+                    {
+                        title : 'Reg Hol OT',
+                        field : 'reghol_ot',
+                        template : "# if(reghol_ot==0){#  #} else{# #= reghol_ot #  #}#",
+                        width : 95, 
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                        aggregates : ['sum'], 
+                        footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
 
+                    
+                    },
+                    
                     
                     
                   

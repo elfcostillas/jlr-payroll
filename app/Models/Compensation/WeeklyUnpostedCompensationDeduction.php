@@ -19,6 +19,6 @@ class WeeklyUnpostedCompensationDeduction extends Model
         'earnings',
         'deductions',
         'biometric_id',
-
+        'retro_pay'
     ];
 }

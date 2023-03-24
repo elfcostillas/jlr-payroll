@@ -55,7 +55,8 @@ class OtherIncomeWeeklyAppController extends Controller
                                                     ],
                                                     [
                                                         "earnings" => $line['earnings'],
-                                                        "deductions" => $line['deductions']
+                                                        "deductions" => $line['deductions'],
+                                                        "retro_pay" => $line['retro_pay']
                                                     ]);
         }
 
