@@ -29,7 +29,17 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         GROUP BY m.biometric_id,m.period_id,e.basic_salary,name_vw.employee_name,e.lastname,e.firstname,earnings,deductions
         ORDER BY e.lastname,e.firstname;");
         */
-        $result = DB::select("SELECT m.biometric_id,o.id AS period_id,e.basic_salary,SUM(ndays) AS n_days,SUM(over_time) n_ot,name_vw.employee_name,IFNULL(earnings,0.00) earnings,IFNULL(deductions,0.00) deductions
+        $result = DB::select("SELECT m.biometric_id,o.id AS period_id,e.basic_salary,
+        SUM(ndays) AS n_days,
+        SUM(over_time) n_ot,name_vw.employee_name,IFNULL(earnings,0.00) earnings,IFNULL(deductions,0.00) deductions,IFNULL(retro_pay,0.00) retro_pay,
+        SUM(IF(IFNULL(sphol_hrs,0)>0,1,0)) sp,
+        SUM(IFNULL(sphol_hrs,0)) AS sphol_hrs,
+        SUM(IF(IFNULL(reghol_hrs,0)>0,1,0)) AS reghol,
+        SUM(IFNULL(reghol_hrs,0)) AS reghol_hrs,
+        SUM(IFNULL(sphol_ot,0)) AS sphol_ot,
+        SUM(IFNULL(reghol_ot,0)) AS reghol_ot,
+        SUM(IFNULL(restday_hrs,0)) AS restday_hrs,
+        SUM(IFNULL(restday_ot,0)) AS restday_ot
         FROM edtr m
         INNER JOIN payroll_period_weekly o ON m.dtr_date BETWEEN o.date_from AND o.date_to
         INNER JOIN employee_names_vw AS name_vw ON m.biometric_id = name_vw.biometric_id
@@ -48,12 +58,40 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
             $hr_rate =  ($line->basic_salary/8);
             $ot_amount = round($line->n_ot * $hr_rate ,2);
             $basic_pay = round($line->basic_salary * $line->n_days,2);
-            $gross_pay = $ot_amount + $basic_pay + $line->earnings;
+            $sp = round($line->basic_salary * $line->sp,2);
+            $sp_hrs = round((($line->basic_salary/8) * $line->sphol_hrs) * 0.3,2);
+
+            $reghol = round($line->basic_salary * $line->reghol,2);
+            $sphol_ot_amount =  round((($line->basic_salary/8) * $line->sphol_ot) * 1.69,2);
+            
+            $rd = round($line->restday_hrs * ($hr_rate * 1.3),2);
+            $rd_ot = round($line->restday_ot * ($hr_rate * 1.69),2);
+
+            $reghol_amount = $reghol + round($hr_rate * $line->reghol_hrs,2);
+            $reg_ot_amount = round($line->reghol_ot * $hr_rate * 2.6,2);
+            //$gross_pay = $ot_amount + $basic_pay + $line->earnings;
+            
+            $gross_pay = ($sp + $sp_hrs + $sphol_ot_amount) 
+                + ( $reghol + $reghol_amount + $reg_ot_amount ) 
+                + ( $rd + $rd_ot ) 
+                + $basic_pay + $line->earnings + $line->retro_pay;
 
             array_push($tmp_payreg,[
+                // 'biometric_id' => $line->biometric_id,
+                // 'period_id' => $line->period_id,
+                // 'daily_rate' => $line->basic_salary,
+                // 'days' => $line->n_days,
+                // 'ot' => $line->n_ot,
+                // 'ot_amount' => $ot_amount,
+                // 'basic_pay' => $basic_pay,
+                // 'earnings' => $line->earnings,
+                // 'gross_pay' => $gross_pay,
+                // 'deductions' => $line->deductions,
+                // 'net_pay' => $gross_pay - $line->deductions ,
+
                 'biometric_id' => $line->biometric_id,
                 'period_id' => $line->period_id,
-                'daily_rate' => $line->basic_salary,
+                'daily_rate' =>  $line->basic_salary,
                 'days' => $line->n_days,
                 'ot' => $line->n_ot,
                 'ot_amount' => $ot_amount,
@@ -61,8 +99,25 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
                 'earnings' => $line->earnings,
                 'gross_pay' => $gross_pay,
                 'deductions' => $line->deductions,
-                'net_pay' => $gross_pay - $line->deductions ,
+                'retro_pay' => $line->retro_pay,
+                'restday' => $line->restday_hrs,
+                'restday_amount' => $rd,
+                'restday_ot' => $line->restday_ot,
+                'restday_ot_amount' => $rd_ot,
+                'sp' => $line->sp,
+                'sp_hrs' =>  $line->sphol_hrs,
+                'sp_amount' => $sp + $sp_hrs,
+                'sp_ot' => $line->sphol_ot,
+                'sp_ot_amount' => $sphol_ot_amount,
+                'reghol' => $line->reghol,
+                'reghol_amount' => $reghol_amount,
+                'reghol_ot' => $line->reghol_ot,
+                'reghol_hrs' => $line->reghol_hrs,
+                'reghol_ot_amount' => $reg_ot_amount,
+                'net_pay' => $gross_pay - $line->deductions
+
             ]);
+
         }
         
         $flag = DB::table('payrollregister_unposted_weekly')->where('period_id', $period_id)->delete();

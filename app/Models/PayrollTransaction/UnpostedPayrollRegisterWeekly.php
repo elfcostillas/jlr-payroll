@@ -23,6 +23,7 @@ class UnpostedPayrollRegisterWeekly extends Model
         'gross_pay',
         'deductions',
         'net_pay',
+        'sp_hrs'
     ];
 
 }
