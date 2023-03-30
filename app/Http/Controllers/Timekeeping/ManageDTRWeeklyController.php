@@ -106,5 +106,15 @@ class ManageDTRWeeklyController extends Controller
         
         return response()->json(true);
     }
+
+    public function computeLogs(Request $request)
+    {
+
+    }
+
+    public function drawLogsM(Request $request)
+    {
+        
+    }
     
 }

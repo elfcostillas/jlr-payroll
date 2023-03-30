@@ -3,6 +3,9 @@
     <button class="k-grid-save-changes k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="events: { click: buttonHandler.drawLogs }">
         </span>&nbsp; Draw Logs
     </button>
+    <button class="k-grid-save-changes k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="events: { click: buttonHandler.drawLogsM }">
+    </span>&nbsp; Draw from Manual  DTR
+    </button>
     <button class="k-grid-save-changes k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="events: { click: buttonHandler.compute }">
         </span>&nbsp; Compute
     </button>
@@ -131,6 +134,7 @@
                                     restday_ot : { type:'number', },
                                     sphol_hrs : { type:'number', },
                                     sphol_ot : { type:'number', },
+                                    holiday_type: { type:'string', },
                                 }
                             }
                         },
@@ -226,6 +230,16 @@
                     {
                         
                         $.post('manage-dtr-weekly/draw-logs',{
+                            period_id : viewModel.selectedPeriod.id,
+                            biometric_id : viewModel.selectedEmployee
+                        },function(){
+                            viewModel.ds.dtrgrid.read();
+                        });
+                    },
+                    drawLogsM : function()
+                    {
+                        
+                        $.post('manage-dtr-weekly/draw-logs-manual',{
                             period_id : viewModel.selectedPeriod.id,
                             biometric_id : viewModel.selectedEmployee
                         },function(){
@@ -450,6 +464,19 @@
                         title : "Time Out",
                         field : "time_out",
                         width : 84,
+                         attributes: {
+                            style: "font-size: 9pt;text-align:center"
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center"
+                            
+                        },
+                        locked : true,
+                    }, {
+                        title : "Holiday",
+                        field : "holiday_type",
+                        width : 75,
                          attributes: {
                             style: "font-size: 9pt;text-align:center"
                             

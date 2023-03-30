@@ -123,6 +123,7 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::post('update-dtr',[ManageDTRWeeklyController::class,'updateDTR']);
         Route::post('draw-logs',[ManageDTRWeeklyController::class,'drawLogs']);
         Route::post('compute-logs',[ManageDTRWeeklyController::class,'computeLogs']);
+        Route::post('draw-logs-manual',[ManageDTRWeeklyController::class,'drawLogsM']);
         
     });
 

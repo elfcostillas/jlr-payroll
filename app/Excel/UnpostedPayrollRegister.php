@@ -31,6 +31,7 @@ class UnpostedPayrollRegister implements ShouldAutoSize,WithColumnFormatting,Fro
     private $gov;
     private $compensation;
     private $label;
+    private $payperiod_label;
 
     public function registerEvents(): array
     {   
@@ -51,11 +52,12 @@ class UnpostedPayrollRegister implements ShouldAutoSize,WithColumnFormatting,Fro
             'labels' => $this->label,
             'deductionLabel' => $this->deductions,
             'govLoan' => $this->gov,
-            'compensation' => $this->compensation
+            'compensation' => $this->compensation,
+            'payperiod_label' => $this->payperiod_label
         ]);
     }
 
-    public function setValues($collections,$noPay,$headers,$deductions,$gov,$compensation,$label){
+    public function setValues($collections,$noPay,$headers,$deductions,$gov,$compensation,$label,$payperiod_label){
     	$this->collections = $collections;
         $this->noPay = $noPay;
         $this->headers = $headers;
@@ -63,6 +65,7 @@ class UnpostedPayrollRegister implements ShouldAutoSize,WithColumnFormatting,Fro
         $this->gov = $gov;
         $this->compensation = $compensation;
         $this->label = $label;
+        $this->payperiod_label = $payperiod_label;
     }   
 
     public function columnFormats(): array

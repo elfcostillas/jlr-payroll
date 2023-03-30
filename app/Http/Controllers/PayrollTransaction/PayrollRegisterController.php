@@ -200,6 +200,11 @@ class PayrollRegisterController extends Controller
         $period = $this->unposted->getPeriod($request->id);
         
         if($period){
+            $period_from = Carbon::createFromFormat('Y-m-d',$period->date_from);
+            $period_to = Carbon::createFromFormat('Y-m-d',$period->date_to);
+
+            $payperiod_label = 'Payroll Period '.$period_from->format('F d-').$period_to->format('d, Y');
+
             $noPay = $this->unposted->semiEmployeeNoPayroll($period->id);
 
             $collections = $this->unposted->getPprocessed($period);
@@ -223,7 +228,7 @@ class PayrollRegisterController extends Controller
                 $label[$value->var_name] = $value->col_label;
             }
 
-            $this->excel->setValues($collections,$noPay,$headers,$deductions,$gov,$compensation,$label);
+            $this->excel->setValues($collections,$noPay,$headers,$deductions,$gov,$compensation,$label, $payperiod_label);
             return Excel::download($this->excel,'PayrollRegister'.$period->id.'.xlsx');
         }
     }

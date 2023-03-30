@@ -28,6 +28,7 @@ class OneTimeDeductionDetailMapper extends AbstractMapper {
                     ->leftJoin('locations','employees.location_id','=','locations.id')
                     ->leftJoin('deduction_onetime_details','employees.biometric_id',"=","deduction_onetime_details.biometric_id")
                     ->where('employee_names_vw.exit_status',1)
+                    ->where('pay_type',[1,2])
                     ->where('header_id',$header_id)
                     ->orWhere(function($query) { 
                         $query->whereNull('header_id');

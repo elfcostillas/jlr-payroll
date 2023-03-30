@@ -194,12 +194,26 @@ class DailyTimeRecordMapper extends AbstractMapper {
 
     public function getweeklyDTR($biometric_id,$period_id)
     {
-        $result = $this->model->select(DB::raw("edtr.id,biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc,restday_hrs,restday_ot,sphol_hrs,sphol_ot,reghol_hrs,reghol_ot"))
+        $holidays = $this->model->select(DB::raw("holidays.*,location_id"))
+        ->from('holidays')
+        ->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
+        ->join('payroll_period',function($join){
+            $join->whereRaw('holiday_date between payroll_period.date_from and payroll_period.date_to');
+        })
+        ->where('payroll_period.id',$period_id);
+
+        $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc,restday_hrs,restday_ot,sphol_hrs,sphol_ot,reghol_hrs,reghol_ot,
+        case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type"))
         ->from('edtr')
-        ->where('biometric_id',$biometric_id)
+        ->where('edtr.biometric_id',$biometric_id)
         ->join('payroll_period_weekly',function($join){
             $join->whereRaw('dtr_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
         })
+        ->leftJoin('employees','employees.biometric_id','=','edtr.biometric_id')
+        ->leftJoinSub($holidays,'holidays',function($join) { //use ($type)
+                            $join->on('holidays.location_id','=','employees.location_id');
+                            $join->on('holidays.holiday_date','=','edtr.dtr_date');
+                        })
         ->leftJoin('work_schedules','schedule_id','=','work_schedules.id')
         ->where('payroll_period_weekly.id',$period_id)
         ->orderBy('dtr_date');

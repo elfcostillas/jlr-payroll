@@ -20,6 +20,11 @@
       
     ?>
     <div id="" >
+        <table>
+            <tr>
+                <td> {{ $payperiod_label }}</td>
+            </tr>
+        </table>
         <table style="border-collapse:collapse;white-space:nowrap;" border=1 >
             <thead>
                 <tr>    
@@ -499,150 +504,150 @@
                                 ?>
                             @endforeach
                             <tr>
-                                <td>TOTAL</td>
+                                <td style="font-weight:bold;">TOTAL</td>
                                 <td></td>
                                 <td></td>
-                                <td>{{$dept['basic_salary']}}</td>
-                                <td>{{ $dept['daily_rate'] }}</td>
-                                <td>{{ $dept['mallowance'] }}</td>
-                                <td>{{ $dept['dallowance'] }}</td>
-                                <td>{{ $dept['ndays'] }}</td>
-                                <td>{{ $dept['basic_pay'] }}</td>
-                                <td>{{ $dept['daily_allowance'] }}</td>
-                                <td>{{ $dept['semi_monthly_allowance'] }}</td>
-                                <td>{{ $dept['late_eq'] }}</td>
-                                <td>{{ $dept['late_eq_amount'] }}</td>
-                                <td>{{ $dept['under_time'] }}</td>
-                                <td>{{ $dept['under_time_amount'] }}</td>
-                                <td>{{ $dept['vl_wpay'] }}</td>
-                                <td>{{ $dept['vl_wpay_amount'] }}</td>
-                                <td>{{ $dept['sl_wpay'] }}</td>
-                                <td>{{ $dept['sl_wpay_amount'] }}</td>
-                                <td>{{ $dept['bl_wpay'] }}</td>
-                                <td>{{ $dept['bl_wpay_amount'] }}</td>
-                                <td>{{ $dept['absences_amount'] }}</td>
-                                <td>{{ $dept['absences_amount'] }}</td>
+                                <td style="font-weight:bold;">{{$dept['basic_salary']}}</td>
+                                <td style="font-weight:bold;">{{ $dept['daily_rate'] }}</td>
+                                <td style="font-weight:bold;">{{ $dept['mallowance'] }}</td>
+                                <td style="font-weight:bold;">{{ $dept['dallowance'] }}</td>
+                                <td style="font-weight:bold;">{{ $dept['ndays'] }}</td>
+                                <td style="font-weight:bold;">{{ $dept['basic_pay'] }}</td>
+                                <td style="font-weight:bold;">{{ $dept['daily_allowance'] }}</td>
+                                <td style="font-weight:bold;">{{ $dept['semi_monthly_allowance'] }}</td>
+                                <td style="font-weight:bold;">{{ $dept['late_eq'] }}</td>
+                                <td style="font-weight:bold;">{{ $dept['late_eq_amount'] }}</td>
+                                <td style="font-weight:bold;">{{ $dept['under_time'] }}</td>
+                                <td style="font-weight:bold;">{{ $dept['under_time_amount'] }}</td>
+                                <td style="font-weight:bold;">{{ $dept['vl_wpay'] }}</td>
+                                <td style="font-weight:bold;">{{ $dept['vl_wpay_amount'] }}</td>
+                                <td style="font-weight:bold;">{{ $dept['sl_wpay'] }}</td>
+                                <td style="font-weight:bold;">{{ $dept['sl_wpay_amount'] }}</td>
+                                <td style="font-weight:bold;">{{ $dept['bl_wpay'] }}</td>
+                                <td style="font-weight:bold;">{{ $dept['bl_wpay_amount'] }}</td>
+                                <td style="font-weight:bold;">{{ $dept['absences_amount'] }}</td>
+                                <td style="font-weight:bold;">{{ $dept['absences_amount'] }}</td>
                                 @foreach($headers as $key => $val)
-                                   <td> {{ $dept[$key] }} </td>
+                                    <td style="font-weight:bold;"> {{ $dept[$key] }} </td>
                                 @endforeach
-                                <td>{{ $dept['gross_pay'] }}</td>
+                                    <td style="font-weight:bold;">{{ $dept['gross_pay'] }}</td>
                                 @foreach($compensation as $comp)
-                                    <td> {{ $deptComp[$comp->id] }} </td>   
+                                    <td style="font-weight:bold;"> {{ $deptComp[$comp->id] }} </td>   
                                 @endforeach
-                                <td>{{ $dept['gross_total'] }}</td>
+                                    <td style="font-weight:bold;">{{ $dept['gross_total'] }}</td>
 
-                                <td>{{ $dept['sss'] }}</td>
-                                <td>{{ $dept['wisp'] }}</td>
-                                <td>{{ $dept['phic'] }}</td>
-                                <td>{{ $dept['hdmf'] }}</td>
+                                    <td style="font-weight:bold;">{{ $dept['sss'] }}</td>
+                                    <td style="font-weight:bold;">{{ $dept['wisp'] }}</td>
+                                    <td style="font-weight:bold;">{{ $dept['phic'] }}</td>
+                                    <td style="font-weight:bold;">{{ $dept['hdmf'] }}</td>
                                 @foreach($govLoan as $gkey => $glabel)
-                                    <td  >{{ $govDed[$glabel->id] }}</td>
+                                    <td  style="font-weight:bold;">{{ $govDed[$glabel->id] }}</td>
                                 @endforeach
 
                                 @foreach($deductionLabel as $key => $label)
-                                    <td  >{{ $compDed[$label->id] }}</td>
+                                    <td style="font-weight:bold;" >{{ $compDed[$label->id] }}</td>
                                 @endforeach
-                                    <td>{{ $dept['total_deduction'] }}</td>
-                                    <td>{{ $dept['net_pay'] }}</td>
+                                    <td style="font-weight:bold;">{{ $dept['total_deduction'] }}</td>
+                                    <td style="font-weight:bold;">{{ $dept['net_pay'] }}</td>
                             </tr>
                         @endforeach
                         <tr>
-                            <td>TOTAL per DIVISION</td>
+                            <td style="font-weight:bold;">TOTAL per DIVISION</td>
                             <td></td>
                             <td></td>
-                            <td>{{ $divTotal['basic_salary']}}</td>
-                            <td>{{ $divTotal['daily_rate'] }}</td>
-                            <td>{{ $divTotal['mallowance'] }}</td>
-                            <td>{{ $divTotal['dallowance'] }}</td>
-                            <td>{{ $divTotal['ndays'] }}</td>
-                            <td>{{ $divTotal['basic_pay'] }}</td>
-                            <td>{{ $divTotal['daily_allowance'] }}</td>
-                            <td>{{ $divTotal['semi_monthly_allowance'] }}</td>
-                            <td>{{ $divTotal['late_eq'] }}</td>
-                            <td>{{ $divTotal['late_eq_amount'] }}</td>
-                            <td>{{ $divTotal['under_time'] }}</td>
-                            <td>{{ $divTotal['under_time_amount'] }}</td>
-                            <td>{{ $divTotal['vl_wpay'] }}</td>
-                            <td>{{ $divTotal['vl_wpay_amount'] }}</td>
-                            <td>{{ $divTotal['sl_wpay'] }}</td>
-                            <td>{{ $divTotal['sl_wpay_amount'] }}</td>
-                            <td>{{ $divTotal['bl_wpay'] }}</td>
-                            <td>{{ $divTotal['bl_wpay_amount'] }}</td>
-                            <td>{{ $divTotal['absences_amount'] }}</td>
-                            <td>{{ $divTotal['absences_amount'] }}</td>
+                            <td style="font-weight:bold;">{{ $divTotal['basic_salary']}}</td>
+                            <td style="font-weight:bold;">{{ $divTotal['daily_rate'] }}</td>
+                            <td style="font-weight:bold;">{{ $divTotal['mallowance'] }}</td>
+                            <td style="font-weight:bold;">{{ $divTotal['dallowance'] }}</td>
+                            <td style="font-weight:bold;">{{ $divTotal['ndays'] }}</td>
+                            <td style="font-weight:bold;">{{ $divTotal['basic_pay'] }}</td>
+                            <td style="font-weight:bold;">{{ $divTotal['daily_allowance'] }}</td>
+                            <td style="font-weight:bold;">{{ $divTotal['semi_monthly_allowance'] }}</td>
+                            <td style="font-weight:bold;">{{ $divTotal['late_eq'] }}</td>
+                            <td style="font-weight:bold;">{{ $divTotal['late_eq_amount'] }}</td>
+                            <td style="font-weight:bold;">{{ $divTotal['under_time'] }}</td>
+                            <td style="font-weight:bold;">{{ $divTotal['under_time_amount'] }}</td>
+                            <td style="font-weight:bold;">{{ $divTotal['vl_wpay'] }}</td>
+                            <td style="font-weight:bold;">{{ $divTotal['vl_wpay_amount'] }}</td>
+                            <td style="font-weight:bold;">{{ $divTotal['sl_wpay'] }}</td>
+                            <td style="font-weight:bold;">{{ $divTotal['sl_wpay_amount'] }}</td>
+                            <td style="font-weight:bold;">{{ $divTotal['bl_wpay'] }}</td>
+                            <td style="font-weight:bold;">{{ $divTotal['bl_wpay_amount'] }}</td>
+                            <td style="font-weight:bold;">{{ $divTotal['absences_amount'] }}</td>
+                            <td style="font-weight:bold;">{{ $divTotal['absences_amount'] }}</td>
                             @foreach($headers as $key => $val)
-                               <td> {{ $deptDIV[$key] }} </td>
+                                <td style="font-weight:bold;"> {{ $deptDIV[$key] }} </td>
                             @endforeach
                             <td>{{ $divTotal['gross_pay'] }}</td>
                             @foreach($compensation as $comp)
-                                <td> {{ $deptComp[$comp->id] }} </td>   
+                                <td style="font-weight:bold;"> {{ $deptComp[$comp->id] }} </td>   
                             @endforeach
-                            <td>{{ $divTotal['gross_total'] }}</td>
+                                <td style="font-weight:bold;">{{ $divTotal['gross_total'] }}</td>
 
-                            <td>{{ $divTotal['sss'] }}</td>
-                            <td>{{ $divTotal['wisp'] }}</td>
-                            <td>{{ $divTotal['phic'] }}</td>
-                            <td>{{ $divTotal['hdmf'] }}</td>
+                                <td style="font-weight:bold;">{{ $divTotal['sss'] }}</td>
+                                <td style="font-weight:bold;">{{ $divTotal['wisp'] }}</td>
+                                <td style="font-weight:bold;">{{ $divTotal['phic'] }}</td>
+                                <td style="font-weight:bold;">{{ $divTotal['hdmf'] }}</td>
                             @foreach($govLoan as $gkey => $glabel)
-                                <td  >{{ $govDedDIV[$glabel->id] }}</td>
+                                <td style="font-weight:bold;" >{{ $govDedDIV[$glabel->id] }}</td>
                             @endforeach
 
                             @foreach($deductionLabel as $key => $label)
-                                <td  >{{ $compDedDIV[$label->id] }}</td>
+                                <td style="font-weight:bold;" >{{ $compDedDIV[$label->id] }}</td>
                             @endforeach
-                                <td>{{ $divTotal['total_deduction'] }}</td>
-                                <td>{{ $divTotal['net_pay'] }}</td>
+                                <td style="font-weight:bold;" style="font-weight:bold;">{{ $divTotal['total_deduction'] }}</td>
+                                <td style="font-weight:bold;" style="font-weight:bold;">{{ $divTotal['net_pay'] }}</td>
                         </tr>
                         <tr>
                             <td></td>
                         </tr>
                     @endforeach
                     <tr>
-                        <td>OVER ALL TOTAL</td>
+                        <td style="font-weight:bold;">OVER ALL TOTAL</td>
                         <td></td>
                         <td></td>
-                        <td>{{ $overALL['basic_salary']}}</td>
-                        <td>{{ $overALL['daily_rate'] }}</td>
-                        <td>{{ $overALL['mallowance'] }}</td>
-                        <td>{{ $overALL['dallowance'] }}</td>
-                        <td>{{ $overALL['ndays'] }}</td>
-                        <td>{{ $overALL['basic_pay'] }}</td>
-                        <td>{{ $overALL['daily_allowance'] }}</td>
-                        <td>{{ $overALL['semi_monthly_allowance'] }}</td>
-                        <td>{{ $overALL['late_eq'] }}</td>
-                        <td>{{ $overALL['late_eq_amount'] }}</td>
-                        <td>{{ $overALL['under_time'] }}</td>
-                        <td>{{ $overALL['under_time_amount'] }}</td>
-                        <td>{{ $overALL['vl_wpay'] }}</td>
-                        <td>{{ $overALL['vl_wpay_amount'] }}</td>
-                        <td>{{ $overALL['sl_wpay'] }}</td>
-                        <td>{{ $overALL['sl_wpay_amount'] }}</td>
-                        <td>{{ $overALL['bl_wpay'] }}</td>
-                        <td>{{ $overALL['bl_wpay_amount'] }}</td>
-                        <td>{{ $overALL['absences_amount'] }}</td>
-                        <td>{{ $overALL['absences_amount'] }}</td>
+                        <td style="font-weight:bold;">{{ $overALL['basic_salary']}}</td>
+                        <td style="font-weight:bold;">{{ $overALL['daily_rate'] }}</td>
+                        <td style="font-weight:bold;">{{ $overALL['mallowance'] }}</td>
+                        <td style="font-weight:bold;">{{ $overALL['dallowance'] }}</td>
+                        <td style="font-weight:bold;">{{ $overALL['ndays'] }}</td>
+                        <td style="font-weight:bold;">{{ $overALL['basic_pay'] }}</td>
+                        <td style="font-weight:bold;">{{ $overALL['daily_allowance'] }}</td>
+                        <td style="font-weight:bold;">{{ $overALL['semi_monthly_allowance'] }}</td>
+                        <td style="font-weight:bold;">{{ $overALL['late_eq'] }}</td>
+                        <td style="font-weight:bold;">{{ $overALL['late_eq_amount'] }}</td>
+                        <td style="font-weight:bold;">{{ $overALL['under_time'] }}</td>
+                        <td style="font-weight:bold;">{{ $overALL['under_time_amount'] }}</td>
+                        <td style="font-weight:bold;">{{ $overALL['vl_wpay'] }}</td>
+                        <td style="font-weight:bold;">{{ $overALL['vl_wpay_amount'] }}</td>
+                        <td style="font-weight:bold;">{{ $overALL['sl_wpay'] }}</td>
+                        <td style="font-weight:bold;">{{ $overALL['sl_wpay_amount'] }}</td>
+                        <td style="font-weight:bold;">{{ $overALL['bl_wpay'] }}</td>
+                        <td style="font-weight:bold;">{{ $overALL['bl_wpay_amount'] }}</td>
+                        <td style="font-weight:bold;">{{ $overALL['absences_amount'] }}</td>
+                        <td style="font-weight:bold;">{{ $overALL['absences_amount'] }}</td>
                         @foreach($headers as $key => $val)
-                           <td> {{ $deptDIVALL[$key] }} </td>
+                           <td style="font-weight:bold;"> {{ $deptDIVALL[$key] }} </td>
                         @endforeach
-                        <td>{{ $overALL['gross_pay'] }}</td>
+                            <td style="font-weight:bold;">{{ $overALL['gross_pay'] }}</td>
                         @foreach($compensation as $comp)
-                            <td> {{ $deptCompDIVALL[$comp->id] }} </td>   
+                            <td style="font-weight:bold;"> {{ $deptCompDIVALL[$comp->id] }} </td>   
                         @endforeach
-                        <td>{{ $overALL['gross_total'] }}</td>
+                            <td style="font-weight:bold;">{{ $overALL['gross_total'] }}</td>
 
-                        <td>{{ $overALL['sss'] }}</td>
-                        <td>{{ $overALL['wisp'] }}</td>
-                        <td>{{ $overALL['phic'] }}</td>
-                        <td>{{ $overALL['hdmf'] }}</td>
+                            <td style="font-weight:bold;">{{ $overALL['sss'] }}</td>
+                            <td style="font-weight:bold;">{{ $overALL['wisp'] }}</td>
+                            <td style="font-weight:bold;">{{ $overALL['phic'] }}</td>
+                            <td style="font-weight:bold;">{{ $overALL['hdmf'] }}</td>
                         @foreach($govLoan as $gkey => $glabel)
-                            <td  >{{ $govDedDIVALL[$glabel->id] }}</td>
+                            <td style="font-weight:bold;"  >{{ $govDedDIVALL[$glabel->id] }}</td>
                         @endforeach
 
                         @foreach($deductionLabel as $key => $label)
-                            <td  >{{ $compDedDIVALL[$label->id] }}</td>
+                            <td style="font-weight:bold;"  >{{ $compDedDIVALL[$label->id] }}</td>
                         @endforeach
-                            <td>{{ $overALL['total_deduction'] }}</td>
-                            <td>{{ $overALL['net_pay'] }}</td>
+                            <td style="font-weight:bold;">{{ $overALL['total_deduction'] }}</td>
+                            <td style="font-weight:bold;">{{ $overALL['net_pay'] }}</td>
                     </tr>
         </table>
         @if(count($no_pay)>0)
