@@ -490,6 +490,34 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
         return $result->get();
     }
 
+    public function getWeeklyDTRforComputation($biometric_id,$period_id)
+    {
+        $holidays = $this->model->select(DB::raw("holidays.*,location_id"))
+                            ->from('holidays')
+                            ->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
+                            ->join('payroll_period_weekly',function($join){
+                                $join->whereRaw('holiday_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
+                            })
+                            ->where('payroll_period_weekly.id',$period_id);
+                            
+        $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,time_to_sec(work_schedules.time_in) as sched_in,holidays.holiday_type,time_to_sec(edtr.time_in) as actual_in"))
+        ->from('edtr')
+        ->where('edtr.biometric_id',$biometric_id)
+        ->join('payroll_period_weekly',function($join){
+            $join->whereRaw('dtr_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
+        })
+        ->leftJoin('employees','employees.biometric_id','=','edtr.biometric_id')
+        //->leftJoin('holidays','edtr.dtr_date','=','holidays.holiday_date')
+        ->leftJoinSub($holidays,'holidays',function($join) { //use ($type)
+						$join->on('holidays.location_id','=','employees.location_id');
+						$join->on('holidays.holiday_date','=','edtr.dtr_date');
+		})
+        ->leftJoin('work_schedules','schedule_id','=','work_schedules.id')
+        ->where('payroll_period_weekly.id',$period_id)
+        ->orderBy('dtr_date');
+
+        return $result->get();
+    }
     // public function mapRawLogs($rawlogs)
     // {
     //     foreach($rawlogs as $logs)
@@ -706,11 +734,50 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                 }
 
                 if($rec->day_name!='Sun'){
-                    $rec->ndays = ($rec->time_in!='' && $rec->time_out!='' && $rec->holiday_type==NULL) ? 1 : 0;
+                    $rec->ndays = ($rec->time_in!='' && $rec->time_out!='' && $rec->holiday_type==NULL && $rec->time_in!='00:00' && $rec->time_out!='00:00') ? 1 : 0;
                 }
 
                 $this->updateValid($rec->toArray());
             }   
+        }else {
+            //echo "im here";
+            foreach($dtr as $rec)
+            {
+                $rec->ndays = ($rec->time_in!='' && $rec->time_out!='' && $rec->holiday_type==NULL && $rec->time_in!='00:00' && $rec->time_out!='00:00') ? 1 : 0;
+                
+                switch($rec->holiday_type)
+                {   
+                 
+                    case 'SH': 
+                            $rec->sphol_pay = $rec->ndays;
+                            $rec->sphol_nd = $rec->night_diff;
+                            $rec->sphol_ot = $rec->overt_time;
+                            $rec->sphol_ndot = $rec->night_diff_ot;
+                        break;
+                    
+                    case 'LH': 
+                            $rec->reghol_pay = $rec->ndays;
+                            $rec->reghol_nd = $rec->night_diff;
+                            $rec->reghol_ot = $rec->overt_time;
+                            $rec->reghol_ndot = $rec->night_diff_ot;
+                        break; 
+                    
+                    case 'DBL': 
+                            $rec->dblhol_pay =  $rec->ndays;
+                            $rec->dblhol_nd = $rec->night_diff;
+                            $rec->dblhol_ot = $rec->overt_time;
+                            $rec->dblhol_ndot = $rec->night_diff_ot;
+                        break; 
+                    
+                } 
+
+                if(in_array($rec->holiday_type,['SH','LH','DBL'])){
+                    $rec->ndays = 0;
+                    $rec->night_diff = 0;
+                    $rec->overt_time = 0;
+                    $rec->night_diff_ot = 0;
+                }
+            }
         }
     }
 

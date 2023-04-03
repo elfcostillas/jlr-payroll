@@ -109,7 +109,16 @@ class ManageDTRWeeklyController extends Controller
 
     public function computeLogs(Request $request)
     {
+        $biometric_id = $request->biometric_id;
+        $period_id = $request->period_id;
 
+        // $dtr = $this->mapper->putLeavesUT($biometric_id,$period_id);
+
+        $dtr = $this->mapper->getWeeklyDTRforComputation($biometric_id,$period_id);
+
+        $this->mapper->computeLogs($dtr,'weekly');
+
+        return response()->json(true);
     }
 
     public function drawLogsM(Request $request)
