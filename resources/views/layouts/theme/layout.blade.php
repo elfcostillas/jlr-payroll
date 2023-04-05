@@ -236,6 +236,8 @@ if($prefix!=""){
           </li>
 
           @php
+
+          
        
           $main = DB::table('main_menu')->distinct()
               ->select('main_menu.id','main_menu.menu_desc','main_menu.menu_icon','main_menu.menu_link')
@@ -307,6 +309,14 @@ if($prefix!=""){
                     <p> Leave Request</p>
                   </a>
                 </li>
+                @if($user->user_rights=='Y')
+                <li class="nav-item">
+                  <a href="{{ url('admin') }}"  class="nav-link">
+                  -&nbsp;&nbsp;&nbsp;&nbsp;
+                    <p>User Rights</p>
+                  </a>
+                </li>
+                @endif
                 <li class="nav-item">
                   <form id="logoutme" action="{{ url('logout') }}" method="POST">@csrf</form>
                   <a href="#" onclick="document.getElementById('logoutme').submit()" class="nav-link">

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mappers\Admin\UserRightsMapper;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class UserRightsController extends Controller
 {
@@ -19,6 +20,14 @@ class UserRightsController extends Controller
 
     public function index()
     {
+
+        $user = Auth::user();
+
+        if($user->user_rights!='Y'){
+            return response()->json('Eror : Access denied.');
+        }else {
+            
+        }
 
         $rights = $this->urights->showAllRights();
 

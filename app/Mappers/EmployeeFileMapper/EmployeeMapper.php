@@ -61,6 +61,7 @@ class EmployeeMapper extends AbstractMapper {
 
 		$user = Auth::user();
 		
+		
         $result = $this->model->select(DB::raw('employees.*,dept_code,div_code,emp_exit_status.status_desc,emp_emp_stat.estatus_desc,pay_description'))
 		->leftJoin('departments','departments.id','=','dept_id')
 		->leftJoin('divisions','divisions.id','=','division_id')

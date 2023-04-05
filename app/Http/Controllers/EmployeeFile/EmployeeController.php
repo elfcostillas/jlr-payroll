@@ -27,6 +27,11 @@ class EmployeeController extends Controller
         $pay_type = $this->mapper->getPayTypes();
         $level_desc = $this->mapper->getLevels();
         $userDept = $this->mapper->getUserDept(Auth::user()->biometric_id);
+        
+        if($userDept==null)
+        {
+            return response()->json('Error : Biometric ID was not set. Please set your Biometric ID on Accounts >> Biometric ID to continue.');
+        }
         //dd($userDept->dept_id);
         if($userDept->dept_id==8){
             $canSeeRates = true;
