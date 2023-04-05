@@ -55,7 +55,7 @@
         @foreach($data as $row)
             @php
               
-                $total_vlwpay += ($row->leave_type=='VL') ? $row->with_pay : 0;
+                $total_vlwpay += ($row->leave_type=='VL' || $row->leave_type=='EL') ? $row->with_pay : 0;
                 $total_slwpay += ($row->leave_type=='SL') ? $row->with_pay : 0;
                 
             @endphp
