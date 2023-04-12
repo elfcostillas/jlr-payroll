@@ -231,7 +231,7 @@
                                     <td style="text-align:right;"> {{ number_format($employee->basic_pay,2) }}</td>
 
                                     <td style="text-align:right;"> {{ ($employee->daily_allowance>0) ? number_format($employee->daily_allowance,2) : ''; }}</td>
-                                    <td style="text-align:right;"> {{ ($employee->payrollregister_unposted_s>0) ? number_format($employee->payrollregister_unposted_s,2) : ''; }}</td>
+                                    <td style="text-align:right;"> {{ ($employee->semi_monthly_allowance>0) ? number_format($employee->semi_monthly_allowance,2) : ''; }}</td>
 
                                     <td style="text-align:right;"> {{ ($employee->late_eq>0) ? number_format($employee->late_eq,2) : ''; }}</td>
                                     <td style="text-align:right;"> {{ ($employee->late_eq_amount>0) ? number_format($employee->late_eq_amount,2) : ''; }}</td>
@@ -247,7 +247,7 @@
                                     <td style="text-align:right;"> {{ ($employee->bl_wpay>0) ? number_format($employee->bl_wpay,2) : ''; }}</td>
                                     <td style="text-align:right;"> {{ ($employee->bl_wpay_amount>0) ? number_format($employee->bl_wpay_amount,2) : ''; }}</td>
                                     
-                                    <td style="text-align:right;"> {{ ($employee->absences_amount>0) ? number_format($employee->absences,2) : ''; }}</td>
+                                    <td style="text-align:right;"> {{ ($employee->absences>0) ? number_format($employee->absences,2) : ''; }}</td>
                                     <td style="text-align:right;"> {{ ($employee->absences_amount>0) ? number_format($employee->absences_amount,2) : ''; }}</td>
                                     
 

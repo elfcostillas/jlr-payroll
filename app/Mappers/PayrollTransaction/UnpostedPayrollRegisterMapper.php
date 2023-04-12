@@ -52,9 +52,9 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
         return $result->get();
     }
 
-    public function getEmployeeWithDTR($period_id)
+    public function getEmployeeWithDTR($period_id,$emp_level)
     {
-
+      
         /*
        reg_ot
 reg_nd
@@ -66,6 +66,7 @@ rd_ndot
 */
         $user = Auth::user();
         $result = $this->model->select(DB::raw("
+                        IF(emp_level>=5 || ISNULL(emp_level),'non-confi','confi') AS emp_level,
                         payroll_period.id AS period_id,
                         employees.biometric_id,
                         lastname,
@@ -149,7 +150,7 @@ rd_ndot
                                 monthly_allowance,
                                 daily_allowance'));
                                 
-            if($user->super_user=='N')
+            if($emp_level=='non-confi')
             {
                 $result = $result->where('emp_level','>=',5);
             }
@@ -157,17 +158,30 @@ rd_ndot
             {
                 $result = $result->where('emp_level','<',5);
             }
+           
 
         return $result->get();
     }
 
-    public function reInsert($period_id,$employees){
+    public function reInsert($period_id,$employees,$emp_level){
+        $user = Auth::user();
         $blank = [];
-        $this->model->where('period_id',$period_id)->delete();
+        
+        $this->model->where('period_id',$period_id)
+        ->where('user_id',$user->id)
+        ->where('emp_level',$emp_level)
+        ->delete();
+
+        $info = array(
+            'user_id' => $user->id,
+            'generated_on' => now()
+        );
 
         foreach($employees as $employee)
-        {       
-            array_push($blank,$employee->toColumnArray());
+        {   
+
+            array_push($blank,array_merge($employee->toColumnArray(),$info));
+
         }
 
         $result = DB::table('payrollregister_unposted_s')->insertOrIgnore($blank);
@@ -175,11 +189,11 @@ rd_ndot
         return $result;
     }
 
-    public function runGovLoans($period,$biometric_ids)
+    public function runGovLoans($period,$biometric_ids,$user_id,$emp_level)
     {
         //dd($period->id);
 
-        DB::table('unposted_loans')->where('period_id',$period->id)->delete();
+        DB::table('unposted_loans')->where('period_id',$period->id)->where('user_id',$user_id)->where('emp_level',$emp_level)->delete();
         $tmp_loan = [];
         $loans = $this->model->select(DB::raw("deduction_gov_loans.id,
                                                 deduction_gov_loans.biometric_id,
@@ -206,6 +220,8 @@ rd_ndot
                 'deduction_type' => $loan->deduction_type,
                 'amount' => $loan->ammortization,
                 'deduction_id' => $loan->id,
+                'emp_level' => $emp_level,
+                'user_id' => $user_id
             ];
 
             array_push($tmp_loan,$tmp);
@@ -215,11 +231,11 @@ rd_ndot
 
     }
 
-    public function runInstallments($period,$biometric_ids)
+    public function runInstallments($period,$biometric_ids,$user_id,$emp_level)
     {
         //dd($period->id)
 
-        DB::table('unposted_installments')->where('period_id',$period->id)->delete();
+        DB::table('unposted_installments')->where('period_id',$period->id)->where('user_id',$user_id)->where('emp_level',$emp_level)->delete();
         $tmp_loan = [];
         $loans = $this->model->select(DB::raw("deduction_installments.id,
                                                 deduction_installments.biometric_id,
@@ -247,6 +263,8 @@ rd_ndot
                 'deduction_type' => $loan->deduction_type,
                 'amount' => $loan->ammortization,
                 'deduction_id' => $loan->id,
+                'emp_level' => $emp_level,
+                'user_id' => $user_id
             ];
 
             array_push($tmp_loan,$tmp);
@@ -256,9 +274,9 @@ rd_ndot
 
     }
 
-    public function runOneTimeDeduction($period,$biometric_ids)
+    public function runOneTimeDeduction($period,$biometric_ids,$user_id,$emp_level)
     {
-        DB::table('unposted_onetime_deductions')->where('period_id',$period->id)->delete();
+        DB::table('unposted_onetime_deductions')->where('period_id',$period->id)->where('user_id',$user_id)->where('emp_level',$emp_level)->delete();
         
         $tmp_loan = [];
 
@@ -279,6 +297,8 @@ rd_ndot
                 'deduction_type' => $loan->deduction_type,
                 'amount' => $loan->amount,
                 'deduction_id' => $loan->id,
+                'emp_level' => $emp_level,
+                'user_id' => $user_id
             ];
 
             array_push($tmp_loan,$tmp);
@@ -287,9 +307,9 @@ rd_ndot
         DB::table('unposted_onetime_deductions')->insertOrIgnore($tmp_loan);
     }
 
-    public function runFixedDeduction($period,$biometric_ids)
+    public function runFixedDeduction($period,$biometric_ids,$user_id,$emp_level)
     {
-        DB::table('unposted_fixed_deductions')->where('period_id',$period->id)->delete();
+        DB::table('unposted_fixed_deductions')->where('period_id',$period->id)->where('user_id',$user_id)->where('emp_level',$emp_level)->delete();
         $tmp_loan = [];
 
         $fixed = $this->model->select(DB::raw("deduction_fixed.id,biometric_id,deduction_fixed.deduction_type,amount"))
@@ -310,6 +330,8 @@ rd_ndot
                 'deduction_type' => $loan->deduction_type,
                 'amount' => $loan->amount,
                 'deduction_id' => $loan->id,
+                'emp_level' => $emp_level,
+                'user_id' => $user_id
             ];
 
             array_push($tmp_loan,$tmp);
@@ -318,7 +340,7 @@ rd_ndot
         DB::table('unposted_fixed_deductions')->insertOrIgnore($tmp_loan);
     }
 
-    public function getPprocessed($period){
+    public function getPprocessed($period,$emp_level){
         // $locations = $this->model->select('locations.id','location_name')
         //             ->from("employees")
         //             ->join('locations','locations.id','=','employees.location_id')
@@ -334,7 +356,7 @@ rd_ndot
                         $departments = $this->getDepartments(0,$division);
 
                         foreach($departments as $department){
-                            $employees = $this->getEmployees(0,$division,$department,$period);
+                            $employees = $this->getEmployees(0,$division,$department,$period,$emp_level);
                             $department->employees =  $employees;
                         }
 
@@ -465,8 +487,9 @@ rd_ndot
 
     }
 
-    public function getEmployees($location,$division,$department,$period) /* Earnings and Deductions here */
+    public function getEmployees($location,$division,$department,$period,$emp_level) /* Earnings and Deductions here */
     {   
+        $user = Auth::user();
         $employees = $this->model->select(DB::raw("employee_names_vw.employee_name,payrollregister_unposted_s.*,employees.pay_type,employees.monthly_allowance as mallowance,
         employees.daily_allowance as dallowance,IF(employees.pay_type=1,employees.basic_salary/2,employees.basic_salary) AS basicpay"))
                                 ->from("payrollregister_unposted_s")
@@ -476,7 +499,9 @@ rd_ndot
                                     ['division_id','=',$division->id],
                                     ['dept_id','=',$department->id],
                                     //['location_id','=',$location->id],
-                                    ['payrollregister_unposted_s.period_id','=',$period->id]
+                                    ['payrollregister_unposted_s.period_id','=',$period->id],
+                                    ['user_id','=',$user->id],
+                                    ['payrollregister_unposted_s.emp_level','=',$emp_level]
                                 ])->orderBy('employees.pay_type','DESC')->orderBy('employee_names_vw.employee_name','ASC')->get();
         foreach($employees as $employee)
         {   
@@ -543,7 +568,7 @@ rd_ndot
        
     }
 
-    public function runFixedCompensation($period,$biometric_ids)
+    public function runFixedCompensation($period,$biometric_ids,$user_id,$emp_level)
     {
         //unposted_fixed_compensations
         //unposted_other_compensations
@@ -554,7 +579,7 @@ INNER JOIN compensation_fixed_details details ON header.id = details.header_id
 WHERE period_id = 1 AND total_amount > 0;*/
 
 
-        DB::table('unposted_fixed_compensations')->where('period_id',$period->id)->delete();
+        DB::table('unposted_fixed_compensations')->where('period_id',$period->id)->where('user_id',$user_id)->where('emp_level',$emp_level)->delete();
         $tmp_earn = [];
 
         $fixed = $this->model->select(DB::raw("period_id,compensation_type,biometric_id,total_amount,id"))
@@ -574,6 +599,8 @@ WHERE period_id = 1 AND total_amount > 0;*/
                 'compensation_type' => $earn->compensation_type,
                 'amount' => $earn->total_amount,
                 'deduction_id' => $earn->id,
+                'emp_level' => $emp_level,
+                'user_id' => $user_id
             ];
 
             array_push($tmp_earn,$tmp);
@@ -584,12 +611,12 @@ WHERE period_id = 1 AND total_amount > 0;*/
         DB::table('unposted_fixed_compensations')->insertOrIgnore($tmp_earn);
     }
 
-    public function runOtherCompensation($period,$biometric_ids)
+    public function runOtherCompensation($period,$biometric_ids,$user_id,$emp_level)
     {
         //unposted_fixed_compensations
         //unposted_other_compensations
 
-        DB::table('unposted_other_compensations')->where('period_id',$period->id)->delete();
+        DB::table('unposted_other_compensations')->where('period_id',$period->id)->where('user_id',$user_id)->where('emp_level',$emp_level)->delete();
         $tmp_earn = [];
 
         $fixed = $this->model->select(DB::raw("period_id,compensation_type,biometric_id,total_amount,id"))
@@ -609,6 +636,8 @@ WHERE period_id = 1 AND total_amount > 0;*/
                 'compensation_type' => $earn->compensation_type,
                 'amount' => $earn->total_amount,
                 'deduction_id' => $earn->id,
+                'emp_level' => $emp_level,
+                'user_id' => $user_id
             ];
 
             array_push($tmp_earn,$tmp);
@@ -964,12 +993,26 @@ WHERE period_id = 1 AND total_amount > 0;*/
 
 
         SELECT period_id,biometric_id,deduction_type,amount,deduction_id FROM unposted_fixed_deductions WHERE period_id = 1;
-SELECT period_id,biometric_id,deduction_type,amount,deduction_id FROM unposted_installments WHERE period_id = 1;
-SELECT period_id,biometric_id,deduction_type,amount,deduction_id FROM unposted_onetime_deductions WHERE period_id = 1;
-SELECT period_id,biometric_id,deduction_type,amount,deduction_id FROM unposted_loans WHERE period_id = 1;
-        
+        SELECT period_id,biometric_id,deduction_type,amount,deduction_id FROM unposted_installments WHERE period_id = 1;
+        SELECT period_id,biometric_id,deduction_type,amount,deduction_id FROM unposted_onetime_deductions WHERE period_id = 1;
+        SELECT period_id,biometric_id,deduction_type,amount,deduction_id FROM unposted_loans WHERE period_id = 1;
+                
         */
 
+    }
+
+    public function getHolidayCounts($biometric_id,$period_id)
+    {
+        $qry = "SELECT holiday_type FROM holidays INNER JOIN holiday_location ON holidays.id = holiday_id
+        INNER JOIN payroll_period ON holiday_date BETWEEN date_from AND date_to
+        INNER JOIN employees ON employees.location_id = holiday_location.location_id
+        INNER JOIN holiday_types ON holiday_types.id = holiday_type
+        WHERE payroll_period.id = $period_id
+        AND biometric_id = $biometric_id";
+
+        $result = DB::select($qry);
+
+        return $result;
     }
 
 

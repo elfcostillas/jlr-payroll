@@ -11,9 +11,10 @@ class SemiMonthly
 
     function getBasicPay($data)
     {
+      
         //dd($data);
         return (float) round($data['basic_salary']/2,2) - $data['late_eq_amount'] - $data['under_time_amount'] - $data['vl_wpay_amount'] - $data['sl_wpay_amount']
-        - $data['absences_amount'] - $data['leghol_count_amount'] - $data['sphol_count_amount'] - $data['bl_wpay_amount'];
+        - $data['absences_amount'] - (round($data['daily_rate'],2) * $data['actual_reghol']) - (round($data['daily_rate'],2) * $data['actual_sphol']) - $data['bl_wpay_amount'];
     }
 
     function getGrossPay($payreg){

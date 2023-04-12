@@ -10,6 +10,7 @@ class Employee
     protected $philrate;
 
     protected $payreg = [
+        'emp_level' => null,
         'period_id' => null,
         'biometric_id' => null,
         'basic_pay' =>null,
@@ -114,8 +115,10 @@ class Employee
         'gross_total' => 0.00,
         'total_deduction' => 0.00,
         'net_pay' => 0.0,
-        'sss_wisp' => 0.00
-
+        'sss_wisp' => 0.00,
+        'actual_reghol' => 0.0,
+        'actual_sphol' => 0.0,
+        'actual_dblhol' => 0.0,
 
 
     ]; 
@@ -200,7 +203,10 @@ class Employee
         $this->payreg['dblhol_rdot_amount'] = round($this->rates['hourly_rate'] * 3.9 * 1.3 * $this->payreg['dblhol_rdot'],2);
         $this->payreg['dblhol_ndot_amount'] = round($this->rates['hourly_rate'] * 3 * 1.1 * 1.3 * $this->payreg['dblhol_ndot'],2);
         $this->payreg['dblhol_rdndot_amount'] = round($this->rates['hourly_rate'] * 3.9 * 1.1 * 1.3 * $this->payreg['dblhol_rdndot'],2);
-
+        // if($this->payreg['biometric_id']==847)
+        // {
+        //     dd($this->payreg);
+        // }
         $this->payreg['basic_pay'] = $this->repo->getBasicPay($this->payreg);
 
         

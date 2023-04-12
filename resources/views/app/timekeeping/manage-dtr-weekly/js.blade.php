@@ -129,6 +129,7 @@
                                     restday_hrs : { type:'number', },
                                     restday_ot : { type:'number', },
                                     reghol_hrs : { type:'number', },
+                                    reghol_pay : { type:'number', },
                                     reghol_ot : { type:'number', },
                                     restday_hrs : { type:'number', },
                                     restday_ot : { type:'number', },
@@ -150,6 +151,7 @@
                             { field : "restday_ot" , aggregate: "sum" },
 
                             { field : "reghol_hrs" , aggregate: "sum" },
+                            { field : "reghol_pay" , aggregate: "sum" },
                             { field : "reghol_ot" , aggregate: "sum" },
 
                             { field : "sphol_hrs" , aggregate: "sum" },
@@ -654,6 +656,23 @@
                     },
                     {
                         title : "Reg Hol",
+                        field : "reghol_pay",
+                        width : 75, 
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        template : "# if(reghol_pay==0){#  #} else{# #= reghol_pay #  #}#",
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        aggregates : ['sum'], 
+                        footerTemplate: "<div style='text-align:center;font-size:8pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+
+                    },
+                    {
+                        title : "Reg Hol (Hrs)",
                         field : "reghol_hrs",
                         width : 75, 
                         attributes: {

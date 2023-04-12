@@ -51,30 +51,33 @@ class PayrollRegisterController extends Controller
 
     public function compute(Request $request)
     {
+        $user = Auth::user();
+
         $period = $this->unposted->getPeriod($request->id);
         $phil_rate = $this->unposted->getPhilRate();
         //dd($phil_rate->rate);
         $payreg = [];
 
-        $employees = $this->unposted->getEmployeeWithDTR($period->id,'semi');
-       
+        $employees = $this->unposted->getEmployeeWithDTR($period->id,'non-confi');
+        
         if($period->period_type==1){
             /* loans for 15 */
         }else{
-            /* loans for 30 */
+            /* loans for 30 */ //,$user_id,$emp_level
         }
 
-        $gloans = $this->unposted->runGovLoans($period,$employees->pluck('biometric_id'));
-        $installments = $this->unposted->runInstallments($period,$employees->pluck('biometric_id'));
-        $onetime = $this->unposted->runOneTimeDeduction($period,$employees->pluck('biometric_id'));
-        $fixed = $this->unposted->runFixedDeduction($period,$employees->pluck('biometric_id'));
+        $gloans = $this->unposted->runGovLoans($period,$employees->pluck('biometric_id'),$user->id,'non-confi');
+        $installments = $this->unposted->runInstallments($period,$employees->pluck('biometric_id'),$user->id,'non-confi');
+        $onetime = $this->unposted->runOneTimeDeduction($period,$employees->pluck('biometric_id'),$user->id,'non-confi');
+        $fixed = $this->unposted->runFixedDeduction($period,$employees->pluck('biometric_id'),$user->id,'non-confi');
 
-        $fixed = $this->unposted->runFixedCompensation($period,$employees->pluck('biometric_id'));
-        $other = $this->unposted->runOtherCompensation($period,$employees->pluck('biometric_id'));
+        $fixed = $this->unposted->runFixedCompensation($period,$employees->pluck('biometric_id'),$user->id,'non-confi');
+        $other = $this->unposted->runOtherCompensation($period,$employees->pluck('biometric_id'),$user->id,'non-confi');
 
         foreach($employees as $employee)
         {
-            
+           
+            $holidays = $this->unposted->getHolidayCounts($employee->biometric_id,$employee->period_id);
             //dd($employee);
             $employee->under_time_amount = 0;
             $employee->vl_wpay = 0;
@@ -89,6 +92,25 @@ class PayrollRegisterController extends Controller
             $employee->bl_wpay_amount = 0;
             $employee->bl_wopay = 0;
             $employee->bl_wopay_amount = 0;
+
+            $employee->actual_reghol = 0;
+            $employee->actual_sphol = 0;
+            $employee->actual_dblhol = 0;
+
+            foreach($holidays as $holiday){
+                //dd();
+                switch($holiday->holiday_type){
+                    case 1 : case '1' :
+                        $employee->actual_reghol += 1;
+                        break;
+                    case 2 : case '1' :
+                        $employee->actual_sphol += 1;
+                        break;
+                    case 3 : case '1' :
+                        $employee->actual_dblhol += 1;
+                        break;
+                }
+            }
 
             $leaves = $this->unposted->getFiledLeaves($employee->biometric_id,$period->id);
 
@@ -139,6 +161,7 @@ class PayrollRegisterController extends Controller
             }
 
             $person = ($employee->pay_type==1) ? new Employee($employee,new SemiMonthly) : new Employee($employee,new Daily);
+            
             $person->setPhilRate($phil_rate->rate);
             $person->compute($period);
             
@@ -156,7 +179,7 @@ class PayrollRegisterController extends Controller
 
         }
        
-        $flag = $this->unposted->reInsert($period->id,$payreg);
+        $flag = $this->unposted->reInsert($period->id,$payreg,'non-confi');
 
        
         if($flag){
@@ -165,7 +188,7 @@ class PayrollRegisterController extends Controller
             return false;
         }
 
-        $collections = $this->unposted->getPprocessed($period);
+        $collections = $this->unposted->getPprocessed($period,'non-confi');
         $headers =  $this->unposted->getHeaders($period)->toArray();
         $colHeaders = $this->unposted->getColHeaders();
 
@@ -207,7 +230,7 @@ class PayrollRegisterController extends Controller
 
             $noPay = $this->unposted->semiEmployeeNoPayroll($period->id);
 
-            $collections = $this->unposted->getPprocessed($period);
+            $collections = $this->unposted->getPprocessed($period,'non-confi');
             $headers =  $this->unposted->getHeaders($period)->toArray();
             $colHeaders = $this->unposted->getColHeaders();
 

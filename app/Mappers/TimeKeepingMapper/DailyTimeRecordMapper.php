@@ -202,7 +202,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
         })
         ->where('payroll_period.id',$period_id);
 
-        $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc,restday_hrs,restday_ot,sphol_hrs,sphol_ot,reghol_hrs,reghol_ot,
+        $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc,restday_hrs,restday_ot,sphol_hrs,sphol_ot,reghol_hrs,reghol_ot,reghol_pay,
         case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type"))
         ->from('edtr')
         ->where('edtr.biometric_id',$biometric_id)
@@ -744,7 +744,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
             foreach($dtr as $rec)
             {
                 $rec->ndays = ($rec->time_in!='' && $rec->time_out!='' && $rec->holiday_type==NULL && $rec->time_in!='00:00' && $rec->time_out!='00:00') ? 1 : 0;
-                
+               
                 switch($rec->holiday_type)
                 {   
                  
@@ -777,6 +777,8 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                     $rec->overt_time = 0;
                     $rec->night_diff_ot = 0;
                 }
+               
+                $this->updateValid($rec->toArray());
             }
         }
     }

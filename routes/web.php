@@ -38,6 +38,7 @@ use App\Http\Controllers\PayrollTransaction\PayrollRegisterController;
 use App\Http\Controllers\PayrollTransaction\PayrollRegisterWeeklyController;
 use App\Http\Controllers\PayrollTransaction\BankTransmittalController;
 use App\Http\Controllers\PayrollTransaction\PayslipController;
+use App\Http\Controllers\PayrollTransaction\PayrollRegisterConfiController;
 
 use App\Http\Controllers\Accounts\BiometricController;
 use App\Http\Controllers\Accounts\LeaveRequestController;
@@ -497,6 +498,20 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::get('download-unposted/{id}',[PayrollRegisterWeeklyController::class,'downloadExcelUnposted']);
         Route::post('post',[PayrollRegisterWeeklyController::class,'postPayroll']);
     });
+
+    Route::prefix('payroll-register-confi')->middleware('access:payroll-transaction/payroll-register-confi')->group(function(){
+        Route::get('/',[PayrollRegisterConfiController::class,'index']);
+        Route::get('unposted-payroll',[PayrollRegisterConfiController::class,'getUnpostedPeriod']);
+        Route::get('compute/{id}',[PayrollRegisterConfiController::class,'compute']);
+        Route::get('download-unposted/{id}',[PayrollRegisterConfiController::class,'downloadExcelUnposted']);
+        Route::post('post',[PayrollRegisterConfiController::class,'postPayroll']);
+        // Route::get('/',[PayrollRegisterController::class,'index']);
+        // Route::get('unposted-payroll',[PayrollRegisterController::class,'getUnpostedPeriod']);
+        // Route::get('compute/{id}',[PayrollRegisterController::class,'compute']);
+        // Route::get('download-unposted/{id}',[PayrollRegisterController::class,'downloadExcelUnposted']);
+        // Route::post('post',[PayrollRegisterController::class,'postPayroll']);
+        
+    }); 
 });
 
 
