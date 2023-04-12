@@ -103,10 +103,10 @@ class PayrollRegisterController extends Controller
                     case 1 : case '1' :
                         $employee->actual_reghol += 1;
                         break;
-                    case 2 : case '1' :
+                    case 2 : case '2' :
                         $employee->actual_sphol += 1;
                         break;
-                    case 3 : case '1' :
+                    case 3 : case '3' :
                         $employee->actual_dblhol += 1;
                         break;
                 }
