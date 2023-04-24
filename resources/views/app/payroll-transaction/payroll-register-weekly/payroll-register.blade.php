@@ -99,7 +99,7 @@
                         <tr>
                             <td style="text-align:center;">{{ $ctr }}</td>
                             <td style="text-align:right;padding : 0px 6px;">{{ $emp->biometric_id }}</td>
-                            <td style="text-align:left;padding : 0px 6px;">{{ $emp->employee_name }}</td>
+                            <td style="text-align:left;padding : 0px 6px;white-space:nowrap;">{{ $emp->employee_name }}</td>
                             <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->daily_rate) }}</td>
                             <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->days) }}</td>
                             <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->basic_pay) }}</td>

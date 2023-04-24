@@ -40,7 +40,13 @@ class PayrollPeriodWeeklyMapper extends AbstractMapper {
 	public function listforDropDown()
 	{	
 		// /SELECT id,CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) AS drange FROM payroll_period_weekly ORDER BY id DESC
-		$result = $this->model->select(DB::raw("id,CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) AS drange"))->orderBy('id','DESC');
+		//SELECT period_id FROM payrollregister_posted_weekly;
+
+		$posted = $this->model->select('period_id')->from('payrollregister_posted_weekly')->distinct()->get();
+
+		$result = $this->model->select(DB::raw("id,CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) AS drange"))
+								->whereNotIn('id',$posted->pluck('period_id'))
+								->orderBy('id','DESC');
 
 		return $result->get();
 	}
