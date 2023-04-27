@@ -26,6 +26,7 @@ class UnpostedPayrollRegisterWeekly implements ShouldAutoSize,WithColumnFormatti
   
     private $collections;
     private $label;
+    private $headers;
     // private $headers;
     // private $deductions;
     // private $gov;
@@ -48,6 +49,7 @@ class UnpostedPayrollRegisterWeekly implements ShouldAutoSize,WithColumnFormatti
         return view('app.payroll-transaction.payroll-register-weekly.payroll-register-ex', [
             'data' => $this->collections,
             'label' => $this->label,
+            'headers' => $this->headers,
             // 'headers' => $this->headers , 
             // 'labels' => $this->label,
             // 'deductionLabel' => $this->deductions,
@@ -57,9 +59,10 @@ class UnpostedPayrollRegisterWeekly implements ShouldAutoSize,WithColumnFormatti
         ]);
     }
 
-    public function setValues($collections,$label){
+    public function setValues($collections,$label,$headers){
     	$this->collections = $collections;
         $this->label = $label;
+        $this->headers = $headers;
         // $this->headers = $headers;
         // $this->deductions = $deductions;
         // $this->gov = $gov;

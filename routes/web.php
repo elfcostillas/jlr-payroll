@@ -38,6 +38,7 @@ use App\Http\Controllers\PayrollTransaction\PayrollRegisterController;
 use App\Http\Controllers\PayrollTransaction\PayrollRegisterWeeklyController;
 use App\Http\Controllers\PayrollTransaction\BankTransmittalController;
 use App\Http\Controllers\PayrollTransaction\PayslipController;
+use App\Http\Controllers\PayrollTransaction\PayslipWeeklyController;
 use App\Http\Controllers\PayrollTransaction\PayrollRegisterConfiController;
 
 use App\Http\Controllers\Accounts\BiometricController;
@@ -483,6 +484,15 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::get('get-employees/{period}/{div}/{dept}',[PayslipController::class,'getEmployees']);
         Route::get('web-view/{period}/{div}/{dept}/{bio_id}',[PayslipController::class,'webView']);
         Route::get('print/{period}/{div}/{dept}/{bio_id}',[PayslipController::class,'print']);
+    });
+
+    Route::prefix('payslip-weekly')->group(function(){
+        Route::get('/',[PayslipWeeklyController::class,'index']);
+
+        Route::get('posted-period',[PayslipWeeklyController::class,'getPostedPeriods']);
+        Route::get('get-employees/{period}/{div}/{dept}',[PayslipWeeklyController::class,'getEmployees']);
+        Route::get('web-view/{period}/{div}/{dept}/{bio_id}',[PayslipWeeklyController::class,'webView']);
+        Route::get('print/{period}/{div}/{dept}/{bio_id}',[PayslipWeeklyController::class,'print']);
     });
 
     Route::prefix('bank-transmittal')->group(function(){

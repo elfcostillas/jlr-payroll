@@ -54,16 +54,6 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
 
     public function getEmployeeWithDTR($period_id,$emp_level)
     {
-      
-        /*
-       reg_ot
-reg_nd
-reg_ndot
-rd_hrs
-rd_ot
-rd_nd
-rd_ndot
-*/
         $user = Auth::user();
         $result = $this->model->select(DB::raw("
                         IF(emp_level>=5 || ISNULL(emp_level),'non-confi','confi') AS emp_level,
@@ -136,6 +126,108 @@ rd_ndot
                     ->whereNotNull('time_out')
                     ->groupBy(DB::raw('
                                 payroll_period.id,
+                                employees.biometric_id,
+                                lastname,
+                                firstname,
+                                middlename,
+                                suffixname,
+                                basic_salary,
+                                is_daily,
+                                deduct_phic,
+                                deduct_sss,
+                                pay_type, 
+                                hdmf_contri,
+                                monthly_allowance,
+                                daily_allowance'));
+                                
+            if($emp_level=='non-confi')
+            {
+                $result = $result->where('emp_level','>=',5);
+            }
+            else
+            {
+                $result = $result->where('emp_level','<',5);
+            }
+           
+
+        return $result->get();
+    }
+
+    public function getEmployeeWithDTRW($period_id,$emp_level)
+    {
+
+        $user = Auth::user();
+        $result = $this->model->select(DB::raw("
+                        IF(emp_level>=5 || ISNULL(emp_level),'non-confi','confi') AS emp_level,
+                        payroll_period.id AS period_id,
+                        employees.biometric_id,
+                        lastname,
+                        firstname,
+                        middlename,
+                        suffixname,
+                        basic_salary,
+                        date_hired,
+                        is_daily,
+                        deduct_phic,
+                        deduct_sss,
+                        pay_type,
+                        SUM(late) AS late,
+                        SUM(late_eq) AS late_eq,
+                        SUM(under_time) AS under_time,
+                        SUM(over_time) AS reg_ot,
+                        SUM(night_diff) AS reg_nd,
+                        SUM(night_diff_ot) AS reg_ndot,
+                        SUM(ndays) AS ndays,
+                        hdmf_contri,
+                        monthly_allowance,
+                        daily_allowance,
+                        sum(restday_hrs) as rd_hrs,
+                        sum(restday_ot) as rd_ot,
+                        sum(restday_nd) as rd_nd,
+                        sum(restday_ndot) as rd_ndot,
+
+                        sum(reghol_pay) as leghol_count,
+                        sum(reghol_hrs) as leghol_hrs,
+                        sum(reghol_ot) as leghol_ot,
+                        sum(reghol_rd) as leghol_rd,
+                        sum(reghol_rdot) as leghol_rdot,
+                        sum(reghol_nd) as leghol_nd,
+                        sum(reghol_rdnd) as leghol_rdnd,
+                        sum(reghol_ndot) as leghol_ndot,
+                        sum(reghol_rdndot) as leghol_rdndot,
+
+                        sum(sphol_pay) as sphol_count,
+                        sum(sphol_hrs) as sphol_hrs,
+                        sum(sphol_ot) as sphol_ot,
+                        sum(sphol_rd) as sphol_rd,
+                        sum(sphol_rdot) as sphol_rdot,
+                        sum(sphol_nd) as sphol_nd,
+                        sum(sphol_rdnd) as sphol_rdnd,
+                        sum(sphol_ndot) as sphol_ndot,
+                        sum(sphol_rdndot) as sphol_rdndot,
+
+                        sum(dblhol_pay) as dblhol_count,
+                        sum(dblhol_hrs) as dblhol_hrs,
+                        sum(dblhol_ot) as dblhol_ot,
+                        sum(dblhol_rd) as dblhol_rd,
+                        sum(dblhol_rdot) as dblhol_rdot,
+                        sum(dblhol_rdnd) as dblhol_rdnd,
+                        sum(dblhol_nd) as dblhol_nd,
+                        sum(dblhol_ndot) as dblhol_ndot,
+                        sum(dblhol_rdndot) as dblhol_rdndot
+                        "))
+                    ->from('edtr')
+                    ->join('payroll_period_weekly',function($join){
+                        $join->whereRaw('edtr.dtr_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
+                    })
+                    ->join('employees','edtr.biometric_id','=','employees.biometric_id')
+                    ->where('payroll_period.id','=',$period_id)
+                    ->whereIn('pay_type',[3])
+                    ->where('exit_status',1)
+                    ->whereNotNull('time_in')
+                    ->whereNotNull('time_out')
+                    ->groupBy(DB::raw('
+                                payroll_period_weekly.id,
                                 employees.biometric_id,
                                 lastname,
                                 firstname,
@@ -888,7 +980,9 @@ WHERE period_id = 1 AND total_amount > 0;*/
                     ->from('payrollregister_unposted_s')
                     ->join('employees','payrollregister_unposted_s.biometric_id','=','employees.biometric_id')
                     ->where('payrollregister_unposted_s.period_id',$period_id)
-                    ->where('emp_level','>=',5)->get();
+                    //->where('emp_level','>=',5)
+                    ->where('payrollregister_unposted_s.emp_level','=','non-confi')
+                    ->get();
         
         foreach($result  as $line){
             $data = $line->toArray();
@@ -912,7 +1006,8 @@ WHERE period_id = 1 AND total_amount > 0;*/
         DB::beginTransaction();
         
         $insertCount = DB::table('payrollregister_posted_s')->insertOrIgnore($tmp);
-      
+        //$insertCount = DB::table('payrollregister_posted_s')->insert($tmp);
+       
         if($result->count() == $insertCount){
             foreach($tables as $unposted => $posted){
                 $loan_array = [];
@@ -920,7 +1015,7 @@ WHERE period_id = 1 AND total_amount > 0;*/
                     ->from($unposted)
                     ->join('employees',$unposted.'.biometric_id','=','employees.biometric_id')
                     ->where('period_id',$period_id)
-                    ->where('emp_level','>=',5)
+                    ->where('employees.emp_level','>=',5)
                     ->get();
                 
                 foreach($loan_type as $loans){
@@ -945,7 +1040,7 @@ WHERE period_id = 1 AND total_amount > 0;*/
                 ->from($unposted)
                 ->join('employees',$unposted.'.biometric_id','=','employees.biometric_id')
                 ->where('period_id',$period_id)
-                ->where('emp_level','>=',5)
+                ->where('employees.emp_level','>=',5)
                 ->get();
 
                 foreach($comp_type as $compensation){

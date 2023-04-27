@@ -119,6 +119,8 @@ class Employee
         'actual_reghol' => 0.0,
         'actual_sphol' => 0.0,
         'actual_dblhol' => 0.0,
+        // 'earnings'=> 0.0,
+        // 'retro_pay'=> 0.0,
 
 
     ]; 
@@ -230,8 +232,10 @@ class Employee
 
         $this->payreg['gross_pay'] = $this->repo->getGrossPay($this->payreg);
 
-        //dd($this->payreg);
-        $this->computeContribution($period);
+        if($this->payreg['pay_type']!='3'){
+            $this->computeContribution($period);
+        }
+        
 
 
         /*
@@ -414,10 +418,21 @@ class Employee
 
     public function computeGrossTotal($other_earn){
         $this->payreg['gross_total'] = $this->payreg['gross_pay'];
-        foreach($other_earn as $earn)
-        {
-            //dd($earn);
-            $this->payreg['gross_total'] += $earn;
+        if($this->payreg['pay_type']!='3'){
+            foreach($other_earn as $earn)
+            {
+                //dd($earn);
+                $this->payreg['gross_total'] += $earn;
+            }
+        }else {
+            if($other_earn){
+                // $this->payreg['retro_pay'] = $other_earn['retro_pay'];
+                // $this->payreg['earnings'] = $other_earn['earnings'] ;
+               
+                $this->payreg['gross_total'] += $other_earn['earnings'] + $other_earn['retro_pay'];
+              
+                $this->payreg['total_deduction'] =  $other_earn['deductions'];
+            }
         }
     }
 

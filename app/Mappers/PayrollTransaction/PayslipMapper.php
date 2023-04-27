@@ -567,6 +567,16 @@ class PayslipMapper extends AbstractMapper {
         
     }
 
+    public function getWeeklyPosytedPeriod()
+    {
+        $result = $this->model->select(DB::raw("period_id,CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) AS date_range"))
+                                ->from('posting_info')->join('payroll_period','payroll_period.id','=','posting_info.period_id')
+                                ->where('trans_type','non-confi')
+                                ->orderBy('period_id','DESC');
+
+        return $result->get();
+    }
+
 
 
 }

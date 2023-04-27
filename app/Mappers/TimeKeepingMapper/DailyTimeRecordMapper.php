@@ -186,7 +186,6 @@ class DailyTimeRecordMapper extends AbstractMapper {
                     ->orderBy('punch_time');
         }
         
-       
         //WHERE biometric_id = 100 ORDER BY punch_date,punch_time;
 
         return $result->get();
@@ -204,6 +203,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
 
         // $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc,restday_hrs,restday_ot,sphol_hrs,sphol_ot,reghol_hrs,reghol_ot,reghol_pay,
         // case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type"))
+        /*
         $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,CONCAT(lastname,', ',firstname) as empname,DATE_FORMAT(dtr_date,'%a') AS day_name,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) as work_sched,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,night_diff_ot,ifnull(schedule_id,0) schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc,case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type,ot_in,ot_out,restday_hrs,restday_ot,restday_nd,restday_ndot,reghol_pay,reghol_hrs,reghol_ot,reghol_rd,reghol_rdnd,reghol_nd,reghol_ndot,sphol_pay,sphol_hrs,sphol_ot,sphol_rd,sphol_rdnd,sphol_nd,sphol_ndot,dblhol_pay,dblhol_hrs,dblhol_ot,dblhol_rd,dblhol_rdnd,dblhol_nd,dblhol_ndot,dblhol_rdot,sphol_rdot,reghol_rdot,reghol_rdndot,sphol_rdndot,dblhol_rdndot"))
                             ->from('edtr')
         ->from('edtr')
@@ -216,6 +216,22 @@ class DailyTimeRecordMapper extends AbstractMapper {
                             $join->on('holidays.location_id','=','employees.location_id');
                             $join->on('holidays.holiday_date','=','edtr.dtr_date');
                         })
+        ->leftJoin('work_schedules','schedule_id','=','work_schedules.id')
+        ->where('payroll_period_weekly.id',$period_id)
+        ->orderBy('dtr_date');
+        */
+        $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,night_diff_ot,ifnull(schedule_id,0) schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc,case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type,ot_in,ot_out,restday_hrs,restday_ot,restday_nd,restday_ndot,reghol_pay,reghol_hrs,reghol_ot,reghol_rd,reghol_rdnd,reghol_nd,reghol_ndot,sphol_pay,sphol_hrs,sphol_ot,sphol_rd,sphol_rdnd,sphol_nd,sphol_ndot,dblhol_pay,dblhol_hrs,dblhol_ot,dblhol_rd,dblhol_rdnd,dblhol_nd,dblhol_ndot,dblhol_rdot,sphol_rdot,reghol_rdot,reghol_rdndot,sphol_rdndot,dblhol_rdndot"))
+        ->from('edtr')
+        ->where('edtr.biometric_id',$biometric_id)
+        ->join('payroll_period_weekly',function($join){
+            $join->whereRaw('dtr_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
+        })
+        ->leftJoin('employees','employees.biometric_id','=','edtr.biometric_id')
+
+        ->leftJoinSub($holidays,'holidays',function($join) { //use ($type)
+            $join->on('holidays.location_id','=','employees.location_id');
+            $join->on('holidays.holiday_date','=','edtr.dtr_date');
+        })
         ->leftJoin('work_schedules','schedule_id','=','work_schedules.id')
         ->where('payroll_period_weekly.id',$period_id)
         ->orderBy('dtr_date');

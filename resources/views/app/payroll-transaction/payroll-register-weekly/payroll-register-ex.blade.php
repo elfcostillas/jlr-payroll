@@ -27,100 +27,80 @@
         }
     }
 
-    $ctr = 1;
+    $rcount = 1;
     ?>
     <div id="" >
         <table style="border-collapse:collapse">
             <thead>
                 <tr>
-                        <th > No. </th>
-                        <th > Bio ID</th>
-                        <th >Name</th>
-                        <th >Daily Rate</th>
-                        <th >No of Days</th>
-                        <th >Basic Pay</th>
+                    <th >No.</th>
+                    <th > Bio ID</th>
+                    <th >Name</th>
+                    <th >Basic Rate</th>
+                    <th >Daily Rate</th>
+                    <th >Allowance (Monthly)</th>
+                    <th >Allowance (Daily)</th>
+                    <th >No Days</th>
+                    <th >Basic Pay</th>
                     
-                        <th >OT</th>
-                        <th >OT Amount</th>
-                        <th >Rest Day</th>
-                        <th >RD Amount</th>
+                    <th >Daily Allowance</th>
+                    <th >Semi Monthly Allowance</th>
 
-                        <th >RD OT</th>
-                        <th >RD OT Amount</th>
+                    <th >Late (Hrs)</th>
+                    <th >Late Amount</th>
 
-                        <th >SP Hol (Hrs)</th>
-                        <th >SP Hol Pay</th>
+                   
+                    <th >Earnings</th>
+                    <th >Retro Pay</th>
 
-                        <th >SP Hol OT</th>
-                        <th >SP Hol OT Pay</th>
+                    @foreach($headers as $key => $val)
+                        <th >{{ $labels[$key] }}</th>
+                        @php $colspan++; @endphp
+                    @endforeach
+                    <th  >Gross Pay</th>
+                  
 
-                        <th >Reg Hol (Hrs)</th>
-                        <th >Reg Hol Pay</th>
-
-                        <th >Reg Hol OT</th>
-                        <th >Reg Hol OT Pay</th>
-
-                        <th >Other Income</th>
-                        <th >Retro Pay</th>
-                        <th >Gross Pay</th>
-                        <th >Deduction</th>
-                        <th >Net Pay</th> 
+                    <th  >Total Deduction</th>
+                    <th  >Net Pay</th>
                 
                 </tr>
             </thead>
-            @foreach($data as $e)
-                <tr>
-                    <td colspan="25" style="background: grey;">{{ $e->div_name }}</td>
-                </tr>
+            @foreach($data as $employee)
+            {{-- @php dd($employee->otherEarnings); @endphp --}}
+             <tr style="vertical-align: top;">
+                 <th>{{ $rcount }}</th>
+                 <th style="width:120px;"> {{ $employee->biometric_id }} </th> 
+                 <th style="text-align:left; width : 240px;"> {{ $employee->employee_name }} </th> 
+                 <td style="text-align:right;"> {{ number_format($employee->basicpay,2) }}</td>
+                 <td style="text-align:right;"> {{ number_format($employee->daily_rate,2) }}</td>
+
+                 <td style="text-align:right;"> {{ ($employee->mallowance>0) ? number_format(round($employee->mallowance/2),2) : '' }}</td>
+                 <td style="text-align:right;"> {{ ($employee->dallowance>0) ? number_format($employee->dallowance,2) : '' }}</td>
+                 
+                 
+                 <td style="text-align:right;"> {{ number_format($employee->ndays,2) }}</td>
+                 <td style="text-align:right;"> {{ number_format($employee->basic_pay,2) }}</td>
+
+                 <td style="text-align:right;"> {{ ($employee->daily_allowance>0) ? number_format($employee->daily_allowance,2) : ''; }}</td>
+                 <td style="text-align:right;"> {{ ($employee->semi_monthly_allowance>0) ? number_format($employee->semi_monthly_allowance,2) : ''; }}</td>
+
+                 <td style="text-align:right;"> {{ ($employee->late_eq>0) ? number_format($employee->late_eq,2) : ''; }}</td>
+                 <td style="text-align:right;"> {{ ($employee->late_eq_amount>0) ? number_format($employee->late_eq_amount,2) : ''; }}</td>
+             
+                 <td style="text-align:right;"> {{ ($employee->otherEarnings['earnings']>0) ? number_format($employee->otherEarnings['earnings'],2) : ''; }}</td>
+                 <td style="text-align:right;"> {{ ($employee->otherEarnings['retro_pay']>0) ? number_format($employee->otherEarnings['retro_pay'],2) : ''; }}</td>
+             
+
+                 @foreach($headers as $key => $val)
+                     <td style="text-align:right;">{{ ($employee->$key > 0) ? number_format($employee->$key,2) : '' }}</td>
+                 @endforeach
+                     <td style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($employee->gross_total > 0) ? number_format($employee->gross_total,2) : '' }}</td>
                 
-                @foreach($e->dept as $dept)
-                <tr>
-                    <td colspan="25" style="background: #e3e3e3;" >{{ $dept->dept_name }}</td>
-                </tr>
-                    @foreach($dept->employees as $emp)
-                        <tr>
-                            <td style="text-align:center;">{{ $ctr }}</td>
-                            <td style="text-align:right;padding : 0px 6px;">{{ $emp->biometric_id }}</td>
-                            <td style="text-align:left;padding : 0px 6px;white-space:nowrap;">{{ $emp->employee_name }}</td>
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->daily_rate) }}</td>
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->days) }}</td>
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->basic_pay) }}</td>
-                            {{--<td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->ot) }}</td>
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->ot_amount) }}</td>
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->earnings) }}</td>
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->gross_pay) }}</td>
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->deductions) }}</td>
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->net_pay) }}</td> --}}
-
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->ot) }}</td>
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->ot_amount) }}</td>
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->restday) }}</td>
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->restday_amount) }}</td>
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->restday_ot) }}</td>
-
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->restday_ot_amount) }}</td>
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->sp_hrs) }}</td>
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->sp_amount) }}</td>
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->sp_ot) }}</td>
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->sp_ot_amount) }}</td>
-
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->reghol_hrs) }}</td>
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->reghol_amount) }}</td>
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->reghol_ot) }}</td>
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->reghol_ot_amount) }}</td>
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->earnings) }}</td>
-
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->retro_pay) }}</td>
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->gross_pay) }}</td>
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->deductions) }}</td>
-                            <td style="text-align:right;padding : 0px 6px;">{{ nformat($emp->net_pay) }}</td>
-
-                        </tr>
-                        <?php $ctr++; ?>
-                    @endforeach
-                @endforeach
-            
-            @endforeach
+                 <td style="text-align:right;font-weight:bold;border-bottom:1px solid;" >{{ ($employee->total_deduction>0) ? number_format($employee->total_deduction,2) : ''; }}</td>
+                 <td style="text-align:right;font-weight:bold;border-bottom:double;{{ ($employee->net_pay < ($employee->gross_total*0.3)) ? 'color:red'  : '' }};" >{{ ($employee->net_pay>0) ? number_format($employee->net_pay,2) :  number_format($employee->net_pay,2) }}</td>
+             </tr>
+             <?php $rcount++; ?>
+         @endforeach
             
         </table>
           

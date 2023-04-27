@@ -60,11 +60,12 @@ SELECT period_id,earnings,deductions,biometric_id FROM unposted_weekly_compensat
         $employees = $this->model->select(DB::raw("employee_names_vw.biometric_id,employee_names_vw.employee_name,$period_id as period_id,ifnull(d.earnings,0.00) earnings,ifnull(d.deductions,0.00) deductions,ifnull(d.retro_pay,0.00) retro_pay"))
                     ->from('employee_names_vw')
                     ->join('employees','employee_names_vw.biometric_id','=','employees.biometric_id')
-                    ->leftJoin('unposted_weekly_compensation','employees.biometric_id','=','unposted_weekly_compensation.biometric_id')
+                    //->leftJoin('unposted_weekly_compensation','employees.biometric_id','=','unposted_weekly_compensation.biometric_id')
                     ->leftJoinSub($data,'d',function($join) use ($period_id){
                         $join->on('d.biometric_id','=','employees.biometric_id');
-                        //$join->on('d.period_id','=',DB::raw("'$period_id'"));
+                        $join->on('d.period_id','=',DB::raw("'$period_id'"));
                     })
+                    //->where('unposted_weekly_compensation.period_id',$period_id)
                     ->where('employees.exit_status',1)
                     ->where('employees.pay_type',3);
 
