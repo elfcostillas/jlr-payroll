@@ -61,14 +61,11 @@ class PayslipController extends Controller
     {
         $period_label = $this->payslip->getPeriodLabel($request->period);
         $result = $this->payslip->getData($request->period,$request->div,$request->dept,$request->bio_id);
-        //$headers = $this->unposted->getHeaders($request->period);
-
-        // foreach($header as $h)
-        // {
-
-        // }
-        //dd($period_label->date_range);
-        return view('app.payroll-transaction.payslip.payslip-web',['data' => $result,'period_label' =>$period_label]);
+       
+        return view('app.payroll-transaction.payslip.payslip-web',[
+            'data' => $result,
+            'period_label' =>$period_label
+        ]);
     }
 
     public function print(Request $request)

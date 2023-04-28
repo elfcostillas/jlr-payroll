@@ -28,19 +28,18 @@ class PayslipWeeklyController  extends Controller
 
     public function getPostedPeriods()
     {
-        $result = $this->payslip->getPostedPeriods();
+        $result = $this->payslip->getWeeklyPosytedPeriod();
 
         return response()->json($result);
     }
 
+
+
     public function webView(Request $request)
     {
-        $period_label = $this->payslip->getPeriodLabel($request->period);
-        $result = $this->payslip->getData($request->period,$request->div,$request->dept,$request->bio_id);
+        $period_label = $this->payslip->getPeriodLabelWeekly($request->period);
+        $result = $this->payslip->getDataWeekly($request->period,$request->div,$request->dept,$request->bio_id);
        
-        return view('app.payroll-transaction.payslip.payslip-web',[
-            'data' => $result,
-            'period_label' =>$period_label
-        ]);
+        return view('app.payroll-transaction.payslip.payslip-web',['data' => $result,'period_label' =>$period_label]);
     }
 }

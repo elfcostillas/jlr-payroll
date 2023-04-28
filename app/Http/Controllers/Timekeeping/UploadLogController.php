@@ -47,6 +47,8 @@ class UploadLogController extends Controller
 				$date = date_format(Carbon::createFromFormat('m/d/Y',$data[1]),'Y-m-d');
 				array_push($logs,['punch_date'=> $date,'punch_time' => $data[2], 'biometric_id' => $data[0],'cstate' => $data[3] ]);
                 //array_push($dtr,['dtr_date' => $date,'bio_metric_id' => $data[0]]);
+			}else{
+				echo var_dump($data);
 			}
         }
 		

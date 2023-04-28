@@ -37,6 +37,16 @@ class PayslipMapper extends AbstractMapper {
         return $result->first();
     }
 
+    public function getPeriodLabelWeekly($period)
+    {
+        //SELECT CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),DATE_FORMAT(date_to,'%m/%d/%Y')) AS period_range FROM payroll_period WHERE id = ''
+        $result = $this->model->select(DB::raw("CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) AS date_range"))
+        ->from('payroll_period_weekly')
+        ->where('id',$period);
+        
+        return $result->first();
+    }
+
     public function getEmployees($period,$division,$department)
     {
         $user = Auth::user();
@@ -571,10 +581,65 @@ class PayslipMapper extends AbstractMapper {
     {
         $result = $this->model->select(DB::raw("period_id,CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) AS date_range"))
                                 ->from('posting_info')->join('payroll_period','payroll_period.id','=','posting_info.period_id')
-                                ->where('trans_type','non-confi')
+                                ->where('trans_type','weekly')
                                 ->orderBy('period_id','DESC');
 
         return $result->get();
+    }
+
+    public function getDataWeekly($period_id,$division,$department,$biometric_id)
+    {
+        //dd($period_id,$division,$department,$biometric_id);
+
+        $result = $this->model->select(DB::raw("payrollregister_posted_weekly.*,dept_id,division_id,concat(lastname,', ',firstname) as employee_name,suffixname,dept_name"))
+                    ->from('payrollregister_posted_weekly')
+                    ->join('employees','employees.biometric_id','=','payrollregister_posted_weekly.biometric_id')
+                    ->leftJoin('departments','departments.id','=','dept_id')
+                    ->leftJoin('posted_weekly_compensation',function($join){
+                        $join->on('posted_weekly_compensation.period_id','=','payrollregister_posted_weekly.period_id');
+                        $join->on('posted_weekly_compensation.biometric_id','=','payrollregister_posted_weekly.biometric_id');
+                    });
+
+        if($period_id != 0 && $period_id != "" && $period_id != null){
+            $result->where('payrollregister_posted_weekly.period_id',$period_id);
+        }
+
+        if($division != 0 && $division != "" && $division != null){
+            $result->where('division_id',$division);
+        }
+
+        if($department != 0 && $department != "" && $department != null){
+            $result->where('dept_id',$department);
+        }
+
+        if($biometric_id != 0 && $biometric_id != "" && $biometric_id != null){
+            $result->where('employees.biometric_id',$biometric_id);
+        }
+
+        $data = $result->get();
+
+       
+        foreach($data as $epay)
+        {
+            if(is_object($epay)){
+                $epay->basic = $this->basic($epay);
+                $epay->gov_loan = $this->paySlipGovLoan($period_id,$epay->biometric_id);
+                $epay->reg_earnings = $this->regEarnings($epay);
+                $epay->restday = $this->restDay($epay);
+                $epay->legalHol = $this->legalHol($epay);
+                $epay->specialHol = $this->specialHol($epay);
+                $epay->dblLegHol = $this->dblLegHol($epay);
+                $epay->allowances = $this->allowances($epay);
+                $epay->otherEearnings = $this->otherEearnings($period_id,$epay->biometric_id);
+                $epay->slvl = $this->slvl($epay);
+                $epay->fixedDeduction = $this->fixedDeduction($period_id,$epay->biometric_id);
+                $epay->installments = $this->installments($period_id,$epay->biometric_id);
+            }
+            
+            
+        }
+
+        return $data;
     }
 
 
