@@ -586,6 +586,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
     public function mapRawLogs2($dtr_log)
     {
+       
         foreach($dtr_log as $dtr){
             // if($dtr->schedule_id>=5 || $dtr->schedule_id == null || $dtr->schedule_id == 'null' || $dtr->schedule_id == ''  ){
             if($dtr->schedule_id>=5 ){
@@ -707,6 +708,28 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
             }
 
+            $ot_in = $this->model->select()->from('edtr_raw')
+            ->where([
+                ['punch_date',$dtr->dtr_date],
+                ['biometric_id',$dtr->biometric_id],
+                ['cstate','OT/In']
+            ])
+            ->orderBy('punch_time','desc')
+            ->first();
+
+            $ot_out = $this->model->select() ->from('edtr_raw')
+            ->where([
+                ['punch_date',$dtr->dtr_date],
+                ['biometric_id',$dtr->biometric_id],
+                ['cstate','OT/Out']
+            ])
+            ->orderBy('punch_time','desc')
+            ->first();
+
+            $dtr->ot_in = ($ot_in) ? $ot_in->punch_time : null;    
+            $dtr->ot_out = ($ot_out) ? $ot_out->punch_time : null;  
+            
+
             $dtr->time_in = ($in) ? $in->punch_time : null;    
             $dtr->time_out = ($out) ? $out->punch_time : null;  
 
@@ -781,7 +804,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
                     $rec->over_time = $cot;
                 }
-                
+
                 switch($rec->holiday_type)
                 {   
                  
