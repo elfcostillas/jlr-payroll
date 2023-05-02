@@ -219,6 +219,23 @@
                             viewModel.ds.subgrid.read();
                         });
                     },
+                    computeAll : function(e){
+                        let tr = $(e.target).closest("tr");
+                        let data = this.dataItem(tr);
+
+                        $.post('manage-dtr-weekly/compute-all',{
+                            period_id : data.id
+                        },function(){
+                            Swal.fire({
+                            //position: 'top-end',
+                            icon: 'success',
+                            title: 'DTR Logs has been processed.',
+                            showConfirmButton: false,
+                            timer: 1000
+                            });	
+                        });
+
+                    },
                     manage : function(e){
                         let tr = $(e.target).closest("tr");
                         let data = this.dataItem(tr);
@@ -340,16 +357,21 @@
                         template : "#= (data.date_to) ? kendo.toString(data.date_to,'MM/dd/yyyy') : ''  #",
                         
                     },
-                    {
-                        title : "Man Hours",
-                        field : "man_hours",
-                        //template : "#=  : ''  #",
-                        width : 110,    
-                    },
+                    // {
+                    //     title : "Man Hours",
+                    //     field : "man_hours",
+                    //     //template : "#=  : ''  #",
+                    //     width : 110,    
+                    // },
                     {
                         command: { text : 'Prepare',click : viewModel.buttonHandler.prepare , },
                         attributes : { style : 'font-size:10pt !important;'},
-                        width : 85
+                        width : 80
+                    },
+                    {
+                        command: { text : 'Compute All',click : viewModel.buttonHandler.computeAll , },
+                        attributes : { style : 'font-size:10pt !important;'},
+                        width : 105
                     },
                   
                 ],

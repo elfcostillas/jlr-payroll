@@ -126,6 +126,7 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::post('draw-logs',[ManageDTRWeeklyController::class,'drawLogs']);
         Route::post('compute-logs',[ManageDTRWeeklyController::class,'computeLogs']);
         Route::post('draw-logs-manual',[ManageDTRWeeklyController::class,'drawLogsM']);
+        Route::post('compute-all',[ManageDTRWeeklyController::class,'computeAll']);
         
     });
 
@@ -507,6 +508,7 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::get('compute/{id}',[PayrollRegisterWeeklyController::class,'compute']);
         Route::get('download-unposted/{id}',[PayrollRegisterWeeklyController::class,'downloadExcelUnposted']);
         Route::post('post',[PayrollRegisterWeeklyController::class,'postPayroll']);
+        
     });
 
     Route::prefix('payroll-register-confi')->middleware('access:payroll-transaction/payroll-register-confi')->group(function(){

@@ -125,5 +125,21 @@ class ManageDTRWeeklyController extends Controller
     {
         
     }
+
+    public function computeAll(Request $request)
+    {
+
+        $emp = $this->mapper->getAllEmptoCompute($request->period_id);
+        
+        foreach($emp as $e){
+            //$e->biometric_id;
+            //dd($request->period_id);
+
+            $dtr = $this->mapper->getweeklyDTR($e->biometric_id,$request->period_id);
+            $this->mapper->mapRawLogs2($dtr);
+        } 
+
+        return response()->json(true);        
+    }
     
 }

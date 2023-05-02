@@ -1097,11 +1097,28 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
     }
 
+    public function getAllEmptoCompute($period_id)
+    {
+        $qry = "SELECT DISTINCT edtr.biometric_id FROM edtr INNER JOIN payroll_period_weekly ON dtr_date BETWEEN date_from AND date_to 
+        INNER JOIN employees ON edtr.biometric_id = employees.biometric_id 
+        WHERE payroll_period_weekly.id = $period_id AND employees.pay_type = 3";
+
+        $result = DB::select($qry);
+
+        return $result;
+    }
+
    
 
 }
 
 /*
+
+SELECT DISTINCT edtr.biometric_id FROM edtr INNER JOIN payroll_period_weekly ON dtr_date BETWEEN date_from AND date_to 
+INNER JOIN employees ON edtr.biometric_id = employees.biometric_id 
+WHERE payroll_period_weekly.id = 1 AND employees.pay_type = 3
+
+
 
 SELECT leave_date,with_pay,without_pay,leave_type FROM leave_request_header 
 INNER JOIN leave_request_detail ON leave_request_detail.header_id = leave_request_header.id
