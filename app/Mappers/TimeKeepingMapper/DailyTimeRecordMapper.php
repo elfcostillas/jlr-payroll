@@ -518,7 +518,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                             })
                             ->where('payroll_period_weekly.id',$period_id);
                             
-        $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,time_to_sec(work_schedules.time_in) as sched_in,holidays.holiday_type,time_to_sec(edtr.time_in) as actual_in"))
+        $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,time_to_sec(work_schedules.time_in) as sched_in,holidays.holiday_type,time_to_sec(edtr.time_in) as actual_in,time_to_sec(ot_in) as ot_in_s,time_to_sec(ot_out) as ot_out_s"))
         //$result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,CONCAT(lastname,', ',firstname) as empname,DATE_FORMAT(dtr_date,'%a') AS day_name,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) as work_sched,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,night_diff_ot,ifnull(schedule_id,0) schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc,case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type,ot_in,ot_out,restday_hrs,restday_ot,restday_nd,restday_ndot,reghol_pay,reghol_hrs,reghol_ot,reghol_rd,reghol_rdnd,reghol_nd,reghol_ndot,sphol_pay,sphol_hrs,sphol_ot,sphol_rd,sphol_rdnd,sphol_nd,sphol_ndot,dblhol_pay,dblhol_hrs,dblhol_ot,dblhol_rd,dblhol_rdnd,dblhol_nd,dblhol_ndot,dblhol_rdot,sphol_rdot,reghol_rdot,reghol_rdndot,sphol_rdndot,dblhol_rdndot"))
                             ->from('edtr')
         ->from('edtr')
@@ -763,8 +763,25 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
             //echo "im here";
             foreach($dtr as $rec)
             {
-                $rec->ndays = ($rec->time_in!='' && $rec->time_out!='' && $rec->holiday_type==NULL && $rec->time_in!='00:00' && $rec->time_out!='00:00') ? 1 : 0;
                
+                $rec->ndays = ($rec->time_in!='' && $rec->time_out!='' && $rec->holiday_type==NULL && $rec->time_in!='00:00' && $rec->time_out!='00:00') ? 1 : 0;
+                
+                if($rec->ot_in_s > 0 && $rec->ot_out_s > 0){
+                    if($rec->ot_out_s >= $rec->ot_in_s){
+                        $ot = ($rec->ot_out_s - $rec->ot_in_s) ;
+                    }else{
+                        $ot = (($rec->ot_out_s + 86400)  - $rec->ot_in_s) ;
+                    }
+
+                    if($ot>=3600){
+                        $cot = ($ot - ($ot % 1800))/3600;
+                    }else{
+                        $cot = 0;
+                    }
+
+                    $rec->over_time = $cot;
+                }
+                
                 switch($rec->holiday_type)
                 {   
                  
@@ -790,6 +807,8 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                         break; 
                     
                 } 
+
+               
 
                 if(in_array($rec->holiday_type,['SH','LH','DBL'])){
                     $rec->ndays = 0;
