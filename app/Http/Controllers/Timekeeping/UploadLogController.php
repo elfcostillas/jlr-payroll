@@ -48,7 +48,7 @@ class UploadLogController extends Controller
 				array_push($logs,['punch_date'=> $date,'punch_time' => $data[2], 'biometric_id' => $data[0],'cstate' => $data[3] ]);
                 //array_push($dtr,['dtr_date' => $date,'bio_metric_id' => $data[0]]);
 			}else{
-				echo var_dump($data);
+				//echo var_dump($data);
 			}
         }
 		
