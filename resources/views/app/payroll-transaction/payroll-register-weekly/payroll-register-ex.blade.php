@@ -26,6 +26,7 @@
             return '';
         }
     }
+    $colspan = 15;
 
     $rcount = 1;
     ?>
@@ -54,7 +55,7 @@
                     <th >Retro Pay</th>
 
                     @foreach($headers as $key => $val)
-                        <th >{{ $labels[$key] }}</th>
+                        <th >{{ $label[$key] }}</th>
                         @php $colspan++; @endphp
                     @endforeach
                     <th  >Gross Pay</th>
