@@ -114,11 +114,13 @@ class PayrollRegisterWeeklyController extends Controller
             $label[$value->var_name] = $value->col_label;
         }
 
+        $nopay = $this->mapper->weeklyEmployeeNoPayroll($period);
+        
         $collections = $this->mapper->getEmployees($period);
 
         return view('app.payroll-transaction.payroll-register-weekly.payroll-register',[
             'data' => $collections,
-           
+            'nopay' => $nopay,
             'headers' => $headers , 
             'labels' => $label,
             ]);

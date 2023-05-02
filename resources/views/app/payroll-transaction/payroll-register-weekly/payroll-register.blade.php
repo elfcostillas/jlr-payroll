@@ -184,6 +184,22 @@
             
         </table>
        
+
+        @if($nopay->count()>0)
+            <table border=1 style="border-collapse:collapse;">
+                <tr>
+                    <td>Biometric ID</td>
+                    <td>Employee Name</td>
+                </tr>
+                @foreach($nopay as $ee)
+                    <tr>
+                        <td>{{ $ee->biometric_id }}</td>
+                        <td>{{ $ee->employee_name }}</td>
+                    </tr>
+                @endforeach
+            </table>
+        @endif
+       
     </div>
 </body>
 </html>

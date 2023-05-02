@@ -199,7 +199,7 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
                 'posted_by' => $user->id,
                 'posted_on' => now(),
             ]);
-            
+
             return array('success'=>'Payroll Period posted successfully.');
             
         }else{
@@ -501,6 +501,24 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         return $earning_array;
        
     }
+
+    public function weeklyEmployeeNoPayroll($period_id)
+    {
+        $empInPayroll = $this->model->select('biometric_id')->from('payrollregister_unposted_weekly')->where('period_id',$period_id);
+
+
+        $result = $this->model->select('employees.biometric_id','employee_name','div_code','dept_code','job_title_name')
+                                ->from('employees')
+                                ->join('employee_names_vw','employees.biometric_id','=','employee_names_vw.biometric_id')
+                                ->leftJoin('departments','departments.id','=','employees.dept_id')
+                                ->leftJoin('divisions','divisions.id','=','employees.division_id')
+                                ->leftJoin('job_titles','job_titles.id','=','employees.job_title_id')
+                                ->whereNotIn('employees.biometric_id',$empInPayroll)
+                                ->where('employees.exit_status',1)
+                                ->where('employees.pay_type','=',3)
+                                ->orderBy('employee_name','asc'); 
+        return $result->get();
+    }   
 }
 
 /*
