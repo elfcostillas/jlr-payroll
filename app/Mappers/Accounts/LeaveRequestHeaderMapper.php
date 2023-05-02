@@ -46,7 +46,13 @@ class LeaveRequestHeaderMapper extends AbstractMapper {
         if($filter['filter']!=null){
 			foreach($filter['filter']['filters'] as $f)
 			{
-				$result->where($f['field'],'like','%'.$f['value'].'%');
+				if($f['field'] == 'requesting_emp'){
+					$result->where('employees.firstname','like','%'.$f['value'].'%')
+					->orWhere('employees.lastname','like','%'.$f['value'].'%');
+				}else {
+					$result->where($f['field'],'like','%'.$f['value'].'%');
+				}
+				
 			}
 		}
 
