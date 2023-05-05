@@ -580,7 +580,7 @@ class PayslipMapper extends AbstractMapper {
     public function getWeeklyPosytedPeriod()
     {
         $result = $this->model->select(DB::raw("period_id,CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) AS date_range"))
-                                ->from('posting_info')->join('payroll_period','payroll_period.id','=','posting_info.period_id')
+                                ->from('posting_info')->join('payroll_period_weekly','payroll_period_weekly.id','=','posting_info.period_id')
                                 ->where('trans_type','weekly')
                                 ->orderBy('period_id','DESC');
 
@@ -591,10 +591,11 @@ class PayslipMapper extends AbstractMapper {
     {
         //dd($period_id,$division,$department,$biometric_id);
 
-        $result = $this->model->select(DB::raw("payrollregister_posted_weekly.*,dept_id,division_id,concat(lastname,', ',firstname) as employee_name,suffixname,dept_name"))
+        $result = $this->model->select(DB::raw("payrollregister_posted_weekly.*,dept_id,division_id,concat(lastname,', ',firstname) as employee_name,suffixname,dept_name,location_name"))
                     ->from('payrollregister_posted_weekly')
                     ->join('employees','employees.biometric_id','=','payrollregister_posted_weekly.biometric_id')
                     ->leftJoin('departments','departments.id','=','dept_id')
+                    ->leftJoin('locations','locations.id','=','location_id')
                     ->leftJoin('posted_weekly_compensation',function($join){
                         $join->on('posted_weekly_compensation.period_id','=','payrollregister_posted_weekly.period_id');
                         $join->on('posted_weekly_compensation.biometric_id','=','payrollregister_posted_weekly.biometric_id');

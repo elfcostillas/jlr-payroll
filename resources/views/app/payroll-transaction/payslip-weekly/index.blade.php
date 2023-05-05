@@ -58,7 +58,7 @@
     
 </style>
 @section('title')
-    <h4> Payslip<h4>
+    <h4> Payslip - Weekly<h4>
 @endsection
 @section('content')
     <div class="container">

@@ -105,6 +105,18 @@
 
                         let url = `payslip-weekly/web-view/${period}/${division}/${department}/${biometric_id}`;
                         window.open(url);
+                    },
+                    dtr : function(e){
+                        let period = $("#posted_period").data("kendoDropDownList").value();
+                        let division = ($("#division_id").data("kendoDropDownList").value()=='') ? 0 : $("#division_id").data("kendoDropDownList").value();
+                        let department = ($("#department_id").data("kendoDropDownList").value()=='') ? 0 : $("#department_id").data("kendoDropDownList").value();
+                        let biometric_id = ($("#biometric_id").data("kendoComboBox").value()=='') ? 0 : $("#biometric_id").data("kendoComboBox").value();
+
+                        // let department = $("#department_id").data("kendoDropDownList").value(); 
+                        // let biometric_id = ($("#biometric_id").data("kendoComboBox").value()!="") ? $("#biometric_id").data("kendoComboBox").value() : 0;
+
+                        let url = `payslip-weekly/dtr-summary/${period}/${division}/${department}/${biometric_id}`;
+                        window.open(url);
                     }
                 }
             });
@@ -186,6 +198,7 @@
                 items : [
                     { id : 'printBtn', type: "button", text: "Print PDF", icon: 'print', click : viewModel.buttonHandler.pdf },
                     { id : 'webBtn', type: "button", text: "View Web", icon: 'print', click : viewModel.buttonHandler.web },
+                    { id : 'dtrBtn', type: "button", text: "DTR Summary", icon: 'table', click : viewModel.buttonHandler.dtr },
                 ]
             });
         });
