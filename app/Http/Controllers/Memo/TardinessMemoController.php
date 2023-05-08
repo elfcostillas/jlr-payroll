@@ -133,13 +133,13 @@ class TardinessMemoController extends Controller
 
                         $secondMonth =  $this->mapper->getLates($memo->biometric_id,$ifilter);
 
-                        if($secondMonth>0){
-                            $breakdown = "Last February you incurred a total of ($secondMonth) tardiness occurrence.";
+                        if(count($secondMonth)>0){
+                            $breakdown = "Last February you incurred a total of (".count($secondMonth).") tardiness occurrence.";
                         }
 
                         $total = $mtardy + count($secondMonth) + count($details);
                         $months = "January, February, March";
-                        
+
                     break;
                 case 4 :
 
