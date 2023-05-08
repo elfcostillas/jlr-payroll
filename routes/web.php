@@ -6,6 +6,7 @@ use App\Http\Controllers\DashBoardController;
 
 use App\Http\Controllers\Admin\UserRightsController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\PasswordResetController;
 
 use App\Http\Controllers\Timekeeping\PayrollPeriodWeeklyController;
 use App\Http\Controllers\Timekeeping\HolidayController;
@@ -590,6 +591,8 @@ Route::get('test',function(){
         echo $date->format('Y-m-d')."<br>"; 
     }
 });
+
+Route::get('change-password/{username}',[PasswordResetController::class,'passwordResetForm']);
 
 Route::get('test2',function(){
     
