@@ -148,8 +148,8 @@
     <p style="white-space: pre-line">This is for your guidance.</p>
     <table border=0 style="width:100%;font-size :11px !important" >
         <tr>
-            <td style="width:25%">{{ $data->prep_by_text }}</td>
-            <td style="width:10%"></td>
+            <td style="width:30%">{{ $data->prep_by_text }}</td>
+            <td style="width:5%"></td>
             <td style="width:25%">{{ $data->noted_by_text }}</td>
             <td style="width:10%"></td>
             <td style="width:30%">{{ $data->noted_by_text_dept }}</td>
