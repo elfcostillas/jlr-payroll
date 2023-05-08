@@ -135,7 +135,7 @@ class TardinessMemoController extends Controller
 
                         if(count($secondMonth)>0){
                             if($mtardy>0){
-                                $breakdown .= "and last February you incurred a total of (".count($secondMonth).") tardiness occurrence.";
+                                $breakdown .= " and last February you incurred a total of (".count($secondMonth).") tardiness occurrence.";
                         
                             }else {
                                 $breakdown  = "Last February you incurred a total of (".count($secondMonth).") tardiness occurrence.";
