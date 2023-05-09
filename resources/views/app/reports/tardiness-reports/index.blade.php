@@ -66,7 +66,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card card-secondary">
-                        <div class="card-header"> Employee Leaves </div>
+                        <div class="card-header"> Employee Tardiness </div>
                         <div class="card-body"> 
                             <table class="formTable" border=0 style="width:100%">
                                 <tr>
@@ -88,6 +88,34 @@
                                     <td><input type="text" id="department_id" ></td>
                                     <td><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.summarize'><i class="fas fa-download"></i> View Summary</button></td>
                                     <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.view'><i class="fas fa-table"></i> View Page</button></td> 
+                                </tr>
+                              
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card card-secondary">
+                        <div class="card-header"> Employee Tardiness - Yearly </div>
+                        <div class="card-body"> 
+                            <table class="formTable" border=0 style="width:100%">
+                                <tr>
+                                    <td>Year</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td> <input type="text" name="" id="tardy_year"> </td>
+                                    <td> </td>
+                                    {{-- <td><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.summarize'><i class="fas fa-download"></i> Download Summary</button></td>
+                                    <td><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.leaveByEmployee'><i class="fas fa-download"></i> Sort By Employee</button></td>
+                                    <td><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download'><i class="fas fa-download"></i> Download Excel</button></td>--}}
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.viewYearly'><i class="fas fa-table"></i> View Page</button></td> 
                                 </tr>
                               
                             </table>

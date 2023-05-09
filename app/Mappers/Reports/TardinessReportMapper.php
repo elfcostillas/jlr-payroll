@@ -186,10 +186,77 @@ class TardinessReportMapper extends AbstractMapper {
 
     }
 
+    public function getEmployees($year){
+        $emp = $this->model->select(DB::raw("biometric_id,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,'')) AS emp_name"))->from('employees')
+                ->where('pay_type','!=',3)
+                ->orderBy('lastname','asc')
+                ->orderBy('firstname','asc');
+
+        return $emp->get();
+    }
+
+    public function buildData($month,$emp,$year)
+    {
+        $arr = [];
+
+        $qry = "SELECT biometric_id,MONTH(dtr_date) as m,COUNT(edtr.id) as c FROM edtr 
+        LEFT JOIN work_schedules ON schedule_id = work_schedules.id
+        WHERE (
+            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) AND TIME_TO_SEC(edtr.time_in) <= TIME_TO_SEC(work_schedules.out_am))
+        OR 
+            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) AND TIME_TO_SEC(edtr.time_in) <= TIME_TO_SEC(work_schedules.time_out))
+            )
+        AND 
+            YEAR(dtr_date) = $year
+        GROUP BY biometric_id,MONTH(dtr_date)";
+
+        $data = DB::select($qry);
+
+        foreach($emp as $e)
+        {
+            foreach($month as $mkey => $mvalue)
+            {
+                $arr[$e->biometric_id][$mkey] = 0;
+            }
+        }
+
+        //SELECT biometric_id,tardy_count FROM manual_tardy;
+
+        foreach($data as $log){
+            if($year==2023){
+                if($log->m!=1){
+                    $arr[$log->biometric_id][$log->m] = $log->c;
+                }
+
+            }else {
+                $arr[$log->biometric_id][$log->m] = $log->c;
+            }
+           
+            
+        }
+
+        if($year==2023)
+        {
+            $manual =  DB::select("SELECT biometric_id,tardy_count FROM manual_tardy;");
+
+            foreach($manual as $mtardy)
+            {
+                $arr[$mtardy->biometric_id][1] = $mtardy->tardy_count;
+            }
+        }
+
+        return $arr;
+
+    }
+
     
 }
 
 /*
+
+SELECT biometric_id,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,'')) AS emp_name 
+FROM employees WHERE pay_type != 3 ORDER BY lastname,firstname
+
 
  $qry = "SELECT dtr_date, edtr.time_in,ROUND((TIME_TO_SEC(edtr.time_in) - TIME_TO_SEC(work_schedules.time_in))/60,0) AS in_minutes  
  FROM edtr LEFT JOIN `work_schedules` ON `schedule_id` = `work_schedules`.`id` 

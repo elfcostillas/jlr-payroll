@@ -115,6 +115,28 @@
                             }
                         }
                     }),
+                    fy : new kendo.data.DataSource({
+                        transport : {
+                            read : {
+                                url : '../timekeeping/leave-credits/year',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },
+                        },
+                        schema : {
+                           
+                            model : {
+                                id : 'fy',
+                                fields : {
+                                    fy : { type : 'number',editable :false },   
+                                    
+                                }
+                            }
+                        }
+                    }),
                     
                 },
                 buttonHandler : {  
@@ -153,6 +175,12 @@
                         }
                         
                     },
+                    viewYearly : function(e){
+                        let year = $("#tardy_year").data("kendoDropDownList").value();
+                        let url = `tardiness-reports/yearly-tardiness/${year}`;
+
+                        window.open(url);
+                    },
                     // leaveByEmployee : function()
                     // {
                     //     let from =  kendo.toString($('#date_from').data('kendoDatePicker').value(),'yyyy-MM-dd');
@@ -168,7 +196,7 @@
                 },
                 callBack : function()
                 {
-
+                   
                 }
             });
 
@@ -212,6 +240,16 @@
 
             $("#date_to").kendoDatePicker({
                 format: "MM/dd/yyyy"
+            });
+
+            $("#tardy_year").kendoDropDownList({
+                dataSource: viewModel.ds.fy,
+                dataTextField: "fy",
+                dataValueField: "fy",
+                index : -1,
+                change : function(e){
+                    //console.log(e.sender.value())
+                }
             });
 
 

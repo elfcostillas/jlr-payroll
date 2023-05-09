@@ -439,6 +439,8 @@ Route::middleware('auth')->prefix('reports')->group(function(){
 
         Route::get('generate-detailed/{from}/{to}/{div}/{dept}',[TardinessReportsController::class,'detailedReport']);
         Route::get('generate-summary/{from}/{to}/{div}/{dept}',[TardinessReportsController::class,'summarizedReport']);
+
+        Route::get('yearly-tardiness/{year}',[TardinessReportsController::class,'tardindessYearly']);
     });
 });
 
