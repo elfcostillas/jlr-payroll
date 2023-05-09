@@ -58,7 +58,7 @@
                 <td rowspan=2>Biometric ID</td>
                 <td rowspan=2>Employee Name</td>
                 @for($i = $index;$i<=$limit;$i++)
-                    <td colspan=10>{{ $month[$i] }}</td>
+                    <td colspan=10>{{ $month[$i] }} {{ $year }}</td>
                 @endfor
                 <td colspan="10" >Summary</td>
             </tr>

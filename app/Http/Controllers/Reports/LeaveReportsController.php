@@ -141,7 +141,7 @@ class LeaveReportsController extends Controller
             
         }
 
-        return view('app.reports.leave-reports.kpi-web',['divisions' => $divisions,'month' => $month,'tableData' => $tableData,'index'=>$index,'limit'=>$limit]);
+        return view('app.reports.leave-reports.kpi-web',['divisions' => $divisions,'month' => $month,'tableData' => $tableData,'index'=>$index,'limit'=>$limit,'year'=>$from->year]);
     }
 
 

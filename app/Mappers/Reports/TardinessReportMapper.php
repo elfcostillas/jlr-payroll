@@ -231,8 +231,6 @@ class TardinessReportMapper extends AbstractMapper {
             }else {
                 $arr[$log->biometric_id][$log->m] = $log->c;
             }
-           
-            
         }
 
         if($year==2023)
