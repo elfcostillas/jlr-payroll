@@ -126,6 +126,26 @@ class LeaveRequestHeaderMapper extends AbstractMapper {
 		return $result->first();
 	}
 
+	public function getEncoder($biometric_id,$from,$to)
+	{
+		$result = $this->model->select('leave_request_header.id','users.name')->from('leave_request_header')
+		->join('users','leave_request_header.encoded_by','=','users.id')
+		->where([
+			['leave_request_header.biometric_id','=',$biometric_id],
+			['date_from','=',$from],
+			['date_to','=',$to],
+		])->first();
+
+		// $result = $this->model->select('leave_request_header.id')->from('leave_request_header')
+		// ->where([
+		// 	['leave_request_header.biometric_id','=',$biometric_id],
+		// 	['date_from','=',$from],
+		// 	['date_to','=',$to],
+		// ])->first();
+
+		return $result;
+	}
+
 }
 
 /*

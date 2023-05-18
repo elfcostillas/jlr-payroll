@@ -58,10 +58,22 @@ class LeaveRequestController extends Controller
 
             $result = $this->header->insertValid($data_arr);
 
+            if(is_object($result)){
+                //return response()->json($result->messages);
+                //dd($result->error['messages']);
+                if($result->error['messages']=='Duplicate.'){
+                    $user = $this->header->getEncoder($data_arr['biometric_id'],$data_arr['date_from'],$data_arr['date_to']);
+                   
+                    return response()->json(['error' =>  $user['name'] .' has already filed a leave on the specefied date(s). with request id '.$user['id'].'.'])->setStatusCode(500, 'Error');
+                }
+                return response()->json($result->error['messages'])->setStatusCode(500, 'Error');
+            }
+
             $this->detail->createDates($data_arr,$result);
             
         }else{
             $result = $this->header->updateValid($data_arr);
+            
             if(is_object($result)){
                 return response()->json($result)->setStatusCode(500, 'Error');
             }
