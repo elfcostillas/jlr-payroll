@@ -33,16 +33,28 @@ class OtherCompensationDetailMapper extends AbstractMapper {
         LEFT JOIN compensation_other_details ON compensation_other_details.biometric_id = employee_names_vw.biometric_id
         */
 
+        // $result = $this->model->select(DB::raw("employee_names_vw.biometric_id,employee_names_vw.employee_name,line_id,header_id,ifnull(total_amount,0.00) total_amount"))
+        //                       ->from("employee_names_vw")
+        //                       ->join('employees','employees.biometric_id','=','employee_names_vw.biometric_id')
+        //                       ->leftJoin('compensation_other_details','employee_names_vw.biometric_id','=','compensation_other_details.biometric_id')
+                             
+        //                       ->orWhere(function($query) { 
+        //                             $query->whereNull('header_id');
+        //                             $query->where('employee_names_vw.exit_status',1);
+        //                         });
+        // if($id!=0){
+        //    $result->where('header_id',$id);
+        // } else {
+
+        // }
+
         $result = $this->model->select(DB::raw("employee_names_vw.biometric_id,employee_names_vw.employee_name,line_id,header_id,ifnull(total_amount,0.00) total_amount"))
                               ->from("employee_names_vw")
                               ->join('employees','employees.biometric_id','=','employee_names_vw.biometric_id')
-                              ->leftJoin('compensation_other_details','employee_names_vw.biometric_id','=','compensation_other_details.biometric_id')
-                              ->where('header_id',$id)
-                              ->orWhere(function($query) { 
-                                    $query->whereNull('header_id');
-                                    $query->where('employee_names_vw.exit_status',1);
-                                });
-
+                              ->leftJoin('compensation_other_details',function($join) use ($id) {
+                                    $join->on('employee_names_vw.biometric_id','=','compensation_other_details.biometric_id');
+                                    $join->whereRaw(DB::raw("compensation_other_details.header_id IN (NULL,$id)"));
+                              })->where('employee_names_vw.exit_status',1);
 
         if($filter['filter']!=null){
 			foreach($filter['filter']['filters'] as $f)

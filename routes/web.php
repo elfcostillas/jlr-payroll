@@ -202,6 +202,7 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         // Route::get('details/{id}',[FTPController::class,'details']);
         // Route::post('detail-update',[FTPController::class,'detailUpdate']);
         // Route::get('print/{id}',[FTPController::class,'print']);
+        Route::post('approve',[FTPController::class,'approve']);
 
         
     });

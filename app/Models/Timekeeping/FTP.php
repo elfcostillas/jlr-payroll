@@ -21,6 +21,9 @@ class FTP extends Model
         'ftp_remarks',
         'encoded_by',
         'encoded_on',
+        'hr_received',
+        'hr_received_by',
+        'hr_received_on'
     ];
 
 

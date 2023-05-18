@@ -68,6 +68,7 @@
                                     ftp_state : {type:"string"},
                                     encoded_by : {type:"number"},
                                     ftp_remarks : {type:"string"},
+                                    employee_name: {type:"string"},
                                     
                                 }
                             }
@@ -75,7 +76,44 @@
                     }),
                 },
                 buttonHandler : {  
-                   
+                    accept : function(e){
+
+                        let tr = $(e.target).closest("tr");
+                        let data = this.dataItem(tr);
+
+                        Swal.fire({
+                            title: 'Accept FTP?',
+                            text: "You won't be able to revert this!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Accept'
+                        }).then((result) => {
+                            if (result.value) {        
+                                //console.log(data.id);               
+                                $.post('ftp/approve',{
+                                    ftp_id : data.id
+                                },function(data,status,){
+                                    
+                                    if(data.success){
+                                        Swal.fire({
+                                            //position: 'top-end',
+                                            icon: 'success',
+                                            title: data.success,
+                                            showConfirmButton: false,
+                                            timer: 1000
+                                        });	
+
+                                        viewModel.ds.maingrid.read();
+                                    }
+                                    else {
+                                        custom_error(data.error);
+                                    }
+                                },'json');
+                            }
+                        });
+                    }
                 },
                 functions : {
                     
@@ -93,30 +131,45 @@
                 sortable : true,
                 height : 550,
                 scrollable: true,
-                toolbar : [{ name :'create',text:'Add FTP' }],
+                //toolbar : [{ name :'create',text:'Add FTP' }],
                 editable : "inline",
                 columns : [
                     {
+                        title : "Biometric ID",
+                        field : "biometric_id",
+                        width : 120,  
+                    },
+                    {
+                        title : "Employee Name",
+                        field : "employee_name",
+                        // template : "#= (data.ftp_date) ? kendo.toString(data.ftp_date,'MM/dd/yyyy') : ''  #",
+                        width : 220,    
+                    },
+                    {
                         title : "Date",
-                        field : "holiday_date",
+                        field : "ftp_date",
                         template : "#= (data.ftp_date) ? kendo.toString(data.ftp_date,'MM/dd/yyyy') : ''  #",
                         width : 120,    
                     },
                     {
+                        title : "Time",
+                        field : "ftp_time",
+                        width : 100,    
+                    },
+                    {
                         title : "Type",
-                        //field : "type_description",
-                        field : "holiday_type",
-                        template : "#: type_description #",
-                        editor : holidayTypeEditor,
-                        width : 160,    
+                        field : "ftp_state",
+                        width : 100,    
                     },
                     {
-                        title : "Description",
-                        field : "holiday_remarks",
+                        title : "Remarks",
+                        field : "ftp_remarks",
                     },
                     {
-                        command : ['edit']
-                    }
+                        command: { text : 'Receive',icon : 'edit' ,click : viewModel.buttonHandler.accept },
+                        attributes : { style : 'font-size:10pt !important;'},
+                        width : 110
+                    },
                   
                 ]
             });
@@ -156,6 +209,7 @@
             kendo.bind($("#viewModel"),viewModel);
 
         });
+
     </script>
 
 @endsection
