@@ -141,6 +141,7 @@ class ManageDTRController extends Controller
         //dd($request->period_id);
         $result = $this->mapper->onetimebigtime($request->period_id);
         $period_id = $request->period_id;
+      
         foreach($result as $bio_id)
         {
       
@@ -152,8 +153,10 @@ class ManageDTRController extends Controller
             $dtr3 = $this->mapper->getSemiDTRforComputation($bio_id->biometric_id,$period_id);
 
             $this->mapper->computeLogs($dtr3,'semi');
-
+           
         }
+
+        return response()->json(true);
 
     }
 

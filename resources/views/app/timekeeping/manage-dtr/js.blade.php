@@ -270,6 +270,24 @@
                         window.open(url);
 
                     },
+                    computeAll : function(e){
+                        let tr = $(e.target).closest("tr");
+                        let data = this.dataItem(tr);
+
+                        let url = `manage-dtr/computeAll`;
+
+                        $.post('manage-dtr/compute-all',{
+                            period_id : data.id
+                        },function(data){
+                            Swal.fire({
+                            //position: 'top-end',
+                            icon: 'success',
+                            title: 'DTR Logs has been processed.',
+                            showConfirmButton: false,
+                            timer: 1000
+                            });	
+                        });
+                    },
                     manage : function(e){
                         let tr = $(e.target).closest("tr");
                         let data = this.dataItem(tr);
@@ -333,7 +351,7 @@
                     computeAll : function() {
                         //alert(viewModel.selectedPeriod.id);
                         if(viewModel.selectedPeriod!=null){
-                            $.post('manage-dtr/computeAll',{
+                            $.post('manage-dtr/compute-all',{
                                 period_id : viewModel.selectedPeriod.id
                             });
                                                     }
@@ -421,19 +439,15 @@
                         template : "#= (data.date_to) ? kendo.toString(data.date_to,'MM/dd/yyyy') : ''  #",
                         
                     },
-                    {
-                        title : "Man Hours",
-                        field : "man_hours",
-                        //template : "#=  : ''  #",
-                        width : 110,    
-                    },
+                   
                     {
                         command: [
                             { text : 'Prepare',click : viewModel.buttonHandler.prepare , },
-                            { text : 'Download',click : viewModel.buttonHandler.download , }
+                            { text : 'Download',click : viewModel.buttonHandler.download , },
+                            { text : 'Compute All',click : viewModel.buttonHandler.computeAll , }
                         ],
                         attributes : { style : 'font-size:10pt !important;'},
-                        width : 160
+                        width : 280
                     },
                   
                 ],

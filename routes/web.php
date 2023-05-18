@@ -165,7 +165,7 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
 
         Route::get('download/{period_id}',[ManageDTRController::class,'exportSemiDTR']);
 
-        Route::post('computeAll',[ManageDTRController::class,'computeAllDTR']);
+        Route::post('compute-all',[ManageDTRController::class,'onetimebigtime']);
         Route::get('set-sched/{period_id}',[ManageDTRController::class,'scheduleSetter']);
     });
 
