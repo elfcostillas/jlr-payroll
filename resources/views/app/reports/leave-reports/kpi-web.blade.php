@@ -44,6 +44,15 @@
 
             return $str;
         }
+
+        function convertoToDecimal($minutes)
+        {
+            if($minutes>0){
+               return round($minutes/60,2);
+            }else {
+                return '';
+            }
+        }
     
     
     ?>
@@ -52,15 +61,15 @@
     @foreach($divisions as $div)
         {{ $div->div_name }}
         @php $ctr = 1; @endphp
-        <table border=1 style="border-collapse:collapse">
+        <table border=1 style="border-collapse:collapse;">
             <tr>
                 <td rowspan=2>No. </td>
                 <td rowspan=2>Biometric ID</td>
-                <td rowspan=2>Employee Name</td>
+                <td rowspan=2 style="">Employee Name</td>
                 @for($i = $index;$i<=$limit;$i++)
-                    <td colspan=10>{{ $month[$i] }} {{ $year }}</td>
+                    <td colspan=11>{{ $month[$i] }} {{ $year }}</td>
                 @endfor
-                <td colspan="10" >Summary</td>
+                <td colspan="11" >Summary</td>
             </tr>
             <tr>
                 
@@ -74,7 +83,7 @@
                     <td>MP</td>
                     <td>SVL</td>
                     <td>Other</td>
-                    <td>Total Tardy</td>
+                    <td colspan=2>Total Tardy</td>
                 @endfor
                 <td>Tardy</td>
                     <td>SL</td>
@@ -85,7 +94,7 @@
                     <td>MP</td>
                     <td>SVL</td>
                     <td>Other</td>
-                    <td>Total Tardy</td>
+                    <td colspan=2>Total Tardy</td>
             </tr>
             @foreach($div->emp as $emp)
                 <?php
@@ -128,6 +137,7 @@
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['svl_count']) }}</td>
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['o_count']) }}</td>
                         <td style="white-space:nowrap" >{{ convert($tableData[$emp->biometric_id][$i]['in_minutes']) }}</td>
+                        <td style="white-space:nowrap" >{{ convertoToDecimal($tableData[$emp->biometric_id][$i]['in_minutes']) }}</td>
                        
                     @endfor
                     <td> {{ nformat($late_count) }} </td>
@@ -140,6 +150,7 @@
                     <td> {{ nformat($svl_count) }} </td>
                     <td> {{ nformat($o_count) }} </td>
                     <td  style="white-space:nowrap" > {{ nformat(convert($in_minutes)) }} </td>
+                    <td  style="white-space:nowrap" > {{ nformat(convertoToDecimal($in_minutes)) }} </td>
                 </tr>
             @endforeach
         </table>
