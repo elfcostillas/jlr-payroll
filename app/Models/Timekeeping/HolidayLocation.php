@@ -15,6 +15,7 @@ class HolidayLocation extends Model
 
     protected $fillable = [
         'holiday_id',
-        'location_id'
+        'location_id',
+        'ldow'
     ];
 }

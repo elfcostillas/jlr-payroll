@@ -49,5 +49,38 @@ class HolidayLocationMapper extends AbstractMapper {
         return $result->get();
     }
 
+    public function findLastWorkingDay($holiday)
+    {
+        
+        $result = $this->model->select()->from('holidays')->where('id',$holiday['holiday_id'])->first();
+        $ldow = Carbon::createFromFormat('Y-m-d',$result->holiday_date);
+
+        $flag = true; $ctr = 0;
+
+        do{
+            $ldow->subDay();
+
+            $holidays =  $this->model->select()->from('holidays')->join('holiday_location','holiday_id','=','holidays.id')
+            ->where('holiday_date','=',$ldow->format('Y-m-d'))->where('location_id','=',$holiday['location_id'])->count();
+
+        
+            if($ldow->shortEnglishDayOfWeek!='Sun' && $holidays == 0){
+                $flag = false;
+            }
+
+            $ctr++;
+            if($ctr>=15){
+                $flag = false;
+            }
+
+        }while($flag);
+
+        return $ldow->format('Y-m-d');
+    }
+
 
 }
+
+
+//SELECT * FROM holidays 
+//INNER JOIN holiday_location ON holiday_id = holidays.id WHERE holiday_date = '2022-08-06' AND location_id = 

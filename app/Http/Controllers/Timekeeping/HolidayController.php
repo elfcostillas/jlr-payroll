@@ -81,7 +81,15 @@ class HolidayController extends Controller
     }
     public function  createLocation(Request $request)
     {
-        $result = $this->location->insertValid($request->all());
+        $ldow = $this->location->findLastWorkingDay($request->all());
+        
+        $arr = array(
+            'holiday_id' => $request->holiday_id,
+            'location_id' => $request->location_id,
+            'ldow' => $ldow
+        );
+
+        $result = $this->location->insertValid($arr);
 
         if(is_object($result)){
 			return response()->json($result)->setStatusCode(500, 'Error');
