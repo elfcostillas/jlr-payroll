@@ -34,12 +34,12 @@ class LeaveReportsMapper extends AbstractMapper {
         $query = "SELECT leave_request_header.biometric_id,employee_name,SUM(IFNULL(with_pay,0)) AS with_pay,SUM(IFNULL(without_pay,0)) AS without_pay FROM leave_request_header 
         INNER JOIN leave_request_detail ON leave_request_header.id = leave_request_detail.header_id
         INNER JOIN employee_names_vw ON leave_request_header.biometric_id = employee_names_vw.biometric_id
-        WHERE is_canceled = 'N' AND  document_status = 'POSTED' AND received_by IS NOT NULL AND leave_type != 'UL'
+        WHERE is_canceled = 'N' AND  document_status = 'POSTED' AND received_by IS NOT NULL 
         AND leave_date between '$from' and '$to'
         GROUP BY leave_request_header.biometric_id
         ORDER BY leave_date ASC,employee_name;";
-
-        $result = DB::select($query);
+        //AND leave_type != 'UL'
+        $result = DB::select($query);   
 
         return $result;  
     }
