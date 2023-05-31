@@ -60,7 +60,7 @@ class LeaveReportsController extends Controller
     {
         $from = $request->from;
         $to = $request->to;
-
+       
         $result = $this->mapper->getLeavesSummary($from,$to);
         $this->summary->setValues($result);
         return Excel::download($this->summary,'EmployeeLeavesSummary.xlsx');
@@ -75,7 +75,22 @@ class LeaveReportsController extends Controller
         $from = $request->from;
         $to = $request->to;
 
-        $result = $this->mapper->getLeaveSummaryByEmployee($from,$to);
+        $result = $this->mapper->getLeaveSummaryByEmployee($from,$to,'nonconfi');
+        
+        $this->byEmployee->setValues($result);
+        return Excel::download($this->byEmployee,'EmployeeLeavesByEmployeeSummary.xlsx');
+
+        // return view('app.reports.leave-reports.leave-employee-excel', [
+        // 	'data' => $result
+        // ]);
+    }
+
+    public function getLeaveByEmployeeConfi(Request $request)
+    {
+        $from = $request->from;
+        $to = $request->to;
+
+        $result = $this->mapper->getLeaveSummaryByEmployee($from,$to,'confi');
         
         $this->byEmployee->setValues($result);
         return Excel::download($this->byEmployee,'EmployeeLeavesByEmployeeSummary.xlsx');

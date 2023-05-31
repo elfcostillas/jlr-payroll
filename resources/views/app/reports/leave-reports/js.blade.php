@@ -150,6 +150,14 @@
 
                         window.open(url);
                     },
+                    leaveByEmployeeConfi: function()
+                    {
+                        let from =  kendo.toString($('#date_from').data('kendoDatePicker').value(),'yyyy-MM-dd');
+                        let to =  kendo.toString($('#date_to').data('kendoDatePicker').value(),'yyyy-MM-dd');
+                        let url = `leave-reports/generate-by-employee-confi/${from}/${to}`;
+
+                        window.open(url);
+                    },
                     viewKPI : function()
                     {
                         let from =  kendo.toString($('#date_from2').data('kendoDatePicker').value(),'yyyy-MM-dd');

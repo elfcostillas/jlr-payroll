@@ -81,11 +81,11 @@
                                 <tr>
                                     <td> <input type="text" name="" id="date_from"> </td>
                                     <td> <input type="text" name="" id="date_to"> </td>
-                                    <td><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.summarize'><i class="fas fa-download"></i> Download Summary</button></td>
+                                    <td><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.summarize'><i class="fas fa-download"></i> Summary</button></td>
                                     <td><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.leaveByEmployee'><i class="fas fa-download"></i> Sort By Employee</button></td>
                                     <td><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download'><i class="fas fa-download"></i> Download Excel</button></td>
                                     <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.view'><i class="fas fa-table"></i> View Page</button></td>
-                                    {{-- <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.view'><i class="fas fa-table"></i> KPI </button></td> --}}
+                                    <td><button type="button" class="btn btn-block btn-warning btn-sm" data-bind='click:buttonHandler.leaveByEmployeeConfi'><i class="fas fa-table"></i> Confi </button></td>
                                 </tr>
                               
                             </table>

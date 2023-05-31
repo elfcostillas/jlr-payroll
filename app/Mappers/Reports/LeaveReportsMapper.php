@@ -44,17 +44,23 @@ class LeaveReportsMapper extends AbstractMapper {
         return $result;  
     }
 
-    public function getLeaveSummaryByEmployee($from,$to)
+    public function getLeaveSummaryByEmployee($from,$to,$type)
     {
+        if($type=='nonconfi'){
+            $level = 'and emp_level >= 5 ';
+        }else {
+            $level = 'and emp_level < 5 ';
+        }
         $employees = "SELECT leave_request_header.biometric_id,employee_name FROM leave_request_header 
         INNER JOIN leave_request_detail ON leave_request_header.id = leave_request_detail.header_id
         INNER JOIN employee_names_vw ON leave_request_header.biometric_id = employee_names_vw.biometric_id
-        WHERE is_canceled = 'N' AND  document_status = 'POSTED' AND received_by IS NOT NULL AND leave_type != 'UL'
-        AND leave_date between '$from' and '$to'
+        inner join employees on leave_request_header.biometric_id = employees.biometric_id
+        WHERE is_canceled = 'N' AND  document_status = 'POSTED' AND received_by IS NOT NULL 
+        AND leave_date between '$from' and '$to'  $level and pay_type != 3
         GROUP BY leave_request_header.biometric_id
         ORDER BY leave_date ASC,employee_name;
         ";
-
+    //AND leave_type != 'UL'
         $result = DB::select($employees);
 
         foreach($result as $emp)
@@ -62,11 +68,11 @@ class LeaveReportsMapper extends AbstractMapper {
             $leaves = $query = "SELECT leave_request_header.biometric_id,employee_name,remarks,leave_type,DATE_FORMAT(leave_date,'%m/%d/%Y') AS mask_leave_date,leave_request_detail.* FROM leave_request_header
             INNER JOIN leave_request_detail ON leave_request_header.id = leave_request_detail.header_id
             INNER JOIN employee_names_vw ON leave_request_header.biometric_id = employee_names_vw.biometric_id
-            WHERE is_canceled = 'N' AND document_status = 'POSTED' AND received_by IS NOT NULL AND leave_type != 'UL'
+            WHERE is_canceled = 'N' AND document_status = 'POSTED' AND received_by IS NOT NULL 
             AND leave_date between '$from' and '$to' AND leave_request_header.biometric_id = '$emp->biometric_id'
 
             ORDER BY leave_date ASC,employee_name;";
-
+    //AND leave_type != 'UL'
             $emp->leaves = DB::select($leaves);
         }
 

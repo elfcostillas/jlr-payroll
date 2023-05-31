@@ -429,6 +429,7 @@ Route::middleware('auth')->prefix('reports')->group(function(){
         Route::get('view/{from}/{to}',[LeaveReportsController::class,'getLeavesFromToWeb']);
         Route::get('generate-summary/{from}/{to}',[LeaveReportsController::class,'getLeaveSumamry']);
         Route::get('generate-by-employee/{from}/{to}',[LeaveReportsController::class,'getLeaveByEmployee']);
+        Route::get('generate-by-employee-confi/{from}/{to}',[LeaveReportsController::class,'getLeaveByEmployeeConfi']);
 
         Route::get('view-kpi/{from}/{to}',[LeaveReportsController::class,'viewKPI']);
 

@@ -14,6 +14,7 @@
                 { text: "Maternity/Paternity Leave", value: "MP" },
                 { text: "Birthday Leave", value: "BL" },
                 { text: "Others", value: "O" },
+                { text: "SVL", value: "SVL" },
             ];
 
             let stopOption = [
