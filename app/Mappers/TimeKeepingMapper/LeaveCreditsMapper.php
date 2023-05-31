@@ -82,7 +82,7 @@ class LeaveCreditsMapper extends AbstractMapper {
         LEFT JOIN (
           SELECT biometric_id,ROUND(SUM(with_pay)/8,2) AS VL_PAY FROM leave_request_header 
               INNER JOIN leave_request_detail ON leave_request_header.id = header_id
-          WHERE leave_date BETWEEN '$start' AND '$end'
+          WHERE leave_date BETWEEN '$start' AND '$end'  AND leave_request_header.acknowledge_status = 'Approved' AND document_status = 'POSTED'
           AND with_pay > 0
           AND is_canceled = 'N'
           AND leave_type in ('VL','EL')
@@ -92,7 +92,7 @@ class LeaveCreditsMapper extends AbstractMapper {
        LEFT JOIN (
           SELECT biometric_id,ROUND(SUM(with_pay)/8,2) AS SL_PAY FROM leave_request_header 
               INNER JOIN leave_request_detail ON leave_request_header.id = header_id
-          WHERE leave_date BETWEEN '$start' AND '$end'
+          WHERE leave_date BETWEEN '$start' AND '$end' AND leave_request_header.acknowledge_status = 'Approved' AND document_status = 'POSTED'
           AND with_pay > 0
           AND is_canceled = 'N'
           AND leave_type = 'SL'
@@ -102,7 +102,7 @@ class LeaveCreditsMapper extends AbstractMapper {
       LEFT JOIN (
           SELECT biometric_id,ROUND(SUM(with_pay)/8,2) AS SVL_PAY FROM leave_request_header 
               INNER JOIN leave_request_detail ON leave_request_header.id = header_id
-          WHERE leave_date BETWEEN '$start' AND '$end'
+          WHERE leave_date BETWEEN '$start' AND '$end' AND leave_request_header.acknowledge_status = 'Approved' AND document_status = 'POSTED'
           AND with_pay > 0
           AND is_canceled = 'N'
           AND leave_type = 'SVL'
@@ -112,7 +112,7 @@ class LeaveCreditsMapper extends AbstractMapper {
       LEFT JOIN (
           SELECT biometric_id,ROUND(SUM(with_pay)/8,2) AS MP_PAY FROM leave_request_header 
               INNER JOIN leave_request_detail ON leave_request_header.id = header_id
-          WHERE leave_date BETWEEN '$start' AND '$end'
+          WHERE leave_date BETWEEN '$start' AND '$end' AND leave_request_header.acknowledge_status = 'Approved' AND document_status = 'POSTED'
           AND with_pay > 0
           AND is_canceled = 'N'
           AND leave_type = 'MP'
@@ -149,7 +149,7 @@ SELECT biometric_id,ROUND(SUM(with_pay)/8,2)
         $qry = "SELECT leave_date,leave_type,remarks,ROUND(with_pay/8,2) with_pay,ROUND(without_pay/8,2) without_pay FROM leave_request_header INNER JOIN leave_request_detail ON leave_request_header.id = leave_request_detail.header_id
         WHERE leave_request_header.biometric_id = $biometric_id
         AND leave_date BETWEEN '$from' AND '$to'
-        and document_status = 'POSTED'
+        and document_status = 'POSTED'  and leave_request_header.acknowledge_status = 'Approved'
         and received_by IS NOT NULL
         ORDER BY leave_date;";
         

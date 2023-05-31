@@ -122,7 +122,7 @@
                                     <td colspan=2><input type="text" id="reliever_id" data-bind="value:form.model.reliever_id"></td>
                                     <td colspan=2><input type="text" id="date_from" data-bind="value:form.model.date_from" required></td>
                                     <td colspan=2><input type="text" id="date_to" data-bind="value:form.model.date_to" required></td>
-                                    <td colspan=2><input type="text" id="leave_type" data-bind="value:form.model.leave_type"></td>
+                                    <td colspan=2><input type="text" id="leave_type" data-bind="value:form.model.leave_type" required></td>
                                 </tr>
                                 <tr>
                                     <td colspan=8>Reason :</td>
