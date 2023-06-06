@@ -150,7 +150,7 @@ class LeaveReportsMapper extends AbstractMapper {
         FROM employees LEFT JOIN 
         (
         SELECT biometric_id,COUNT(leave_date) AS sl_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
-        WHERE leave_request_header.received_by IS NOT NULL and and leave_request_header.acknowledge_status = 'Approved'
+        WHERE leave_request_header.received_by IS NOT NULL and leave_request_header.acknowledge_status = 'Approved'
         AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
         AND leave_type = 'SL'
         AND leave_date BETWEEN '$start' AND '$end'
@@ -159,7 +159,7 @@ class LeaveReportsMapper extends AbstractMapper {
         ) AS sl ON employees.biometric_id = sl.biometric_id
         LEFT JOIN (
         SELECT biometric_id,COUNT(leave_date) AS vl_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
-        WHERE leave_request_header.received_by IS NOT NULL and and leave_request_header.acknowledge_status = 'Approved'
+        WHERE leave_request_header.received_by IS NOT NULL and leave_request_header.acknowledge_status = 'Approved'
         AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
         AND leave_type = 'VL'
         AND leave_date BETWEEN '$start' AND '$end'
@@ -169,7 +169,7 @@ class LeaveReportsMapper extends AbstractMapper {
         AS vl ON employees.biometric_id = vl.biometric_id
         LEFT JOIN (
         SELECT biometric_id,COUNT(leave_date) AS el_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
-        WHERE leave_request_header.received_by IS NOT NULL and and leave_request_header.acknowledge_status = 'Approved'
+        WHERE leave_request_header.received_by IS NOT NULL and leave_request_header.acknowledge_status = 'Approved'
         AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
         AND leave_type = 'EL'
         AND leave_date BETWEEN '$start' AND '$end'
@@ -178,7 +178,7 @@ class LeaveReportsMapper extends AbstractMapper {
         ) AS el ON employees.biometric_id = el.biometric_id
         LEFT JOIN (
         SELECT biometric_id,COUNT(leave_date) AS ut_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
-        WHERE leave_request_header.received_by IS NOT NULL and and leave_request_header.acknowledge_status = 'Approved'
+        WHERE leave_request_header.received_by IS NOT NULL and leave_request_header.acknowledge_status = 'Approved'
         AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
         AND leave_type = 'UT'
         AND leave_date BETWEEN '$start' AND '$end'
@@ -187,7 +187,7 @@ class LeaveReportsMapper extends AbstractMapper {
         ) AS ut ON employees.biometric_id = ut.biometric_id
         LEFT JOIN (
         SELECT biometric_id,COUNT(leave_date) AS bl_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
-        WHERE leave_request_header.received_by IS NOT NULL and and leave_request_header.acknowledge_status = 'Approved'
+        WHERE leave_request_header.received_by IS NOT NULL and leave_request_header.acknowledge_status = 'Approved'
         AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
         AND leave_type = 'BL'
         AND leave_date BETWEEN '$start' AND '$end'
@@ -196,7 +196,7 @@ class LeaveReportsMapper extends AbstractMapper {
         ) AS bl ON employees.biometric_id = bl.biometric_id
         LEFT JOIN (
         SELECT biometric_id,COUNT(leave_date) AS mp_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
-        WHERE leave_request_header.received_by IS NOT NULL and and leave_request_header.acknowledge_status = 'Approved'
+        WHERE leave_request_header.received_by IS NOT NULL and leave_request_header.acknowledge_status = 'Approved'
         AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
         AND leave_type = 'MP'
         AND leave_date BETWEEN '$start' AND '$end'
@@ -205,7 +205,7 @@ class LeaveReportsMapper extends AbstractMapper {
         ) AS mp ON employees.biometric_id = mp.biometric_id
         LEFT JOIN (
         SELECT biometric_id,COUNT(leave_date) AS o_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
-        WHERE leave_request_header.received_by IS NOT NULL and and leave_request_header.acknowledge_status = 'Approved'
+        WHERE leave_request_header.received_by IS NOT NULL and leave_request_header.acknowledge_status = 'Approved'
         AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
         AND leave_type = 'O'
         AND leave_date BETWEEN '$start' AND '$end'
@@ -214,7 +214,7 @@ class LeaveReportsMapper extends AbstractMapper {
         ) AS o ON employees.biometric_id = o.biometric_id
         LEFT JOIN (
         SELECT biometric_id,COUNT(leave_date) AS svl_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
-        WHERE leave_request_header.received_by IS NOT NULL and and leave_request_header.acknowledge_status = 'Approved'
+        WHERE leave_request_header.received_by IS NOT NULL and leave_request_header.acknowledge_status = 'Approved'
         AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
         AND leave_type = 'SVL'
         AND leave_date BETWEEN  '$start' AND '$end'
