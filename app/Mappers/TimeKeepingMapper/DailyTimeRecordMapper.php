@@ -726,12 +726,19 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
             ->orderBy('punch_time','desc')
             ->first();
 
-            $dtr->ot_in = ($ot_in) ? $ot_in->punch_time : null;    
-            $dtr->ot_out = ($ot_out) ? $ot_out->punch_time : null;  
+            // $dtr->ot_in = ($ot_in) ? $ot_in->punch_time : null;    
+            // $dtr->ot_out = ($ot_out) ? $ot_out->punch_time : null;  
             
 
-            $dtr->time_in = ($in) ? $in->punch_time : null;    
-            $dtr->time_out = ($out) ? $out->punch_time : null;  
+            // $dtr->time_in = ($in) ? $in->punch_time : null;    
+            // $dtr->time_out = ($out) ? $out->punch_time : null;  
+
+            $dtr->ot_in = ($ot_in) ? $ot_in->punch_time : $dtr->ot_in;
+            $dtr->ot_out = ($ot_out) ? $ot_out->punch_time : $dtr->ot_out;  
+            
+
+            $dtr->time_in = ($in) ? $in->punch_time : $dtr->time_in;    
+            $dtr->time_out = ($out) ? $out->punch_time : $dtr->time_out;  
 
             $this->updateValid($dtr->toArray());
         }       

@@ -396,7 +396,14 @@
                     buttonCount : 5
                 },
                 noRecords: true,
-                filterable : true,
+                filterable : {
+                    extra: false,
+                    operators: {
+                        string: {
+                            contains : "Contains"
+                        }
+                    }
+                },
                 sortable : true,
                 height : 550,
                 scrollable: true,
@@ -487,7 +494,7 @@
                         //template : "#= schedule_desc #",  #=data.schedule_id #
                         //template : "#= if(data.schedule_desc==null) #"
                        
-                        width : 110,
+                         width : 120,
                          attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -502,7 +509,7 @@
                     {
                         title : "Time In",
                         field : "time_in",
-                        width : 70,
+                        width : 80,
                          attributes: {
                             style: "font-size: 9pt;text-align:center",
 
@@ -518,7 +525,7 @@
                     {
                         title : "Time Out",
                         field : "time_out",
-                        width : 70,
+                        width : 80,
                          attributes: {
                             style: "font-size: 9pt;text-align:center"
                             
@@ -533,7 +540,7 @@
                     {
                         title : "Days",
                         field : "ndays",
-                        width : 60,
+                        width : 70,
                          attributes: {
                             style: "font-size: 9pt;text-align:center"
                             
@@ -581,7 +588,7 @@
                     {
                         title : "UT",
                         field : "under_time",
-                        width : 60,
+                        width : 80,
                         attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -595,24 +602,24 @@
                         footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>",
                         editor : dataEditor 
                     },
-                    {
-                        title : "ND",
-                        field : "night_diff",
-                        width : 60, 
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    // {
+                    //     title : "ND",
+                    //     field : "night_diff",
+                    //     width : 60, 
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        template : "# if(night_diff==0){#  #} else{# #= night_diff #  #}#",
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     template : "# if(night_diff==0){#  #} else{# #= night_diff #  #}#",
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        aggregates : ['sum'], 
-                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
-                        editor : dataEditor
+                    //     },
+                    //     aggregates : ['sum'], 
+                    //     footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
+                    //     editor : dataEditor
 
-                    },
+                    // },
                     {
                         title : "OT In",
                         field : "ot_in",
@@ -656,478 +663,478 @@
                         footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>",
                         editor : dataEditor
                     },
-                    {
-                        title : "ND OT",
-                        field : "night_diff_ot",
-                        width : 60, 
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    // {
+                    //     title : "ND OT",
+                    //     field : "night_diff_ot",
+                    //     width : 60, 
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        template : "# if(night_diff_ot==0){#  #} else{# #= night_diff_ot #  #}#",
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     template : "# if(night_diff_ot==0){#  #} else{# #= night_diff_ot #  #}#",
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        aggregates : ['sum'], 
-                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
-                        editor : dataEditor
+                    //     },
+                    //     aggregates : ['sum'], 
+                    //     footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
+                    //     editor : dataEditor
 
-                    },
-                    {
-                        title : '-',
-                        width : 15,
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    // },
+                    // {
+                    //     title : '-',
+                    //     width : 15,
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    },
-                    {
-                        title : "RD Hrs",
-                        field : "restday_hrs",
-                        width : 75, 
-                        template : "# if(restday_hrs==0){#  #} else{# #= restday_hrs #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // },
+                    // {
+                    //     title : "RD Hrs",
+                    //     field : "restday_hrs",
+                    //     width : 75, 
+                    //     template : "# if(restday_hrs==0){#  #} else{# #= restday_hrs #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                    },
-                    {
-                        title : "RD OT",
-                        field : "restday_ot",
-                        width : 75, 
-                        template : "# if(restday_ot==0){#  #} else{# #= restday_ot #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    // },
+                    // {
+                    //     title : "RD OT",
+                    //     field : "restday_ot",
+                    //     width : 75, 
+                    //     template : "# if(restday_ot==0){#  #} else{# #= restday_ot #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                    },
-                    {
-                        title : "RD ND",
-                        field : "restday_nd",
-                        width : 75, 
-                        template : "# if(restday_nd==0){#  #} else{# #= restday_nd #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    // },
+                    // {
+                    //     title : "RD ND",
+                    //     field : "restday_nd",
+                    //     width : 75, 
+                    //     template : "# if(restday_nd==0){#  #} else{# #= restday_nd #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                    },
-                    {
-                        title : "RD ND OT",
-                        field : "restday_ndot",
-                        width : 75, 
-                        template : "# if(restday_ndot==0){#  #} else{# #= restday_ndot #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    // },
+                    // {
+                    //     title : "RD ND OT",
+                    //     field : "restday_ndot",
+                    //     width : 75, 
+                    //     template : "# if(restday_ndot==0){#  #} else{# #= restday_ndot #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                    },
-                    {
-                        title : '-',
-                        width : 15,
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    // },
+                    // {
+                    //     title : '-',
+                    //     width : 15,
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    },
+                    //     }, 
+                    // },
                     
-                    {
-                        title : 'Hol Type',
-                        field : 'holiday_type',
-                        width : 90,
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    // {
+                    //     title : 'Hol Type',
+                    //     field : 'holiday_type',
+                    //     width : 90,
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    },
-                    {
-                        title : 'Reg Hol Pay',
-                        field : 'reghol_pay',
-                        width : 90,
-                        template : "# if(reghol_pay==0){#  #} else{# #= reghol_pay #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // },
+                    // {
+                    //     title : 'Reg Hol Pay',
+                    //     field : 'reghol_pay',
+                    //     width : 90,
+                    //     template : "# if(reghol_pay==0){#  #} else{# #= reghol_pay #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    },
-                    {
-                        title : 'Reg Hol Hrs',
-                        field : 'reghol_hrs',
-                        template : "# if(reghol_hrs==0){#  #} else{# #= reghol_hrs #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // },
+                    // {
+                    //     title : 'Reg Hol Hrs',
+                    //     field : 'reghol_hrs',
+                    //     template : "# if(reghol_hrs==0){#  #} else{# #= reghol_hrs #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    },
-                    {
-                        title : 'Reg Hol OT',
-                        field : 'reghol_ot',
-                        template : "# if(reghol_ot==0){#  #} else{# #= reghol_ot #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // },
+                    // {
+                    //     title : 'Reg Hol OT',
+                    //     field : 'reghol_ot',
+                    //     template : "# if(reghol_ot==0){#  #} else{# #= reghol_ot #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    },
-                    {
-                        title : 'Reg Hol RD',
-                        field : 'reghol_rd',
-                        template : "# if(reghol_rd==0){#  #} else{# #= reghol_rd #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // },
+                    // {
+                    //     title : 'Reg Hol RD',
+                    //     field : 'reghol_rd',
+                    //     template : "# if(reghol_rd==0){#  #} else{# #= reghol_rd #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    },
-                    {
-                        title : 'Reg Hol RD ND',
-                        field : 'reghol_rdnd',
-                        template : "# if(reghol_rdnd==0){#  #} else{# #= reghol_rdnd #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // },
+                    // {
+                    //     title : 'Reg Hol RD ND',
+                    //     field : 'reghol_rdnd',
+                    //     template : "# if(reghol_rdnd==0){#  #} else{# #= reghol_rdnd #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    },
-                    {
-                        title : 'Reg Hol RD OT',
-                        field : 'reghol_rdot',
-                        template : "# if(reghol_rdot==0){#  #} else{# #= reghol_rdot #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // },
+                    // {
+                    //     title : 'Reg Hol RD OT',
+                    //     field : 'reghol_rdot',
+                    //     template : "# if(reghol_rdot==0){#  #} else{# #= reghol_rdot #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    },
-                    {
-                        title : 'Reg Hol ND',
-                        field : 'reghol_nd',
-                        template : "# if(reghol_nd==0){#  #} else{# #= reghol_nd #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // },
+                    // {
+                    //     title : 'Reg Hol ND',
+                    //     field : 'reghol_nd',
+                    //     template : "# if(reghol_nd==0){#  #} else{# #= reghol_nd #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    },
-                    {
-                        title : 'Reg Hol ND OT',
-                        field : 'reghol_ndot',
-                        template : "# if(reghol_ndot==0){#  #} else{# #= reghol_ndot #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // },
+                    // {
+                    //     title : 'Reg Hol ND OT',
+                    //     field : 'reghol_ndot',
+                    //     template : "# if(reghol_ndot==0){#  #} else{# #= reghol_ndot #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    },
-                    {
-                        title : 'Reg Hol RD ND OT',
-                        field : 'reghol_rdndot',
-                        template : "# if(reghol_rdndot==0){#  #} else{# #= reghol_rdndot #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // },
+                    // {
+                    //     title : 'Reg Hol RD ND OT',
+                    //     field : 'reghol_rdndot',
+                    //     template : "# if(reghol_rdndot==0){#  #} else{# #= reghol_rdndot #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    },
-                    {
-                        title : '-', 
-                        width : 15
-                    },
-                    {
-                        title : 'SP Hol pay',
-                        field : 'sphol_pay',
-                        template : "# if(sphol_pay==0){#  #} else{# #= sphol_pay #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // },
+                    // {
+                    //     title : '-', 
+                    //     width : 15
+                    // },
+                    // {
+                    //     title : 'SP Hol pay',
+                    //     field : 'sphol_pay',
+                    //     template : "# if(sphol_pay==0){#  #} else{# #= sphol_pay #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    },
-                    {
-                        title : 'SP Hol Hrs',
-                        field : 'sphol_hrs',
-                        template : "# if(sphol_hrs==0){#  #} else{# #= sphol_hrs #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // },
+                    // {
+                    //     title : 'SP Hol Hrs',
+                    //     field : 'sphol_hrs',
+                    //     template : "# if(sphol_hrs==0){#  #} else{# #= sphol_hrs #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    },
-                    {
-                        title : 'SP Hol OT',
-                        field : 'sphol_ot',
-                        template : "# if(sphol_ot==0){#  #} else{# #= sphol_ot #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // },
+                    // {
+                    //     title : 'SP Hol OT',
+                    //     field : 'sphol_ot',
+                    //     template : "# if(sphol_ot==0){#  #} else{# #= sphol_ot #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    },
-                    {
-                        title : 'SP Hol RD',
-                        field : 'sphol_rd',
-                        template : "# if(sphol_rd==0){#  #} else{# #= sphol_rd #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // },
+                    // {
+                    //     title : 'SP Hol RD',
+                    //     field : 'sphol_rd',
+                    //     template : "# if(sphol_rd==0){#  #} else{# #= sphol_rd #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    },
-                    {
-                        title : 'SP Hol RD ND',
-                        field : 'sphol_rdnd',
-                        template : "# if(sphol_rdnd==0){#  #} else{# #= sphol_rdnd #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // },
+                    // {
+                    //     title : 'SP Hol RD ND',
+                    //     field : 'sphol_rdnd',
+                    //     template : "# if(sphol_rdnd==0){#  #} else{# #= sphol_rdnd #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    },
-                    {
-                        title : 'SP Hol RD OT',
-                        field : 'sphol_rdot',
-                        template : "# if(sphol_rdot==0){#  #} else{# #= sphol_rdot #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // },
+                    // {
+                    //     title : 'SP Hol RD OT',
+                    //     field : 'sphol_rdot',
+                    //     template : "# if(sphol_rdot==0){#  #} else{# #= sphol_rdot #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    },
-                    {
-                        title : 'SP Hol ND',
-                        field : 'sphol_nd',
-                        template : "# if(sphol_nd==0){#  #} else{# #= sphol_nd #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // },
+                    // {
+                    //     title : 'SP Hol ND',
+                    //     field : 'sphol_nd',
+                    //     template : "# if(sphol_nd==0){#  #} else{# #= sphol_nd #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    }, 
-                    {
-                        title : 'SP Hol ND OT',
-                        field : 'sphol_ndot',
-                        template : "# if(sphol_ndot==0){#  #} else{# #= sphol_ndot #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // }, 
+                    // {
+                    //     title : 'SP Hol ND OT',
+                    //     field : 'sphol_ndot',
+                    //     template : "# if(sphol_ndot==0){#  #} else{# #= sphol_ndot #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    }, 
-                    {
-                        title : 'SP Hol RD ND OT',
-                        field : 'sphol_rdndot',
-                        template : "# if(sphol_rdndot==0){#  #} else{# #= sphol_rdndot #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // }, 
+                    // {
+                    //     title : 'SP Hol RD ND OT',
+                    //     field : 'sphol_rdndot',
+                    //     template : "# if(sphol_rdndot==0){#  #} else{# #= sphol_rdndot #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    }, 
-                    {
-                        title : '-', 
-                        width : 15
-                    }, 
-                    {
-                        title : 'DBL Hol Pay',
-                        field : 'dblhol_pay',
-                        template : "# if(dblhol_pay==0){#  #} else{# #= dblhol_pay #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // }, 
+                    // {
+                    //     title : '-', 
+                    //     width : 15
+                    // }, 
+                    // {
+                    //     title : 'DBL Hol Pay',
+                    //     field : 'dblhol_pay',
+                    //     template : "# if(dblhol_pay==0){#  #} else{# #= dblhol_pay #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    },
-                    {
-                        title : 'DBL Hol Hrs',
-                        field : 'dblhol_hrs',
-                        template : "# if(dblhol_hrs==0){#  #} else{# #= dblhol_hrs #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // },
+                    // {
+                    //     title : 'DBL Hol Hrs',
+                    //     field : 'dblhol_hrs',
+                    //     template : "# if(dblhol_hrs==0){#  #} else{# #= dblhol_hrs #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    },
-                    {
-                        title : 'DBL Hol OT',
-                        field : 'dblhol_ot',
-                        template : "# if(dblhol_ot==0){#  #} else{# #= dblhol_ot #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // },
+                    // {
+                    //     title : 'DBL Hol OT',
+                    //     field : 'dblhol_ot',
+                    //     template : "# if(dblhol_ot==0){#  #} else{# #= dblhol_ot #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    },
-                    {
-                        title : 'DBL Hol RD',
-                        field : 'dblhol_rd',
-                        template : "# if(dblhol_rd==0){#  #} else{# #= dblhol_rd #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // },
+                    // {
+                    //     title : 'DBL Hol RD',
+                    //     field : 'dblhol_rd',
+                    //     template : "# if(dblhol_rd==0){#  #} else{# #= dblhol_rd #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    },
-                    {
-                        title : 'DBL Hol RD ND',
-                        field : 'dblhol_rdnd',
-                        template : "# if(dblhol_rdnd==0){#  #} else{# #= dblhol_rdnd #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // },
+                    // {
+                    //     title : 'DBL Hol RD ND',
+                    //     field : 'dblhol_rdnd',
+                    //     template : "# if(dblhol_rdnd==0){#  #} else{# #= dblhol_rdnd #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    },
-                    {
-                        title : 'DBL Hol RDOT',
-                        field : 'dblhol_rdot',
-                        template : "# if(dblhol_rdot==0){#  #} else{# #= dblhol_rdot #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // },
+                    // {
+                    //     title : 'DBL Hol RDOT',
+                    //     field : 'dblhol_rdot',
+                    //     template : "# if(dblhol_rdot==0){#  #} else{# #= dblhol_rdot #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    },
-                    {
-                        title : 'DBL Hol ND',
-                        field : 'dblhol_nd',
-                        template : "# if(dblhol_nd==0){#  #} else{# #= dblhol_nd #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // },
+                    // {
+                    //     title : 'DBL Hol ND',
+                    //     field : 'dblhol_nd',
+                    //     template : "# if(dblhol_nd==0){#  #} else{# #= dblhol_nd #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    }, 
-                    {
-                        title : 'DBL Hol ND OT',
-                        field : 'dblhol_ndot',
-                        template : "# if(dblhol_ndot==0){#  #} else{# #= dblhol_ndot #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // }, 
+                    // {
+                    //     title : 'DBL Hol ND OT',
+                    //     field : 'dblhol_ndot',
+                    //     template : "# if(dblhol_ndot==0){#  #} else{# #= dblhol_ndot #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    }, 
-                    {
-                        title : 'DBL Hol RD ND OT',
-                        field : 'dblhol_rdndot',
-                        template : "# if(dblhol_rdndot==0){#  #} else{# #= dblhol_rdndot #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     }, 
+                    // }, 
+                    // {
+                    //     title : 'DBL Hol RD ND OT',
+                    //     field : 'dblhol_rdndot',
+                    //     template : "# if(dblhol_rdndot==0){#  #} else{# #= dblhol_rdndot #  #}#",
+                    //     attributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt;text-align:center",
                             
-                        }, 
-                    }, 
+                    //     }, 
+                    // }, 
                    
                   
                 ],

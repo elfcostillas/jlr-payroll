@@ -10,7 +10,7 @@ use App\Mappers\TimeKeepingMapper\PayrollPeriodWeeklyMapper;
 use App\Mappers\PayrollTransaction\UnpostedPayrollRegisterWeeklyMapper;
 use App\Excel\UnpostedPayrollRegisterWeekly;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Mappers\EmployeeFileMapper\Repository\Employee;
+use App\Mappers\EmployeeFileMapper\Repository\WeeklyEmployee;
 use App\Mappers\EmployeeFileMapper\Repository\SemiMonthly;
 use App\Mappers\EmployeeFileMapper\Repository\Daily;
 
@@ -83,7 +83,7 @@ class PayrollRegisterWeeklyController extends Controller
                 }
             }
             
-            $person = new Employee($employee,new Daily);
+            $person = new WeeklyEmployee($employee,new Daily);
             $person->compute($period);
             $deductions = $this->mapper->getDeductions($employee->biometric_id,$employee->period_id);
             $person->computeGrossTotal($deductions);

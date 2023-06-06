@@ -56,6 +56,10 @@ class LeaveRequestController extends Controller
             $data_arr['request_date']= now();
             $data_arr['encoded_by']= Auth::user()->id;
 
+            $data_arr['acknowledge_status'] = 'Approved';
+            $data_arr['acknowledge_time'] = now();
+            $data_arr['acknowledge_by'] = 1;
+
             $result = $this->header->insertValid($data_arr);
 
             if(is_object($result)){

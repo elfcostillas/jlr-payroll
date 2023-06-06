@@ -151,7 +151,34 @@ class TardinessMemoController extends Controller
 
                     break;
                 case 4 :
+                    // $iStart = date('Y-m-d',strtotime($memo->memo_year.'-04-01'));
 
+                    // $ifilter = array(
+                    //     'from' => $iStart,
+                    //     'to' => date('Y-m-t',strtotime($iStart)),
+                    // );
+
+                    // if($mtardy>0){
+                    //     $breakdown = "Last January you incurred a total of ($mtardy) tardiness occurrence";
+                    // }
+
+                    // $secondMonth =  $this->mapper->getLates($memo->biometric_id,$ifilter);
+
+                    // if(count($secondMonth)>0){
+                    //     if($mtardy>0){
+                    //         $breakdown .= " and last February you incurred a total of (".count($secondMonth).") tardiness occurrence.";
+                    
+                    //     }else {
+                    //         $breakdown  = "Last February you incurred a total of (".count($secondMonth).") tardiness occurrence.";
+                    //     }
+                    // }else {
+                    //     if($mtardy>0){
+                    //         $breakdown .= ".";
+                    //     }
+                    // }
+
+                    $total = count($details);
+                    $months = "April";
                     break;
                 case 5 :
 

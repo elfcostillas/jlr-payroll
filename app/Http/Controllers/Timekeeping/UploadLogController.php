@@ -43,12 +43,21 @@ class UploadLogController extends Controller
         foreach($content as $line)
         {
             $data = preg_split("/\s+/", trim($line));
-			if(count($data)==4){
-				$date = date_format(Carbon::createFromFormat('m/d/Y',$data[1]),'Y-m-d');
-				array_push($logs,['punch_date'=> $date,'punch_time' => $data[2], 'biometric_id' => $data[0],'cstate' => $data[3] ]);
-                //array_push($dtr,['dtr_date' => $date,'bio_metric_id' => $data[0]]);
-			}else{
-				//echo var_dump($data);
+			if( $data[0] !="AC-No." && $data[0] !="" ){
+				if(count($data)==5){
+					if($data[4]!=""){
+						$data[3] = $data[4];
+					}
+
+					$date = date_format(Carbon::createFromFormat('m/d/Y',$data[1]),'Y-m-d');
+					array_push($logs,['punch_date'=> $date,'punch_time' => $data[2], 'biometric_id' => $data[0],'cstate' => $data[3] ]);
+					//array_push($dtr,['dtr_date' => $date,'bio_metric_id' => $data[0]]);
+				}else{
+					if(count($data)==4){
+						$date = date_format(Carbon::createFromFormat('m/d/Y',$data[1]),'Y-m-d');
+						array_push($logs,['punch_date'=> $date,'punch_time' => $data[2], 'biometric_id' => $data[0],'cstate' => $data[3] ]);
+					}
+				}
 			}
         }
 		
