@@ -59,6 +59,7 @@ class TardinessReportMapper extends AbstractMapper {
                 ->join('employee_names_vw','employee_names_vw.biometric_id','=','edtr.biometric_id')
                 ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
                 //->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)');
+                ->where('pay_type','!=',3)
                 ->where('emp_level','>',2) 
                 ->where('job_title_id','!=',12)
                 ->where('employees.dept_id','=',5)
