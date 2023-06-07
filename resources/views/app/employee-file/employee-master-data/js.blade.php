@@ -33,7 +33,7 @@
                     { text: "Single", value: 1 },
                     { text: "Married", value: 2 },
                     { text: "Divorced", value: 3 },
-                    { text: "Widowed", value: 4 },
+                    { text: "Widowed/Widower", value: 4 },
                 ];
 
             let obj = {
