@@ -29,6 +29,17 @@ class TardinessReportMapper extends AbstractMapper {
         }else{
 
         }
+        /*
+            SELECT biometric_id,leave_date,leave_type FROM leave_request_header INNER JOIN leave_request_detail ON header_id = header_id 
+            WHERE document_status = 'POSTED' AND acknowledge_status ='Approved' AND is_canceled = 'N' 
+        */
+        $leaves = $this->model->select('biometric_id','leave_date','leave_type')
+                                ->from('leave_request_header')
+                                ->join('leave_request_detail','header_id','=','header_id')
+                                ->where('document_status','=','POSTED')
+                                ->where('acknowledge_status','=','Approved')
+                                ->where('is_canceled','=','N')
+                                ->whereBetween('leave_date',[$filter['from'],$filter['to']]);
 
         $div = $divisions->get();
 
@@ -40,12 +51,17 @@ class TardinessReportMapper extends AbstractMapper {
                 ->join('employees','edtr.biometric_id','=','employees.biometric_id')
                 ->join('work_schedules','schedule_id','=','work_schedules.id')
                 ->join('employee_names_vw','employee_names_vw.biometric_id','=','edtr.biometric_id')
+                ->leftJoinSub($leaves,'leaves',function($join){
+                        $join->on('leaves.biometric_id', '=', 'edtr.biometric_id');
+                        $join->on('leaves.leave_date', '=', 'edtr.dtr_date');
+                })
                 ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
                 //->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)');
                 ->where('emp_level','>',2) 
                 ->where('pay_type','!=',3) 
                 ->where('job_title_id','!=',12)
                 ->where('employees.dept_id','!=',5)
+                ->whereNull('leave_type')
                 ->whereRaw('(
                     (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
                     (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out) )
@@ -57,12 +73,17 @@ class TardinessReportMapper extends AbstractMapper {
                 ->join('employees','edtr.biometric_id','=','employees.biometric_id')
                 ->join('work_schedules','schedule_id','=','work_schedules.id')
                 ->join('employee_names_vw','employee_names_vw.biometric_id','=','edtr.biometric_id')
+                ->leftJoinSub($leaves,'leaves',function($join){
+                    $join->on('leaves.biometric_id', '=', 'edtr.biometric_id');
+                    $join->on('leaves.leave_date', '=', 'edtr.dtr_date');
+                })
                 ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
                 //->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)');
                 ->where('pay_type','!=',3)
                 ->where('emp_level','>',2) 
                 ->where('job_title_id','!=',12)
                 ->where('employees.dept_id','=',5)
+                ->whereNull('leave_type')
                 ->whereRaw('(
                     (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
                     (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out) )
@@ -139,16 +160,29 @@ class TardinessReportMapper extends AbstractMapper {
         return $result->get();
         */
 
+        $leaves = $this->model->select('biometric_id','leave_date','leave_type')
+        ->from('leave_request_header')
+        ->join('leave_request_detail','header_id','=','header_id')
+        ->where('document_status','=','POSTED')
+        ->where('acknowledge_status','=','Approved')
+        ->where('is_canceled','=','N')
+        ->whereBetween('leave_date',[$filter['from'],$filter['to']]);
+
         $result = $this->model->select(DB::raw("employees.biometric_id,employee_name,COUNT(dtr_date) late_count"))
         ->from('edtr')
         ->join('employees','edtr.biometric_id','=','employees.biometric_id')
         ->join('work_schedules','schedule_id','=','work_schedules.id')
         ->join('employee_names_vw','employee_names_vw.biometric_id','=','edtr.biometric_id')
+        ->leftJoinSub($leaves,'leaves',function($join){
+            $join->on('leaves.biometric_id', '=', 'edtr.biometric_id');
+            $join->on('leaves.leave_date', '=', 'edtr.dtr_date');
+        })
         ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
         //->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)')
         ->where('emp_level','>',2) 
         ->where('pay_type','!=',3) 
         ->where('job_title_id','!=',12)
+        ->whereNull('leave_type')
         ->whereRaw('(
             (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
             (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out) )
@@ -201,9 +235,10 @@ class TardinessReportMapper extends AbstractMapper {
     public function buildData($month,$emp,$year)
     {
         $arr = [];
-
+        /*
         $qry = "SELECT biometric_id,MONTH(dtr_date) as m,COUNT(edtr.id) as c FROM edtr 
         LEFT JOIN work_schedules ON schedule_id = work_schedules.id
+        left
         WHERE (
             (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) AND TIME_TO_SEC(edtr.time_in) <= TIME_TO_SEC(work_schedules.out_am))
         OR 
@@ -212,6 +247,22 @@ class TardinessReportMapper extends AbstractMapper {
         AND 
             YEAR(dtr_date) = $year
         GROUP BY biometric_id,MONTH(dtr_date)";
+        */
+
+        $qry = "SELECT edtr.biometric_id,MONTH(dtr_date) AS m,COUNT(edtr.id) AS c FROM edtr 
+        LEFT JOIN work_schedules ON schedule_id = work_schedules.id
+        LEFT JOIN (
+        SELECT biometric_id,leave_date,leave_type FROM leave_request_header INNER JOIN leave_request_detail ON header_id = header_id 
+        WHERE document_status = 'POSTED' AND acknowledge_status ='Approved' AND is_canceled = 'N' AND YEAR(leave_date) = $year ) AS l ON edtr.biometric_id = l.biometric_id AND edtr.dtr_date = l.leave_date
+        WHERE (
+            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) AND TIME_TO_SEC(edtr.time_in) <= TIME_TO_SEC(work_schedules.out_am))
+        OR 
+            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) AND TIME_TO_SEC(edtr.time_in) <= TIME_TO_SEC(work_schedules.time_out))
+            )
+        AND 
+            YEAR(dtr_date) = $year
+           AND l.leave_type IS NULL
+        GROUP BY edtr.biometric_id,MONTH(dtr_date)";
 
         $data = DB::select($qry);
 

@@ -4,32 +4,32 @@ namespace App\Http\Controllers\EmployeeFile;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Mappers\EmployeeFileMapper\EmployeeMapper;
 use App\Mappers\EmployeeFileMapper\EmployeeWeeklyMapper;
+use App\Mappers\EmployeeFileMapper\EmployeeMapper;
 use App\Mappers\Admin\ActivityLogMapper;
 use Illuminate\Support\Facades\Auth;
 
-class EmployeeController extends Controller
+class EmployeeWeeklyController extends Controller
 {
     //
     private $mapper;
     private $log;
-    private $weekly;
+    private $main;
 
-    public function __construct(EmployeeMapper $mapper,ActivityLogMapper $log,EmployeeWeeklyMapper $weekly)
+    public function __construct(EmployeeWeeklyMapper $mapper,ActivityLogMapper $log,EmployeeMapper $main)
     {
         $this->mapper = $mapper;
         $this->log = $log;
-        $this->weekly = $weekly;
+        $this->main = $main;
     }
 
     public function index()
     {
-        $emp_stat = $this->mapper->getEmploymentStat();
-        $exit_stat = $this->mapper->getExitStat();
-        $pay_type = $this->mapper->getPayTypes();
-        $level_desc = $this->mapper->getLevels();
-        $userDept = $this->mapper->getUserDept(Auth::user()->biometric_id);
+        $emp_stat = $this->main->getEmploymentStat();
+        $exit_stat = $this->main->getExitStat();
+        $pay_type = $this->main->getPayTypes();
+        $level_desc = $this->main->getLevels();
+        $userDept = $this->main->getUserDept(Auth::user()->biometric_id);
         
         if($userDept==null)
         {
@@ -42,7 +42,7 @@ class EmployeeController extends Controller
             $canSeeRates = false;
         }
     //    dd($canSeeRates);
-        return view('app.employee-file.employee-master-data.index',['emp_stat'=>$emp_stat, 'exit_stat'=>$exit_stat, 'pay_type'=>$pay_type, 'level_desc'=>$level_desc,'canSeeRates'=>$canSeeRates]);
+        return view('app.employee-file.employee-master-data-weekly.index',['emp_stat'=>$emp_stat, 'exit_stat'=>$exit_stat, 'pay_type'=>$pay_type, 'level_desc'=>$level_desc,'canSeeRates'=>$canSeeRates]);
     }
 
     public function list(Request $request)
@@ -103,7 +103,6 @@ class EmployeeController extends Controller
             }
 
             $result = $this->mapper->insertValid($data_arr);
-            $result2 = $this->weekly->insertValid($data_arr);
 
             if(is_object($result)){
                 return response()->json($result)->setStatusCode(500, 'Error');
@@ -224,7 +223,7 @@ class EmployeeController extends Controller
             $emp_array[$value->biometric_id] = $value->empname;
         }
 
-        return view('app.employee-file.employee-master-data.bio-assignment',['data' => $data,'emp' => $emp_array]);
+        return view('app.employee-file.employee-master-data-weekly.bio-assignment',['data' => $data,'emp' => $emp_array]);
 
     }
 

@@ -44,7 +44,7 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         FROM edtr m
         INNER JOIN payroll_period_weekly o ON m.dtr_date BETWEEN o.date_from AND o.date_to
         INNER JOIN employee_names_vw AS name_vw ON m.biometric_id = name_vw.biometric_id
-        INNER JOIN employees AS e ON m.biometric_id = e.biometric_id
+        INNER JOIN employees_weekly AS e ON m.biometric_id = e.biometric_id
         LEFT JOIN unposted_weekly_compensation AS comp ON m.biometric_id = comp.biometric_id AND o.id = comp.period_id
         WHERE o.id =  $period_id
         AND e.exit_status = 1
@@ -124,8 +124,8 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
 
     public function showComputed($period_id)
     {
-        $division = $this->model->select('division_id','div_name')->from('employees')
-                    ->join('divisions','divisions.id','=','employees.division_id')
+        $division = $this->model->select('division_id','div_name')->from('employees_weekly')
+                    ->join('divisions','divisions.id','=','employees_weekly.division_id')
                     ->where('exit_status',1)
                     ->where('pay_type',3)
                     ->orderBy('division_id','asc')
@@ -134,11 +134,11 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         
         foreach($division as $idiv)
         {
-            $department = $this->model->select('departments.id','dept_name')->from('employees')
-                ->join('departments','departments.id','=','employees.dept_id')
+            $department = $this->model->select('departments.id','dept_name')->from('employees_weekly')
+                ->join('departments','departments.id','=','employees_weekly.dept_id')
                 ->where('exit_status',1)
                 ->where('pay_type',3)
-                ->where('employees.division_id',$idiv->division_id)
+                ->where('employees_weekly.division_id',$idiv->division_id)
                 ->distinct()
                 ->get();
 
@@ -148,7 +148,7 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
             {
                 $employees = DB::select("SELECT name_vw.employee_name,m.* FROM payrollregister_unposted_weekly AS m
                 INNER JOIN employee_names_vw AS name_vw ON m.biometric_id = name_vw.biometric_id
-                INNER JOIN employees AS e ON m.biometric_id = e.biometric_id
+                INNER JOIN employees_weekly AS e ON m.biometric_id = e.biometric_id
                 WHERE m.period_id  = $period_id AND e.division_id = $idiv->division_id AND e.dept_id = $dept->id
                 ORDER BY e.lastname,e.firstname");
 
@@ -214,7 +214,7 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         $result = $this->model->select(DB::raw("
                         'weekly' AS emp_level,
                         payroll_period_weekly.id AS period_id,
-                        employees.biometric_id,
+                        employees_weekly.biometric_id,
                         lastname,
                         firstname,
                         middlename,
@@ -274,7 +274,7 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
                     ->join('payroll_period_weekly',function($join){
                         $join->whereRaw('edtr.dtr_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
                     })
-                    ->join('employees','edtr.biometric_id','=','employees.biometric_id')
+                    ->join('employees_weekly','edtr.biometric_id','=','employees_weekly.biometric_id')
                     ->where('payroll_period_weekly.id','=',$period_id)
                     ->whereIn('pay_type',[3])
                     ->where('exit_status',1)
@@ -284,7 +284,7 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
                     ->where('time_out','!=','00:00')
                     ->groupBy(DB::raw('
                                 payroll_period_weekly.id,
-                                employees.biometric_id,
+                                employees_weekly.biometric_id,
                                 lastname,
                                 firstname,
                                 middlename,
@@ -341,7 +341,7 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
     {
         $qry = "SELECT holiday_type FROM holidays INNER JOIN holiday_location ON holidays.id = holiday_id
         INNER JOIN payroll_period_weekly ON holiday_date BETWEEN date_from AND date_to
-        INNER JOIN employees ON employees.location_id = holiday_location.location_id
+        INNER JOIN employees_weekly ON employees_weekly.location_id = holiday_location.location_id
         INNER JOIN holiday_types ON holiday_types.id = holiday_type
         WHERE payroll_period_weekly.id = $period_id
         AND biometric_id = $biometric_id";
@@ -452,17 +452,17 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
     public function getEmployees($period) /* Earnings and Deductions here */
     {   
         $user = Auth::user();
-        $employees = $this->model->select(DB::raw("employee_names_vw.employee_name,payrollregister_unposted_weekly.*,employees.pay_type,employees.monthly_allowance as mallowance,
-        employees.daily_allowance as dallowance,IF(employees.pay_type=1,employees.basic_salary/2,employees.basic_salary) AS basicpay"))
+        $employees = $this->model->select(DB::raw("employee_names_vw.employee_name,payrollregister_unposted_weekly.*,employees_weekly.pay_type,employees_weekly.monthly_allowance as mallowance,
+        employees_weekly.daily_allowance as dallowance,IF(employees_weekly.pay_type=1,employees_weekly.basic_salary/2,employees_weekly.basic_salary) AS basicpay"))
                                 ->from("payrollregister_unposted_weekly")
-                                ->join("employees",'employees.biometric_id','=','payrollregister_unposted_weekly.biometric_id')
+                                ->join("employees_weekly",'employees_weekly.biometric_id','=','payrollregister_unposted_weekly.biometric_id')
                                 ->join("employee_names_vw",'employee_names_vw.biometric_id','=','payrollregister_unposted_weekly.biometric_id')
                                 ->where([
                                    
                                     ['payrollregister_unposted_weekly.period_id','=',$period],
                                     ['user_id','=',$user->id],
                                    
-                                ])->orderBy('employees.pay_type','DESC')->orderBy('employee_names_vw.employee_name','ASC')->get();
+                                ])->orderBy('employees_weekly.pay_type','DESC')->orderBy('employee_names_vw.employee_name','ASC')->get();
         foreach($employees as $employee)
         {   
             $employee->otherEarnings = $this->otherEarnings($employee->biometric_id,$period);
@@ -507,15 +507,15 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         $empInPayroll = $this->model->select('biometric_id')->from('payrollregister_unposted_weekly')->where('period_id',$period_id);
 
 
-        $result = $this->model->select('employees.biometric_id','employee_name','div_code','dept_code','job_title_name')
-                                ->from('employees')
-                                ->join('employee_names_vw','employees.biometric_id','=','employee_names_vw.biometric_id')
-                                ->leftJoin('departments','departments.id','=','employees.dept_id')
-                                ->leftJoin('divisions','divisions.id','=','employees.division_id')
-                                ->leftJoin('job_titles','job_titles.id','=','employees.job_title_id')
-                                ->whereNotIn('employees.biometric_id',$empInPayroll)
-                                ->where('employees.exit_status',1)
-                                ->where('employees.pay_type','=',3)
+        $result = $this->model->select('employees_weekly.biometric_id','employee_name','div_code','dept_code','job_title_name')
+                                ->from('employees_weekly')
+                                ->join('employee_names_vw','employees_weekly.biometric_id','=','employee_names_vw.biometric_id')
+                                ->leftJoin('departments','departments.id','=','employees_weekly.dept_id')
+                                ->leftJoin('divisions','divisions.id','=','employees_weekly.division_id')
+                                ->leftJoin('job_titles','job_titles.id','=','employees_weekly.job_title_id')
+                                ->whereNotIn('employees_weekly.biometric_id',$empInPayroll)
+                                ->where('employees_weekly.exit_status',1)
+                                ->where('employees_weekly.pay_type','=',3)
                                 ->orderBy('employee_name','asc'); 
         return $result->get();
     }   
@@ -528,13 +528,13 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
 
 
 SELECT DISTINCT departments.id,dept_name FROM employees 
-INNER JOIN departments ON departments.id = employees.dept_id
-WHERE exit_status = 1 AND pay_type = 3 AND employees.division_id = 1 
+INNER JOIN departments ON departments.id = employees_weekly.dept_id
+WHERE exit_status = 1 AND pay_type = 3 AND employees_weekly.division_id = 1 
 ORDER BY dept_id; 
 
 
 SELECT DISTINCT division_id,div_name FROM employees 
-INNER JOIN divisions ON divisions.id = employees.division_id
+INNER JOIN divisions ON divisions.id = employees_weekly.division_id
 WHERE exit_status = 1 AND pay_type = 3 ORDER BY division_id; 
 
 

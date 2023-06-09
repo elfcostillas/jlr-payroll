@@ -8,9 +8,9 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-class EmployeeMapper extends AbstractMapper {
+class EmployeeWeeklyMapper extends AbstractMapper {
 
-	protected $modelClassName = 'App\Models\EmployeeFile\Employee';
+	protected $modelClassName = 'App\Models\EmployeeFile\EmployeeWeekly';
     protected $rules = [
     	'firstname' => 'required|sometimes',
 		'lastname' => 'required|sometimes',
@@ -62,13 +62,13 @@ class EmployeeMapper extends AbstractMapper {
 		$user = Auth::user();
 		
 		
-        $result = $this->model->select(DB::raw('employees.*,dept_code,div_code,emp_exit_status.status_desc,emp_emp_stat.estatus_desc,pay_description'))
+        $result = $this->model->select(DB::raw('employees_weekly.*,dept_code,div_code,emp_exit_status.status_desc,emp_emp_stat.estatus_desc,pay_description'))
 		->leftJoin('departments','departments.id','=','dept_id')
 		->leftJoin('divisions','divisions.id','=','division_id')
 		->leftJoin('emp_exit_status','exit_status','=','emp_exit_status.id')
 		->leftJoin('emp_emp_stat','employee_stat','=','emp_emp_stat.id')
 		->leftJoin('emp_pay_types','pay_type','=','emp_pay_types.id')
-		->where('pay_type','!=',3);
+		->where('pay_type','=',3);
 
 		// if($user->super_user=='N')
 		// {

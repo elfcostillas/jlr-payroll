@@ -29,6 +29,7 @@ use App\Http\Controllers\Settings\OtherIncomeWeeklyController;
 
 use App\Http\Controllers\EmployeeFile\DivisionController;
 use App\Http\Controllers\EmployeeFile\EmployeeController;
+use App\Http\Controllers\EmployeeFile\EmployeeWeeklyController;
 use App\Http\Controllers\EmployeeFile\DepartmentController;
 use App\Http\Controllers\EmployeeFile\JobTitleController;
 use App\Http\Controllers\Reports\EmployeeReportController;
@@ -251,6 +252,19 @@ Route::middleware('auth')->prefix('employee-files')->group(function(){
         Route::get('job-titles/{id}',[EmployeeController::class,'getJobTitles']);
 
         Route::get('biometric-assignment',[EmployeeController::class,'bioAssignment']);
+        
+    });
+
+    Route::prefix('employee-master-data-weekly')->group(function(){ 
+        Route::get('/',[EmployeeWeeklyController::class,'index']);
+        Route::get('read/{id}',[EmployeeWeeklyController::class,'readById']);
+        Route::get('list',[EmployeeWeeklyController::class,'list']);
+        //Route::post('create',[EmployeeController::class,'create']);
+        //Route::post('update',[EmployeeController::class,'update']);
+        Route::post('save',[EmployeeWeeklyController::class,'save']);
+        Route::get('job-titles/{id}',[EmployeeWeeklyController::class,'getJobTitles']);
+
+        Route::get('biometric-assignment',[EmployeeWeeklyController::class,'bioAssignment']);
         
     });
 

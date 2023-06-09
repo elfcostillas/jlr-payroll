@@ -4,7 +4,7 @@ namespace App\Http\Controllers\PayrollTransaction;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Mappers\EmployeeFileMapper\EmployeeMapper;
+use App\Mappers\EmployeeFileMapper\EmployeeWeeklyMapper;
 use Illuminate\Support\Facades\Auth;
 use App\Mappers\TimeKeepingMapper\PayrollPeriodWeeklyMapper;
 use App\Mappers\PayrollTransaction\UnpostedPayrollRegisterWeeklyMapper;
@@ -22,7 +22,7 @@ class PayrollRegisterWeeklyController extends Controller
     private $period;
     private $mapper;
 
-    public function __construct(EmployeeMapper $employee,PayrollPeriodWeeklyMapper $period,UnpostedPayrollRegisterWeeklyMapper $mapper,UnpostedPayrollRegisterWeekly $excel)
+    public function __construct(EmployeeWeeklyMapper $employee,PayrollPeriodWeeklyMapper $period,UnpostedPayrollRegisterWeeklyMapper $mapper,UnpostedPayrollRegisterWeekly $excel)
     {
         $this->employee = $employee;
         $this->period = $period;

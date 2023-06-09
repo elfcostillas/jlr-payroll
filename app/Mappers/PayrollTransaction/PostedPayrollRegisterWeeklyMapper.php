@@ -89,11 +89,11 @@ class PostedPayrollRegisterWeeklyMapper extends AbstractMapper {
     }
 
     function getData($period_id){
-        $qry = "SELECT DISTINCT employees.biometric_id,employee_name,lastname,firstname,basic_salary
-        FROM employees INNER JOIN edtr ON employees.biometric_id = edtr.biometric_id
-        INNER JOIN employee_names_vw ON employees.biometric_id = employee_names_vw.biometric_id
+        $qry = "SELECT DISTINCT employees_weekly.biometric_id,employee_name,lastname,firstname,basic_salary
+        FROM employees_weekly INNER JOIN edtr ON employees_weekly.biometric_id = edtr.biometric_id
+        INNER JOIN employee_names_vw ON employees_weekly.biometric_id = employee_names_vw.biometric_id
         INNER JOIN payroll_period_weekly ON dtr_date BETWEEN date_from AND date_to
-        AND payroll_period_weekly.id = $period_id AND employees.pay_type = 3 ORDER BY lastname,firstname";
+        AND payroll_period_weekly.id = $period_id AND employees_weekly.pay_type = 3 ORDER BY lastname,firstname";
 
         $result = DB::select($qry);
         
