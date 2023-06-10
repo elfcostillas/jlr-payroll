@@ -88,10 +88,20 @@ class EmployeeWeeklyMapper extends AbstractMapper {
 		}
 
 		if(trim($filter['search'])!=''){
-			$result = $result->orWhere('firstname','like','%'.$filter['search'].'%')
-			->orWhere('lastname','like','%'.$filter['search'].'%')
-			->orWhere('middlename','like','%'.$filter['search'].'%');
+			$result->where(function($query) use ($filter){
+				// if(trim($filter['search'])!=''){
+				// 	$result = $result->orWhere('firstname','like','%'.$filter['search'].'%')
+				// 	->orWhere('lastname','like','%'.$filter['search'].'%')
+				// 	->orWhere('middlename','like','%'.$filter['search'].'%');
+				// }
+
+				$query->where('firstname','like','%'.$filter['search'].'%')
+					->orWhere('lastname','like','%'.$filter['search'].'%')
+					->orWhere('middlename','like','%'.$filter['search'].'%');
+			});
 		}
+	
+		
 
 		$total = $result->count();
 
