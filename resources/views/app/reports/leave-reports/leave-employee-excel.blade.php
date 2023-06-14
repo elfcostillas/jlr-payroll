@@ -1,6 +1,7 @@
 <?php
     function nformat($n)
     {
+      
         if($n>8){
             return number_format($n,0);
         }
@@ -21,6 +22,9 @@
         <td>Reason</td>
         <td>With Pay</td>
         <td>Without Pay</td>
+        <td>Under Time</td>
+        <td>VL Balance</td>
+        <td>SL Balance  </td>
     </tr>
     <tr>
         <td></td>
@@ -32,13 +36,18 @@
         </tr>
        
         @foreach($emp->leaves as $leave)
+           
             <tr>
                 <td></td>
                 <td>{{ $leave->mask_leave_date }}</td>
                 <td>{{ $leave->leave_type }}</td>
                 <td>{{ $leave->remarks }}</td>
-                <td>{{ nformat($leave->with_pay) }}</td>
-                <td>{{ nformat($leave->without_pay) }}</td>
+                
+                <td>{{ nformat(($leave->leave_type!='UT') ? $leave->with_pay : 0 )  }}</td>
+                <td>{{ nformat(($leave->leave_type!='UT') ? $leave->without_pay : 0 )  }}</td>
+                <td>{{ nformat(($leave->leave_type=='UT') ? ($leave->without_pay + $leave->with_pay) : 0 )  }}</td>
+                <td>{{ $leave->bal[0]->vacation_leave - $leave->bal[0]->VL_PAY }}</td>
+                <td>{{ $leave->bal[0]->sick_leave - $leave->bal[0]->SL_PAY }}</td>
             </tr>
         @endforeach
     @endforeach
