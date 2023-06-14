@@ -46,6 +46,9 @@ class LeaveReportsMapper extends AbstractMapper {
 
     public function getLeaveSummaryByEmployee($from,$to,$type)
     {
+        $year = Carbon::createFromFormat('Y-m-d',$from)->format('Y');
+        $start = $year.'-01-01';
+
         if($type=='nonconfi'){
             $level = 'and emp_level >= 5 ';
         }else {
@@ -58,7 +61,7 @@ class LeaveReportsMapper extends AbstractMapper {
         WHERE is_canceled = 'N' AND  document_status = 'POSTED' AND received_by IS NOT NULL and acknowledge_status = 'Approved'
         AND leave_date between '$from' and '$to'  $level and pay_type != 3
         GROUP BY leave_request_header.biometric_id
-        ORDER BY leave_date ASC,employee_name;
+        ORDER BY employee_name ASC,leave_date ASC;
         ";
     //AND leave_type != 'UL'
         $result = DB::select($employees);
@@ -73,10 +76,79 @@ class LeaveReportsMapper extends AbstractMapper {
 
             ORDER BY leave_date ASC,employee_name;";
     //AND leave_type != 'UL'
-            $emp->leaves = DB::select($leaves);
+            $leave =  DB::select($leaves);
+            
+            foreach($leave as $l){
+                $bal = $this->getBalance($year,$start,$l->leave_date,$emp->biometric_id);
+              
+                $l->bal = $bal;
+            }
+            $emp->leaves = $leave;
         }
 
         return $result;
+    }
+
+    function getBalance($year,$start,$end,$biometric_id){
+    //     $qry = "  SELECT employees.biometric_id,lastname,firstname,suffixname,IFNULL(vacation_leave,0) vacation_leave,IFNULL(sick_leave,0) sick_leave,
+    //     IFNULL(VL_PAY,0) VL_PAY,IFNULL(SL_PAY,0) SL_PAY
+    //     FROM employees LEFT JOIN leave_credits ON leave_credits.biometric_id = employees.biometric_id
+    //     LEFT JOIN (
+    //       SELECT biometric_id,ROUND(SUM(with_pay)/8,2) AS VL_PAY FROM leave_request_header 
+    //           INNER JOIN leave_request_detail ON leave_request_header.id = header_id
+    //       WHERE leave_date BETWEEN '$start' AND '$end'  AND leave_request_header.acknowledge_status = 'Approved' AND document_status = 'POSTED'
+    //       AND with_pay > 0
+    //       AND is_canceled = 'N'
+    //       AND leave_type in ('VL','EL')
+    //       AND leave_request_header.received_by IS NOT NULL
+    //       GROUP BY biometric_id
+    //   ) AS vl ON employees.biometric_id = vl.biometric_id
+    //    LEFT JOIN (
+    //       SELECT biometric_id,ROUND(SUM(with_pay)/8,2) AS SL_PAY FROM leave_request_header 
+    //           INNER JOIN leave_request_detail ON leave_request_header.id = header_id
+    //       WHERE leave_date BETWEEN '$start' AND '$end' AND leave_request_header.acknowledge_status = 'Approved' AND document_status = 'POSTED'
+    //       AND with_pay > 0
+    //       AND is_canceled = 'N'
+    //       AND leave_type = 'SL'
+    //       AND leave_request_header.received_by IS NOT NULL
+    //       GROUP BY biometric_id
+    //   ) AS sl ON employees.biometric_id = sl.biometric_id
+    //     WHERE leave_credits.fy_year = $year and employees.biometric_id = $biometric_id;";
+
+        $qry = "SELECT employees.biometric_id,lastname,firstname,suffixname,IFNULL(vacation_leave,0) vacation_leave,IFNULL(sick_leave,0) sick_leave,
+        IFNULL(VL_PAY,0) VL_PAY,IFNULL(SL_PAY,0) SL_PAY
+    from employees  
+    LEFT JOIN (
+          SELECT biometric_id,ROUND(SUM(with_pay)/8,2) AS VL_PAY FROM leave_request_header 
+              INNER JOIN leave_request_detail ON leave_request_header.id = header_id
+          WHERE leave_date BETWEEN '$start' AND '$end' AND leave_request_header.acknowledge_status = 'Approved' AND document_status = 'POSTED'
+          AND with_pay > 0
+          AND is_canceled = 'N'
+          AND leave_type in ('VL','EL')
+          AND leave_request_header.received_by IS NOT NULL
+          AND biometric_id = $biometric_id
+          GROUP BY biometric_id
+      ) AS vl ON employees.biometric_id = vl.biometric_id
+       LEFT JOIN (
+          SELECT biometric_id,ROUND(SUM(with_pay)/8,2) AS SL_PAY FROM leave_request_header 
+              INNER JOIN leave_request_detail ON leave_request_header.id = header_id
+          WHERE leave_date BETWEEN '$start' AND '$end' AND leave_request_header.acknowledge_status = 'Approved' AND document_status = 'POSTED'
+          AND with_pay > 0
+          AND is_canceled = 'N'
+          AND leave_type = 'SL'
+          AND leave_request_header.received_by IS NOT NULL
+          AND biometric_id = $biometric_id
+          GROUP BY biometric_id
+      ) AS sl ON employees.biometric_id = sl.biometric_id
+      left join (
+        select * from leave_credits where biometric_id = $biometric_id and fy_year = $year
+      ) as leave_credits on leave_credits.biometric_id = employees.biometric_id
+      where employees.biometric_id = $biometric_id;";
+
+        $result = DB::select($qry);
+
+        return $result;
+
     }
 
     public function getDivisions()

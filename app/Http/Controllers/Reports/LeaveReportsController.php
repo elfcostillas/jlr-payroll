@@ -76,7 +76,7 @@ class LeaveReportsController extends Controller
         $to = $request->to;
 
         $result = $this->mapper->getLeaveSummaryByEmployee($from,$to,'nonconfi');
-        
+
         $this->byEmployee->setValues($result);
         return Excel::download($this->byEmployee,'EmployeeLeavesByEmployeeSummary.xlsx');
 
@@ -91,7 +91,7 @@ class LeaveReportsController extends Controller
         $to = $request->to;
 
         $result = $this->mapper->getLeaveSummaryByEmployee($from,$to,'confi');
-        
+
         $this->byEmployee->setValues($result);
         return Excel::download($this->byEmployee,'EmployeeLeavesByEmployeeSummary.xlsx');
 
