@@ -34,6 +34,7 @@ use App\Http\Controllers\EmployeeFile\DepartmentController;
 use App\Http\Controllers\EmployeeFile\JobTitleController;
 use App\Http\Controllers\Reports\EmployeeReportController;
 use App\Http\Controllers\Reports\LeaveReportsController;
+use App\Http\Controllers\Reports\ManHoursController;
 use Carbon\CarbonPeriod;
 
 use App\Http\Controllers\PayrollTransaction\PayrollRegisterController;
@@ -458,6 +459,13 @@ Route::middleware('auth')->prefix('reports')->group(function(){
 
         Route::get('yearly-tardiness/{year}',[TardinessReportsController::class,'tardindessYearly']);
     });
+    //
+    Route::prefix('man-hours')->group(function(){
+        Route::get('/',[ManHoursController::class,'index']);
+       
+    });
+
+
 });
 
 Route::middleware('auth')->prefix('accounts')->group(function(){

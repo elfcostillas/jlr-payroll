@@ -117,8 +117,71 @@ class LeaveRequestController extends Controller
         if($request->with_pay+$request->without_pay>9)
         {
             return response()->json(['error'=>'Invalid no of days.'])->setStatusCode(500, 'Error');
+        } else {
+            $biometric_id = $request->biometric_id;
+            $leave_date = Carbon::createFromFormat('Y-m-d',$request->leave_date);
+
+            $header = $this->header->header($request->header_id);
+          
+            
+            $year = $leave_date->format('Y');
+            $start = $year.'-01-01';
+            $end = $year.'-12-31';
+
+            // $data = $this->credits->showLeaves($header->biometric_id,$start,$end);
+           
+            $consumed = $this->credits->getBalance( $year,$start,$end,$header->biometric_id);
+
+            $balance_vl = ($consumed[0]->vacation_leave - $consumed[0]->VL_PAY) * 8;  
+            $balance_sl = ($consumed[0]->sick_leave - $consumed[0]->SL_PAY) * 8;   
+
+            $w_pay = ($request->with_pay) ? $request->with_pay : 0;
+            $wo_pay = ($request->without_pay)? $request->without_pay : 0;
+
+            if($header->leave_type == 'SL'){
+                //if($balance_sl>0){
+                if(($balance_sl-$w_pay)>=0 && ($w_pay>0)){
+                    $ye_pay = ($balance_sl - $w_pay >=0) ? $w_pay : $w_pay - $balance_sl;
+                    $no_pay = ($balance_sl - $w_pay >=0) ? $wo_pay : ($balance_sl - $w_pay) + $wo_pay;
+                    //$balance_sl = ($balance_sl- $ye_pay <= 0) ? 0 : $balance_sl- $ye_pay;
+                }else {
+                    return response()->json(['error' => 'Insufficient sick leave credits.'])->setStatusCode(500, 'Error');
+                    // $ye_pay = 0;
+                    // $no_pay = $w_pay + $wo_pay;
+                }
+               
+                
+            }else {
+                // dd(($balance_vl-$w_pay)>=0 && ($w_pay>0));
+               
+                if(($balance_vl-$w_pay)>=0 || ($w_pay==0)){
+                    $ye_pay = ($balance_vl - $w_pay >=0) ? $w_pay : $w_pay - $balance_vl;
+                    $no_pay = ($balance_vl - $w_pay >=0) ? $wo_pay : ($balance_vl - $w_pay) + $wo_pay;
+                    $balance_vl = ($balance_vl- $ye_pay <= 0) ? 0 : $balance_vl- $ye_pay;
+                }else {
+                    return response()->json(['error' => 'Insufficient vacation leave credits.'])->setStatusCode(500, 'Error');
+                    // $ye_pay = 0;
+                    // $no_pay = $w_pay + $wo_pay;
+                }
+
+              
+            }
+          
+            // $arrayd = array(
+            //     'header_id' => $header->id,
+            //     'leave_date' => $day,
+            //     'is_canceled' => 'N',
+            //     'time_from' => null,
+            //     'time_to' => null,
+            //     'with_pay' => $ye_pay,
+            //     'without_pay' =>  $no_pay,
+            // );
+
+            //LeaveDetail::create($arrayd);
         }
+
         $result = $this->detail->updateValid($request->all());
+        
 
         return response()->json($result);
     }
