@@ -462,6 +462,12 @@ Route::middleware('auth')->prefix('reports')->group(function(){
     //
     Route::prefix('man-hours')->group(function(){
         Route::get('/',[ManHoursController::class,'index']);
+        Route::get('generate/{from}/{to}/{hr1}/{hr2}',[ManHoursController::class,'generateReport']);
+        Route::get('pdf/{from}/{to}/{hr1}/{hr2}',[ManHoursController::class,'viewPDF']);
+
+        Route::get('generate-ot/{from}/{to}/{hr1}/{hr2}',[ManHoursController::class,'generateReportOT']);
+        Route::get('pdf-ot/{from}/{to}/{hr1}/{hr2}',[ManHoursController::class,'viewPDFOT']);
+       
        
     });
 
