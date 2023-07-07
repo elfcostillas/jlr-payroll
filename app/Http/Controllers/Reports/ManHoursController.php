@@ -28,7 +28,10 @@ class ManHoursController extends Controller
         $from = Carbon::createFromFormat('Y-m-d',$request->from);
         $to = Carbon::createFromFormat('Y-m-d',$request->to);
 
-        $result = $this->mapper->getData($from->format('Y-m-d'),$to->format('Y-m-d'),$request->filtered,$request->hr1,$request->hr2);
+        $h1 = ($request->hr1==null || $request->hr1 == 'null') ? 0 : $request->hr1;
+        $h2 = ($request->hr2==null || $request->hr2 == 'null') ? 0 : $request->hr2;
+
+        $result = $this->mapper->getData($from->format('Y-m-d'),$to->format('Y-m-d'),$request->filtered,$h1,$h2);
 
         $label = $from->format('m/d/Y') . ' - ' . $to->format('m/d/Y');
 
@@ -40,8 +43,11 @@ class ManHoursController extends Controller
     {
         $from = Carbon::createFromFormat('Y-m-d',$request->from);
         $to = Carbon::createFromFormat('Y-m-d',$request->to);
+        
+        $h1 = ($request->hr1==null || $request->hr1 == 'null') ? 0 : $request->hr1;
+        $h2 = ($request->hr2==null || $request->hr2 == 'null') ? 0 : $request->hr2;
 
-        $result = $this->mapper->getData($from->format('Y-m-d'),$to->format('Y-m-d'),$request->filtered,$request->hr1,$request->hr2);
+        $result = $this->mapper->getData($from->format('Y-m-d'),$to->format('Y-m-d'),$request->filtered,$h1,$h2);
         
         $label = $from->format('m/d/Y') . ' - ' . $to->format('m/d/Y');
 
@@ -61,6 +67,8 @@ class ManHoursController extends Controller
     {
         $from = Carbon::createFromFormat('Y-m-d',$request->from);
         $to = Carbon::createFromFormat('Y-m-d',$request->to);
+
+       
 
         $result = $this->mapper->getDataOT($from->format('Y-m-d'),$to->format('Y-m-d'),$request->filtered,$request->hr1,$request->hr2);
 

@@ -27,9 +27,12 @@ class ManHoursMapper extends AbstractMapper {
         if($h1 != $h2){
             $filter = "and total between $h1 and $h2";
 
-            if($h1 ==0 || $h2 == 0){
-                $filter = "and total >= ".($h1+$h2) ;
+            if($h1 == 0 || $h2 ==0){
+                //$h3 = $h1 + $h2;
+                
+                $filter = "and total >= ".($h1+$h2);
             }
+         
         }else{
             $filter = ($h1 >0 ) ? 'and total = '.$h1 : '';
         }
