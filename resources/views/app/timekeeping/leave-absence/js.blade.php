@@ -357,7 +357,7 @@
                         var myWindow = $("#pop");
                         
                         myWindow.kendoWindow({
-                            width: "834", //1124 - 1152
+                            width: "934", //1124 - 1152
                             height: "710",
                             title: "Leave Request Form",
                             visible: false,
@@ -496,7 +496,7 @@
                 height : 550,
                 scrollable: true,
                 toolbar : [
-                    { template: kendo.template($("#template").html()) }
+                    // { template: kendo.template($("#template").html()) }
                 ],
                 //editable : "inline",
                 columns : [
@@ -567,18 +567,9 @@
                         title : "Date",
                         field : "leave_date",
                         template : "#= (data.leave_date) ? kendo.toString(data.leave_date,'MM/dd/yyyy') : ''  #",
-                        width : 100,    
+                        width : 90,    
                     },
-                    {
-                        title : "Cancelled",
-                        field : "is_canceled",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center"
-                            
-                        },
-                        width : 100,    
-                        editor : stopEditor
-                    },
+                   
                     {
                         title : "Time From",
                         field : "time_from",
@@ -586,7 +577,8 @@
                             style: "font-size: 9pt;text-align:center"
                             
                         },
-                        //width : 100,    
+                        width : 100,  
+                        // width : 90,     
                     },
                     {
                         title : "Time To",
@@ -595,7 +587,7 @@
                             style: "font-size: 9pt;text-align:center"
                             
                         },
-                        //width : 90,    
+                        width : 90,    
                     },
                     // {
                     //     title : "Day",
@@ -616,7 +608,7 @@
                             style: "font-size: 9pt;text-align:center"
                             
                         },
-                        width : 120,   
+                        width : 80,   
                         footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
                         template : "#if(with_pay==0){#  #}else{# #= with_pay # #}# ",
                     },
@@ -627,17 +619,30 @@
                             style: "font-size: 9pt;text-align:center"
                             
                         },
-                        width : 120,    
+                        width : 100,    
                         footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
                         template : "#if(without_pay==0){#  #}else{# #= without_pay # #}# ",
                     },
-                    // {
-                    //     command : ['edit'],
-                    //     width :190,    
-                    // },
-                    // {
-                    //     width : 190
-                    // }
+                    {
+                        title : "Cancel",
+                        field : "is_canceled",
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center"
+                            
+                        },
+                        width : 90,    
+                        editor : stopEditor
+                    },
+                    {
+                        
+                        title : "Remarks",
+                        field : "leave_remarks",
+                        attributes: {
+                            style: "font-size: 9pt;text-align:left"
+                            
+                        },
+                        
+                    }
                   
                 ]
             });

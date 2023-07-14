@@ -85,7 +85,7 @@ class LeaveRequestDetailMapper extends AbstractMapper {
 
     public function listDates($id)
     {
-        $result = $this->model->select(DB::raw("line_id,header_id,leave_date,is_canceled,time_from,time_to,days,with_pay,without_pay,DATE_FORMAT(leave_date,'%a') as dayname"))->where('header_id',$id);
+        $result = $this->model->select(DB::raw("line_id,header_id,leave_date,is_canceled,time_from,time_to,days,with_pay,without_pay,DATE_FORMAT(leave_date,'%a') as dayname,leave_remarks"))->where('header_id',$id);
 
         //DATE_FORMAT(leave_date,'%a')
         /*

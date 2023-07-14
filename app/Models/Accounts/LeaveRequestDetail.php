@@ -21,7 +21,8 @@ class LeaveRequestDetail extends Model
         'time_to',
         'days',
         'with_pay',
-        'without_pay'
+        'without_pay',
+        'remarks'
     ];
 
 }
