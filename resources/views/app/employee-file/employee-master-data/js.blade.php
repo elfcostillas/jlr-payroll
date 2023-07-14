@@ -359,6 +359,20 @@
                         viewModel.form.model.set('employee_stat',1);
                         viewModel.form.model.set('exit_status',1);
                         viewModel.form.model.set('pay_type',1);
+                    },
+                    copy : function(e)
+                    {
+                        $.post('employee-master-data/copy-onlinerequest',{
+                            id : viewModel.form.model.id 
+                        },function(data,staus){
+                            swal_success(data);
+
+                        })
+                        .fail(function(data){
+                           swal_error(data);
+                        }).always(function() {
+                            
+                        });
                     }
                 },
                 functions : {
@@ -729,6 +743,7 @@
                 items : [
                     { id : 'saveBtn', type: "button", text: "Save", icon: 'save', click : viewModel.buttonHandler.save },
                     { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
+                    { id : 'copy', type: "button", text: "Copy to Online Request", icon: 'copy', click : viewModel.buttonHandler.copy },
                 ]
             });
 

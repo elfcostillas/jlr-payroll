@@ -253,6 +253,7 @@ Route::middleware('auth')->prefix('employee-files')->group(function(){
         Route::get('job-titles/{id}',[EmployeeController::class,'getJobTitles']);
 
         Route::get('biometric-assignment',[EmployeeController::class,'bioAssignment']);
+        Route::post('copy-onlinerequest',[EmployeeController::class,'copyToOR']);
         
     });
 
@@ -266,6 +267,8 @@ Route::middleware('auth')->prefix('employee-files')->group(function(){
         Route::get('job-titles/{id}',[EmployeeWeeklyController::class,'getJobTitles']);
 
         Route::get('biometric-assignment',[EmployeeWeeklyController::class,'bioAssignment']);
+
+       
         
     });
 

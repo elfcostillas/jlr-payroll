@@ -8,6 +8,8 @@ use App\Mappers\EmployeeFileMapper\EmployeeMapper;
 use App\Mappers\EmployeeFileMapper\EmployeeWeeklyMapper;
 use App\Mappers\Admin\ActivityLogMapper;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Mappers\EmployeeFileMapper\OnlineRequestUserMapper;
 
 class EmployeeController extends Controller
 {
@@ -15,12 +17,14 @@ class EmployeeController extends Controller
     private $mapper;
     private $log;
     private $weekly;
+    private $online;
 
-    public function __construct(EmployeeMapper $mapper,ActivityLogMapper $log,EmployeeWeeklyMapper $weekly)
+    public function __construct(EmployeeMapper $mapper,ActivityLogMapper $log,EmployeeWeeklyMapper $weekly,OnlineRequestUserMapper $online)
     {
         $this->mapper = $mapper;
         $this->log = $log;
         $this->weekly = $weekly;
+        $this->online = $online;
     }
 
     public function index()
@@ -228,7 +232,25 @@ class EmployeeController extends Controller
 
     }
 
+    public function copyToOR(Request $request)
+    {
+       
+        $result = $this->mapper->header($request->id);
+        $key = [
+            'email' => trim($result->biometric_id)
+        ];
 
+        $data = [
+           
+            'password' => Hash::make(trim($result->lastname)),
+            'name' => trim($result->lastname).', '.trim($result->firstname) 
+        ];
+       // dd($key,$data);
+       $result = $this->online->updateOrCreate($key,$data);
+
+       return response()->json($result);
+
+    }
 
     // public function getEmploymentStat()
     // {
