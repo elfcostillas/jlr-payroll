@@ -114,7 +114,7 @@ class LeaveRequestController extends Controller
 
     public function updateDetail(Request $request)
     {
-        if($request->with_pay+$request->without_pay>9)
+        if($request->with_pay+$request->without_pay>8)
         {
             return response()->json(['error'=>'Invalid no of days.'])->setStatusCode(500, 'Error');
         } else {
@@ -166,6 +166,8 @@ class LeaveRequestController extends Controller
 
               
             }
+
+       
           
             // $arrayd = array(
             //     'header_id' => $header->id,

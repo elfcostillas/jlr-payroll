@@ -155,7 +155,12 @@
                                 url : 'leaves-absences/update-detail',
                                 type : 'post',
                                 dataType : 'json',
-                                complete : function(e){
+                                complete : function(e,jqXhr){
+                              
+                                    if(e.status==500)
+                                    {
+                                        custom_error(e.responseJSON.error)
+                                    }
                                     viewModel.ds.leaveDetails.read();
                                 }
                             },
