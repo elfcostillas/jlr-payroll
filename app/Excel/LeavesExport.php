@@ -30,7 +30,8 @@ class LeavesExport implements ShouldAutoSize,WithColumnFormatting,FromView,WithE
     {   
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-
+                $sheet = $event->sheet->getDelegate();
+                $sheet->setShowGridlines(false);
             }
         ];    
     }

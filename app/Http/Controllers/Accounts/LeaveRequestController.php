@@ -132,9 +132,14 @@ class LeaveRequestController extends Controller
            
             $consumed = $this->credits->getBalance( $year,$start,$end,$header->biometric_id);
 
-            $balance_vl = ($consumed[0]->vacation_leave - $consumed[0]->VL_PAY) * 8;  
-            $balance_sl = ($consumed[0]->sick_leave - $consumed[0]->SL_PAY) * 8;   
-
+            if($consumed){
+                $balance_vl = ($consumed[0]->vacation_leave - $consumed[0]->VL_PAY) * 8;  
+                $balance_sl = ($consumed[0]->sick_leave - $consumed[0]->SL_PAY) * 8;   
+            }else {
+                $balance_vl = 0;
+                $balance_sl = 0;
+            }
+            
             $w_pay = ($request->with_pay) ? $request->with_pay : 0;
             $wo_pay = ($request->without_pay)? $request->without_pay : 0;
 

@@ -30,7 +30,8 @@ class LeaveByEmployee implements ShouldAutoSize,WithColumnFormatting,FromView,Wi
     {   
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-
+                $sheet = $event->sheet->getDelegate();
+                $sheet->setShowGridlines(false);
             }
         ];    
     }
