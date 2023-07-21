@@ -139,13 +139,15 @@ class LeaveRequestController extends Controller
                 $balance_vl = 0;
                 $balance_sl = 0;
             }
-            
+
             $w_pay = ($request->with_pay) ? $request->with_pay : 0;
             $wo_pay = ($request->without_pay)? $request->without_pay : 0;
 
             if($header->leave_type == 'SL'){
                 //if($balance_sl>0){
-                if(($balance_sl-$w_pay)>=0 && ($w_pay>0)){
+                //  dd($balance_sl-$w_pay>=0,$w_pay>0);
+                // if(($balance_sl-$w_pay)>=0 && ($w_pay>0)){
+                if(($balance_sl-$w_pay)>=0 || ($w_pay==0)){
                     $ye_pay = ($balance_sl - $w_pay >=0) ? $w_pay : $w_pay - $balance_sl;
                     $no_pay = ($balance_sl - $w_pay >=0) ? $wo_pay : ($balance_sl - $w_pay) + $wo_pay;
                     //$balance_sl = ($balance_sl- $ye_pay <= 0) ? 0 : $balance_sl- $ye_pay;
