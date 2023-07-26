@@ -12,18 +12,20 @@ class EmployeeWeeklyMapper extends AbstractMapper {
 
 	protected $modelClassName = 'App\Models\EmployeeFile\EmployeeWeekly';
     protected $rules = [
-    	'firstname' => 'required|sometimes',
+		'firstname' => 'required|sometimes',
 		'lastname' => 'required|sometimes',
 		//'middlename' => 'required|sometimes',
 		//'suffixname' => 'required|sometimes',
 		'biometric_id' => 'required|sometimes|unique:employees',
 		//'bank_acct' => 'required|sometimes|unique:employees',
-		'division_id' => 'required|sometimes',
-		'dept_id' => 'required|sometimes|gt:0',
-		'location_id' => 'required|sometimes|gt:0',
-		'employee_stat' => 'required|sometimes|gt:0',
+
+		// 'division_id' => 'required|sometimes',
+		// 'dept_id' => 'required|sometimes|gt:0',
+		// 'location_id' => 'required|sometimes|gt:0',
+		//'employee_stat' => 'required|sometimes|gt:0',
 		'exit_status' => 'required|sometimes|gt:0',
-		'pay_type' => 'required|sometimes|gt:0',
+		// 'pay_type' => 'required|sometimes|gt:0',
+		
 		// primary_addr
 		// secondary_addr
 		// remarks
