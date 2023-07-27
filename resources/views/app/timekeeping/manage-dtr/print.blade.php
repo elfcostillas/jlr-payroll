@@ -81,7 +81,7 @@
                     <td style="text-align:center;"> {{ $log->time_out }} </td>
 
                     <td>{{ $log->ndays }}</td>
-                    <td>{{ $logs->late }}</td>
+                    <td>{{ $log->late }}</td>
                     <td></td>
                     <td>{{ $log->over_time }}</td>
                     <td>{{ $log->under_time }}</td>
