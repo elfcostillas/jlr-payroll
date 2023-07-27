@@ -80,14 +80,14 @@
                     <td style="text-align:center;"> {{ $log->time_in }} </td>
                     <td style="text-align:center;"> {{ $log->time_out }} </td>
 
+                    <td>{{ $log->ndays }}</td>
+                    <td>{{ $logs->late }}</td>
                     <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>{{ $log->over_time }}</td>
+                    <td>{{ $log->under_time }}</td>
                     
                     <td></td>
-                    <td></td>
+                    <td>{{ $log->holiday_type }}</td>
                     <td></td>
                     <td></td>
                     <td></td>
