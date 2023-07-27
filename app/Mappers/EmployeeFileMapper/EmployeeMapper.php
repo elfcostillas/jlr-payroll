@@ -235,7 +235,30 @@ class EmployeeMapper extends AbstractMapper {
 		return $index;
 	}
 
+	public function createOn100($data)
+	{
+		// dd($data);
+		$result = DB::connection('dps')->table()
+		->updateOrCreate(['biometrics_id' => $data['biometric_id'] ],[
+			'last_name' => strtoupper($data['lastname']),
+			'first_name' => strtoupper($data['firstname']),
+			'middle_name' => strtoupper($data['middlename']),
+		]);
+	}
+
 
 
 
 }
+
+/*
+jlr_employees
+last_name
+first_name
+middle_name
+biometrics_id
+
+  "firstname" => "Egllen"
+  "lastname" => "Abalorio"
+  "middlename" => "Gabenite"
+*/
