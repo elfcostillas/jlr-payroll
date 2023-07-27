@@ -10,6 +10,11 @@
 </head>
 <?php
     use Carbon\Carbon;
+
+    function nformat($n)
+    {
+        return ($n>0) ? round($n,2) : '';
+    }
 ?>
 
 <style>
@@ -80,11 +85,11 @@
                     <td style="text-align:center;"> {{ $log->time_in }} </td>
                     <td style="text-align:center;"> {{ $log->time_out }} </td>
 
-                    <td>{{ $log->ndays }}</td>
-                    <td>{{ $log->late }}</td>
+                    <td>{{ nformat($log->ndays) }}</td>
+                    <td>{{ nformat($log->late) }}</td>
                     <td></td>
-                    <td>{{ $log->over_time }}</td>
-                    <td>{{ $log->under_time }}</td>
+                    <td>{{ nformat($log->over_time) }}</td>
+                    <td>{{ nformat($log->under_time) }}</td>
                     
                     <td></td>
                     <td>{{ $log->holiday_type }}</td>
