@@ -238,12 +238,19 @@ class EmployeeMapper extends AbstractMapper {
 	public function createOn100($data)
 	{
 		// dd($data);
-		$result = DB::connection('dps')->table()
-		->updateOrCreate(['biometrics_id' => $data['biometric_id'] ],[
+		// dd($data);
+		$result = DB::connection('dps')->table('jlr_employees')
+		->updateOrInsert([
+			// 'biometrics_id' => $data['biometric_id'] 
 			'last_name' => strtoupper($data['lastname']),
 			'first_name' => strtoupper($data['firstname']),
+		],[
+			
 			'middle_name' => strtoupper($data['middlename']),
 		]);
+
+		//$result = DB::connection('dps')->table('jlr_employees')->where('biometrics_id',$data['biometric_id'])->first();
+		
 	}
 
 
