@@ -85,14 +85,14 @@
                     <td style="text-align:center;"> {{ $log->time_in }} </td>
                     <td style="text-align:center;"> {{ $log->time_out }} </td>
 
-                    <td>{{ nformat($log->ndays) }}</td>
-                    <td>{{ nformat($log->late) }}</td>
+                    <td style="text-align:center;">{{ nformat($log->ndays) }}</td>
+                    <td style="text-align:center;">{{ nformat($log->late) }}</td>
                     <td></td>
-                    <td>{{ nformat($log->over_time) }}</td>
-                    <td>{{ nformat($log->under_time) }}</td>
+                    <td style="text-align:center;">{{ nformat($log->over_time) }}</td>
+                    <td style="text-align:center;">{{ nformat($log->under_time) }}</td>
                     
                     <td></td>
-                    <td>{{ $log->holiday_type }}</td>
+                    <td style="text-align:center;">{{ $log->holiday_type }}</td>
                     <td></td>
                     <td></td>
                     <td></td>
