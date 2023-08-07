@@ -489,7 +489,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                             })
                             ->where('payroll_period.id',$period_id);
                             
-        $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,time_to_sec(work_schedules.time_in) as sched_in,holidays.holiday_type,time_to_sec(edtr.time_in) as actual_in"))
+        $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,time_to_sec(work_schedules.time_in) as sched_in,time_to_sec(work_schedules.time_out) as sched_out,time_to_sec(work_schedules.out_am) as sched_outam,time_to_sec(work_schedules.in_pm) as sched_inpm,holidays.holiday_type,time_to_sec(edtr.time_in) as actual_in"))
         ->from('edtr')
         ->where('edtr.biometric_id',$biometric_id)
         ->join('payroll_period',function($join){
@@ -752,27 +752,55 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                 // var_dump($rec->holiday_type);
 
                 //dd($rec);
-               
+              
                 if($rec->schedule_id!=0){
                     
-                    if($rec->actual_in > $rec->sched_in){
-                        $late = (int)($rec->actual_in - $rec->sched_in)/60;
-                        $quart = 0;
-                        if($late>0){
+                    if($rec->actual_in > $rec->sched_in && $rec->actual_in < $rec->sched_outam ){
+                        if($rec->actual_in > $rec->sched_in){
+                            $late = (int)($rec->actual_in - $rec->sched_in)/60;
                             $quart = 0;
-                            $quart +=  ($late<=15) ? 1 : floor($late/15) ;//round($late/15,0);
-                           
-                            $nlate = $late - ($quart * 15);
-                            $quart += ($nlate%15 > 0) ? 1 : 0;
-                          
+                            if($late>0){
+                                $quart = 0;
+                                $quart +=  ($late<=15) ? 1 : floor($late/15) ;//round($late/15,0);
+                            
+                                $nlate = $late - ($quart * 15);
+                                $quart += ($nlate%15 > 0) ? 1 : 0;
+                            
+                            }
+                            $rec->late = $late;
+                            $rec->late_eq = $quart * 0.25;
+                        }else{
+                            $rec->late = 0;
+                            $rec->late_eq = 0;
                         }
-                       
-                        $rec->late = $late;
-                        $rec->late_eq = $quart * 0.25;
-                    }else{
-                        $rec->late = 0;
-                        $rec->late_eq = 0;
+                    }else {
+                        if($rec->actual_in > $rec->sched_inpm && $rec->actual_in < $rec->sched_out ){
+                            if($rec->actual_in > $rec->sched_inpm){
+                                $late = (int)($rec->actual_in - $rec->sched_inpm)/60;
+                                $quart = 0;
+                                if($late>0){
+                                    $quart = 0;
+                                    $quart +=  ($late<=15) ? 1 : floor($late/15) ;//round($late/15,0);
+                                
+                                    $nlate = $late - ($quart * 15);
+                                    $quart += ($nlate%15 > 0) ? 1 : 0;
+                                
+                                }
+                                $rec->late = $late;
+                                $rec->late_eq = $quart * 0.25;
+                            }else{
+                                $rec->late = 0;
+                                $rec->late_eq = 0;
+                            }
+                        }else {
+                            $rec->late = 0;
+                            $rec->late_eq = 0;
+                        }
                     }
+
+                   
+                       
+                  
 
                     // if($rec->day_name!='Sun'){
                     //     //var_dump($rec->day_name);

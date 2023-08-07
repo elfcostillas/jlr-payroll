@@ -15,6 +15,11 @@
     {
         return ($n>0) ? round($n,2) : '';
     }
+
+    function sformat($string)
+    {
+        return ($string=='00:00') ? '' : $string;
+    }
 ?>
 
 <style>
@@ -82,8 +87,8 @@
                     <td style="text-align:center;" > {{ strtoupper($log->day_name) }}</td>
                     <td style="text-align:center;" > {{ date_format($dtrdate,'m/d/Y')}}</td>
                     <td style="text-align:center;"> {{ $log->schedule_desc }}</td>
-                    <td style="text-align:center;"> {{ $log->time_in }} </td>
-                    <td style="text-align:center;"> {{ $log->time_out }} </td>
+                    <td style="text-align:center;"> {{ sformat($log->time_in) }} </td>
+                    <td style="text-align:center;"> {{ sformat($log->time_out) }} </td>
 
                     <td style="text-align:center;">{{ nformat($log->ndays) }}</td>
                     <td style="text-align:center;">{{ nformat($log->late) }}</td>
