@@ -51,17 +51,17 @@ class TardinessReportMapper extends AbstractMapper {
                 ->join('employees','edtr.biometric_id','=','employees.biometric_id')
                 ->join('work_schedules','schedule_id','=','work_schedules.id')
                 ->join('employee_names_vw','employee_names_vw.biometric_id','=','edtr.biometric_id')
-                ->leftJoinSub($leaves,'leaves',function($join){
-                        $join->on('leaves.biometric_id', '=', 'edtr.biometric_id');
-                        $join->on('leaves.leave_date', '=', 'edtr.dtr_date');
-                })
+                // ->leftJoinSub($leaves,'leaves',function($join){
+                //         $join->on('leaves.biometric_id', '=', 'edtr.biometric_id');
+                //         $join->on('leaves.leave_date', '=', 'edtr.dtr_date');
+                // })
                 ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
                 //->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)');
                 ->where('emp_level','>',2) 
                 ->where('pay_type','!=',3) 
                 ->where('job_title_id','!=',12)
                 ->where('employees.dept_id','!=',5)
-                ->whereNull('leave_type')
+                // ->whereNull('leave_type')
                 ->whereRaw('(
                     (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
                     (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out) )
@@ -73,17 +73,17 @@ class TardinessReportMapper extends AbstractMapper {
                 ->join('employees','edtr.biometric_id','=','employees.biometric_id')
                 ->join('work_schedules','schedule_id','=','work_schedules.id')
                 ->join('employee_names_vw','employee_names_vw.biometric_id','=','edtr.biometric_id')
-                ->leftJoinSub($leaves,'leaves',function($join){
-                    $join->on('leaves.biometric_id', '=', 'edtr.biometric_id');
-                    $join->on('leaves.leave_date', '=', 'edtr.dtr_date');
-                })
+                // ->leftJoinSub($leaves,'leaves',function($join){
+                //     $join->on('leaves.biometric_id', '=', 'edtr.biometric_id');
+                //     $join->on('leaves.leave_date', '=', 'edtr.dtr_date');
+                // })
                 ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
                 //->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)');
                 ->where('pay_type','!=',3)
                 ->where('emp_level','>',2) 
                 ->where('job_title_id','!=',12)
                 ->where('employees.dept_id','=',5)
-                ->whereNull('leave_type')
+                // ->whereNull('leave_type')
                 ->whereRaw('(
                     (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
                     (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out) )
@@ -173,16 +173,16 @@ class TardinessReportMapper extends AbstractMapper {
         ->join('employees','edtr.biometric_id','=','employees.biometric_id')
         ->join('work_schedules','schedule_id','=','work_schedules.id')
         ->join('employee_names_vw','employee_names_vw.biometric_id','=','edtr.biometric_id')
-        ->leftJoinSub($leaves,'leaves',function($join){
-            $join->on('leaves.biometric_id', '=', 'edtr.biometric_id');
-            $join->on('leaves.leave_date', '=', 'edtr.dtr_date');
-        })
+        // ->leftJoinSub($leaves,'leaves',function($join){
+        //     $join->on('leaves.biometric_id', '=', 'edtr.biometric_id');
+        //     $join->on('leaves.leave_date', '=', 'edtr.dtr_date');
+        // })
         ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
         //->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)')
         ->where('emp_level','>',2) 
         ->where('pay_type','!=',3) 
         ->where('job_title_id','!=',12)
-        ->whereNull('leave_type')
+        // ->whereNull('leave_type')
         ->whereRaw('(
             (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
             (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out) )
