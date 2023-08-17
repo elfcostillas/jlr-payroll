@@ -33,6 +33,14 @@ class TardinessReportMapper extends AbstractMapper {
             SELECT biometric_id,leave_date,leave_type FROM leave_request_header INNER JOIN leave_request_detail ON header_id = header_id 
             WHERE document_status = 'POSTED' AND acknowledge_status ='Approved' AND is_canceled = 'N' 
         */
+        /*
+        select holiday_date,location_id,holiday_type from holidays inner join holiday_location on holidays.id = holiday_location.holiday_id
+        holiday_location on holidays.id = holiday_location.holiday_id
+        */
+
+        $holidays = DB::table('holidays')->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
+                        ->select(DB::raw("holiday_date,location_id,holiday_type"));
+
         $leaves = $this->model->select('biometric_id','leave_date','leave_type')
                                 ->from('leave_request_header')
                                 ->join('leave_request_detail','header_id','=','header_id')
@@ -61,7 +69,12 @@ class TardinessReportMapper extends AbstractMapper {
                 ->where('pay_type','!=',3) 
                 ->where('job_title_id','!=',12)
                 ->where('employees.dept_id','!=',5)
+                ->leftJoinSub($holidays,'holidays',function($join){
+                    $join->on('holidays.location_id','=','employees.location_id');
+                    $join->on('edtr.dtr_date','=','holidays.holiday_date');
+                })
                 // ->whereNull('leave_type')
+                ->whereNull('holiday_type')
                 ->whereRaw('(
                     (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
                     (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out) )
@@ -83,6 +96,12 @@ class TardinessReportMapper extends AbstractMapper {
                 ->where('emp_level','>',2) 
                 ->where('job_title_id','!=',12)
                 ->where('employees.dept_id','=',5)
+                ->leftJoinSub($holidays,'holidays',function($join){
+                    $join->on('holidays.location_id','=','employees.location_id');
+                    $join->on('edtr.dtr_date','=','holidays.holiday_date');
+                })
+                // ->whereNull('leave_type')
+                ->whereNull('holiday_type')
                 // ->whereNull('leave_type')
                 ->whereRaw('(
                     (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
@@ -160,6 +179,9 @@ class TardinessReportMapper extends AbstractMapper {
         return $result->get();
         */
 
+        $holidays = DB::table('holidays')->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
+        ->select(DB::raw("holiday_date,location_id,holiday_type"));
+
         $leaves = $this->model->select('biometric_id','leave_date','leave_type')
         ->from('leave_request_header')
         ->join('leave_request_detail','header_id','=','header_id')
@@ -182,6 +204,7 @@ class TardinessReportMapper extends AbstractMapper {
         ->where('emp_level','>',2) 
         ->where('pay_type','!=',3) 
         ->where('job_title_id','!=',12)
+        
         // ->whereNull('leave_type')
         ->whereRaw('(
             (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
@@ -206,6 +229,7 @@ class TardinessReportMapper extends AbstractMapper {
         foreach($emps as $e){
             $lates = $this->model->select(DB::raw("dtr_date, edtr.time_in,ROUND((TIME_TO_SEC(edtr.time_in) - TIME_TO_SEC(work_schedules.time_in))/60,0) AS in_minutes"))
                     ->from('edtr')
+                    ->join('employees','edtr.biometric_id','=','employees.biometric_id')
                     ->leftJoin('work_schedules','schedule_id','=','work_schedules.id')
                     ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
                     ///->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)')
@@ -213,7 +237,13 @@ class TardinessReportMapper extends AbstractMapper {
                         (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
                         (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out) )
                         )')
-                    ->where('biometric_id',$e->biometric_id)
+                        ->leftJoinSub($holidays,'holidays',function($join){
+                            $join->on('holidays.location_id','=','employees.location_id');
+                            $join->on('edtr.dtr_date','=','holidays.holiday_date');
+                        })
+                       
+                        ->whereNull('holiday_type')
+                    ->where('employees.biometric_id',$e->biometric_id)
                     ->get();
 
             $e->late_punch = $lates;

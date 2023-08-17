@@ -202,10 +202,25 @@ class LeaveReportsMapper extends AbstractMapper {
             and job_title_id != 12";
         }
         else{
-            $sub_qry = " SELECT employees.biometric_id,COUNT(dtr_date) late_count,SUM((TIME_TO_SEC(edtr.time_in)- TIME_TO_SEC(work_schedules.time_in))/60) AS in_minutes FROM edtr 
+            // $sub_qry = " SELECT employees.biometric_id,COUNT(dtr_date) late_count,SUM((TIME_TO_SEC(edtr.time_in)- TIME_TO_SEC(work_schedules.time_in))/60) AS in_minutes FROM edtr 
+            // INNER JOIN employees ON edtr.biometric_id = employees.biometric_id
+            // INNER JOIN work_schedules ON schedule_id = work_schedules.id
+            // INNER JOIN employee_names_vw ON employee_names_vw.biometric_id = edtr.biometric_id
+            // AND (
+            //     (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
+            //     (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) <= TIME_TO_SEC(work_schedules.time_out) )
+            //     )
+            // AND dtr_date BETWEEN '$start' AND '$end'
+            // and emp_level >= 3
+            // and job_title_id != 12
+            // GROUP BY employees.biometric_id,lastname,firstname
+            // ORDER BY lastname,dtr_date";
+
+            $sub_qry = "SELECT employees.biometric_id,COUNT(dtr_date) late_count,SUM((TIME_TO_SEC(edtr.time_in)- TIME_TO_SEC(work_schedules.time_in))/60) AS in_minutes FROM edtr 
             INNER JOIN employees ON edtr.biometric_id = employees.biometric_id
             INNER JOIN work_schedules ON schedule_id = work_schedules.id
             INNER JOIN employee_names_vw ON employee_names_vw.biometric_id = edtr.biometric_id
+            LEFT JOIN (select holiday_date,location_id,holiday_type from holidays inner join holiday_location on holidays.id = holiday_location.holiday_id) as holidays on dtr_date = holidays.holiday_date and holidays.location_id = employees.location_id
             AND (
                 (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
                 (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) <= TIME_TO_SEC(work_schedules.time_out) )
@@ -213,7 +228,8 @@ class LeaveReportsMapper extends AbstractMapper {
             AND dtr_date BETWEEN '$start' AND '$end'
             and emp_level >= 3
             and job_title_id != 12
-            GROUP BY employees.biometric_id,lastname,firstname
+            and holiday_type is null 
+            GROUP BY employees.biometric_id,lastname,firstname,dtr_date
             ORDER BY lastname,dtr_date";
         }
 
