@@ -193,7 +193,7 @@ class TardinessMemoController extends Controller
                     $may = date('Y-m-d',strtotime($memo->memo_year.'-05-01'));
 
                     $mayFilter = array(
-                        'from' => $iStart,
+                        'from' => $may,
                         'to' => date('Y-m-t',strtotime($may)),
                     );
 

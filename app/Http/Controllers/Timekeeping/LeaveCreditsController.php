@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Timekeeping;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mappers\TimeKeepingMapper\LeaveCreditsMapper;
+use App\Mappers\TimeKeepingMapper\LeaveCreditMaker;
 use App\Excel\CreditBalance;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -14,11 +15,13 @@ class LeaveCreditsController extends Controller
     //
     private $mapper;
     private $excel;
+    private $lc_maker;
 
-    public function __construct(LeaveCreditsMapper $mapper, CreditBalance $excel)
+    public function __construct(LeaveCreditsMapper $mapper, CreditBalance $excel,LeaveCreditMaker $lc_maker)
     {
         $this->mapper = $mapper;
         $this->excel = $excel;
+        $this->lc_maker = $lc_maker;
     }
 
     public function index()
@@ -97,6 +100,11 @@ class LeaveCreditsController extends Controller
         // $canvas->page_text(510, 800, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
         // //return $pdf->download('JLR-DTR-Print.pdf'); 
         // return $pdf->stream('JLR-DTR-Print.pdf'); 
+    }
+
+    public function makeLeaveCredits()
+    {
+        $result = $this->lc_maker->process();
     }
 
     
