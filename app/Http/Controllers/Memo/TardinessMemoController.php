@@ -189,6 +189,10 @@ class TardinessMemoController extends Controller
                     );
 
                     $marchResult =  $this->mapper->getLates($memo->biometric_id,$marchFilter);
+                
+                    if(count($marchResult)>0){
+                        $breakdown = "Last March you incurred a total of (".count($marchResult).") tardiness occurrence";
+                    }
 
                     $may = date('Y-m-d',strtotime($memo->memo_year.'-05-01'));
 
@@ -198,6 +202,19 @@ class TardinessMemoController extends Controller
                     );
 
                     $mayResult =  $this->mapper->getLates($memo->biometric_id,$mayFilter);
+
+                    if(count($mayResult)>0){
+                        if(count($marchResult)>0){
+                            $breakdown .= " and last May you incurred a total of (".count($mayResult).") tardiness occurrence.";
+                    
+                        }else {
+                            $breakdown  = "Last May you incurred a total of (".count($mayResult).") tardiness occurrence.";
+                        }
+                    }else {
+                        if($marchResult>0){
+                            $breakdown .= ".";
+                        }
+                    }
 
                     $total = count($marchResult) + count($mayResult) + count($details);
                     $months = "April, May, June";

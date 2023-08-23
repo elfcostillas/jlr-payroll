@@ -123,16 +123,26 @@ class TardinessMemoMapper extends AbstractMapper {
 
     public function getLates($biometric_id,$filter)
     {
+        $holidays = DB::table('holidays')->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
+        ->select(DB::raw("holiday_date,location_id,holiday_type"));
+
         $lates = $this->model->select(DB::raw("dtr_date, edtr.time_in,edtr.time_out,ROUND((TIME_TO_SEC(edtr.time_in) - TIME_TO_SEC(work_schedules.time_in))/60,0) AS in_minutes"))
         ->from('edtr')
+        ->join('employees','edtr.biometric_id','=','employees.biometric_id')
         ->leftJoin('work_schedules','schedule_id','=','work_schedules.id')
+        ->leftJoinSub($holidays,'holidays',function($join){
+            $join->on('holidays.location_id','=','employees.location_id');
+            $join->on('edtr.dtr_date','=','holidays.holiday_date');
+        })
+        // ->whereNull('leave_type')
+        ->whereNull('holiday_type')
         ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
         ///->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)')
         ->whereRaw('(
             (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
             (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out) )
             )')
-        ->where('biometric_id',$biometric_id)
+        ->where('edtr.biometric_id',$biometric_id)
         ->get();
 
         return $lates;
