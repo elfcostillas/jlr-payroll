@@ -28,6 +28,7 @@
         }
 
         function convert($total){
+           
             if($total>0){
                 if($total%60 > 0){
                     $mins = $total % 60;
@@ -125,6 +126,8 @@
                             $svl_count  +=$tableData[$emp->biometric_id][$i]['svl_count'];
                             $o_count  +=$tableData[$emp->biometric_id][$i]['o_count'];
                             $in_minutes +=$tableData[$emp->biometric_id][$i]['in_minutes'];
+
+                           
                         ?>
 
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['late_count']) }}</td>
@@ -136,6 +139,7 @@
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['mp_count']) }}</td>
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['svl_count']) }}</td>
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['o_count']) }}</td>
+                        {{-- <td style="white-space:nowrap" >{{ convert($tableData[$emp->biometric_id][$i]['in_minutes']) }}</td> --}}
                         <td style="white-space:nowrap" >{{ convert($tableData[$emp->biometric_id][$i]['in_minutes']) }}</td>
                         <td style="white-space:nowrap" >{{ convertoToDecimal($tableData[$emp->biometric_id][$i]['in_minutes']) }}</td>
                        

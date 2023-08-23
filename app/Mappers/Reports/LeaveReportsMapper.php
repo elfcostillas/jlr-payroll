@@ -221,7 +221,8 @@ class LeaveReportsMapper extends AbstractMapper {
             INNER JOIN work_schedules ON schedule_id = work_schedules.id
             INNER JOIN employee_names_vw ON employee_names_vw.biometric_id = edtr.biometric_id
             LEFT JOIN (select holiday_date,location_id,holiday_type from holidays inner join holiday_location on holidays.id = holiday_location.holiday_id) as holidays on dtr_date = holidays.holiday_date and holidays.location_id = employees.location_id
-            AND (
+            
+            WHERE (
                 (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
                 (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) <= TIME_TO_SEC(work_schedules.time_out) )
                 )
@@ -229,8 +230,8 @@ class LeaveReportsMapper extends AbstractMapper {
             and emp_level >= 3
             and job_title_id != 12
             and holiday_type is null 
-            GROUP BY employees.biometric_id,lastname,firstname,dtr_date
-            ORDER BY lastname,dtr_date";
+            GROUP BY employees.biometric_id,lastname,firstname
+            ORDER BY lastname";
         }
 
         $qry = "SELECT employees.biometric_id,IFNULL(sl_count,0) sl_count,IFNULL(vl_count,0) vl_count,IFNULL(el_count,0) el_count,IFNULL(ut_count,0) ut_count,
