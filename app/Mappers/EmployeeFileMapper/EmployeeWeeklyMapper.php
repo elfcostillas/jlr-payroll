@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Auth;
 
 class EmployeeWeeklyMapper extends AbstractMapper {
 
-	protected $modelClassName = 'App\Models\EmployeeFile\EmployeeWeekly';
+	// protected $modelClassName = 'App\Models\EmployeeFile\EmployeeWeekly';
+	protected $modelClassName = 'App\Models\EmployeeFile\Employee';
+   
     protected $rules = [
 		'firstname' => 'required|sometimes',
 		'lastname' => 'required|sometimes',
@@ -64,7 +66,8 @@ class EmployeeWeeklyMapper extends AbstractMapper {
 		$user = Auth::user();
 		
 		
-        $result = $this->model->select(DB::raw('employees_weekly.*,dept_code,div_code,emp_exit_status.status_desc,emp_emp_stat.estatus_desc,pay_description'))
+        //$result = $this->model->select(DB::raw('employees_weekly.*,dept_code,div_code,emp_exit_status.status_desc,emp_emp_stat.estatus_desc,pay_description'))
+        $result = $this->model->select(DB::raw('employees.*,dept_code,div_code,emp_exit_status.status_desc,emp_emp_stat.estatus_desc,pay_description'))
 		->leftJoin('departments','departments.id','=','dept_id')
 		->leftJoin('divisions','divisions.id','=','division_id')
 		->leftJoin('emp_exit_status','exit_status','=','emp_exit_status.id')
