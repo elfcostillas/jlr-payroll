@@ -158,17 +158,20 @@ class LeaveReportsMapper extends AbstractMapper {
         
         //INNER JOIN `employee_names_vw` ON `employee_names_vw`.`biometric_id` = `edtr`.`biometric_id` 
         $qa = $this->model->select(DB::raw("101 AS id,'Quality Assurance' div_name")); // DB::select("SELECT 101 AS id,'QA' div_name");
+        
         $result = $this->model->select('id','div_name')->from('divisions')->union($qa);
 
         $divisions = $result->get();
 
         foreach($divisions as $div)
         {
+            //select estatus_desc from employees left join emp_emp_stat on employees.employee_stat = emp_emp_stat.id
             if($div->id != 101){
-                $emp = $this->model->select('employees.biometric_id','employee_names_vw.employee_name','departments.dept_code')
+                $emp = $this->model->select('employees.biometric_id','employee_names_vw.employee_name','departments.dept_code','estatus_desc',DB::raw('ifnull(date_format(date_hired,"%m/%d/%Y"),"wala gi set ni maria mae") as date_hired'))
                     ->from('employees')
                     ->join('employee_names_vw','employee_names_vw.biometric_id','=','employees.biometric_id')
                     ->leftJoin('departments','employees.dept_id','=','departments.id')
+                    ->leftJoin('emp_emp_stat','employees.employee_stat','=','emp_emp_stat.id')
                     ->where('employees.division_id',$div->id)
                     ->where('employees.exit_status',1)
                     ->where('employees.pay_type','!=',3)
@@ -178,11 +181,12 @@ class LeaveReportsMapper extends AbstractMapper {
                     ->orderBy('firstname','asc')
                     ->get();
             }else{
-                $emp = $this->model->select('employees.biometric_id','employee_names_vw.employee_name','departments.dept_code')
+                $emp = $this->model->select('employees.biometric_id','employee_names_vw.employee_name','departments.dept_code','estatus_desc',DB::raw('ifnull(date_format(date_hired,"%m/%d/%Y"),"wala gi set ni maria mae") as date_hired'))
                     ->from('employees')
                     ->join('employee_names_vw','employee_names_vw.biometric_id','=','employees.biometric_id')
                     ->where('employees.division_id',2)
                     ->leftJoin('departments','employees.dept_id','=','departments.id')
+                    ->leftJoin('emp_emp_stat','employees.employee_stat','=','emp_emp_stat.id')
                     ->where('employees.exit_status',1)
                     ->where('employees.pay_type','!=',3)
                     ->where('employees.dept_id','=',5)

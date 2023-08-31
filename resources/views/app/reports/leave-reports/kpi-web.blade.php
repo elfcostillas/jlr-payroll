@@ -14,6 +14,10 @@
         table tr td {
             padding : 4px 6px;
         }
+
+        .grey {
+            /* background-color : #E5E4E2; */
+        }
     </style>
 
     <?php
@@ -22,6 +26,15 @@
         {
             if($n > 0){
                 return $n;
+            }else {
+                return '';
+            }
+        }
+
+        function computePoints($n)
+        {
+            if($n > 0){
+                return round($n * 0.02,2);
             }else {
                 return '';
             }
@@ -70,40 +83,51 @@
                 <td rowspan=2 style="">Department</td>
                 @for($i = $index;$i<=$limit;$i++)
                     {{-- <td colspan=11>{{ $month[$i] }} {{ $year }}</td> --}}
-                    <td colspan=11>{{ $month[$i] }} {{ $year }}</td>
+                    <td colspan=12>{{ $month[$i] }} {{ $year }}</td>
                 @endfor
-                {{-- <td colspan="11" >Summary</td> --}}
-                <td colspan="11" >Summary</td>
+                {{-- <td colspan="12" >Summary</td> --}}
+                <td colspan="12" >Summary</td>
+                <td colspan=7 ></td>
             </tr>
             <tr>
                 
                 @for($i = $index;$i<=$limit;$i++)
                     <td>Tardy</td>
-                    <td>SL</td>
+                    <td class="grey">SL</td>
                     <td>VL</td>
-                    <td>EL</td>
+                    <td class="grey">EL</td>
                     <td>UT</td>
-                    <td>BL</td>
+                    <td class="grey">BL</td>
                     <td>MP</td>
-                    <td>SVL</td>
-                    <td>SUS</td>
+                    <td class="grey">SVL</td>
+                    <td>Others</td>
+                    <td class="grey">SUS</td>
                     <td>AWOL</td>
                     {{-- <td colspan=2>Total Tardy</td> --}}
 
-                    <td>Total Tardy</td>
+                    <td  class="grey">Total Tardy</td>
                 @endfor
-                <td>Tardy</td>
-                    <td>SL</td>
+                    <td>Tardy</td>
+                    <td class="grey">SL</td>
                     <td>VL</td>
-                    <td>EL</td>
+                    <td class="grey">EL</td>
                     <td>UT</td>
-                    <td>BL</td>
+                    <td class="grey">BL</td>
                     <td>MP</td>
-                    <td>SVL</td>
+                    <td class="grey">SVL</td>
+                    <td>Others</td>
+                    <td class="grey">Total Leaves and UT</td>
                     <td>SUS</td>
-                    <td>AWOL</td>
+                    <td class="grey">AWOL</td>
                     {{-- <td colspan=2>Total Tardy</td> --}}
-                    <td>Total Tardy</td>
+                    <!-- <td>Total Tardy</td> -->
+                    <td>QPIP Equivalent</td>
+                    <td>TOTAL</td>
+                    <td>Incentives</td>
+                    <td>Status</td>
+                    <td>Date Hired</td>
+                    <td>No of Months</td>
+                    <td>Reasons</td>
             </tr>
             @foreach($div->emp as $emp)
                 <?php
@@ -137,38 +161,53 @@
                             $o_count  +=$tableData[$emp->biometric_id][$i]['o_count'];
                             $in_minutes +=$tableData[$emp->biometric_id][$i]['in_minutes'];
 
-                           
+
                         ?>
 
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['late_count']) }}</td>
-                        <td >{{ nformat($tableData[$emp->biometric_id][$i]['sl_count']) }}</td>
+                        <td  class="grey">{{ nformat($tableData[$emp->biometric_id][$i]['sl_count']) }}</td>
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['vl_count']) }}</td>
-                        <td >{{ nformat($tableData[$emp->biometric_id][$i]['el_count']) }}</td>
-                        <td >{{ nformat($tableData[$emp->biometric_id][$i]['ut_count']) }}</td>
-                        <td >{{ nformat($tableData[$emp->biometric_id][$i]['bl_count']) }}</td>
+                        <td  class="grey">{{ nformat($tableData[$emp->biometric_id][$i]['el_count']) }}</td>
+                        <td >{{ computePoints($tableData[$emp->biometric_id][$i]['ut_count']) }}</td>
+                        <td  class="grey">{{ nformat($tableData[$emp->biometric_id][$i]['bl_count']) }}</td>
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['mp_count']) }}</td>
-                        <td >{{ nformat($tableData[$emp->biometric_id][$i]['svl_count']) }}</td>
+                        <td  class="grey">{{ nformat($tableData[$emp->biometric_id][$i]['svl_count']) }}</td>
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['o_count']) }}</td>
-                        <td></td>
-                       
+                        <td  class="grey"></td>
+                        <td ></td>
                         {{-- <td style="white-space:nowrap" >{{ convert($tableData[$emp->biometric_id][$i]['in_minutes']) }}</td> --}}
                         {{-- <td style="white-space:nowrap" >{{ convert($tableData[$emp->biometric_id][$i]['in_minutes']) }}</td> --}}
-                        <td style="white-space:nowrap" >{{ convertoToDecimal($tableData[$emp->biometric_id][$i]['in_minutes']) }}</td>
+                        <td  class="grey" style="white-space:nowrap" >{{ convertoToDecimal($tableData[$emp->biometric_id][$i]['in_minutes']) }}</td>
                        
                     @endfor
+                    <?php 
+                        $total_ut = $sl_count + $vl_count + $el_count + $mp_count + round($ut_count*0.02,2);
+                    ?>
                     <td> {{ nformat($late_count) }} </td>
-                    <td> {{ nformat($sl_count) }} </td>
+                    <td class="grey"> {{ nformat($sl_count) }} </td>
                     <td> {{ nformat($vl_count) }} </td>
-                    <td> {{ nformat($el_count) }} </td>
-                    <td> {{ nformat($ut_count) }} </td>
-                    <td> {{ nformat($bl_count) }} </td>
+                    <td class="grey"> {{ nformat($el_count) }} </td>
+                    <td> {{ computePoints($ut_count) }} </td>
+                    <td class="grey"> {{ nformat($bl_count) }} </td>
                     <td> {{ nformat($mp_count) }} </td>
-                    <td> {{ nformat($svl_count) }} </td>
+                    <td class="grey"> {{ nformat($svl_count) }} </td>
                     <td> {{ nformat($o_count) }} </td>
+                    <td  class="grey" style="text-align:center;font-weight:bold;"> {{ nformat($total_ut ) }}</td>  <!-- TOTAL UT and Leaves  -->
+                 
                     <td></td>
+                    <td  class="grey"></td>
                    
                     {{-- <td  style="white-space:nowrap" > {{ nformat(convert($in_minutes)) }} </td> --}}
-                    <td  style="white-space:nowrap" > {{ nformat(convertoToDecimal($in_minutes)) }} </td>
+                    <!-- <td  style="white-space:nowrap" > {{ nformat(convertoToDecimal($in_minutes)) }} </td> -->
+
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td> {{ $emp->estatus_desc }}</td>
+                    <td>{{$emp->date_hired }}</td>
+                    <td></td>
+                    <td></td>
+                  
                 </tr>
             @endforeach
         </table>
