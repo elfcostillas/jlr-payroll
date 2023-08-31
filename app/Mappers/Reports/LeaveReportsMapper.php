@@ -153,7 +153,9 @@ class LeaveReportsMapper extends AbstractMapper {
 
     public function getDivisions()
     {
-
+        //
+        //SELECT departments.dept_code FROM employees INNER JOIN departments ON employees.dept_id = departments.id
+        
         //INNER JOIN `employee_names_vw` ON `employee_names_vw`.`biometric_id` = `edtr`.`biometric_id` 
         $qa = $this->model->select(DB::raw("101 AS id,'Quality Assurance' div_name")); // DB::select("SELECT 101 AS id,'QA' div_name");
         $result = $this->model->select('id','div_name')->from('divisions')->union($qa);
@@ -163,24 +165,28 @@ class LeaveReportsMapper extends AbstractMapper {
         foreach($divisions as $div)
         {
             if($div->id != 101){
-                $emp = $this->model->select('employees.biometric_id','employee_names_vw.employee_name')
+                $emp = $this->model->select('employees.biometric_id','employee_names_vw.employee_name','departments.dept_code')
                     ->from('employees')
                     ->join('employee_names_vw','employee_names_vw.biometric_id','=','employees.biometric_id')
+                    ->leftJoin('departments','employees.dept_id','=','departments.id')
                     ->where('employees.division_id',$div->id)
                     ->where('employees.exit_status',1)
                     ->where('employees.pay_type','!=',3)
                     ->where('employees.dept_id','!=',5)
+                    ->orderBy('employees.dept_id','asc')
                     ->orderBy('lastname','asc')
                     ->orderBy('firstname','asc')
                     ->get();
             }else{
-                $emp = $this->model->select('employees.biometric_id','employee_names_vw.employee_name')
+                $emp = $this->model->select('employees.biometric_id','employee_names_vw.employee_name','departments.dept_code')
                     ->from('employees')
                     ->join('employee_names_vw','employee_names_vw.biometric_id','=','employees.biometric_id')
                     ->where('employees.division_id',2)
+                    ->leftJoin('departments','employees.dept_id','=','departments.id')
                     ->where('employees.exit_status',1)
                     ->where('employees.pay_type','!=',3)
                     ->where('employees.dept_id','=',5)
+                    ->orderBy('employees.dept_id','asc')
                     ->orderBy('lastname','asc')
                     ->orderBy('firstname','asc')
                     ->get();
@@ -215,11 +221,13 @@ class LeaveReportsMapper extends AbstractMapper {
             // and job_title_id != 12
             // GROUP BY employees.biometric_id,lastname,firstname
             // ORDER BY lastname,dtr_date";
+            //SELECT departments.dept_code FROM employees INNER JOIN departments ON employees.dept_id = departments.id
 
             $sub_qry = "SELECT employees.biometric_id,COUNT(dtr_date) late_count,SUM((TIME_TO_SEC(edtr.time_in)- TIME_TO_SEC(work_schedules.time_in))/60) AS in_minutes FROM edtr 
             INNER JOIN employees ON edtr.biometric_id = employees.biometric_id
             INNER JOIN work_schedules ON schedule_id = work_schedules.id
             INNER JOIN employee_names_vw ON employee_names_vw.biometric_id = edtr.biometric_id
+          
             LEFT JOIN (select holiday_date,location_id,holiday_type from holidays inner join holiday_location on holidays.id = holiday_location.holiday_id) as holidays on dtr_date = holidays.holiday_date and holidays.location_id = employees.location_id
             
             WHERE (

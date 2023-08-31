@@ -65,11 +65,14 @@
         <table border=1 style="border-collapse:collapse;">
             <tr>
                 <td rowspan=2>No. </td>
-                <td rowspan=2>Biometric ID</td>
-                <td rowspan=2 style="">Employee Name</td>
+                {{-- <td rowspan=2>Biometric ID</td> --}}
+                <td rowspan=2 style="width:280px">Employee Name</td>
+                <td rowspan=2 style="">Department</td>
                 @for($i = $index;$i<=$limit;$i++)
+                    {{-- <td colspan=11>{{ $month[$i] }} {{ $year }}</td> --}}
                     <td colspan=11>{{ $month[$i] }} {{ $year }}</td>
                 @endfor
+                {{-- <td colspan="11" >Summary</td> --}}
                 <td colspan="11" >Summary</td>
             </tr>
             <tr>
@@ -83,8 +86,11 @@
                     <td>BL</td>
                     <td>MP</td>
                     <td>SVL</td>
-                    <td>Other</td>
-                    <td colspan=2>Total Tardy</td>
+                    <td>SUS</td>
+                    <td>AWOL</td>
+                    {{-- <td colspan=2>Total Tardy</td> --}}
+
+                    <td>Total Tardy</td>
                 @endfor
                 <td>Tardy</td>
                     <td>SL</td>
@@ -94,11 +100,14 @@
                     <td>BL</td>
                     <td>MP</td>
                     <td>SVL</td>
-                    <td>Other</td>
-                    <td colspan=2>Total Tardy</td>
+                    <td>SUS</td>
+                    <td>AWOL</td>
+                    {{-- <td colspan=2>Total Tardy</td> --}}
+                    <td>Total Tardy</td>
             </tr>
             @foreach($div->emp as $emp)
                 <?php
+                   
                     $late_count = 0;
                     $sl_count = 0;
                     $vl_count = 0;
@@ -112,8 +121,9 @@
                 ?>
                 <tr>
                     <td> {{ $ctr++ }} </td>
-                    <td> {{ $emp->biometric_id }} </td>
+                    {{-- <td> {{ $emp->biometric_id }} </td> --}}
                     <td style="white-space:nowrap"> {{ $emp->employee_name }} </td>
+                    <td> {{ $emp->dept_code }} </td>
                     @for($i = $index;$i<=$limit;$i++)
                         <?php
                             $late_count  +=$tableData[$emp->biometric_id][$i]['late_count'];
@@ -139,8 +149,10 @@
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['mp_count']) }}</td>
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['svl_count']) }}</td>
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['o_count']) }}</td>
+                        <td></td>
+                       
                         {{-- <td style="white-space:nowrap" >{{ convert($tableData[$emp->biometric_id][$i]['in_minutes']) }}</td> --}}
-                        <td style="white-space:nowrap" >{{ convert($tableData[$emp->biometric_id][$i]['in_minutes']) }}</td>
+                        {{-- <td style="white-space:nowrap" >{{ convert($tableData[$emp->biometric_id][$i]['in_minutes']) }}</td> --}}
                         <td style="white-space:nowrap" >{{ convertoToDecimal($tableData[$emp->biometric_id][$i]['in_minutes']) }}</td>
                        
                     @endfor
@@ -153,7 +165,9 @@
                     <td> {{ nformat($mp_count) }} </td>
                     <td> {{ nformat($svl_count) }} </td>
                     <td> {{ nformat($o_count) }} </td>
-                    <td  style="white-space:nowrap" > {{ nformat(convert($in_minutes)) }} </td>
+                    <td></td>
+                   
+                    {{-- <td  style="white-space:nowrap" > {{ nformat(convert($in_minutes)) }} </td> --}}
                     <td  style="white-space:nowrap" > {{ nformat(convertoToDecimal($in_minutes)) }} </td>
                 </tr>
             @endforeach
