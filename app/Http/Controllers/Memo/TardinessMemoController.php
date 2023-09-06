@@ -219,8 +219,10 @@ class TardinessMemoController extends Controller
                     $total = count($marchResult) + count($mayResult) + count($details);
                     $months = "April, May, June";
                 case 7 :
-
+                    $total = count($details);
+                    $months = "July";
                     break;
+                  
                 case 8 :
 
                     break;

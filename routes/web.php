@@ -646,5 +646,24 @@ Route::get('now',function(){
     echo now();
 });
 
+use App\Libraries\LeaveCreditsMaker;
+
+Route::get('leave-credits-maker',function(){
+    $maker = new LeaveCreditsMaker();
+
+    // $period = CarbonPeriod::create('2023-01-01','2023-09-06');
+
+    // // Iterate over the period
+    // foreach ($period as $date) {
+    //     echo $date->format('Y-m-d')."<br>"; 
+    //     $maker($date);
+    // }
+
+    $maker(now());
+
+  
+    // $leavecreditsmaker();
+});
+
 
 require __DIR__.'/auth.php';
