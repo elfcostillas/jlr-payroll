@@ -51,11 +51,13 @@ class PostedPayrollRegisterMapper extends AbstractMapper {
             ->from('payrollregister_posted_s')
             ->join('employees','payrollregister_posted_s.biometric_id','=','employees.biometric_id')
             ->where('payrollregister_posted_s.period_id',$period);
-
+            
             if($user_rights->emp_level<5){
-               $result->where('payrollregister_posted_s.emp_level','<',5);
+            //    $result->where('payrollregister_posted_s.emp_level','<',5);
+               $result->where('payrollregister_posted_s.emp_level','=','confi');
             }else{
-                $result->where('payrollregister_posted_s.emp_level','>=',5);
+                // $result->where('payrollregister_posted_s.emp_level','>=',5);
+                $result->where('payrollregister_posted_s.emp_level','>=','non-confi');
             }
 
             return $result->get();
