@@ -53,9 +53,9 @@ class PostedPayrollRegisterMapper extends AbstractMapper {
             ->where('payrollregister_posted_s.period_id',$period);
 
             if($user_rights->emp_level<5){
-               $result->where('emp_level','<',5);
+               $result->where('payrollregister_posted_s.emp_level','<',5);
             }else{
-                $result->where('emp_level','>=',5);
+                $result->where('payrollregister_posted_s.emp_level','>=',5);
             }
 
             return $result->get();
