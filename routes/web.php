@@ -440,6 +440,7 @@ Route::middleware('auth')->prefix('reports')->group(function(){
     Route::prefix('employee-report')->group(function(){
         Route::get('/',[EmployeeReportController::class,'index']);
         Route::get('generate',[EmployeeReportController::class,'generate']);
+        Route::get('generate-weekly',[EmployeeReportController::class,'generateWeekly']);
     });
 
     Route::prefix('leave-reports')->group(function(){

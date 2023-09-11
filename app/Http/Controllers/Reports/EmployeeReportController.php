@@ -37,4 +37,20 @@ class EmployeeReportController extends Controller
         $this->excel->setValues($result,null);
         return Excel::download($this->excel,'EmployeeMasterData.xlsx');
     }
+
+    public function generateWeekly(Request $request)
+    {
+        $filter = [
+            'division' =>  $request->input('divison'),
+        ];
+
+        $result = $this->emp_mapper->generateReportWeekly($filter);
+
+        //return view('app.reports.employee-reports.employee-list',['data' => $result]);
+        $this->excel->setValues($result,null);
+        return Excel::download($this->excel,'EmployeeMasterData.xlsx');
+    }
+
+
+    
 }

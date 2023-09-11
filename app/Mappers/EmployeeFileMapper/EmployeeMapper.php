@@ -129,6 +129,26 @@ class EmployeeMapper extends AbstractMapper {
 		return $result->get();
 	}
 
+	public function generateReportWeekly($filter)
+	{
+		$result = $this->model->select(DB::raw('employees.*,dept_code,div_code,emp_exit_status.status_desc,emp_emp_stat.estatus_desc,pay_description'))
+		->leftJoin('departments','departments.id','=','dept_id')
+		->leftJoin('divisions','divisions.id','=','division_id')
+		->leftJoin('civil_status','employees.civil_status','=','civil_status.id')
+		->leftJoin('emp_exit_status','exit_status','=','emp_exit_status.id')
+		->leftJoin('emp_emp_stat','employee_stat','=','emp_emp_stat.id')
+		->leftJoin('emp_pay_types','pay_type','=','emp_pay_types.id');
+
+		if($filter['division']!=0){
+			$result = $result->where('division_id',$filter['division']);
+		}
+
+		$result->where('pay_type','=',3);
+		$result->where('exit_status','=',1);
+
+		return $result->get();
+	}
+
 	public function getEmploymentStat()
 	{
 		$result = $this->model->select('id','estatus_desc')->from('emp_emp_stat');

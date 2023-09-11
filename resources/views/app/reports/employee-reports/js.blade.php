@@ -121,7 +121,12 @@
                     download : function()
                     {
                         process();
-                    }
+                    },
+                    download_weekly : function()
+                    {
+                        process2();
+                    },
+
             
                 },
                 functions : {
@@ -160,13 +165,17 @@
 
             function process()
             {
-                // $.get('employee-report/generate',{
-                //     division : $("#division_id").data("kendoDropDownList").value()
-                // },function(){
-
-                // });
+              
                 let div =  $("#division_id").data("kendoDropDownList").value();
                 let url = `employee-report/generate?division=${div}`;
+                window.open(url);
+            }
+
+            function process2()
+            {
+               
+                let div =  $("#division_id").data("kendoDropDownList").value();
+                let url = `employee-report/generate-weekly?division=${div}`;
                 window.open(url);
             }
             
