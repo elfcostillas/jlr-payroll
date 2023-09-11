@@ -24,6 +24,7 @@
         <td>Bank Account</td>
         <td>Daily Allowance</td>
         <td>Monthly Allowance</td>
+        <td>Date Hired</td>
     </tr>
     
     @foreach($data as $emp)
@@ -52,6 +53,7 @@
             <td>{{ $emp->bank_acct }}</td>
             <td>{{ $emp->monthly_allowance }}  </td>
             <td>{{ $emp->daily_allowance }}  </td>
+            <td>{{ $emp->date_hired }} </td>
         </tr>
     @endforeach
 </table>
