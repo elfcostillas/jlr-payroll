@@ -69,60 +69,61 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                         deduct_phic,
                         deduct_sss,
                         pay_type,
-                        late AS late,
-                        late_eq AS late_eq,
-                        under_time AS under_time,
-                        over_time AS reg_ot,
-                        night_diff AS reg_nd,
-                        night_diff_ot AS reg_ndot,
-                        ndays AS ndays,
+                        SUM(late) AS late,
+                        SUM(late_eq) AS late_eq,
+                        SUM(under_time) AS under_time,
+                        SUM(over_time) AS reg_ot,
+                        SUM(night_diff) AS reg_nd,
+                        SUM(night_diff_ot) AS reg_ndot,
+                        SUM(ndays) AS ndays,
                         hdmf_contri,
                         monthly_allowance,
                         daily_allowance,
-                        restday_hrs as rd_hrs,
-                        restday_ot as rd_ot,
-                        restday_nd as rd_nd,
-                        restday_ndot as rd_ndot,
+                        sum(restday_hrs) as rd_hrs,
+                        sum(restday_ot) as rd_ot,
+                        sum(restday_nd) as rd_nd,
+                        sum(restday_ndot) as rd_ndot,
 
-                        reghol_pay as leghol_count,
-                        reghol_hrs as leghol_hrs,
-                        reghol_ot as leghol_ot,
-                        reghol_rd as leghol_rd,
-                        reghol_rdot as leghol_rdot,
-                        reghol_nd as leghol_nd,
-                        reghol_rdnd as leghol_rdnd,
-                        reghol_ndot as leghol_ndot,
-                        reghol_rdndot as leghol_rdndot,
+                        sum(reghol_pay) as leghol_count,
+                        sum(reghol_hrs) as leghol_hrs,
+                        sum(reghol_ot) as leghol_ot,
+                        sum(reghol_rd) as leghol_rd,
+                        sum(reghol_rdot) as leghol_rdot,
+                        sum(reghol_nd) as leghol_nd,
+                        sum(reghol_rdnd) as leghol_rdnd,
+                        sum(reghol_ndot) as leghol_ndot,
+                        sum(reghol_rdndot) as leghol_rdndot,
 
-                        sphol_pay as sphol_count,
-                        sphol_hrs as sphol_hrs,
-                        sphol_ot as sphol_ot,
-                        sphol_rd as sphol_rd,
-                        sphol_rdot as sphol_rdot,
-                        sphol_nd as sphol_nd,
-                        sphol_rdnd as sphol_rdnd,
-                        sphol_ndot as sphol_ndot,
-                        sphol_rdndot as sphol_rdndot,
+                        sum(sphol_pay) as sphol_count,
+                        sum(sphol_hrs) as sphol_hrs,
+                        sum(sphol_ot) as sphol_ot,
+                        sum(sphol_rd) as sphol_rd,
+                        sum(sphol_rdot) as sphol_rdot,
+                        sum(sphol_nd) as sphol_nd,
+                        sum(sphol_rdnd) as sphol_rdnd,
+                        sum(sphol_ndot) as sphol_ndot,
+                        sum(sphol_rdndot) as sphol_rdndot,
 
-                        dblhol_pay as dblhol_count,
-                        dblhol_hrs as dblhol_hrs,
-                        dblhol_ot as dblhol_ot,
-                        dblhol_rd as dblhol_rd,
-                        dblhol_rdot as dblhol_rdot,
-                        dblhol_rdnd as dblhol_rdnd,
-                        dblhol_nd as dblhol_nd,
-                        dblhol_ndot as dblhol_ndot,
-                        dblhol_rdndot as dblhol_rdndot
+                        sum(dblhol_pay) as dblhol_count,
+                        sum(dblhol_hrs) as dblhol_hrs,
+                        sum(dblhol_ot) as dblhol_ot,
+                        sum(dblhol_rd) as dblhol_rd,
+                        sum(dblhol_rdot) as dblhol_rdot,
+                        sum(dblhol_rdnd) as dblhol_rdnd,
+                        sum(dblhol_nd) as dblhol_nd,
+                        sum(dblhol_ndot) as dblhol_ndot,
+                        sum(dblhol_rdndot) as dblhol_rdndot
                         "))
-                    ->from('edtr_totals')
+                    ->from('edtr')
                     ->join('payroll_period',function($join){
-                        $join->whereRaw('edtr_totals.period_id = payroll_period.id');
+                        $join->whereRaw('edtr.dtr_date between payroll_period.date_from and payroll_period.date_to');
                     })
-                    ->join('employees','edtr_totals.biometric_id','=','employees.biometric_id')
+                    ->join('employees','edtr.biometric_id','=','employees.biometric_id')
                     ->where('payroll_period.id','=',$period_id)
                     ->whereIn('pay_type',[1,2])
                     ->where('exit_status',1)
-                  
+                    ->whereNotNull('time_in')
+                    ->whereNotNull('time_out')
                     ->groupBy(DB::raw('
                                 payroll_period.id,
                                 employees.biometric_id,
