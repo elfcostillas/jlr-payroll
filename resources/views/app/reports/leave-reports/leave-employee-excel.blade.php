@@ -28,13 +28,14 @@
         <td style="border:1px solid black;">VL Balance</td>
         <td style="border:1px solid black;">SL Balance  </td>
     </tr>
-    <tr>
+    <!-- <tr>
         <td></td>
         <td colspan="5"></td>
-    </tr>
+    </tr> -->
     @foreach($data as $emp)
         <tr>
             <td style="border:1px solid black;"> {{ $emp->employee_name }} </td>
+            <td colspan=10 style="border:1px solid black;"></td>
         </tr>
        
         @foreach($emp->leaves as $leave)
