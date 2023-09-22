@@ -69,6 +69,7 @@
                                     date_to: { type : 'date' },
                                     date_release: { type : 'date' },
                                     man_hours: { type : 'number' },
+                                    inProgress: { type : 'string' },
                                 }
                             }
                         }
