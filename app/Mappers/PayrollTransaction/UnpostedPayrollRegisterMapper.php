@@ -122,6 +122,7 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                     ->where('payroll_period.id','=',$period_id)
                     ->whereIn('pay_type',[1,2])
                     ->where('exit_status',1)
+                    ->where('edtr_totals.ndays','>',0)
                   
                     ->groupBy(DB::raw('
                                 payroll_period.id,

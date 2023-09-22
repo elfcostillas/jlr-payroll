@@ -30,4 +30,18 @@ class UploadLogMapper extends AbstractMapper {
         DB::table('edtr')->where($key)->update($data);
     }
 
+    public function getPeriodInProgress()
+    {
+        $result = DB::table('payroll_period')->select('id')->where('inProgress','=','Y');
+
+        return $result->first();
+    }
+
+    public function updateSummary($key,$data)
+    {
+        $result = DB::table('edtr_totals')->where($key)->update($data);
+        //return $result->first();
+    }
+
+    
 }

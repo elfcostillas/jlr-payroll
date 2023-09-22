@@ -18,6 +18,7 @@ use App\Http\Controllers\Timekeeping\ManualDTRController;
 use App\Http\Controllers\Timekeeping\FTPController;
 use App\Http\Controllers\Timekeeping\LeavesAbsencesController;
 use App\Http\Controllers\Timekeeping\LeaveCreditsController;
+use App\Http\Controllers\Timekeeping\DTRSummaryController;
 
 use App\Http\Controllers\Settings\LocationController;
 use App\Http\Controllers\Settings\DefaultScheduleController;
@@ -234,6 +235,25 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
 
         Route::get('show-leaves/{biometric_id}/{year}',[LeaveCreditsController::class,'showLeaves']);
         Route::get('make-leave-credits',[LeaveCreditsController::class,'makeLeaveCredits']);
+
+    });
+
+    //DTRSummaryController
+
+    Route::prefix('dtr-summary')->group(function(){
+        Route::get('/',[DTRSummaryController::class,'index']);
+        Route::get('period-list',[DTRSummaryController::class,'periodList']);
+        Route::get('download/{period_id}',[DTRSummaryController::class,'download']);
+    });
+
+    Route::prefix('dtr-summary-uploader')->group(function(){
+        
+        Route::get('/',[UploadLogController::class,'index_summary']);
+        Route::post('upload',[UploadLogController::class,'upload_summary']);
+    });
+        
+   
+    Route::prefix('leave-credits')->group(function(){
 
     });
 

@@ -22,20 +22,39 @@ class OneTimeDeductionDetailMapper extends AbstractMapper {
         //             ->from('deduction_onetime_details')
         //             ->join('employees','deduction_onetime_details.biometric_id','=','employees.biometric_id')
         //             ->where('header_id',$header_id);
+        // $result = $this->model->select(DB::raw("employee_names_vw.biometric_id,employee_name as empname,location_name,header_id,ifnull(amount,0.00) as amount,line_id "))
+        //             ->from('employee_names_vw')
+        //             ->join('employees','employee_names_vw.biometric_id','=','employees.biometric_id')
+        //             ->leftJoin('locations','employees.location_id','=','locations.id')
+        //             ->leftJoin('deduction_onetime_details','employees.biometric_id',"=","deduction_onetime_details.biometric_id")
+        //             ->where('employee_names_vw.exit_status',1)
+        //             ->where('pay_type',[1,2])
+        //             ->where('header_id',$header_id)
+        //             ->orWhere(function($query) { 
+        //                 $query->whereNull('header_id');
+        //                 $query->where('employee_names_vw.exit_status',1);
+        //             })
+        //             ->orderBy('lastname')
+        //             ->orderBy('firstname');
+
         $result = $this->model->select(DB::raw("employee_names_vw.biometric_id,employee_name as empname,location_name,header_id,ifnull(amount,0.00) as amount,line_id "))
-                    ->from('employee_names_vw')
-                    ->join('employees','employee_names_vw.biometric_id','=','employees.biometric_id')
-                    ->leftJoin('locations','employees.location_id','=','locations.id')
-                    ->leftJoin('deduction_onetime_details','employees.biometric_id',"=","deduction_onetime_details.biometric_id")
-                    ->where('employee_names_vw.exit_status',1)
-                    ->where('pay_type',[1,2])
-                    ->where('header_id',$header_id)
-                    ->orWhere(function($query) { 
-                        $query->whereNull('header_id');
-                        $query->where('employee_names_vw.exit_status',1);
-                    })
-                    ->orderBy('lastname')
-                    ->orderBy('firstname');
+        ->from('employee_names_vw')
+        ->join('employees','employee_names_vw.biometric_id','=','employees.biometric_id')
+        ->leftJoin('locations','employees.location_id','=','locations.id')
+        // ->leftJoin('deduction_onetime_details','employees.biometric_id',"=","deduction_onetime_details.biometric_id")
+        ->leftJoin('deduction_onetime_details',function($join) use ($header_id) {
+            $join->on('employees.biometric_id',"=","deduction_onetime_details.biometric_id");
+            $join->where("header_id","=",$header_id);
+        })
+        ->where('employee_names_vw.exit_status',1)
+        // ->where('pay_type',[1,2])
+        ->where('header_id',$header_id)
+        ->orWhere(function($query) { 
+            $query->whereNull('header_id');
+            $query->where('employee_names_vw.exit_status',1);
+        })
+        ->orderBy('lastname')
+        ->orderBy('firstname');
 
         return $result->get();
     }

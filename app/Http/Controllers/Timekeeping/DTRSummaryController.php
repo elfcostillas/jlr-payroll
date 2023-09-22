@@ -1,0 +1,50 @@
+<?php
+
+namespace App\Http\Controllers\Timekeeping;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+use App\Mappers\TimeKeepingMapper\DTRSummaryMapper;
+use App\Excel\DTRSummaryExport;
+use Maatwebsite\Excel\Facades\Excel;
+
+class DTRSummaryController extends Controller
+{
+    //
+    public $mapper;
+    public $excel;
+
+    public function __construct(DTRSummaryMapper $mapper,DTRSummaryExport $excel)
+    {
+        $this->mapper = $mapper;
+        $this->excel = $excel;
+    }
+
+    public function index()
+    {
+        return view('app.timekeeping.dtr-summary.index');
+    }
+
+    public function periodList()
+    {
+        $result = $this->mapper->periodList();
+
+        return response()->json($result);
+    }
+
+    public function download(Request $request)
+    {
+        // dd($request->period_id);
+        $period_id = $request->period_id;
+        $this->mapper->deleteAndInsert($request->period_id);
+
+        $employees = $this->mapper->listEmployees($request->period_id);
+
+        $this->excel->setValues($employees);
+        return Excel::download($this->excel,'DTR-Sumamry'.$period_id.'.xlsx');
+        // return view('app.timekeeping.dtr-summary.web',['employees' => $employees]);
+    }
+
+
+}

@@ -160,6 +160,84 @@ class UploadLogController extends Controller
         return response()->json($result);
 	}
 
+	public function index_summary()
+	{
+		return view('app.timekeeping.upload-summary.index');
+	}
+
+	public function upload_summary(Request $request)
+	{
+		//dd($request->period_id);
+		$file = $request->file('files');
+        
+        $logs = [];
+        $dtr = [];
+
+        $path = Storage::disk('local')->put('uploads',$file);
+       
+        $thisFile = Storage::get($path);
+        $content = explode("\n",mb_convert_encoding($thisFile, 'UTF-8', 'UTF-8'));
+
+		$inProgress = $this->mapper->getPeriodInProgress();
+
+        foreach($content as $line)
+        {
+			$data = str_getcsv($line,",");
+
+			if($data && $data[0]==$inProgress->id)
+			{
+
+				$key = array('biometric_id' => $data[1],'period_id' => $data[0]);
+
+				$formatted = array(
+						'ndays' => ($data[3]=='') ? 0 : $data[3],
+						// 'late' => ($data[8]=='') ? 0 : $data[8],
+						'late_eq' => ($data[4]=='') ? 0 : $data[4],
+						'under_time' => ($data[5]=='') ? 0 : $data[5],
+						'night_diff' => ($data[6]=='') ? 0 : $data[6],
+						'over_time' => ($data[7]=='') ? 0 : $data[7],
+						
+						'night_diff_ot' => ($data[8]=='') ? 0 : $data[8],
+						'restday_hrs' => ($data[9]=='') ? 0 : $data[9],
+						'restday_ot' => ($data[10]=='') ? 0 : $data[10],
+						'restday_nd' => ($data[11]=='') ? 0 : $data[11],
+						'restday_ndot' => ($data[12]=='') ? 0 : $data[12],
+						'reghol_pay' => ($data[13]=='') ? 0 : $data[13],
+						'reghol_hrs' => ($data[14]=='') ? 0 : $data[14],
+						'reghol_ot' => ($data[15]=='') ? 0 : $data[15],
+						'reghol_rd' => ($data[16]=='') ? 0 : $data[16],
+						'reghol_rdnd' => ($data[17]=='') ? 0 : $data[17],
+						'reghol_rdot' => ($data[18]=='') ? 0 : $data[18],
+						'reghol_nd' => ($data[19]=='') ? 0 : $data[19],
+						'reghol_ndot' => ($data[20]=='') ? 0 : $data[20],
+						'reghol_rdndot' => ($data[21]=='') ? 0 : $data[21],
+						'sphol_pay' => ($data[22]=='') ? 0 : $data[22],
+						'sphol_hrs' => ($data[23]=='') ? 0 : $data[23],
+						'sphol_ot' => ($data[24]=='') ? 0 : $data[24],
+						'sphol_rd' => ($data[25]=='') ? 0 : $data[25],
+						'sphol_rdnd' => ($data[26]=='') ? 0 : $data[26],
+						'sphol_rdot' => ($data[27]=='') ? 0 : $data[27],
+						'sphol_nd' => ($data[28]=='') ? 0 : $data[28],
+						'sphol_ndot' => ($data[29]=='') ? 0 : $data[29],
+						'sphol_rdndot' => ($data[30]=='') ? 0 : $data[30],
+						'dblhol_pay' => ($data[31]=='') ? 0 : $data[31],
+						'dblhol_hrs' => ($data[32]=='') ? 0 : $data[32],
+						'dblhol_ot' => ($data[33]=='') ? 0 : $data[33],
+						'dblhol_rd' => ($data[34]=='') ? 0 : $data[34],
+						'dblhol_rdnd' => ($data[35]=='') ? 0 : $data[35],
+						'dblhol_rdot' => ($data[36]=='') ? 0 : $data[36],
+						'dblhol_nd' => ($data[37]=='') ? 0 : $data[37],
+						'dblhol_ndot' => ($data[38]=='') ? 0 : $data[38],
+						'dblhol_rdndot' => ($data[39]=='') ? 0 : $data[39]
+				);
+
+				$result = $this->mapper->updateSummary($key,$formatted);
+			}
+
+			
+		}
+	}	
+
 }
 
 /*

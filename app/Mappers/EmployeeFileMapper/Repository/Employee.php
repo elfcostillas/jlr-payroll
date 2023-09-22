@@ -128,7 +128,8 @@ class Employee
     protected $rates = [
         'monthly_credit' => null,
         'daily_rate' => null,
-        'hourly_rate' => null
+        'hourly_rate' => null,
+        'minute_rate' => null
     ];
 
     public function __construct($data,$repo)
@@ -154,7 +155,7 @@ class Employee
 
         $this->setDaysWorked();
 
-        $this->payreg['late_eq_amount'] = round($this->rates['hourly_rate'] * $this->payreg['late_eq'],2);
+        $this->payreg['late_eq_amount'] = round($this->rates['minute_rate'] * $this->payreg['late_eq'],2);
         $this->payreg['under_time_amount'] = round($this->rates['hourly_rate'] * $this->payreg['under_time'],2);
         $this->payreg['absences_amount'] = round($this->rates['hourly_rate'] * $this->payreg['absences'],2);
 
@@ -356,6 +357,7 @@ class Employee
             $this->rates["daily_rate"] = (float) round(($this->data['basic_salary']*12)/313,4);
             $this->rates["hourly_rate"] = (float) round($this->rates['daily_rate']/8,4);
         }
+            $this->rates['minute_rate'] =  $this->rates["hourly_rate"] / 60;
     }
 
     public function setPhilRate($rate){
