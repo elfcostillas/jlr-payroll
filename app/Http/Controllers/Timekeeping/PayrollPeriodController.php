@@ -51,6 +51,16 @@ class PayrollPeriodController extends Controller
 
     public function update(Request $request)
     {
+        $data = $request->all();
+
+        if($data['inProgress']=='Y')
+        {
+            $flag = $this->mapper->checkAtherForProgress($data);
+            if($flag){
+                return response()->json(['error' => 'Another payroll period inprogress detected.'])->setStatusCode(500, 'Error');
+            }
+        }
+
         $result = $this->mapper->updateValid($request->all());
 
         if(is_object($result)){

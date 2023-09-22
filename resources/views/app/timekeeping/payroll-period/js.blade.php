@@ -2,6 +2,11 @@
     <script>
         $(document).ready(function(){
 
+            let stopOption = [
+                { text: "No", value: "N" },
+                { text: "Yes", value: "Y" },
+            ];
+
             var viewModel = kendo.observable({ 
                 ds : {
                     maingrid : new kendo.data.DataSource({
@@ -105,12 +110,18 @@
                         template : "#= (data.date_to) ? kendo.toString(data.date_to,'MM/dd/yyyy') : ''  #",
                         //width : 120,    
                     },
-                  
                     {
                         title : "Man Hours",
                         field : "man_hours",
                         //template : "#=  : ''  #",
                         width : 120,    
+                    },
+                    {
+                        title : "In Progress",
+                        field : "inProgress",
+                        //template : "#=  : ''  #",
+                        width : 120,    
+                        editor : stopEditor
                     },
                     {
                         command : ['edit'],
@@ -119,6 +130,23 @@
                   
                 ]
             });
+
+            function stopEditor(container, options)
+            {
+                $('<input name="' + options.field + '"/>')
+                .appendTo(container)
+                .kendoDropDownList({
+                //.kendoComboBox({
+                    //autoBind: false,
+                    autoWidth: true,
+                    dataTextField: "text",
+                    dataValueField: "value",
+                    dataSource: stopOption,
+                   
+                });
+            }
+
+            //
 
             kendo.bind($("#viewModel"),viewModel);
 

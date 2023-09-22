@@ -17,7 +17,8 @@ class PayrollPeriod extends Model
         'date_from',
         'date_to',
         'date_release',
-        'man_hours'
+        'man_hours',
+        'inProgress'
     ];
 
     //protected $connection = 'sqlite';

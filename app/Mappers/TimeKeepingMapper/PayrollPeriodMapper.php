@@ -18,7 +18,7 @@ class PayrollPeriodMapper extends AbstractMapper {
 
     public function list($filter)
     {
-        $result = $this->model->select('id','date_from','date_to','date_release','man_hours');
+        $result = $this->model->select('id','date_from','date_to','date_release','man_hours','inProgress');
 
         if($filter['filter']!=null){
 			foreach($filter['filter']['filters'] as $f)
@@ -45,6 +45,14 @@ class PayrollPeriodMapper extends AbstractMapper {
 
         return $result->get();
     }
+
+	public function checkAtherForProgress($data)
+	{
+		$result = DB::table('payroll_period')->where('inProgress','=','Y')
+					->where('id','!=',$data['id'])
+					->count();
+		return ($result>0) ? true : false;
+	}
 
 
 }
