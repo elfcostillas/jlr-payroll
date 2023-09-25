@@ -17,7 +17,7 @@ class DTRSummaryMapper extends AbstractMapper {
     public function periodList()
     {
         $result = DB::table('payroll_period')
-                    ->select(DB::raw("id,CONCAT(DATE_FORMAT(date_from,'%m / %d / %Y'),' - ',DATE_FORMAT(date_from,'%m / %d / %Y')) AS period_range"))
+                    ->select(DB::raw("id,CONCAT(DATE_FORMAT(date_from,'%m / %d / %Y'),' - ',DATE_FORMAT(date_to,'%m / %d / %Y')) AS period_range"))
                     ->orderBy('id','DESC');
 
         return $result->get();
