@@ -73,13 +73,13 @@ class DTRSummaryMapper extends AbstractMapper {
             {
                 $employees = DB::table('employees')->select(DB::raw("trim(
                         concat(
-                        ifnull(`jlr_hris2`.`employees`.`lastname`, ''),
+                        ifnull(`jlr_hris`.`employees`.`lastname`, ''),
                         ', ',
-                        ifnull(`jlr_hris2`.`employees`.`firstname`, ''),
+                        ifnull(`jlr_hris`.`employees`.`firstname`, ''),
                         ' ',
-                        ifnull(`jlr_hris2`.`employees`.`suffixname`, ''),
+                        ifnull(`jlr_hris`.`employees`.`suffixname`, ''),
                         ' ',
-                        ifnull(`jlr_hris2`.`employees`.`middlename`, '')
+                        ifnull(`jlr_hris`.`employees`.`middlename`, '')
                         )
                     ) AS `employee_name`,
                     edtr_totals.*"))
