@@ -24,7 +24,7 @@
                            
                            
                         },
-                        pageSize :11,
+                        pageSize :99,
                      
                         schema : {
                             model : {
@@ -48,7 +48,7 @@
                             },
                            
                         },
-                        pageSize :12,
+                        pageSize :99,
                         schema : {
                             model : {
                                 id : 'period_id',
