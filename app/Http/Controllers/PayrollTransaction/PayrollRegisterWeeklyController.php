@@ -53,7 +53,7 @@ class PayrollRegisterWeeklyController extends Controller
     {
         $period = $request->id;
         $payreg = [];
-
+      
     //     $result = $this->mapper->compute($period);
        
     //     $data = $this->mapper->showComputed($period);
@@ -100,8 +100,6 @@ class PayrollRegisterWeeklyController extends Controller
         $colHeaders = $this->mapper->getColHeaders();
 
         $label = [];
-
-     
 
         foreach($headers as $key => $value){
             if($value==0){

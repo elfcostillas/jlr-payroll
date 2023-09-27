@@ -271,7 +271,6 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
 
         foreach($employees as $employee)
         {   
-
             array_push($blank,array_merge($employee->toColumnArray(),$info));
 
         }

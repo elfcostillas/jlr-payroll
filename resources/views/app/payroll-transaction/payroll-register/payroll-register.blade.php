@@ -137,7 +137,7 @@
         </table>
     </div> --}}
     <?php
-        $colspan=26;
+        $colspan=28;
         $rcount = 1;
        //ndays,basic_pay,late_eq,late_eq_amount,under_time,under_time_amount
     ?>
@@ -172,6 +172,9 @@
 
                         <th style="padding : 0px 4px;min-width:110px;" >BL</th>
                         <th style="padding : 0px 4px;min-width:110px;" >BL Amount</th>
+
+                        <th style="padding : 0px 4px;min-width:110px;" >SVL</th>
+                        <th style="padding : 0px 4px;min-width:110px;" >SVL Amount</th>
 
                         <th style="padding : 0px 4px;min-width:110px;" >Absent</th>
                         <th style="padding : 0px 4px;min-width:110px;" >Absent Amount</th>
@@ -246,6 +249,9 @@
 
                                     <td style="text-align:right;"> {{ ($employee->bl_wpay>0) ? number_format($employee->bl_wpay,2) : ''; }}</td>
                                     <td style="text-align:right;"> {{ ($employee->bl_wpay_amount>0) ? number_format($employee->bl_wpay_amount,2) : ''; }}</td>
+
+                                    <td style="text-align:right;"> {{ ($employee->svl>0) ? number_format($employee->svl,2) : ''; }}</td>
+                                    <td style="text-align:right;"> {{ ($employee->svl_amount>0) ? number_format($employee->svl_amount,2) : ''; }}</td>
                                     
                                     <td style="text-align:right;"> {{ ($employee->absences>0) ? number_format($employee->absences,2) : ''; }}</td>
                                     <td style="text-align:right;"> {{ ($employee->absences_amount>0) ? number_format($employee->absences_amount,2) : ''; }}</td>

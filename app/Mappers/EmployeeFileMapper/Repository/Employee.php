@@ -41,6 +41,8 @@ class Employee
         'bl_wpay_amount' => 0.00,
         'bl_wopay' => 0.00,
         'bl_wopay_amount' => 0.00,
+        'svl' => 0.00,
+        'svl_amount' => 0.00,
         'absences' => 0.00,
         'absences_amount' => 0.00,
         'reg_ot'	=> 0.00,
@@ -163,7 +165,7 @@ class Employee
         $this->payreg['sl_wpay_amount'] = round($this->rates['hourly_rate'] * $this->payreg['sl_wpay'],2);
         $this->payreg['bl_wpay_amount'] = round($this->rates['hourly_rate'] * $this->payreg['bl_wpay'],2);
 
-        
+        $this->payreg['svl_amount'] = round($this->rates['hourly_rate'] * $this->payreg['svl'],2);
         //dd($this->rates['hourly_rate']);
         /* Regular Days */
         $this->payreg['reg_ot_amount'] = round(($this->rates['hourly_rate'] * 1.25) * $this->payreg['reg_ot'],2);

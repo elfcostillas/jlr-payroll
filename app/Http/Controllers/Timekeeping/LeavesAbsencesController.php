@@ -74,34 +74,37 @@ class LeavesAbsencesController extends Controller
 
         foreach($details as $leave)
         {
-            $w_pay = $leave->with_pay;
-            $wo_pay = $leave->without_pay;
+            if($header->leave_type=='SL' || $header->leave_type=='VL' || $header->leave_type=='E')
+            {
 
-            if($header->leave_type=='SL'){
-                if(($balance_sl-$w_pay)>=0 && ($w_pay>0)){
-                    $ye_pay = ($balance_sl - $w_pay >=0) ? $w_pay : $w_pay - $balance_sl;
-                    $no_pay = ($balance_sl - $w_pay >=0) ? $wo_pay : ($balance_sl - $w_pay) + $wo_pay;
-                    $balance_sl = ($balance_sl- $ye_pay <= 0) ? 0 : $balance_sl- $ye_pay;
-                }else{
-                    $ye_pay = 0;
-                    $no_pay = $w_pay + $wo_pay;
+                $w_pay = $leave->with_pay;
+                $wo_pay = $leave->without_pay;
+
+                if($header->leave_type=='SL'){
+                    if(($balance_sl-$w_pay)>=0 && ($w_pay>0)){
+                        $ye_pay = ($balance_sl - $w_pay >=0) ? $w_pay : $w_pay - $balance_sl;
+                        $no_pay = ($balance_sl - $w_pay >=0) ? $wo_pay : ($balance_sl - $w_pay) + $wo_pay;
+                        $balance_sl = ($balance_sl- $ye_pay <= 0) ? 0 : $balance_sl- $ye_pay;
+                    }else{
+                        $ye_pay = 0;
+                        $no_pay = $w_pay + $wo_pay;
+                    }
+                } else {
+                    if(($balance_vl-$w_pay)>=0 || ($w_pay==0)){
+                        $ye_pay = ($balance_vl - $w_pay >=0) ? $w_pay : $w_pay - $balance_vl;
+                        $no_pay = ($balance_vl - $w_pay >=0) ? $wo_pay : ($balance_vl - $w_pay) + $wo_pay;
+                        $balance_vl = ($balance_vl- $ye_pay <= 0) ? 0 : $balance_vl- $ye_pay;
+                    }else{
+                        $ye_pay = 0;
+                        $no_pay = $w_pay + $wo_pay;
+                    }
                 }
-            } else {
-                if(($balance_vl-$w_pay)>=0 || ($w_pay==0)){
-                    $ye_pay = ($balance_vl - $w_pay >=0) ? $w_pay : $w_pay - $balance_vl;
-                    $no_pay = ($balance_vl - $w_pay >=0) ? $wo_pay : ($balance_vl - $w_pay) + $wo_pay;
-                    $balance_vl = ($balance_vl- $ye_pay <= 0) ? 0 : $balance_vl- $ye_pay;
-                }else{
-                    $ye_pay = 0;
-                    $no_pay = $w_pay + $wo_pay;
-                }
+
+                $leave->with_pay = $ye_pay;
+                $leave->without_pay = $no_pay;
+
+                $resultd = $this->detail->updateValid($leave->toArray());
             }
-
-            $leave->with_pay = $ye_pay;
-            $leave->without_pay = $no_pay;
-
-            $resultd = $this->detail->updateValid($leave->toArray());
-            
         }
 
         if($header!=null){

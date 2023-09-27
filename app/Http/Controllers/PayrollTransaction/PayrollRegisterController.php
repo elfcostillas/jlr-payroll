@@ -93,6 +93,9 @@ class PayrollRegisterController extends Controller
             $employee->bl_wopay = 0;
             $employee->bl_wopay_amount = 0;
 
+            $employee->svl = 0;
+            $employee->svl_amount = 0;
+
             $employee->actual_reghol = 0;
             $employee->actual_sphol = 0;
             $employee->actual_dblhol = 0;
@@ -113,7 +116,7 @@ class PayrollRegisterController extends Controller
             }
 
             $leaves = $this->unposted->getFiledLeaves($employee->biometric_id,$period->id);
-
+            
             if($leaves->count()>0){
                 foreach($leaves as $leave){
                     switch($leave->leave_type){
@@ -149,6 +152,10 @@ class PayrollRegisterController extends Controller
                             //$employee->bl_wpay += $leave->with_pay;
                             //$employee->bl_wopay += $leave->without_pay;
                             break;
+
+                        case 'SVL' :
+                                $employee->svl += $leave->with_pay;
+                            break;
                         
                         default : 
                             $employee->vl_wpay += $leave->with_pay;
@@ -181,7 +188,6 @@ class PayrollRegisterController extends Controller
        
         $flag = $this->unposted->reInsert($period->id,$payreg,'non-confi');
 
-       
         if($flag){
             $noPay = $this->unposted->semiEmployeeNoPayroll($period->id);
         }else{
@@ -208,13 +214,18 @@ class PayrollRegisterController extends Controller
             //dd($value->var_name,$vaue->col_label);
             $label[$value->var_name] = $value->col_label;
         }
-     
-        //dd($label);
 
         //dd($colHeaders);
         //dd($headers);
         
-        return view('app.payroll-transaction.payroll-register.payroll-register',['data' => $collections,'no_pay' => $noPay,'headers' => $headers , 'labels' => $label,'deductionLabel' => $deductions,'govLoan' => $gov,'compensation' => $compensation]);
+        return view('app.payroll-transaction.payroll-register.payroll-register',[
+            'data' => $collections,
+            'no_pay' => $noPay,
+            'headers' => $headers , 
+            'labels' => $label,
+            'deductionLabel' => $deductions,
+            'govLoan' => $gov,
+            'compensation' => $compensation]);
     }
 
     public function downloadExcelUnposted(Request $request)

@@ -57,6 +57,9 @@
                         <td >BL</td>
                         <td >BL Amount</td>
 
+                        <td >SVL</td>
+                        <td >SVL Amount</td>
+
                         <td >Absent</td>
                         <td >Absent <br> Amount</td>
 
@@ -526,6 +529,8 @@
                                 <td style="font-weight:bold;" >{{ $dept['sl_wpay_amount'] }}</td>
                                 <td style="font-weight:bold;" >{{ $dept['bl_wpay'] }}</td>
                                 <td style="font-weight:bold;" >{{ $dept['bl_wpay_amount'] }}</td>
+                                <td></td>
+                                <td></td>
                                 <td style="font-weight:bold;" >{{ $dept['absences_amount'] }}</td>
                                 <td style="font-weight:bold;" >{{ $dept['absences_amount'] }}</td>
                                 @foreach($headers as $key => $val)
@@ -574,6 +579,8 @@
                             <td style="font-weight:bold;"  >{{ $divTotal['sl_wpay_amount'] }}</td>
                             <td style="font-weight:bold;"  >{{ $divTotal['bl_wpay'] }}</td>
                             <td style="font-weight:bold;"  >{{ $divTotal['bl_wpay_amount'] }}</td>
+                            <td></td>
+                            <td></td>
                             <td style="font-weight:bold;"  >{{ $divTotal['absences_amount'] }}</td>
                             <td style="font-weight:bold;"  >{{ $divTotal['absences_amount'] }}</td>
                             @foreach($headers as $key => $val)
@@ -625,6 +632,8 @@
                         <td  style="font-weight:bold;" >{{ $overALL['sl_wpay_amount'] }}</td>
                         <td  style="font-weight:bold;" >{{ $overALL['bl_wpay'] }}</td>
                         <td  style="font-weight:bold;" >{{ $overALL['bl_wpay_amount'] }}</td>
+                        <td></td>
+                        <td></td>
                         <td  style="font-weight:bold;" >{{ $overALL['absences_amount'] }}</td>
                         <td  style="font-weight:bold;" >{{ $overALL['absences_amount'] }}</td>
                         @foreach($headers as $key => $val)
