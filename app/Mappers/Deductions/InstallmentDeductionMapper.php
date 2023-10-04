@@ -37,7 +37,7 @@ class InstallmentDeductionMapper extends AbstractMapper {
 
     public function list($biometric_id,$filter)
     {
-        $result = $this->model->select(DB::raw("deduction_installments.id,employee_names_vw.employee_name,deduction_types.description,total_amount"))
+        $result = $this->model->select(DB::raw("deduction_installments.id,deduction_installments.remarks,employee_names_vw.employee_name,deduction_types.description,total_amount"))
 		->from('deduction_installments')
 		->join('employee_names_vw','employee_names_vw.biometric_id','=','deduction_installments.biometric_id')
 		->join('payroll_period_vw','payroll_period_vw.id','=','deduction_installments.period_id')

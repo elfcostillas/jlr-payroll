@@ -50,10 +50,10 @@
     <h4> Installments <h4>
 @endsection
 @section('content')
-    <div class="container">
+    <div class="">
         <div id="viewModel" >
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card card-secondary">
                         <div class="card-header">Employees</div>
                         <div class="card-body"> 
@@ -62,7 +62,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-8">
+                <div class="col-md-9">
                     <div class="card card-secondary">
                         <div class="card-header"> Deductions </div>
                         <div class="card-body">
@@ -112,7 +112,10 @@
                                 <td colspan=6>Remarks</td>
                             </tr>
                             <tr>
-                               <td colspan=6><input type="text" id="remarks" data-bind="value:form.model.remarks"></td>
+                               <!-- <td colspan=6><input type="text" id="remarks" data-bind="value:form.model.remarks"></td> -->
+                                <td colspan=6>
+                                    <textarea style="height:54px" name="remarks" id="remarks" rows="3" data-bind="value:form.model.remarks"></textarea>
+                                </td>
                             </tr>
                             
                         </table>

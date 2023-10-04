@@ -340,11 +340,18 @@
                     {
                         title : "Employee",
                         field : "employee_name",
+                        width : 180,    
                        
                     },
                     {
                         title : "Deduction Type",
                         field : "description",
+                        width : 160,    
+                    },
+                    {
+                        title : "Remarks",
+                        field : "remarks",
+                        
                     },
                     {
                         title : "Amount",
@@ -450,7 +457,8 @@
             });
             $("#ammortization").kendoNumericTextBox({format : "n2"});
 
-            $("#remarks").kendoTextBox({ });
+            // $("#remarks").kendoTextBox({ rows:2 });
+            $("#remarks").kendoTextArea({ });
             
             $("#is_stopped").kendoDropDownList({
                 dataTextField: "text",
