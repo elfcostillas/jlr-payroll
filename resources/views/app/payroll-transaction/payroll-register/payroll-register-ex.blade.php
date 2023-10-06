@@ -119,6 +119,9 @@
                 $overALL['absences'] = 0;
                 $overALL['absences_amount'] = 0;
 
+                $overALL['svl'] = 0;
+                $overALL['svl_amount'] = 0;
+
                 $overALL['gross_pay'] = 0;
                 $overALL['gross_total'] = 0;
 
@@ -182,6 +185,9 @@
                                 $divTotal['bl_wpay_amount'] = 0;
                                 $divTotal['absences'] = 0;
                                 $divTotal['absences_amount'] = 0;
+
+                                $divTotal['svl'] = 0;
+                                $divTotal['svl_amount'] = 0;
 
                                 $divTotal['gross_pay'] = 0;
                                 $divTotal['gross_total'] = 0;
@@ -248,6 +254,9 @@
                                 $dept['absences'] = 0; 
                                 $dept['absences_amount'] = 0;
 
+                                $dept['svl'] = 0; 
+                                $dept['svl_amount'] = 0;
+
                                 $dept['gross_pay'] = 0; 
                                 $dept['gross_total'] = 0;
 
@@ -304,6 +313,9 @@
                                     $dept['absences'] += $employee->absences;
                                     $dept['absences_amount'] += $employee->absences_amount;
 
+                                    $dept['svl'] += $employee->svl;
+                                    $dept['svl_amount'] += $employee->svl_amount;
+
                                     $dept['gross_pay'] += $employee->gross_pay;
                                     $dept['gross_total'] += $employee->gross_total;
 
@@ -359,6 +371,9 @@
                                     $divTotal['absences_amount'] += $employee->absences_amount;
                                     $divTotal['gross_pay'] += $employee->gross_pay;
                                     $divTotal['gross_total'] += $employee->gross_total;
+
+                                    $divTotal['svl'] += $employee->svl;
+                                    $divTotal['svl_amount'] += $employee->svl_amount;
 
                                     foreach($headers as $key => $val)
                                     {
@@ -473,7 +488,8 @@
 
                                     <td > {{ ($employee->bl_wpay>0) ? $employee->bl_wpay : ''; }}</td>
                                     <td > {{ ($employee->bl_wpay_amount>0) ? $employee->bl_wpay_amount : ''; }}</td>
-                                    
+                                    <td>  {{ ($employee->svl>0) ? $employee->svl : ''; }}</td>
+                                    <td  >{{ ($employee->svl_amount>0) ? $employee->svl_amount : ''; }}</td>
                                     <td > {{ ($employee->absences_amount>0) ? $employee->absences : ''; }}</td>
                                     <td > {{ ($employee->absences_amount>0) ? $employee->absences_amount : ''; }}</td>
                                     
@@ -529,8 +545,8 @@
                                 <td style="font-weight:bold;" >{{ $dept['sl_wpay_amount'] }}</td>
                                 <td style="font-weight:bold;" >{{ $dept['bl_wpay'] }}</td>
                                 <td style="font-weight:bold;" >{{ $dept['bl_wpay_amount'] }}</td>
-                                <td></td>
-                                <td></td>
+                                <td style="font-weight:bold;" >{{ $dept['svl'] }}</td>
+                                <td style="font-weight:bold;" >{{ $dept['svl_amount'] }}</td>
                                 <td style="font-weight:bold;" >{{ $dept['absences_amount'] }}</td>
                                 <td style="font-weight:bold;" >{{ $dept['absences_amount'] }}</td>
                                 @foreach($headers as $key => $val)
@@ -579,8 +595,8 @@
                             <td style="font-weight:bold;"  >{{ $divTotal['sl_wpay_amount'] }}</td>
                             <td style="font-weight:bold;"  >{{ $divTotal['bl_wpay'] }}</td>
                             <td style="font-weight:bold;"  >{{ $divTotal['bl_wpay_amount'] }}</td>
-                            <td></td>
-                            <td></td>
+                            <td style="font-weight:bold;"  >{{ $divTotal['svl'] }}</td>
+                            <td style="font-weight:bold;"  >{{ $divTotal['svl_amount'] }}</td>
                             <td style="font-weight:bold;"  >{{ $divTotal['absences_amount'] }}</td>
                             <td style="font-weight:bold;"  >{{ $divTotal['absences_amount'] }}</td>
                             @foreach($headers as $key => $val)
@@ -632,8 +648,8 @@
                         <td  style="font-weight:bold;" >{{ $overALL['sl_wpay_amount'] }}</td>
                         <td  style="font-weight:bold;" >{{ $overALL['bl_wpay'] }}</td>
                         <td  style="font-weight:bold;" >{{ $overALL['bl_wpay_amount'] }}</td>
-                        <td></td>
-                        <td></td>
+                        <td  style="font-weight:bold;" >{{ $overALL['svl'] }}</td>
+                        <td  style="font-weight:bold;" >{{ $overALL['svl_amount'] }}</td>
                         <td  style="font-weight:bold;" >{{ $overALL['absences_amount'] }}</td>
                         <td  style="font-weight:bold;" >{{ $overALL['absences_amount'] }}</td>
                         @foreach($headers as $key => $val)
