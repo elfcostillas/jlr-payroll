@@ -167,6 +167,12 @@ class TardinessMemoController extends Controller
 
                     $marchResult =  $this->mapper->getLates($memo->biometric_id,$marchFilter);
 
+
+                    if(count($marchResult) >0)
+                    {
+                        $breakdown = "Last March you incurred a total of (".count($marchResult).") tardiness occurrence. ";
+                    }
+
                     // $may = date('Y-m-d',strtotime($memo->memo_year.'-05-01'));
 
                     // $mayFilter = array(
@@ -226,6 +232,32 @@ class TardinessMemoController extends Controller
                     break;
                   
                 case 8 :
+                    $july = date('Y-m-d',strtotime($memo->memo_year.'-07-01'));
+
+                    $julyFilter = array(
+                        'from' => $july,
+                        'to' => date('Y-m-t',strtotime($july)),
+                    );
+
+                    $julyResult =  $this->mapper->getLates($memo->biometric_id,$julyFilter);
+
+                 
+                    if(count($julyResult) >0)
+                    {
+                        $breakdown = "Last July you incurred a total of (".count($julyResult).") tardiness occurrence. ";
+                    }
+
+                    // $may = date('Y-m-d',strtotime($memo->memo_year.'-05-01'));
+
+                    // $mayFilter = array(
+                    //     'from' => $iStart,
+                    //     'to' => date('Y-m-t',strtotime($iStart)),
+                    // );
+
+                    // $mayResult =  $this->mapper->getLates($memo->biometric_id,$mayFilter);
+
+                    $total = count($julyResult) + count($details);
+                    $months = "July, August";
 
                     break;
                 case 9 :
