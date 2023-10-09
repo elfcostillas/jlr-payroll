@@ -347,6 +347,7 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                             ->havingRaw('balance>0')
                             ->get();
         
+        dd($loans->toSql(),$loans->getBindings());
         foreach($loans as $loan)
         {
             $tmp = [

@@ -338,7 +338,7 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                             ->leftJoin('posted_installments','deduction_installments.id','=','posted_installments.deduction_id')
                             ->join('deduction_types','deduction_types.id','=','deduction_installments.deduction_type')
                             ->whereRaw("is_stopped = 'N'")
-                            ->where('deduction_installments.period_id','>=',$period->id)
+                            ->where('deduction_installments.period_id','<=',$period->id)
                             ->whereIn('deduction_installments.biometric_id',$biometric_ids)
                             ->whereIn('deduction_types.deduction_sched',[$period->period_type,3])
                             ->whereIn('deduction_installments.biometric_id',$biometric_ids)
