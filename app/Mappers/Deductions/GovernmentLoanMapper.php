@@ -37,7 +37,7 @@ class GovernmentLoanMapper extends AbstractMapper {
 
     public function list($biometric_id,$filter)
     {
-        $result = $this->model->select(DB::raw("deduction_gov_loans.id,employee_names_vw.employee_name,loan_types.description,total_amount"))
+        $result = $this->model->select(DB::raw("deduction_gov_loans.id,employee_names_vw.employee_name,loan_types.description,total_amount,ammortization"))
 		->from('deduction_gov_loans')
 		->join('employee_names_vw','employee_names_vw.biometric_id','=','deduction_gov_loans.biometric_id')
 		->join('payroll_period_vw','payroll_period_vw.id','=','deduction_gov_loans.period_id')

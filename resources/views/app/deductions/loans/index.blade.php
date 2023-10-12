@@ -50,7 +50,7 @@
     <h4> Loans <h4>
 @endsection
 @section('content')
-    <div class="container">
+    <div class="">
         <div id="viewModel" >
             <div class="row">
                 <div class="col-md-4">
@@ -104,7 +104,7 @@
                             <tr>
                                 <td colspan=1><input type="text" id="total_amount" data-bind="value:form.model.total_amount"> </td>
                                 <td colspan=1><input type="text" id="terms" data-bind="value:form.model.terms"> </td>
-                                <td colspan=1><input type="text" id="ammortization" data-bind="value:form.model.ammortization" readonly > </td>
+                                <td colspan=1><input type="text" id="ammortization" data-bind="value:form.model.ammortization" > </td>
                                 <td colspan=1><input type="text" id="is_stopped" data-bind="value:form.model.is_stopped"> </td>
                                 <td></td>
                                 <td colspan=1><input type="text" id="loan_amount" data-bind="value:form.model.loan_amount"></td>

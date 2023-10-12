@@ -90,7 +90,7 @@
                                     descriptiongit : { type : 'string' },
                                     total_amount : { type : 'number' },
                                     // date_release: { type : 'date' },
-                                    // man_hours: { type : 'number' },
+                                    ammortization: { type : 'number' },
                                 }
                             }
                         }
@@ -353,6 +353,14 @@
                         field : "total_amount",
                         width : 110,    
                         template : "#=kendo.toString(total_amount,'n2')#",
+                        attributes : { style : 'text-align:right;' },
+                    },
+                    {
+                        title : "Ammortization",
+                        field : "ammortization",
+                        width : 140,    
+                        template : "#=kendo.toString(ammortization,'n2')#",
+                        attributes : { style : 'text-align:right;' },
                     },
                     {
                         command: { text : 'View',icon : 'edit' ,click : viewModel.buttonHandler.view },
