@@ -981,6 +981,7 @@ WHERE period_id = 1 AND total_amount > 0;*/
                     ->where('payrollregister_unposted_s.period_id',$period_id)
                     //->where('emp_level','>=',5)
                     ->where('payrollregister_unposted_s.emp_level','=','non-confi')
+                    ->where('user_id','=',$user->id)
                     ->get();
         
         foreach($result  as $line){
@@ -1010,11 +1011,13 @@ WHERE period_id = 1 AND total_amount > 0;*/
         if($result->count() == $insertCount){
             foreach($tables as $unposted => $posted){
                 $loan_array = [];
-                $loan_type = $this->model->select('period_id','employees.biometric_id','deduction_type','amount','deduction_id')
+                $loan_type = $this->model->select('period_id','employees.biometric_id','deduction_type','amount','deduction_id',$unposted.'.emp_level','user_id')
                     ->from($unposted)
                     ->join('employees',$unposted.'.biometric_id','=','employees.biometric_id')
+                    ->join('deduction_types','deduction_types.id','=','deduction_type')
                     ->where('period_id',$period_id)
                     ->where('employees.emp_level','>=',5)
+                    ->where('user_id','=',$user->id)
                     ->get();
                 
                 foreach($loan_type as $loans){
@@ -1035,11 +1038,14 @@ WHERE period_id = 1 AND total_amount > 0;*/
 
             foreach($comp_tables as $unposted => $posted){
                 $comp_array = [];
-                $comp_type = $this->model->select('period_id','employees.biometric_id','compensation_type','amount','deduction_id')
+                $comp_type = $this->model->select('period_id','employees.biometric_id','compensation_type','amount','deduction_id',$unposted.'.emp_level','user_id')
                 ->from($unposted)
+                ->join('compensation_types','compensation_types.id','=','compensation_type')
                 ->join('employees',$unposted.'.biometric_id','=','employees.biometric_id')
                 ->where('period_id',$period_id)
-                ->where('employees.emp_level','>=',5)
+                // ->where('employees.emp_level','>=',5)
+                ->where($unposted.'.emp_level','=','non-confi')
+                ->where('user_id','=',$user->id)
                 ->get();
 
                 foreach($comp_type as $compensation){
@@ -1048,8 +1054,10 @@ WHERE period_id = 1 AND total_amount > 0;*/
 
                     array_push($comp_array,$tmpcomp);
                 }
+
                 $detailCount = DB::table($posted)->insertOrIgnore($comp_array);
                 if($comp_type->count() != $detailCount){
+                    dd($comp_type->count(),$detailCount);
                     DB::rollBack();
                     return array('error'=>'Posting on table '.$unposted.'.');
                     
@@ -1067,6 +1075,8 @@ WHERE period_id = 1 AND total_amount > 0;*/
 
             return array('success'=>'Payroll Period posted successfully.');
         }else{
+
+            
             DB::rollBack();
             return array('error'=>'Posting on table payrollregister_unposted_s.');
             //return response()->json(['error' => 'Posting on table payrollregister_unposted_s.']);
