@@ -21,7 +21,9 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class UnpostedPayrollRegister implements ShouldAutoSize,WithColumnFormatting,FromView,WithEvents 
+use Maatwebsite\Excel\Concerns\WithDrawings;
+
+class UnpostedPayrollRegister implements ShouldAutoSize,WithColumnFormatting,FromView,WithEvents,WithDrawings
 {
   
     private $collections;
@@ -94,5 +96,17 @@ class UnpostedPayrollRegister implements ShouldAutoSize,WithColumnFormatting,Fro
         //     'K' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2
             
         // ];
+    }
+
+    public function drawings()
+    {
+        $drawing = new Drawing();
+        // $drawing->setName('Logo');
+        // $drawing->setDescription('This is my logo');
+        $drawing->setPath(public_path('/images/header-logo.jpg'));
+        $drawing->setHeight(90);
+        $drawing->setCoordinates('A1');
+
+        return $drawing;
     }
 }

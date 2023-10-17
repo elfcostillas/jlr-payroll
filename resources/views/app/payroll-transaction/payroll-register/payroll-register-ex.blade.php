@@ -17,10 +17,21 @@
  
     <?php
         $colspan=25;
-      
+
+        $grandCtr = 0;
+    //   <img src="{{ public_path('images/header-logo.jpg') }}" style="height:24px;" class="center" >
     ?>
     <div id="" >
+        <div>
+        
+        </div>
         <table>
+            <tr >
+                <td style="height:92px;"></td>
+            </tr>
+            <tr>
+                <td style="font-weight:bold;" >JLR Construction and Aggregates Inc.</td>
+            </tr>
             <tr>
                 <td> {{ $payperiod_label }}</td>
             </tr>
@@ -228,6 +239,7 @@
                             </tr>
                             <?php 
                                 $ctr = 1;
+                               
 
                                 $dept['basic_salary'] = 0; 
                                 $dept['daily_rate'] = 0;
@@ -456,6 +468,7 @@
                                     $overALL['total_deduction'] += $employee->total_deduction;
                                     $overALL['net_pay'] += $employee->net_pay;
 
+                                    $grandCtr++;
                                    
                                 ?>
                               
@@ -675,6 +688,11 @@
                             <td  style="font-weight:bold;" >{{ $overALL['total_deduction'] }}</td>
                             <td  style="font-weight:bold;" >{{ $overALL['net_pay'] }}</td>
                     </tr>
+        </table>
+        <table>
+            <tr>
+                <td> No of Employees :</td> <td> {{ $grandCtr }}</td>
+            </tr>
         </table>
         @if(count($no_pay)>0)
         <table>

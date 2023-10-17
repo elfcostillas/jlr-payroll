@@ -2,6 +2,9 @@
     <script id="template" type="text/x-kendo-template">
         <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="click:buttonHandler.createDeduction" > <span class="k-icon k-i-plus k-button-icon"></span>Create Deduction</button>
         <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="click:buttonHandler.showAll" > <span class="k-icon k-i-edit k-button-icon"></span>Show All</button>
+
+        <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="click:buttonHandler.downloadNonConfi" > <span class="k-icon k-i-download k-button-icon"></span>Download Non Confi</button>
+        <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="click:buttonHandler.downloadConfi" > <span class="k-icon k-i-download k-button-icon"></span>Download Confi</button>
     </script>
 
     <script>
@@ -272,7 +275,15 @@
                     {
                         viewModel.ds.maingrid.transport.options.read.url = `installments/list/0`;
                         viewModel.ds.maingrid.read();
-                    }
+                    },
+
+                    downloadNonConfi : function() {
+                        let url = 'installments/download-non-confi';
+                        window.open(url);
+                    },
+                    downloadConfi: function() {
+
+                    },
 
                 },
                 functions : {

@@ -138,6 +138,47 @@ class InstallmentDeductionMapper extends AbstractMapper {
         return $result->get();
     }
 
+    public function dlNonConfi()
+    {
+
+        $period = DB::table('payroll_period')->where('inProgress','Y')
+                    ->select(DB::raw('id,CASE WHEN DAY(date_from)=1 THEN 1 ELSE 2 END AS period_type'))
+                    ->first();
+        
+        $biometric_ids = DB::table('employees')->where('exit_status',1)
+                        ->where('emp_level','>=','5')
+                        ->whereIn('pay_type',[1,2])
+                        ->select('biometric_id')
+                        ;
+
+        $loans = $this->model->select(DB::raw("deduction_installments.id,
+                deduction_installments.biometric_id,
+                employee_name,
+                deduction_installments.deduction_type,
+                deduction_installments.remarks,
+                description,
+                deduction_installments.total_amount,
+                SUM(IFNULL(posted_installments.amount,0)) AS paid,
+                total_amount-SUM(IFNULL(posted_installments.amount,0)) AS balance,
+                IF(total_amount-SUM(IFNULL(posted_installments.amount,0))<ammortization,total_amount-SUM(IFNULL(posted_installments.amount,0)),ammortization) AS ammortization"))
+        ->from("deduction_installments")
+        ->leftJoin('posted_installments','deduction_installments.id','=','posted_installments.deduction_id')
+        ->join('deduction_types','deduction_types.id','=','deduction_installments.deduction_type')
+        ->join('employee_names_vw','deduction_installments.biometric_id','=','employee_names_vw.biometric_id')
+        ->join('employees','deduction_installments.biometric_id','=','employees.biometric_id')
+        ->whereRaw("is_stopped = 'N'")
+        ->where('deduction_installments.period_id','<=',$period->id)
+        ->whereIn('deduction_installments.biometric_id',$biometric_ids)
+        ->whereIn('deduction_types.deduction_sched',[$period->period_type,3])
+        ->groupBy(DB::raw("id,deduction_installments.biometric_id,deduction_installments.deduction_type")) 
+        ->havingRaw('balance>0')
+        ->orderBy('employees.lastname','ASC')
+        ->orderBy('employees.lastname','ASC')
+        ->get();
+
+        return $loans;
+    }
+
 }
 
 

@@ -102,4 +102,11 @@ class InstallmentDeductionController extends Controller
         return response()->json($result);
 
     }
+
+    public function dlNonConfi()
+    {
+        $result = $this->mapper->dlNonConfi();
+
+        return view('app.deductions.installment-deductions.installment-summary',['installments' => $result ]); 
+    }
 }

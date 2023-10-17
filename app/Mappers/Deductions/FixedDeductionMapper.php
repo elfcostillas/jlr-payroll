@@ -23,7 +23,11 @@ class FixedDeductionMapper extends AbstractMapper {
         $result = $this->model->select(DB::raw("deduction_fixed.*,employee_name,users.name as encoder,ifnull(is_stopped,'N') as is_stopped,
         deduction_types.description as deduction_desc,employee_names_vw.biometric_id"))
 		->from('employee_names_vw')
-		->leftJoin('deduction_fixed','employee_names_vw.biometric_id','=','deduction_fixed.biometric_id')
+		// ->leftJoin('deduction_fixed','employee_names_vw.biometric_id','=','deduction_fixed.biometric_id')
+        ->leftJoin('deduction_fixed',function($join) use ($type){
+            $join->on('employee_names_vw.biometric_id','=','deduction_fixed.biometric_id');
+            $join->where('deduction_fixed.deduction_type','=',$type);
+        })
 		//->join('payroll_period_vw','payroll_period_vw.id','=','deduction_fixed.period_id')
 		->leftJoin('deduction_types','deduction_type','=','deduction_types.id')
         ->leftJoin('users','encoded_by','=','users.id')
@@ -40,11 +44,13 @@ class FixedDeductionMapper extends AbstractMapper {
         */
         
         if($type!=0){
-            $result = $result->where('deduction_type',$type)
-            ->orWhere(function($query) { 
-                $query->whereNull('deduction_type');
-                $query->where('employee_names_vw.exit_status',1);
-            });
+            // $result = $result->where('deduction_type',$type)
+            // ->orWhere(function($query) { 
+            //     $query->whereNull('deduction_type');
+            //     $query->where('employee_names_vw.exit_status',1);
+            // });
+
+            $result->where('employee_names_vw.exit_status',1);
         }
 
         if($filter['filter']!=null){
