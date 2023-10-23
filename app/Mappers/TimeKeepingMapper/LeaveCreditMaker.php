@@ -22,7 +22,7 @@ class LeaveCreditMaker extends AbstractMapper {
     {
         $result =DB::table('employees')->select(DB::raw("biometric_id,birthdate"))->whereNotNull('birthdate')->get();
 
-        dd($result);
+        //dd($result);
     }
 
 }

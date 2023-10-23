@@ -22,7 +22,7 @@ class Kernel extends ConsoleKernel
         $schedule->call(function (){
             $maker = new LeaveCreditsMaker();
             $maker(now());
-        })->daily();
+        })->dailyAt('1:00');;
     }
 
     /**

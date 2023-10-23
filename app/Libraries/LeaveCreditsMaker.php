@@ -4,10 +4,9 @@ namespace App\Libraries;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+// use Illuminate\Support\Facades\Storage;
 
 class LeaveCreditsMaker {
-
-	
 
 	public function __invoke($date){
         $this->local_function($date);
@@ -20,6 +19,7 @@ class LeaveCreditsMaker {
 
         /* Check if start of Year */
         $curdate = $date->format('Y-m-d');
+        // Storage::disk('local')->put('file.txt', $date);
 
         $now = $date->format('m-d');
         $c_year = $date->format('Y');

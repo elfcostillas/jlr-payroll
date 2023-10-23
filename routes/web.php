@@ -688,5 +688,22 @@ Route::get('leave-credits-maker',function(){
     // $leavecreditsmaker();
 });
 
+Route::get('process-sheet4',function(){
+    $employees = DB::table('sheet4')
+        ->select(DB::raw('biometric_id,sum(ndays) as ndays,sum(actual_late) as actual_late'))
+        ->groupBy('biometric_id')
+        ->having('ndays','>',0)
+        ->get();
+
+    foreach($employees as $e){
+        DB::table('edtr_totals')
+        ->where('biometric_id','=',$e->biometric_id)
+        ->where('period_id','=',21)
+        ->update([
+            'ndays' => $e->ndays,
+            'late_eq' => $e->actual_late
+        ]);
+    }
+});
 
 require __DIR__.'/auth.php';
