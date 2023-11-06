@@ -63,8 +63,10 @@ class LeavesAbsencesController extends Controller
         $consumed = $this->credits->getBalance( $year,$start,$end,$header->biometric_id);
 
         if($consumed){
-            $balance_vl = ($consumed[0]->vacation_leave - $consumed[0]->VL_PAY) * 8;  
-            $balance_sl = ($consumed[0]->sick_leave - $consumed[0]->SL_PAY) * 8;  
+
+            // /$balance_sl = ($consumed[0]->sick_leave - $consumed[0]->SL_PAY) * 8;  
+            $balance_vl = (($consumed[0]->vacation_leave - $consumed[0]->VL_PAY)<=0) ? 0 :($consumed[0]->vacation_leave - $consumed[0]->VL_PAY) * 8;  
+            $balance_sl = (($consumed[0]->sick_leave - $consumed[0]->SL_PAY)<=0) ? 0 :($consumed[0]->sick_leave - $consumed[0]->SL_PAY) * 8;  
         }else {
             $balance_vl = 0;
             $balance_sl = 0;
