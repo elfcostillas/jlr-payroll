@@ -610,6 +610,7 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                     'SSS WISP' => $employee->sss_wisp,
                     'PhilHealt Premium' => $employee->phil_prem,
                     'PAG IBIG Contri' => $employee->hdmf_contri,
+                    'WTAx' => $employee->wtax,
                 ]
             );
             $employee->loans = $this->getGovLoans($employee->biometric_id,$period->id);

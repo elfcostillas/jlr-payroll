@@ -121,6 +121,7 @@ class Employee
         'actual_reghol' => 0.0,
         'actual_sphol' => 0.0,
         'actual_dblhol' => 0.0,
+        'wtax' => 0.00
         // 'earnings'=> 0.0,
         // 'retro_pay'=> 0.0,
 
@@ -348,6 +349,8 @@ class Employee
             $this->payreg['phil_prem'] = ($this->data['deduct_phic']=='Y') ?  round(($this->rates['monthly_credit'] * ($this->philrate/100))/2,2) : 0.00;
             $this->payreg['sss_wisp'] = ($this->data['deduct_sss']=='Y') ?  $this->computeWISP() : 0.00;
         }
+
+        $wtax = $this->computeWTax();
     }
 
     public function setPayRates(){
@@ -442,7 +445,7 @@ class Employee
 
     public function computeTotalDeduction($company,$govloan)
     {
-        $this->payreg['total_deduction'] = $this->payreg['hdmf_contri'] + $this->payreg['sss_prem'] + $this->payreg['phil_prem'];
+        $this->payreg['total_deduction'] = $this->payreg['hdmf_contri'] + $this->payreg['sss_prem'] + $this->payreg['phil_prem'] + $this->payreg['wtax'] ;
 
         foreach($company as $loan){
             $this->payreg['total_deduction'] += $loan;
@@ -452,6 +455,24 @@ class Employee
             $this->payreg['total_deduction'] += $gloan;
         }
 
+    }
+
+    public function computeWTax()
+    {
+        //basic - absent
+        //dd($this->payreg['basic_pay']);
+
+        /*
+        "pay_type": "1"
+        +"range1": "0.00"
+        +"range2": "10416.00"
+        +"fix": "0.00"
+        +"percentage": "0.00"
+        */
+
+        $range = DB::table('wtax')->whereRaw(round($this->payreg['basic_pay'],0)." between range1 and range2 ")->first();
+
+        $this->payreg['wtax'] = $range->fix + round( (round($this->payreg['basic_pay'],0 )- $range->range1 <= 0) ? 0 : round($this->payreg['basic_pay'] - $range->range1) * $range->percentage,2);
     }
 
     public function computeNetPay()

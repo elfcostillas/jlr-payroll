@@ -88,7 +88,9 @@
                         <td >SSS Premium</td>
                         <td >SSS WISP</td>
                         <td >PhilHealt <br> Premium</td>
-                        <td >PAG IBIG <br> Contri</td>  @php $colspan+=3; @endphp
+                        <td >PAG IBIG <br> Contri</td> 
+                        <td >Withholding Tax</td> 
+                         @php $colspan+=3; @endphp
                         @foreach($govLoan as $glabel)
                             <td width ="90px" style="white-space:normal"><p>{{ $glabel->description }}</p></td>
                             @php $colspan++; @endphp
@@ -150,6 +152,7 @@
                 $overALL['wisp'] = 0;
                 $overALL['phic'] = 0;
                 $overALL['hdmf'] = 0;
+                $overALL['wtax'] = 0;
 
                 foreach($govLoan as $gkey => $glabel)
                 {
@@ -217,6 +220,7 @@
                                 $divTotal['wisp'] = 0;
                                 $divTotal['phic'] = 0;
                                 $divTotal['hdmf'] = 0;
+                                $divTotal['wtax'] = 0;
 
                                 foreach($govLoan as $gkey => $glabel)
                                 {
@@ -286,6 +290,7 @@
                                 $dept['wisp'] = 0; 
                                 $dept['phic'] = 0; 
                                 $dept['hdmf'] = 0; 
+                                $dept['wtax'] = 0; 
 
                                 foreach($govLoan as $gkey => $glabel)
                                 {
@@ -355,6 +360,7 @@
                                     $dept['wisp'] += $employee->gov_deductions['SSS WISP'];
                                     $dept['phic'] += $employee->gov_deductions['PhilHealt Premium'];
                                     $dept['hdmf'] += $employee->gov_deductions['PAG IBIG Contri'];
+                                    $dept['wtax'] += $employee->gov_deductions['WTAx'];
 
                                     $dept['total_deduction'] += $employee->total_deduction;
                                     $dept['net_pay'] += $employee->net_pay;
@@ -411,6 +417,7 @@
                                     $divTotal['wisp'] += $employee->gov_deductions['SSS WISP'];
                                     $divTotal['phic'] += $employee->gov_deductions['PhilHealt Premium'];
                                     $divTotal['hdmf'] += $employee->gov_deductions['PAG IBIG Contri'];
+                                    $divTotal['wtax'] += $employee->gov_deductions['WTAx'];
 
                                     $divTotal['total_deduction'] += $employee->total_deduction;
                                     $divTotal['net_pay'] += $employee->net_pay;
@@ -464,6 +471,7 @@
                                     $overALL['wisp'] += $employee->gov_deductions['SSS WISP'];
                                     $overALL['phic'] += $employee->gov_deductions['PhilHealt Premium'];
                                     $overALL['hdmf'] += $employee->gov_deductions['PAG IBIG Contri'];
+                                    $overALL['wtax'] += $employee->gov_deductions['WTAx'];
 
                                     $overALL['total_deduction'] += $employee->total_deduction;
                                     $overALL['net_pay'] += $employee->net_pay;
@@ -520,6 +528,7 @@
                                         <td  >{{ ($employee->gov_deductions['SSS WISP']>0) ? $employee->gov_deductions['SSS WISP'] : ''; }}</td>
                                         <td  >{{ ($employee->gov_deductions['PhilHealt Premium']>0) ? $employee->gov_deductions['PhilHealt Premium'] : ''; }}</td>
                                         <td  >{{ ($employee->gov_deductions['PAG IBIG Contri']>0) ? $employee->gov_deductions['PAG IBIG Contri'] : ''; }}</td>
+                                        <td  >{{ ($employee->gov_deductions['WTAx']>0) ? $employee->gov_deductions['WTAx'] : ''; }}</td>
 
                                     @foreach($govLoan as $gkey => $glabel)
                                        
@@ -575,6 +584,7 @@
                                     <td style="font-weight:bold;" >{{ $dept['wisp'] }}</td>
                                     <td style="font-weight:bold;" >{{ $dept['phic'] }}</td>
                                     <td style="font-weight:bold;" >{{ $dept['hdmf'] }}</td>
+                                    <td style="font-weight:bold;" >{{ $dept['wtax'] }}</td>
                                 @foreach($govLoan as $gkey => $glabel)
                                     <td style="font-weight:bold;" >{{ $govDed[$glabel->id] }}</td>
                                 @endforeach
@@ -625,6 +635,7 @@
                                 <td style="font-weight:bold;"  >{{ $divTotal['wisp'] }}</td>
                                 <td style="font-weight:bold;"  >{{ $divTotal['phic'] }}</td>
                                 <td style="font-weight:bold;"  >{{ $divTotal['hdmf'] }}</td>
+                                <td style="font-weight:bold;"  >{{ $divTotal['wtax'] }}</td>
                             @foreach($govLoan as $gkey => $glabel)
                                 <td  style="font-weight:bold;"  >{{ $govDedDIV[$glabel->id] }}</td>
                             @endforeach
@@ -678,6 +689,7 @@
                             <td style="font-weight:bold;"  >{{ $overALL['wisp'] }}</td>
                             <td style="font-weight:bold;"  >{{ $overALL['phic'] }}</td>
                             <td style="font-weight:bold;"  >{{ $overALL['hdmf'] }}</td>
+                            <td style="font-weight:bold;"  >{{ $overALL['wtax'] }}</td>
                         @foreach($govLoan as $gkey => $glabel)
                             <td style="font-weight:bold;"  >{{ $govDedDIVALL[$glabel->id] }}</td>
                         @endforeach

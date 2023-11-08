@@ -220,7 +220,6 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::get('copy',[LeavesAbsencesController::class,'getLeavesFrom100']);
         Route::get('get-encode-leave-credits',[LeavesAbsencesController::class,'makeQueryfor100']);
 
-
     });
 
     Route::prefix('leave-credits')->group(function(){
