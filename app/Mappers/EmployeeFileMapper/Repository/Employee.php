@@ -469,10 +469,18 @@ class Employee
         +"fix": "0.00"
         +"percentage": "0.00"
         */
+        $annual = $this->rates['monthly_credit'] * 12;
 
-        $range = DB::table('wtax')->whereRaw(round($this->payreg['basic_pay'],0)." between range1 and range2 ")->first();
+       
 
-        $this->payreg['wtax'] = $range->fix + round( (round($this->payreg['basic_pay'],0 )- $range->range1 <= 0) ? 0 : round($this->payreg['basic_pay'] - $range->range1) * $range->percentage,2);
+        $range = DB::table('wtax')->whereRaw(" $annual between range1 and range2 ")->where('pay_type','=',2)->first();
+
+       
+        // $annual_tax = $range->fix + round( ($annual - $range->range1 <= 0) ? 0 : $annual  - $range->range1) * $range->percentage,2);
+
+        $annual_tax = $range->fix + round( ($annual - $range->range1 <= 0) ? 0 : $annual - $range->range1,2) * $range->percentage;
+    
+        $this->payreg['wtax'] = round($annual_tax/24,2);
     }
 
     public function computeNetPay()
