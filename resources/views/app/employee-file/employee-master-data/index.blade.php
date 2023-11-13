@@ -168,14 +168,15 @@
                             </tr>
                             <tr>
                                 <td colspan="2">T.I.N.</td>
-                                <td></td>
+                                <td>Deduct WTax</td>
                                 <td colspan="2">HDMF</td>
                                 <td>HDMF Contri</td>
                                 <td colspan="2"></td>
                             </tr>
                             <tr>
                                 <td colspan="2"><input type="text" id="tin_no" data-bind="value:form.model.tin_no"></td>
-                                <td></td>
+                                <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" data-bind="checked:form.mirror.deduct_wtax" id="deduct_wtax"></div></div></td>
+                                
                                 <td colspan="2"><input type="text" id="hdmf_no" data-bind="value:form.model.hdmf_no"></td>
                                 <td><input type="text" id="hdmf_contri" data-bind="value:form.model.hdmf_contri"></td>
                                 <td colspan="2"></td>

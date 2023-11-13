@@ -143,6 +143,7 @@ class EmployeeController extends Controller
     {
         $result = $this->mapper->header($request->id);
         $this->createLog('view',$request->id,$result);
+        
         return response()->json($result);
     }
 
