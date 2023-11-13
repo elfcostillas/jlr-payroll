@@ -68,6 +68,7 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                         is_daily,
                         deduct_phic,
                         deduct_sss,
+                        deduct_wtax,
                         pay_type,
                         late AS late,
                         late_eq AS late_eq,
@@ -1058,7 +1059,7 @@ WHERE period_id = 1 AND total_amount > 0;*/
 
                 $detailCount = DB::table($posted)->insertOrIgnore($comp_array);
                 if($comp_type->count() != $detailCount){
-                    dd($comp_type->count(),$detailCount);
+                    // dd($comp_type->count(),$detailCount);
                     DB::rollBack();
                     return array('error'=>'Posting on table '.$unposted.'.');
                     
