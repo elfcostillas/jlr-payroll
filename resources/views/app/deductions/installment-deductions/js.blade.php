@@ -222,6 +222,29 @@
                             //viewModel.maingrid.ds.read();
                         });
                     },
+                    saveAS : async function(e){
+                        await viewModel.functions.reAssignValues();
+                        viewModel.form.model.set('id',null);
+
+                        var json_data = JSON.stringify(viewModel.form.model);
+                        
+                        $.post('installments/save',{
+                            data : json_data
+                        },function(data,staus){
+                            swal_success(data);
+
+                            let url  = `installments/read-header/${data}`;
+                            read(url,viewModel);
+
+                            viewModel.ds.maingrid.read();
+                            //viewModel.maingrid.formReload(data);
+                        })
+                        .fail(function(data){
+                           swal_error(data);
+                        }).always(function() {
+                            //viewModel.maingrid.ds.read();
+                        });
+                    },
                     view : function(e) {
                         e.preventDefault(); 
                         viewModel.functions.showPOP();
@@ -543,6 +566,7 @@
                 items : [
                     { id : 'saveBtn', type: "button", text: "Save", icon: 'save', click : viewModel.buttonHandler.save },
                     { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
+                    { id : 'saveAsBtn', type: "button", text: "Save as New", icon: 'save', click : viewModel.buttonHandler.saveAS },
                 //  { id : 'postBtn', type: "button", text: "Post", icon: 'print', click : viewModel.buttonHandler.post },
                 ]
             });

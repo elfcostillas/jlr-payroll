@@ -261,16 +261,106 @@ class TardinessMemoController extends Controller
 
                     break;
                 case 9 :
+                    $july = date('Y-m-d',strtotime($memo->memo_year.'-07-01'));
 
+                    $julyFilter = array(
+                        'from' => $july,
+                        'to' => date('Y-m-t',strtotime($july)),
+                    );
+
+                    $julyResult =  $this->mapper->getLates($memo->biometric_id,$julyFilter);
+                
+                    if(count($julyResult)>0){
+                        $breakdown = "Last July you incurred a total of (".count($julyResult).") tardiness occurrence";
+                    }
+
+                    $aug = date('Y-m-d',strtotime($memo->memo_year.'-08-01'));
+
+                    $augFilter = array(
+                        'from' => $aug,
+                        'to' => date('Y-m-t',strtotime($aug)),
+                    );
+
+                    $augResult =  $this->mapper->getLates($memo->biometric_id,$augFilter);
+
+                    if(count($augResult)>0){
+                        if(count($julyResult)>0){
+                            $breakdown .= " and last August you incurred a total of (".count($augResult).") tardiness occurrence.";
+                    
+                        }else {
+                            $breakdown  = "Last August you incurred a total of (".count($augResult).") tardiness occurrence.";
+                        }
+                    }else {
+                        if(count($julyResult)>0){
+                            $breakdown .= ".";
+                        }
+                    }
+
+                    $total = count($julyResult) + count($augResult) + count($details);
+                    $months = "July, August, September";
                     break;
                 case 10 :
-
+                    $total = count($details);
+                    $months = "October";
+                   
                     break;
                 case 11 :
+                    $oct = date('Y-m-d',strtotime($memo->memo_year.'-10-01'));
 
+                    $octFilter = array(
+                        'from' => $july,
+                        'to' => date('Y-m-t',strtotime($july)),
+                    );
+
+                    $octResult =  $this->mapper->getLates($memo->biometric_id,$octFilter);
+
+                 
+                    if(count($octResult) >0)
+                    {
+                        $breakdown = "Last October you incurred a total of (".count($octResult).") tardiness occurrence. ";
+                    }
+
+                    $total = count($octResult) + count($details);
+                    $months = "October, November";
                     break;
                 case 12 :
+                    $july = date('Y-m-d',strtotime($memo->memo_year.'-10-01'));
 
+                    $julyFilter = array(
+                        'from' => $july,
+                        'to' => date('Y-m-t',strtotime($july)),
+                    );
+
+                    $julyResult =  $this->mapper->getLates($memo->biometric_id,$julyFilter);
+                
+                    if(count($julyResult)>0){
+                        $breakdown = "Last October you incurred a total of (".count($julyResult).") tardiness occurrence";
+                    }
+
+                    $aug = date('Y-m-d',strtotime($memo->memo_year.'-11-01'));
+
+                    $augFilter = array(
+                        'from' => $aug,
+                        'to' => date('Y-m-t',strtotime($aug)),
+                    );
+
+                    $augResult =  $this->mapper->getLates($memo->biometric_id,$augFilter);
+
+                    if(count($augResult)>0){
+                        if(count($julyResult)>0){
+                            $breakdown .= " and last November you incurred a total of (".count($augResult).") tardiness occurrence.";
+                    
+                        }else {
+                            $breakdown  = "Last November you incurred a total of (".count($augResult).") tardiness occurrence.";
+                        }
+                    }else {
+                        if(count($julyResult)>0){
+                            $breakdown .= ".";
+                        }
+                    }
+
+                    $total = count($julyResult) + count($augResult) + count($details);
+                    $months = "October, November, December";
                     break;
             }
         }else{

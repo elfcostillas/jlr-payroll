@@ -401,6 +401,8 @@ Route::middleware('auth')->prefix('deductions')->group(function(){
         Route::get('list/{id}',[OneTimeDeductionController::class,'list']);
         Route::get('list-details/{id}',[OneTimeDeductionController::class,'readDetail']);
 
+        Route::get('download/{id}',[OneTimeDeductionController::class,'download']);
+
         Route::post('save',[OneTimeDeductionController::class,'save']);
         //Route::post('update',[OneTimeDeductionController::class,'update']);
 
@@ -411,6 +413,8 @@ Route::middleware('auth')->prefix('deductions')->group(function(){
         Route::get('list-types',[OneTimeDeductionController::class,'getTypes']);
         Route::get('list-payroll-period',[OneTimeDeductionController::class,'getPayrollPeriod']);
         Route::get('employee-list',[OneTimeDeductionController::class,'getEmployees']);
+
+        Route::post('upload',[OneTimeDeductionController::class,'upload']);
     
     });
 

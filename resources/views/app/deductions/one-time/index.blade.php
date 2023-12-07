@@ -100,6 +100,21 @@
                             
                         </table>
                         <div id="detailsgrid"></div>
+                        <div id="pop2" style="display:none;">
+                            <div class="card card-secondary">
+                            <div class="card-header"> Upload Deductions </div>
+                            <div class="card-body"> 
+                                <div id="example">
+                                    <div>
+                                        <div class="demo-section">
+                                            <input name="files" id="files" type="file" />
+                                            <meta name="_token" content="{!! csrf_token() !!}" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     </div>
                 </div>
             </div>

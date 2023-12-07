@@ -8,6 +8,9 @@ use App\Mappers\Deductions\OneTimeDeductionHeaderMapper;
 use App\Mappers\Deductions\OneTimeDeductionDetailMapper;
 use Illuminate\Support\Facades\Auth;
 use App\Mappers\TimeKeepingMapper\PayrollPeriodMapper;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Excel\OneTimeDeduction;
+use Illuminate\Support\Facades\Storage;
 
 class OneTimeDeductionController extends Controller
 {
@@ -15,13 +18,15 @@ class OneTimeDeductionController extends Controller
     private $header;
     private $detail;   
     private $payperiod;
+    private $excel;
  
 
-    public function __construct(OneTimeDeductionHeaderMapper $header,OneTimeDeductionDetailMapper $detail,PayrollPeriodMapper $payperiod)
+    public function __construct(OneTimeDeductionHeaderMapper $header,OneTimeDeductionDetailMapper $detail,PayrollPeriodMapper $payperiod,OneTimeDeduction $excel)
     {
         $this->header = $header;
         $this->detail = $detail;        
         $this->payperiod = $payperiod;    
+        $this->excel = $excel;
     }
 
     public function index()
@@ -143,6 +148,59 @@ class OneTimeDeductionController extends Controller
 		}
 
         return response()->json($result);
+    }
+
+    public function download(Request $request)
+    {
+        $header_id = $request->id;
+        $result = $this->detail->list($header_id);
+
+        // return view('app.deductions.one-time.export',['data' => $result,'header_id'=>$header_id]);
+
+        $this->excel->setValues($result,$header_id);
+        return Excel::download($this->excel,'OneTimeDeduction'.$header_id.'.xlsx');
+
+    }
+
+    public function upload(Request $request)
+    {
+        $header_id = $request->header_id;
+        $file = $request->file('files');
+
+        $logs = [];
+        $dtr = [];
+
+        $path = Storage::disk('local')->put('uploads',$file);
+       
+        $thisFile = Storage::get($path);
+        $content = explode("\n",mb_convert_encoding($thisFile, 'UTF-8', 'UTF-8'));
+
+        foreach($content as $line)
+        {
+			$data = str_getcsv($line,",");
+
+            if($data[0] == $header_id){
+                if(array_key_exists(3,$data)){
+
+                    
+                    if($data[3] != 0 && $data[3] != '')
+                    {
+                        array_push($logs,[
+                            'header_id' => $header_id,
+                            'biometric_id' => $data[1],
+                            'amount' => $data[3]
+                        ]);
+                    }
+                }else {
+                    dd($data);
+                }
+            }
+
+        }
+
+       $result = $this->detail->uploadCSV($logs,$header_id);
+
+       return response()->json($result);
     }
 }
 

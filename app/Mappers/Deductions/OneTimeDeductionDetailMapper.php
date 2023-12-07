@@ -53,10 +53,20 @@ class OneTimeDeductionDetailMapper extends AbstractMapper {
             $query->whereNull('header_id');
             $query->where('employee_names_vw.exit_status',1);
         })
-        ->orderBy('lastname')
-        ->orderBy('firstname');
+        ->whereIn('pay_type',[1,2])
+        ->orderByRaw('trim(employees.lastname) ASC')
+        ->orderByRaw('trim(employees.firstname) ASC');
+        // ->orderBy('employees.firstname','ASC');
 
         return $result->get();
+    }
+
+    public function uploadCSV($logs,$header_id)
+    {
+        $delete = $this->model->where('header_id',$header_id)->delete();
+        $result = DB::table('deduction_onetime_details')->insertOrIgnore($logs);
+
+        return $result;
     }
 
    

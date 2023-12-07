@@ -27,9 +27,10 @@
                         }
                     
                     });
-                    e.data = {
-                        period_id : 11
-                    };
+
+                    // e.data = {
+                    //     period_id : 11
+                    // };
                 }
             }
             //e.data = { dropdownlist: $("#dropdownlist").val(), docnumber: $("#docnumber").val() };
