@@ -27,10 +27,11 @@ class EmployeeReportController extends Controller
 
     public function generate(Request $request)
     {
+        
         $filter = [
-            'division' =>  $request->input('divison'),
+            'division' =>  $request->input('division'),
         ];
-
+        
         $result = $this->emp_mapper->generateReport($filter);
 
         //return view('app.reports.employee-reports.employee-list',['data' => $result]);
