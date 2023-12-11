@@ -129,6 +129,7 @@ class EmployeeMapper extends AbstractMapper {
 
 		$result->where('pay_type','<>',3);
 		$result->where('exit_status','=',1);
+		$result->where('job_title_id','<>',130);
 
 		$result->orderBy('lastname','asc');
 		$result->orderBy('firstname','asc');
@@ -152,6 +153,7 @@ class EmployeeMapper extends AbstractMapper {
 
 		$result->where('pay_type','=',3);
 		$result->where('exit_status','=',1);
+		$result->where('job_title_id','<>',130);
 
 		$result->orderBy('lastname','asc');
 		$result->orderBy('firstname','asc');
