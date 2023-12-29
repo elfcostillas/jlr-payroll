@@ -170,7 +170,9 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
     public function postPayroll($period_id)
     {
         $user = Auth::user();
-        $result = $this->model->select()->from('payrollregister_unposted_weekly')->where('period_id',$period_id)->get()->toArray();
+        $result = $this->model->select()->from('payrollregister_unposted_weekly')
+        ->where('user_id',$user->id)
+        ->where('period_id',$period_id)->get()->toArray();
         $tmp_array = [];
         $comp_array = [];
         
