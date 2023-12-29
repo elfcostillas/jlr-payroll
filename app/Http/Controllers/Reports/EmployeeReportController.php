@@ -30,6 +30,7 @@ class EmployeeReportController extends Controller
         
         $filter = [
             'division' =>  $request->input('division'),
+            'department'=> $request->input('department'),
         ];
         
         $result = $this->emp_mapper->generateReport($filter);

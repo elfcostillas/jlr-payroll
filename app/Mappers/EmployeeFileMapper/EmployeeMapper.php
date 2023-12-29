@@ -127,6 +127,10 @@ class EmployeeMapper extends AbstractMapper {
 			$result = $result->where('division_id',$filter['division']);
 		}
 
+		if($filter['department']!=0 && $filter['department']!='' ){
+			$result = $result->where('dept_id',$filter['department']);
+		}
+
 		$result->where('pay_type','<>',3);
 		$result->where('exit_status','=',1);
 		$result->where('job_title_id','<>',130);

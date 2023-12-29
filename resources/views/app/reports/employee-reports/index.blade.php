@@ -71,13 +71,13 @@
                             <table class="formTable" border=0 style="width:100%">
                                 <tr>
                                     <td colspan=2>Division</td>
-                                    {{-- <td colspan=2>Department</td> --}}
+                                    <td colspan=2>Department</td>
                                     <td colspan=2></td>
                                 </tr>
                                 <tr>
                                     
                                     <td colspan=2><input type="text" id="division_id" data-bind="value:form.model.division_id" ></td>
-                                    {{-- <td colspan=2><input type="text" id="dept_id" ></td> --}}
+                                    <td colspan=2><input type="text" id="dept_id" ></td>
                                     <td colspan=2></td>
                                     <td colspan=2></td>
                                 </tr>

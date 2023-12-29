@@ -21,6 +21,7 @@ class PayrollRegisterWeeklyController extends Controller
     private $employee;
     private $period;
     private $mapper;
+    private $excel;
 
     public function __construct(EmployeeWeeklyMapper $employee,PayrollPeriodWeeklyMapper $period,UnpostedPayrollRegisterWeeklyMapper $mapper,UnpostedPayrollRegisterWeekly $excel)
     {

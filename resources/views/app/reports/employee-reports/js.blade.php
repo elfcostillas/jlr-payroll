@@ -80,7 +80,13 @@
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
-                                    
+                                    // viewModel.ds.division.add({
+                                    //     "id": 99,
+                                    //     "div_code": "QA",
+                                    //     "div_name": "QA"
+                                    // });
+
+                                    // console.log('im here');
                                 }
                             },
                         },
@@ -167,7 +173,8 @@
             {
               
                 let div =  $("#division_id").data("kendoDropDownList").value();
-                let url = `employee-report/generate?division=${div}`;
+                let dept =  $("#dept_id").data("kendoDropDownList").value();
+                let url = `employee-report/generate?division=${div}&department=${dept}`;
                 window.open(url);
             }
 
@@ -175,7 +182,8 @@
             {
                
                 let div =  $("#division_id").data("kendoDropDownList").value();
-                let url = `employee-report/generate-weekly?division=${div}`;
+                let dept =  $("#dept_id").data("kendoDropDownList").value();
+                let url = `employee-report/generate?division=${div}&department=${dept}`;
                 window.open(url);
             }
             
