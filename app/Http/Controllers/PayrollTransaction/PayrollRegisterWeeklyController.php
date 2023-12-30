@@ -13,6 +13,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Mappers\EmployeeFileMapper\Repository\WeeklyEmployee;
 use App\Mappers\EmployeeFileMapper\Repository\SemiMonthly;
 use App\Mappers\EmployeeFileMapper\Repository\Daily;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PayrollRegisterWeeklyController extends Controller
 {
@@ -49,6 +50,7 @@ class PayrollRegisterWeeklyController extends Controller
         // }
         return response()->json($result);
     }
+
 
     public function compute(Request $request)
     {
@@ -160,6 +162,45 @@ class PayrollRegisterWeeklyController extends Controller
         return Excel::download($this->excel,'PayrollRegisterWeekly'.$period.'.xlsx');
 
         
+    }
+
+    public function downloadPdfUnposted(Request $request)
+    {
+        $period = $request->id;
+        $headers = $this->mapper->getHeaders($period)->toArray();
+        $colHeaders = $this->mapper->getColHeaders();
+
+        foreach($headers as $key => $value){
+            if($value==0){
+                unset($headers[$key]);
+            }
+        }
+
+        $period_label = $this->period->makeRange($period);
+
+        foreach($colHeaders  as  $value ){
+            //dd($value->var_name,$vaue->col_label);
+            $label[$value->var_name] = $value->col_label;
+        }
+
+        $collections = $this->mapper->getEmployees($period);
+
+        $pdf = PDF::loadView('app.payroll-transaction.payroll-register-weekly.print',[
+                'data' => $collections,
+                'headers' => $headers,
+                'label' => $label,
+                'period_label' => $period_label->drange 
+            ])->setPaper('Folio','landscape');
+
+        $pdf->output();
+        $dom_pdf = $pdf->getDomPDF();
+    
+        $canvas = $dom_pdf ->get_canvas();
+        $canvas->page_text(850, 590, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+       
+        return $pdf->stream('JLR-DTR-Print.pdf'); 
+
+
     }
 
     public function postPayroll(Request $request)

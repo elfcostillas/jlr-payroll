@@ -73,6 +73,13 @@
                         alert('view');
                     },
 
+                    pdf : function(){
+                        let period = $("#unposted_period").data("kendoDropDownList");
+                        let url = `payroll-register-weekly/pdf-unposted/${period.value()}`;
+                        window.open(url)
+                    },
+
+
                     download : function(){
                         let period = $("#unposted_period").data("kendoDropDownList");
                         let url = `payroll-register-weekly/download-unposted/${period.value()}`;

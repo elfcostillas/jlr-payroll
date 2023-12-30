@@ -453,33 +453,44 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
 
     public function getEmployees($period) /* Earnings and Deductions here */
     {   
-        $user = Auth::user();
-        $employees = $this->model->select(DB::raw("employee_names_vw.employee_name,payrollregister_unposted_weekly.*,employees.pay_type,employees.monthly_allowance as mallowance,
-        employees.daily_allowance as dallowance,IF(employees.pay_type=1,employees.basic_salary/2,employees.basic_salary) AS basicpay"))
-                                ->from("payrollregister_unposted_weekly")
-                                ->join("employees",'employees.biometric_id','=','payrollregister_unposted_weekly.biometric_id')
-                                ->join("employee_names_vw",'employee_names_vw.biometric_id','=','payrollregister_unposted_weekly.biometric_id')
-                                ->where([
-                                   
-                                    ['payrollregister_unposted_weekly.period_id','=',$period],
-                                    ['user_id','=',$user->id],
-                                   
-                                ])->orderBy('employees.pay_type','DESC')->orderBy('employee_names_vw.employee_name','ASC')->get();
-        foreach($employees as $employee)
-        {   
-            $employee->otherEarnings = $this->otherEarnings($employee->biometric_id,$period);
-            $employee->gov_deductions = collect(
-                [
-                    'SSS Premium' => 0,
-                    'SSS WISP' => 0,
-                    'PhilHealt Premium' => 0,
-                    'PAG IBIG Contri' => 0,
-                ]
-            );
-        
+
+        $locations = DB::table('locations')->get();
+
+        foreach($locations as $location)
+        {
+            
+            $user = Auth::user();
+            $employees = $this->model->select(DB::raw("dept_code,job_title_name,employee_names_vw.employee_name,payrollregister_unposted_weekly.*,employees.pay_type,employees.monthly_allowance as mallowance,
+            employees.daily_allowance as dallowance,IF(employees.pay_type=1,employees.basic_salary/2,employees.basic_salary) AS basicpay"))
+                                    ->from("payrollregister_unposted_weekly")        
+                                    ->join("employees",'employees.biometric_id','=','payrollregister_unposted_weekly.biometric_id')
+                                    ->join("employee_names_vw",'employee_names_vw.biometric_id','=','payrollregister_unposted_weekly.biometric_id')
+                                    ->leftJoin('departments','departments.id','=','employees.dept_id')
+                                    ->leftJoin('job_titles','employees.job_title_id','=','job_titles.id')
+                                    ->where([
+                                        ['location_id','=',$location->id],
+                                        ['payrollregister_unposted_weekly.period_id','=',$period],
+                                        ['user_id','=',$user->id],
+                                    
+                                    ])->orderBy('employees.pay_type','DESC')->orderBy('employee_names_vw.employee_name','ASC')->get();
+            foreach($employees as $employee)
+            {   
+                $employee->otherEarnings = $this->otherEarnings($employee->biometric_id,$period);
+                $employee->gov_deductions = collect(
+                    [
+                        'SSS Premium' => 0,
+                        'SSS WISP' => 0,
+                        'PhilHealt Premium' => 0,
+                        'PAG IBIG Contri' => 0,
+                    ]
+                );
+            
+            }
+
+            $location->employees = $employees;
         }
-                           
-        return $employees;
+                   
+        return $locations;
     }
 
     public function otherEarnings($biometric_id,$period_id)

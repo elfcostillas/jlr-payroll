@@ -81,7 +81,7 @@
     <h4> Payroll Register - Weekly <h4>
 @endsection
 @section('content')
-    <div class="container">
+    <div class="">
         <div id="viewModel" >
             <div class="row">
                 <div class="col-md-6">
@@ -90,21 +90,22 @@
                         <div class="card-body"> 
                         <table class="formTable" border=0 style="width:100%">
                             <tr>
-                                <td colspan=4>Payroll Period</td>
+                                <td colspan=5>Payroll Period</td>
                             </tr>
                             <tr>
-                                <td colspan=2 > <input type="text" id="unposted_period"></td>
+                                <td colspan=2 > <input style ="width:220px" type="text" id="unposted_period"></td>
                                 <td></td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td colspan=4>&nbsp;</td>
+                                <td colspan=5>&nbsp;</td>
                             </tr>
                             <tr>
-                                <td> <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base fixwidth" data-bind="click : buttonHandler.compute"> Compute</button> </td>
-                                <td> <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base fixwidth" data-bind="click : buttonHandler.view"> View</button> </td>
-                                <td> <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base fixwidth" data-bind="click : buttonHandler.download"> Download Excel</button> </td>
-                                <td> <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base fixwidth" data-bind="click : buttonHandler.post"> Post</button> </td>
+                                <td style="text-align:center;" > <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base fixwidth" data-bind="click : buttonHandler.compute"> Compute</button> </td>
+                                <td style="text-align:center;" > <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base fixwidth" data-bind="click : buttonHandler.view"> View</button> </td>
+                                <td style="text-align:center;" > <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base fixwidth" data-bind="click : buttonHandler.download"> Download Excel</button> </td>
+                                <td style="text-align:center;" > <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base fixwidth" data-bind="click : buttonHandler.pdf"> PDF</button> </td>
+                                <td style="text-align:center;" > <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base fixwidth" data-bind="click : buttonHandler.post"> Post</button> </td>
                             </tr>
                             
                         </table>
