@@ -838,6 +838,8 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                     }
 
                     $rec->over_time = $cot;
+                } else {
+                    $rec->over_time = 0;
                 }
 
                 switch($rec->holiday_type)

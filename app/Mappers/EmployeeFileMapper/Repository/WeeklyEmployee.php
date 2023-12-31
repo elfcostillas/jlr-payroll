@@ -431,7 +431,7 @@ class WeeklyEmployee
                
                 $this->payreg['gross_total'] += $other_earn['earnings'] + $other_earn['retro_pay'];
               
-                $this->payreg['total_deduction'] =  $other_earn['deductions'];
+                $this->payreg['total_deduction'] =  $other_earn['deductions'] + $other_earn['canteen'];
             }
         }
     }

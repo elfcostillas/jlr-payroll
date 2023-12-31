@@ -98,6 +98,8 @@
                                     earnings : { type: 'number', },
                                     deductions : { type: 'number', },
                                     retro_pay : { type: 'number', },
+                                    canteen : { type: 'number', },
+                                    remarks : { type: 'string', },
                                 }
                             }
                         }
@@ -118,7 +120,7 @@
                         var myWindow = $("#pop");
                        
                         myWindow.kendoWindow({
-                            width: "810", //1124 - 1152
+                            width: "1124", //1124 - 1152
                             height: "700",
                             title: "Weekly Empolyees - Other Income & Dedictions",
                             visible: false,
@@ -237,6 +239,24 @@
                             style : "text-align:right"
                         },
                         template : "# if(deductions==0){#  #} else{# #= kendo.toString(deductions,'n2') #  #}#",
+                    },
+                    {
+                        title : "Canteen",
+                        field : "canteen",
+                        width : 130,
+                        attributes : {
+                            style : "text-align:right"
+                        },
+                        template : "# if(canteen==0){#  #} else{# #= kendo.toString(canteen,'n2') #  #}#",
+                    },
+                    {
+                        title : "Remarks",
+                        field : "remarks",
+                        width : 220,
+                        attributes : {
+                            // style : "text-align:right"
+                        },
+                        // template : "# if(deductions==0){#  #} else{# #= kendo.toString(deductions,'n2') #  #}#",
                     }
                 ]
             });

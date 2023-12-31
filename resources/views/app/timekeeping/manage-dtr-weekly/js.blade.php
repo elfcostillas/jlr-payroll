@@ -95,10 +95,34 @@
                             parameterMap : function(data,type)
                             {
                                 console.log(type);
-                                if(type=='update'){
+                                if(type=='update' || type=='create'){
                                     $.each(data.models,function(index,value){
                                         value.dtr_date =  kendo.toString(value.dtr_date,'yyyy-MM-dd')
+
+                                        if(value.time_in!=null){
+                                        
+                                            value.time_in = pad(value.time_in,4);
+                                            value.time_in = (value.time_in.includes(':')) ? value.time_in : value.time_in.substring(0,2)+':'+ value.time_in.substring(2,4);
+                                        }
+
+                                        if(value.time_out!=null){
+                                            value.time_out = pad(value.time_out,4);
+                                            value.time_out = (value.time_out.includes(':')) ? value.time_out : value.time_out.substring(0,2)+':'+ value.time_out.substring(2,4);
+                                        }
+
+                                        if(value.ot_in!=null){
+                                            value.ot_in = pad(value.ot_in,4);
+                                            value.ot_in = (value.ot_in.includes(':')) ? value.ot_in : value.ot_in.substring(0,2)+':'+ value.ot_in.substring(2,4);
+                                        }
+
+                                        if(value.ot_out!=null){
+                                            value.ot_out = pad(value.ot_out,4);
+                                            value.ot_out = (value.ot_out.includes(':')) ? value.ot_out : value.ot_out.substring(0,2)+':'+ value.ot_out.substring(2,4);
+                                        }
+
                                     });
+
+                                    
                                 }
                                 return data;
                             }
@@ -521,6 +545,7 @@
                         },    
                         template : "# if(time_in=='00:00'||time_in==null){#  #} else{# #= time_in #  #}#",
                         locked : true,
+                        editor : timeEditor
                     },
                     {
                         title : "Time Out",
@@ -536,6 +561,7 @@
                         },
                         template : "# if(time_out=='00:00'||time_out==null){#  #} else{# #= time_out #  #}#",
                         locked : true,
+                        editor : timeEditor
                     },
                     {
                         title : "Days",
@@ -628,10 +654,12 @@
                             style: "font-size: 9pt;text-align:center"
                             
                         },
+                        template : "# if(ot_in=='00:00'||ot_in==null){#  #} else{# #= ot_in #  #}#",
                         headerAttributes: {
                             style: "font-size: 9pt;text-align:center"
                             
-                        }    
+                        },
+                        editor : timeEditor
                     },
                     {
                         title : "OT Out",
@@ -644,7 +672,9 @@
                         headerAttributes: {
                             style: "font-size: 9pt;text-align:center"
                             
-                        }    
+                        },
+                        template : "# if(ot_out=='00:00'||ot_out==null){#  #} else{# #= ot_out #  #}#",
+                        editor : timeEditor
                     },
                     {
                         title : "Reg OT",
@@ -1171,6 +1201,28 @@
                 $('<input name="' + options.field + '"/>')
                 .appendTo(container)
                 .kendoTextBox({
+               
+                });
+            }
+
+            function timeEditor(container, options){
+                $('<input name="' + options.field + '"/>')
+                .appendTo(container)
+                .kendoTextBox({
+                    change : function(e){
+                        // console.log(this);//
+                        let time = this.value();
+
+                        // console.log(time);
+
+                        let grid = $("#dtrgrid").data("kendoGrid");
+                        let selectedRow = grid.dataItem(grid.select());
+
+                        let vtext = pad(time,4);
+                        vtext = (vtext.includes(':')) ? vtext : vtext.substring(0,2)+':'+ vtext.substring(2,4);
+                                        
+                        selectedRow.set(options.field,vtext);
+                    }
                
                 });
             }

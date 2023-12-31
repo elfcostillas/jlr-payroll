@@ -538,6 +538,8 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::get('compute/{id}',[PayrollRegisterController::class,'compute']);
         Route::get('download-unposted/{id}',[PayrollRegisterController::class,'downloadExcelUnposted']);
         Route::post('post',[PayrollRegisterController::class,'postPayroll']);
+
+        
         
     }); 
     //PayslipController
@@ -573,6 +575,10 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::get('pdf-unposted/{id}',[PayrollRegisterWeeklyController::class,'downloadPdfUnposted']);
         Route::get('download-unposted/{id}',[PayrollRegisterWeeklyController::class,'downloadExcelUnposted']);
         Route::post('post',[PayrollRegisterWeeklyController::class,'postPayroll']);
+        Route::get('posted-payroll',[PayrollRegisterWeeklyController::class,'getPostedPeriod']);
+
+        Route::post('unpost',[PayrollRegisterWeeklyController::class,'unpost']);
+
         
     });
 

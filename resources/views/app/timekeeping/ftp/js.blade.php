@@ -67,8 +67,13 @@
                                     ftp_time : {type:"string"},
                                     ftp_state : {type:"string"},
                                     encoded_by : {type:"number"},
-                                    ftp_remarks : {type:"string"},
+                                    ftp_reason : {type:"string"},
                                     employee_name: {type:"string"},
+
+                                    time_in: {type:"string"},
+                                    time_out: {type:"string"},
+                                    ot_in: {type:"string"},
+                                    ot_out: {type:"string"},
                                     
                                 }
                             }
@@ -135,6 +140,11 @@
                 editable : "inline",
                 columns : [
                     {
+                        title : "Type",
+                        field : "ftp_remarks",
+                        width : 160,  
+                    },
+                    {
                         title : "Biometric ID",
                         field : "biometric_id",
                         width : 120,  
@@ -152,18 +162,28 @@
                         width : 120,    
                     },
                     {
-                        title : "Time",
-                        field : "ftp_time",
+                        title : "Time In",
+                        field : "time_in",
                         width : 100,    
                     },
                     {
-                        title : "Type",
-                        field : "ftp_state",
+                        title : "Time Out",
+                        field : "time_out",
+                        width : 100,    
+                    },
+                    {
+                        title : "O.T. In",
+                        field : "ot_in",
+                        width : 100,    
+                    },
+                    {
+                        title : "O.T. Out",
+                        field : "ot_out",
                         width : 100,    
                     },
                     {
                         title : "Remarks",
-                        field : "ftp_remarks",
+                        field : "ftp_reason",
                     },
                     {
                         command: { text : 'Receive',icon : 'edit' ,click : viewModel.buttonHandler.accept },

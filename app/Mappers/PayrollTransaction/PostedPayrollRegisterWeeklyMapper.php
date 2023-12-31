@@ -111,6 +111,21 @@ class PostedPayrollRegisterWeeklyMapper extends AbstractMapper {
 
         return $result;
     }
+
+    public function unpost($period_id)
+    {
+        $posting_info = DB::table('posting_info')->where([
+            ['trans_type','=','weekly'],
+            ['period_id','=',$period_id]
+        ])->delete();
+
+        $posted = DB::table('payrollregister_posted_weekly')
+                        ->where('period_id','=',$period_id)
+                        ->delete();
+
+        return array('success'=>'Payroll Period unposted successfully.');
+        
+    }
 }
 
 ?>

@@ -8,12 +8,14 @@ use App\Mappers\EmployeeFileMapper\EmployeeWeeklyMapper;
 use Illuminate\Support\Facades\Auth;
 use App\Mappers\TimeKeepingMapper\PayrollPeriodWeeklyMapper;
 use App\Mappers\PayrollTransaction\UnpostedPayrollRegisterWeeklyMapper;
+use App\Mappers\PayrollTransaction\PostedPayrollRegisterWeeklyMapper;
 use App\Excel\UnpostedPayrollRegisterWeekly;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Mappers\EmployeeFileMapper\Repository\WeeklyEmployee;
 use App\Mappers\EmployeeFileMapper\Repository\SemiMonthly;
 use App\Mappers\EmployeeFileMapper\Repository\Daily;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Mappers\PayrollTransaction\PayslipMapper;
 
 class PayrollRegisterWeeklyController extends Controller
 {
@@ -23,13 +25,17 @@ class PayrollRegisterWeeklyController extends Controller
     private $period;
     private $mapper;
     private $excel;
+    private $payslip;
+    private $posted;
 
-    public function __construct(EmployeeWeeklyMapper $employee,PayrollPeriodWeeklyMapper $period,UnpostedPayrollRegisterWeeklyMapper $mapper,UnpostedPayrollRegisterWeekly $excel)
+    public function __construct(PostedPayrollRegisterWeeklyMapper $posted,PayslipMapper $payslip,EmployeeWeeklyMapper $employee,PayrollPeriodWeeklyMapper $period,UnpostedPayrollRegisterWeeklyMapper $mapper,UnpostedPayrollRegisterWeekly $excel)
     {
         $this->employee = $employee;
         $this->period = $period;
         $this->mapper = $mapper;
         $this->excel = $excel;
+        $this->payslip = $payslip;
+        $this->posted = $posted;
     }
 
     public function index()
@@ -117,7 +123,7 @@ class PayrollRegisterWeeklyController extends Controller
 
         $nopay = $this->mapper->weeklyEmployeeNoPayroll($period);
         
-        $collections = $this->mapper->getEmployees($period);
+        $collections = $this->mapper->getEmployeesV1($period);
 
         return view('app.payroll-transaction.payroll-register-weekly.payroll-register',[
             'data' => $collections,
@@ -208,6 +214,20 @@ class PayrollRegisterWeeklyController extends Controller
     
         $result = $this->mapper->postPayroll($request->period_id);
 
+
+        return response()->json($result);
+    }
+
+    public function unpost(Request $request)
+    {
+        $result = $this->posted->unpost($request->period_id);
+
+        return response()->json($result);
+    }
+
+    public function getPostedPeriod()
+    {
+        $result = $this->payslip->getWeeklyPosytedPeriod();
 
         return response()->json($result);
     }

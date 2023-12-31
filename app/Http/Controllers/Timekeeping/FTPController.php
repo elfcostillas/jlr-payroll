@@ -7,14 +7,17 @@ use Illuminate\Http\Request;
 use App\Mappers\TimeKeepingMapper\FTPMapper;
 use Illuminate\Support\Facades\Auth;
 
+use App\Mappers\TimeKeepingMapper\FailureToPunchV2Mapper;
 class FTPController extends Controller
 {
     //
     private $mapper;
+    private $mapper2;
 
-    public function __construct(FTPMapper $mapper)
+    public function __construct(FTPMapper $mapper,FailureToPunchV2Mapper $mapper2)
     {
         $this->mapper = $mapper;
+        $this->mapper2 = $mapper2;
     }
 
     public function index()
@@ -32,8 +35,8 @@ class FTPController extends Controller
             'sort' => $request->input('sort'),
         ];
 
-        $result = $this->mapper->list($filter);
-
+        $result = $this->mapper2->list($filter);
+        
         return response()->json($result);
     }
 

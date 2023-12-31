@@ -110,14 +110,6 @@
                         }
                     ?>
 
-                    <!-- @if(array_key_exists($employee->job_title_name,$summary))
-                        @php  $summary[$employee->job_title_name] +=1; @endphp
-                       
-                    @else
-                        @php  $summary[$employee->job_title_name] =1; @endphp
-                        
-                    @endif -->
-
                 @endforeach
             </table>
 

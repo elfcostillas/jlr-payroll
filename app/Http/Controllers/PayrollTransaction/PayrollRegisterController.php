@@ -296,4 +296,6 @@ class PayrollRegisterController extends Controller
         
         //$position = $this->employee->getPosition();
     }
+
+
 }

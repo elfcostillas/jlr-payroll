@@ -116,6 +116,7 @@
                                             });	
 
                                             viewModel.ds.unposted.read();
+                                            viewModel.ds.posted.read();
                                         }
                                         else {
                                             custom_error(data.error);
@@ -124,6 +125,47 @@
                                 }
                             });
                     },
+
+                    unpost : function (e) {
+                        let period = $("#posted_period").data("kendoDropDownList");
+
+                        Swal.fire({
+                                title: 'Unpost Payroll',
+                                text: "You won't be able to revert this!",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Finalize'
+                            }).then((result) => {
+                                if (result.value) {                       
+                                    $.post('payroll-register-weekly/unpost',{
+                                        period_id : period.value()
+                                    },function(data,status,){
+                                        //console.log(status,data);
+                                        //console.log(data.error)
+
+                                        if(data.success){
+                                            Swal.fire({
+                                            //position: 'top-end',
+                                            icon: 'success',
+                                            title: data.success,
+                                            showConfirmButton: false,
+                                            timer: 1000
+                                            });	
+
+                                            viewModel.ds.unposted.read();
+                                            viewModel.ds.posted.read();
+                                        }
+                                        else {
+                                            custom_error(data.error);
+                                        }
+                                    },'json');
+                                }
+                            });
+                    }
+
+                    
 
                 },
                 functions : {
@@ -165,6 +207,17 @@
                 //change: onChange
             });
 
+            $("#posted_period").kendoDropDownList({
+                dataTextField: "date_range",
+                dataValueField: "id",
+                dataSource: viewModel.ds.posted,
+                //index: 0,
+                autoWidth : true,
+                dataBound : function(e){
+                  
+                }
+                //change: onChange
+            });
            
 
     
