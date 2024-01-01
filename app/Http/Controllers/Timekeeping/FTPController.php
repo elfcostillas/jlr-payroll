@@ -67,6 +67,45 @@ class FTPController extends Controller
         return response()->json(['success'=>'FTP Approved.']);
     }
 
+    public function getEmployees() 
+    {
+        $result = $this->mapper2->getEmployees();
+
+        return response()->json($result);
+    }
+
+    public function save(Request $request)
+    {
+        $user = Auth::user();
+
+        $data = json_decode($request->data);
+
+        $data_arr = (array) $data;
+        
+
+        $data_arr['created_by'] = $user->id;
+        $data_arr['created_on'] = now(); 
+
+        if($data_arr['id']==null || $data_arr['id']==0 || $data_arr['id']=='')
+        {
+            $result = $this->mapper2->insertValid($data_arr);
+        }else {
+            $result = $this->mapper2->updateValid($data_arr);
+        }
+
+        if(is_object($result)){
+			return response()->json($result)->setStatusCode(500, 'Error');
+		}
+
+        return response()->json($result);
+    }
+
+    function readByID(Request $request)
+    {
+        $result = $this->mapper2->find($request->id);
+        return response()->json($result);
+    }
+
 
 
 

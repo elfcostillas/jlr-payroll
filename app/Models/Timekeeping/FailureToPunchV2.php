@@ -16,7 +16,7 @@ class FailureToPunchV2 extends Model
 
     protected $fillable = [
         'id',
-        'biomeric_id',
+        'biometric_id',
         'ftp_date',
         'ftp_type',
         'ftp_reason',

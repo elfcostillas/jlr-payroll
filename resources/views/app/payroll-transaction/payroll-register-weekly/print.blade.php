@@ -12,7 +12,7 @@
         .pr4{
             text-align : right;
             padding-right : 4px;
-            width: 50px;
+            width: 55px;
         }
     </style>
 </head>
@@ -70,6 +70,8 @@
                             @php $colspan++; @endphp
                         @endforeach
                         <th  >Gross Pay</th>
+                        <th> PPE </th>
+                        <th> Canteen </th>
                         <th  >Total Deduction</th>
                         <th  >Net Pay</th>
                     
@@ -97,7 +99,8 @@
                             <td class="pr4"  style="text-align:right;">{{ ($employee->$key > 0) ? number_format($employee->$key,2) : '' }}</td>
                         @endforeach
                         <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($employee->gross_total > 0) ? number_format($employee->gross_total,2) : '' }}</td>
-
+                        <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['deductions']>0) ? number_format($employee->otherEarnings['deductions'],2) : ''; }}</td>
+                        <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['canteen']>0) ? number_format($employee->otherEarnings['canteen'],2) : ''; }}</td>
                         <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;" >{{ ($employee->total_deduction>0) ? number_format($employee->total_deduction,2) : ''; }}</td>
                         <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:double;{{ ($employee->net_pay < ($employee->gross_total*0.3)) ? 'color:red'  : '' }};" >{{ ($employee->net_pay>0) ? number_format($employee->net_pay,2) :  number_format($employee->net_pay,2) }}</td>
                     </tr>
@@ -120,30 +123,34 @@
     @endforeach
 
     <?php  $total = 0; ?>
-    <table border=1 style="border-collapse:collapse; width:200;  float:left;margin-right:12px;">
-        <tr>
-            <td colspan=2> No of Employees</td> 
 
-            @foreach($data as $loc)
-                <tr>
-                    <td style="padding:2px;width:180px" >{{ $loc->location_name }}</td>
-                    <td style="padding-right:5px;text-align:right;" >{{ $loc->employees->count() }} </td>
-                </tr>
-                {{$total += $loc->employees->count(); }}
-            @endforeach
+    
+        <table border=1 style="border-collapse:collapse; width:200;  float:left;margin-right:12px;">
             <tr>
-                <td>TOTAL</td>
-                <td style="padding-right:5px;text-align:right;" >{{ $total }}</td>
-            </tr>
-        </tr>
-    </table>
+                <td colspan=2> No of Employees</td> 
 
-    @foreach($data as $loc)
-        <?php
-            $locTotal = 0;
-        ?>
-         
-            <table border=1 style="border-collapse:collapse; width:200px; float:left;margin-right:12px;">
+                @foreach($data as $loc)
+                    <tr>
+                        <td style="padding:2px;width:180px" >{{ $loc->location_name }}</td>
+                        <td style="padding-right:5px;text-align:right;" >{{ $loc->employees->count() }} </td>
+                    </tr>
+                    {{$total += $loc->employees->count(); }}
+                @endforeach
+                <tr>
+                    <td>TOTAL</td>
+                    <td style="padding-right:5px;text-align:right;" >{{ $total }}</td>
+                </tr>
+            </tr>
+        </table>
+
+        @foreach($data as $loc)
+            <?php
+                $locTotal = 0;
+            ?>
+            
+
+        
+            <table border=1 style="page-break-inside:avoid;border-collapse:collapse; width:200px; float:left;margin-right:12px;">
             <tr>
                 <td colspan=3 style="padding:2px;width:180px" >{{ $loc->location_name }}</td>
             </tr>
@@ -159,7 +166,7 @@
                                 </tr>
                             @endforeach
                         @endif
-                      
+                        
 
                     @endforeach
                 @endif
@@ -168,12 +175,8 @@
                     <td style="width:30px;padding-right:5px;text-align:right;" >{{ $locTotal }} </td>
                 </tr>
             </table>
-       
-          
 
-          
-     
-    @endforeach
+        @endforeach
 
   
 </body>
