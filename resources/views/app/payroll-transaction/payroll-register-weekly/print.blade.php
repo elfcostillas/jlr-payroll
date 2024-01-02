@@ -42,7 +42,10 @@
 
         @if($location->employees->count()>0)
 
-           
+            <?php 
+                $location_total = 0;
+                $location_gtotal = 0; 
+            ?>
 
             <table border=1  style="width:100%;border-collapse:collapse;margin-bottom:6px;" class="btable">
                 <tr>
@@ -78,7 +81,18 @@
                     </tr>
                 </thead>
                 @foreach($location->employees as $employee)
-                    <tr>
+
+                    <?php
+                        if($employee->retired =='Y'){
+                            $stylee = '#BBC3CC;';
+                        }else {
+                            $stylee = 'white';
+                        }
+
+                       
+                    ?>
+                    
+                    <tr style="background-color:{{$stylee}};">
                         <td style="text-align:right;width:30px;padding-right:6px;" >{{ $ctr++ }}</td>
                         <td style="width:60px" > {{ $employee->dept_code }}</td>
                         <td style="width:90px" > {{ $employee->job_title_name }}</td>
@@ -106,14 +120,27 @@
                     </tr>
 
                     <?php
+
                         if(isset($summary[$employee->dept_code][$employee->job_title_name])){
                             $summary[$employee->dept_code][$employee->job_title_name] += 1;
                         }else {
                             $summary[$employee->dept_code][$employee->job_title_name] = 1;
                         }
+
+                        $location_total += $employee->gross_total;
+                        $location_gtotal += $employee->net_pay;
                     ?>
 
                 @endforeach
+                <tr>
+                    <td colspan = 13 ></td>
+                    <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_total > 0) ? number_format($location_total,2) : '' }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_gtotal > 0) ? number_format($location_gtotal,2) : '' }}</td>
+                   
+                </tr>
             </table>
 
         @endif
