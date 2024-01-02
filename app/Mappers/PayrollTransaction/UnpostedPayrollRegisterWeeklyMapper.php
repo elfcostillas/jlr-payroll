@@ -270,7 +270,8 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
                         sum(dblhol_rdnd) as dblhol_rdnd,
                         sum(dblhol_nd) as dblhol_nd,
                         sum(dblhol_ndot) as dblhol_ndot,
-                        sum(dblhol_rdndot) as dblhol_rdndot
+                        sum(dblhol_rdndot) as dblhol_rdndot,
+                        retired
                         "))
                     ->from('edtr')
                     ->join('payroll_period_weekly',function($join){
@@ -285,6 +286,7 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
                     // ->where('time_in','!=','00:00')
                     // ->where('time_out','!=','00:00')
                     ->where('ndays','>',0)
+                    // ->where('employees.biometric_id','=',897)
                     ->groupBy(DB::raw('
                                 payroll_period_weekly.id,
                                 employees.biometric_id,
@@ -300,6 +302,7 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
                                 hdmf_contri,
                                 monthly_allowance,
                                 daily_allowance'));
+                    // ->havingRaw('SUM(ndays) > ?', [0]);
                                 
             if($emp_level=='non-confi')
             {

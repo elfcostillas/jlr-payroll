@@ -50,7 +50,8 @@ class Employee extends Model
         'daily_allowance',
         'monthly_allowance',
         'sched_mtwtf',
-        'sched_sat'
+        'sched_sat',
+        'retired'
 
     ];
 

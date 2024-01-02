@@ -119,6 +119,7 @@ class WeeklyEmployee
         'actual_reghol' => 0.0,
         'actual_sphol' => 0.0,
         'actual_dblhol' => 0.0,
+   
         // 'earnings'=> 0.0,
         // 'retro_pay'=> 0.0,
 
@@ -165,7 +166,12 @@ class WeeklyEmployee
         
         //dd($this->rates['hourly_rate']);
         /* Regular Days */
-        $this->payreg['reg_ot_amount'] = round(($this->rates['hourly_rate'] * 1.0) * $this->payreg['reg_ot'],2);
+        if($this->data['retired']=='Y'){
+            $this->payreg['reg_ot_amount'] = round(($this->rates['hourly_rate'] * 1.25) * $this->payreg['reg_ot'],2);
+        }else{
+            $this->payreg['reg_ot_amount'] = round(($this->rates['hourly_rate'] * 1.0) * $this->payreg['reg_ot'],2);
+        }
+        
         // $this->payreg['reg_nd_amount'] = round(($this->rates['hourly_rate'] * 0.1) * $this->payreg['reg_nd'],2);
         // $this->payreg['reg_ndot_amount'] = round(($this->rates['hourly_rate'] * 0.1 * 1.25) * $this->payreg['reg_ndot'],2);
 
@@ -352,10 +358,12 @@ class WeeklyEmployee
             //dd($this->data);
             $this->rates["daily_rate"] = $this->data['basic_salary'] ;//+ $this->data['daily_allowance'];
             $this->rates["hourly_rate"] = (float) round(($this->rates['daily_rate'] + $this->data['daily_allowance'])/8,4);
+           
         }else{
             $this->rates["daily_rate"] = (float) round(($this->data['basic_salary']*12)/313,4);
             $this->rates["hourly_rate"] = (float) round($this->rates['daily_rate']/8,4);
         }
+        
     }
 
     public function setPhilRate($rate){
