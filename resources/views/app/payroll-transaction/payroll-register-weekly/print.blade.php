@@ -46,7 +46,7 @@
 
             <table border=1  style="width:100%;border-collapse:collapse;margin-bottom:6px;" class="btable">
                 <tr>
-                    <td colspan=16 > {{ $location->location_name }}</td>  
+                    <td colspan=18 > {{ $location->location_name }}</td>  
                 </tr>
                 <thead>
                     <tr>

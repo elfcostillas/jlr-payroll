@@ -280,10 +280,11 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
                     ->where('payroll_period_weekly.id','=',$period_id)
                     ->whereIn('pay_type',[3])
                     ->where('exit_status',1)
-                    ->whereNotNull('time_in')
-                    ->whereNotNull('time_out')
-                    ->where('time_in','!=','00:00')
-                    ->where('time_out','!=','00:00')
+                    // ->whereNotNull('time_in')
+                    // ->whereNotNull('time_out')
+                    // ->where('time_in','!=','00:00')
+                    // ->where('time_out','!=','00:00')
+                    ->where('ndays','>',0)
                     ->groupBy(DB::raw('
                                 payroll_period_weekly.id,
                                 employees.biometric_id,
