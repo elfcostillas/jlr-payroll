@@ -29,6 +29,32 @@ class LeaveReportsMapper extends AbstractMapper {
         return $result;    
     } 
 
+    public function getLeavesByPayType($from,$to)
+    {
+        //SELECT id, pay_description FROM emp_pay_types;
+
+        $paytype = DB::table('emp_pay_types')->select('id','pay_description')->get();
+
+        foreach($paytype as $type)
+        {
+            $query = "SELECT leave_request_header.biometric_id,employee_name,leave_request_header.remarks,leave_type,DATE_FORMAT(leave_date,'%m/%d/%Y') AS mask_leave_date,leave_request_detail.* FROM leave_request_header 
+            INNER JOIN leave_request_detail ON leave_request_header.id = leave_request_detail.header_id
+            INNER JOIN employee_names_vw ON leave_request_header.biometric_id = employee_names_vw.biometric_id
+            INNER JOIN employees on leave_request_header.biometric_id = employees.biometric_id
+            WHERE is_canceled = 'N' AND  document_status = 'POSTED' AND received_by IS NOT NULL and acknowledge_status = 'Approved'
+
+            AND leave_date between '".$from."' and '".$to."'
+            AND pay_type = ".$type->id."
+            ORDER BY leave_date ASC,employee_name;";
+    
+            $result = DB::select($query);
+
+            $type->emps = $result;
+        }
+
+        return $paytype;    
+    } 
+
     public function getLeavesSummary($from,$to)
     {
         $query = "SELECT leave_request_header.biometric_id,employee_name,SUM(IFNULL(with_pay,0)) AS with_pay,SUM(IFNULL(without_pay,0)) AS without_pay FROM leave_request_header 

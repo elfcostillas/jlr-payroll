@@ -9,6 +9,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Excel\LeavesExport;
 use App\Excel\LeaveSummaryExport;
 use App\Excel\LeaveByEmployee;
+use App\Excel\LeavesByPayType;
 use Carbon\Carbon;
 
 class LeaveReportsController extends Controller
@@ -18,13 +19,15 @@ class LeaveReportsController extends Controller
     private $excel;
     private $summary;
     private $byEmployee;
+    private $byPayType;
 
-    public function __construct(LeaveReportsMapper $mapper,LeavesExport $excel,LeaveSummaryExport $summary,LeaveByEmployee $byEmployee)
+    public function __construct(LeaveReportsMapper $mapper,LeavesExport $excel,LeaveSummaryExport $summary,LeaveByEmployee $byEmployee,LeavesByPayType $byPayType)
     {
         $this->mapper = $mapper;
         $this->excel = $excel;
         $this->summary = $summary;
         $this->byEmployee = $byEmployee;
+        $this->byPayType = $byPayType;
     }
 
     public function index()
@@ -43,6 +46,18 @@ class LeaveReportsController extends Controller
         $this->excel->setValues($result);
         return Excel::download($this->excel,'EmployeeLeaves.xlsx');
         //return view('app.reports.leave-reports.excel',['result' => $result]);
+    }
+
+    public function getLeavesByPayType(Request $request)
+    {
+
+        $from = $request->from;
+        $to = $request->to;
+
+        $result = $this->mapper->getLeavesByPayType($from,$to);
+
+        $this->byPayType->setValues($result);
+        return Excel::download($this->byPayType,'EmployeeLeavesByPayType.xlsx');
     }
 
     public function getLeavesFromToWeb(Request $request)

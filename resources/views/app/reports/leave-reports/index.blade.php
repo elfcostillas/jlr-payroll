@@ -87,6 +87,10 @@
                                     <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.view'><i class="fas fa-table"></i> View Page</button></td>
                                     <td><button type="button" class="btn btn-block btn-warning btn-sm" data-bind='click:buttonHandler.leaveByEmployeeConfi'><i class="fas fa-table"></i> Confi </button></td>
                                 </tr>
+                                <tr>
+                                    <td colspan=2></td>
+                                    <td> <button type=button class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.dailyMonthly'> Daily / Monthly  </button> </td>
+                                </tr>
                               
                             </table>
                         </div>

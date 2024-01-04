@@ -482,6 +482,7 @@ Route::middleware('auth')->prefix('reports')->group(function(){
         Route::get('generate-by-employee-confi/{from}/{to}',[LeaveReportsController::class,'getLeaveByEmployeeConfi']);
 
         Route::get('view-kpi/{from}/{to}',[LeaveReportsController::class,'viewKPI']);
+        Route::get('generate-by-pay-type/{from}/{to}',[LeaveReportsController::class,'getLeavesByPayType']);
 
         //Route::get('generate',[LeaveReportsController::class,'generate']);
     });
