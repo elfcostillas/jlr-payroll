@@ -74,7 +74,7 @@ class LeaveReportsMapper extends AbstractMapper {
                     AND employees.dept_id = $department->id
                     AND employees.division_id = $division->id
                     AND leave_date between '$from' and '$to'
-                    GROUP BY leave_request_header.biometric_id
+                    GROUP BY leave_request_header.biometric_id,leave_type
                     ORDER BY leave_date ASC,employee_name;";
                     //AND leave_type != 'UL'
                     $leaves = DB::select($query);   
