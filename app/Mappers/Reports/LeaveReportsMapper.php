@@ -57,17 +57,34 @@ class LeaveReportsMapper extends AbstractMapper {
 
     public function getLeavesSummary($from,$to)
     {
-        $query = "SELECT leave_request_header.biometric_id,employee_name,SUM(IFNULL(with_pay,0)) AS with_pay,SUM(IFNULL(without_pay,0)) AS without_pay FROM leave_request_header 
-        INNER JOIN leave_request_detail ON leave_request_header.id = leave_request_detail.header_id
-        INNER JOIN employee_names_vw ON leave_request_header.biometric_id = employee_names_vw.biometric_id
-        WHERE is_canceled = 'N' AND  document_status = 'POSTED' AND received_by IS NOT NULL and acknowledge_status = 'Approved'
-        AND leave_date between '$from' and '$to'
-        GROUP BY leave_request_header.biometric_id
-        ORDER BY leave_date ASC,employee_name;";
-        //AND leave_type != 'UL'
-        $result = DB::select($query);   
 
-        return $result;  
+        $divisions = $this->model->select()->from('divisions')->get();
+
+        foreach($divisions as $division)
+        {
+            $departments = $this->model->select()->from('departments')->where('dept_div_id',$division->id)->get();
+                foreach($departments as $department)
+                {
+                $query = "SELECT leave_request_header.biometric_id,employee_name,SUM(IFNULL(with_pay,0)) AS with_pay,SUM(IFNULL(without_pay,0)) AS without_pay FROM leave_request_header 
+                    INNER JOIN leave_request_detail ON leave_request_header.id = leave_request_detail.header_id
+                    INNER JOIN employee_names_vw ON leave_request_header.biometric_id = employee_names_vw.biometric_id
+                    INNER JOIN employees on employees.biometric_id = leave_request_header.biometric_id
+                    WHERE is_canceled = 'N' AND  document_status = 'POSTED' AND received_by IS NOT NULL and acknowledge_status = 'Approved'
+                    AND employees.dept_id = $department->id
+                    AND employees.division_id = $division->id
+                    AND leave_date between '$from' and '$to'
+                    GROUP BY leave_request_header.biometric_id
+                    ORDER BY leave_date ASC,employee_name;";
+                    //AND leave_type != 'UL'
+                    $leaves = DB::select($query);   
+
+                    $department->leaves = $leaves;
+                }
+
+            $division->departments = $departments;
+        }
+    
+        return $divisions;  
     }
 
     public function getLeaveSummaryByEmployee($from,$to,$type)

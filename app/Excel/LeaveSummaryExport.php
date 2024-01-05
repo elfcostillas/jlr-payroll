@@ -31,7 +31,7 @@ class LeaveSummaryExport implements ShouldAutoSize,WithColumnFormatting,FromView
         return [
             AfterSheet::class    => function(AfterSheet $event) {
                 $sheet = $event->sheet->getDelegate();
-                $sheet->setShowGridlines(false);
+                $sheet->setShowGridlines(true);
             }
         ];    
     }
