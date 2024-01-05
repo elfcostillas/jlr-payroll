@@ -100,6 +100,35 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card card-secondary">
+                        <div class="card-header"> Employee Leaves (By Date) </div>
+                        <div class="card-body"> 
+                            <table class="formTable" border=0 style="width:100%">
+                                <tr>
+                                    <td>Date</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td> <input type="text" name="" id="on_date"> </td>
+                                    <td> </td>
+                                    <td><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.onThatDay'><i class="fas fa-download"></i> Generate</button></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>          
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-secondary">
                         <div class="card-header"> Q P I P</div>
                         <div class="card-body"> 
                             <table class="formTable" border=0 style="width:100%">

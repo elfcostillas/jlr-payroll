@@ -357,4 +357,56 @@ class LeaveReportsMapper extends AbstractMapper {
 
         return $result;
     }   
+
+    public function leaveOnDate($date)
+    {
+        /*
+        SELECT * FROM leave_request_header 
+            INNER JOIN leave_request_detail ON header_id = id
+            INNER JOIN leave_request_type ON leave_type = leave_type_code
+            INNER JOIN employees ON leave_request_header.biometric_id = employees.biometric_id
+            INNER JOIN employee_names_vw ON employee_names_vw.biometric_id = employees.biometric_id
+            WHERE leave_date = '2024-01-01' AND document_status = 'POSTED' AND acknowledge_status = 'Approved' AND is_canceled = 'N'
+            AND employees.dept_id = ;
+        */
+
+        $locations = $this->model->select()->from('locations')->get();
+
+        foreach($locations as $location)
+        {
+            $divisions = $this->model->select()->from('divisions')->get();
+
+            foreach($divisions as $division)
+            {
+                $departments = $this->model->select()->from('departments')->where('dept_div_id',$division->id)->get();
+                    foreach($departments as $department)
+                    {
+                        $leaves = $this->model->select(DB::raw("leave_request_header.*,employee_name,leave_type_desc"))
+                                        ->from('leave_request_header')
+                                        ->join('leave_request_detail','leave_request_detail.header_id','=','leave_request_header.id')
+                                        ->join('leave_request_type','leave_type','=','leave_type_code')
+                                        ->join('employees','leave_request_header.biometric_id','=','employees.biometric_id')
+                                        ->join('employee_names_vw','employee_names_vw.biometric_id','=','employees.biometric_id')
+                                        ->where('leave_date','=',$date)
+                                        ->where('document_status','=','POSTED')
+                                        ->where('acknowledge_status','=','Approved')
+                                        ->where('is_canceled','=','N')
+                                        ->whereRaw("(with_pay + without_pay) >0")
+                                        ->where('employees.location_id','=',$location->id)
+                                        ->where('employees.dept_id','=',$department->id)
+                                        ->where('employees.division_id','=',$division->id)
+                                        ->get();
+
+                        $department->leaves = $leaves;
+                    }
+
+                $division->departments = $departments;
+            }
+
+            $location->divisions = $divisions;
+        }
+
+        return $locations;
+
+    }
 }

@@ -483,6 +483,7 @@ Route::middleware('auth')->prefix('reports')->group(function(){
 
         Route::get('view-kpi/{from}/{to}',[LeaveReportsController::class,'viewKPI']);
         Route::get('generate-by-pay-type/{from}/{to}',[LeaveReportsController::class,'getLeavesByPayType']);
+        Route::get('leave-on-date/{date}',[LeaveReportsController::class,'leaveOnDate']);
 
         //Route::get('generate',[LeaveReportsController::class,'generate']);
     });

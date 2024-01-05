@@ -174,6 +174,15 @@ class LeaveReportsController extends Controller
         return view('app.reports.leave-reports.kpi-web',['divisions' => $divisions,'month' => $month,'tableData' => $tableData,'index'=>$index,'limit'=>$limit,'year'=>$from->year]);
     }
 
+    public function leaveOnDate(Request $request)
+    {
+        $date = $request->date;
+
+        $result = $this->mapper->leaveOnDate($date);
+
+        return view('app.reports.leave-reports.leave-by-date',['result' => $result]);
+    }
+
 
 }
 

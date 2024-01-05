@@ -177,6 +177,13 @@
                         let url = `leave-reports/generate-by-pay-type/${from}/${to}`;
 
                         window.open(url);
+                    },
+                    onThatDay : function()
+                    {
+                        let date = kendo.toString($('#on_date').data('kendoDatePicker').value(),'yyyy-MM-dd');
+                        let url = `leave-reports/leave-on-date/${date}`;
+
+                        window.open(url);
                     }
             
                 },
@@ -219,6 +226,10 @@
             });
 
             $("#date_to2").kendoDatePicker({
+                format: "MM/dd/yyyy"
+            });
+
+            $("#on_date").kendoDatePicker({
                 format: "MM/dd/yyyy"
             });
 
