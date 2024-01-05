@@ -77,6 +77,7 @@ class LeaveReportsController extends Controller
         $to = $request->to;
        
         $result = $this->mapper->getLeavesSummary($from,$to);
+        
         $this->summary->setValues($result);
         return Excel::download($this->summary,'EmployeeLeavesSummary.xlsx');
 

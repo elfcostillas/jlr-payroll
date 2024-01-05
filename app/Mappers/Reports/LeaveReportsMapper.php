@@ -59,15 +59,16 @@ class LeaveReportsMapper extends AbstractMapper {
     {
 
         $divisions = $this->model->select()->from('divisions')->get();
-
+        // ->join('leave_request_type','leave_type','=','leave_type_code')
         foreach($divisions as $division)
         {
             $departments = $this->model->select()->from('departments')->where('dept_div_id',$division->id)->get();
                 foreach($departments as $department)
                 {
-                $query = "SELECT leave_request_header.biometric_id,employee_name,SUM(IFNULL(with_pay,0)) AS with_pay,SUM(IFNULL(without_pay,0)) AS without_pay FROM leave_request_header 
+                $query = "SELECT leave_request_header.biometric_id,employee_name,leave_type,leave_type_desc,SUM(IFNULL(with_pay,0)) AS with_pay,SUM(IFNULL(without_pay,0)) AS without_pay FROM leave_request_header 
                     INNER JOIN leave_request_detail ON leave_request_header.id = leave_request_detail.header_id
                     INNER JOIN employee_names_vw ON leave_request_header.biometric_id = employee_names_vw.biometric_id
+                    INNER JOIN leave_request_type on leave_type = leave_type_code
                     INNER JOIN employees on employees.biometric_id = leave_request_header.biometric_id
                     WHERE is_canceled = 'N' AND  document_status = 'POSTED' AND received_by IS NOT NULL and acknowledge_status = 'Approved'
                     AND employees.dept_id = $department->id

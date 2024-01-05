@@ -31,6 +31,7 @@
                 <tr>
                     <td>Biometric ID</td>
                     <td>Name</td>
+                    <td>Leave Type</td>
                     <td>With Pay</td>
                     <td>Without Pay</td>
                 </tr>
@@ -39,6 +40,8 @@
                            
                             <td> {{ $leave->biometric_id }}  </td>
                             <td> {{ $leave->employee_name }}</td>
+                            <td> {{ $leave->leave_type_desc }}</td>
+                          
                             <td>{{ nformat($leave->with_pay) }}</td>
                             <td>{{ nformat($leave->without_pay) }}</td>
                         </tr>
