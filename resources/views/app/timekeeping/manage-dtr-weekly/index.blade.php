@@ -101,16 +101,16 @@
                     </div>
                 </div>
                 <div id="pop" style="display:none;">
-                   <table style="width:100%">
+                    <table style="width:100%">
                         <tr>
                             <td>
-                                <div style="width:924px;" id="dtrgrid"></div>
+                                <div style="width:1084px;" id="dtrgrid"></div>
                             </td>
                             <td style="width:170px;background-color: #f8f9fa;vertical-align:top;">
                                 <div style="height:300px;overflow:scrollable;" id="raw-logs"></div>
                             </td>
                         </tr>
-                   </table>
+                    </table>
                 </div>
             </div>
         </div>

@@ -346,7 +346,7 @@
                         var myWindow = $("#pop");
                         
                         myWindow.kendoWindow({
-                            width: "1124", //1124 - 1152
+                            width: "1284", //1124 - 1152
                             height: "460",
                             //title: "Employee Information",
                             visible: false,
@@ -838,7 +838,7 @@
                     {
                         title : 'Reg Hol Pay',
                         field : 'reghol_pay',
-                        width : 90,
+                        width : 85,
                         template : "# if(reghol_pay==0){#  #} else{# #= reghol_pay #  #}#",
                         attributes: {
                             style: "font-size: 9pt;text-align:center",
@@ -853,7 +853,7 @@
                         title : 'Reg Hol Hrs',
                         field : 'reghol_hrs',
                         template : "# if(reghol_hrs==0){#  #} else{# #= reghol_hrs #  #}#",
-                        width:90,
+                        width:85,
                         attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
