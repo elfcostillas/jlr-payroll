@@ -17,6 +17,21 @@
                 selectedPeriod : null,
                 selectedEmployee : null,
                 ds : {
+                
+                    locations : new kendo.data.DataSource({
+                        transport : {
+                            read : {
+                                url : '../settings/locations/get-locations',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },
+                           
+                           
+                        },
+                    }),
                     maingrid : new kendo.data.DataSource({
                         transport : {
                             read : {
@@ -185,6 +200,7 @@
                                     reghol_rdndot : { type:'number', },
                                     sphol_rdndot : { type:'number', },
                                     dblhol_rdndot  : { type:'number', },
+                                    loc_id  : { type:'number', },
 
                                     holiday_type : { type:'string', editable : false }
                                 }
@@ -495,6 +511,20 @@
                         },
                         locked : true,
                     },
+                    // {
+                    //     title : "Location",
+                    //     field : "loc_id",
+                    //     width : 80,
+                    //      attributes: {
+                    //         style: "font-size: 9pt"
+                    //     },
+                    //     headerAttributes: {
+                    //         style: "font-size: 9pt"
+                    //     },
+                    //     locked : true,
+                    //     template : "#if(data.location_name==null){# #} else {#  #=data.location_name# #}#",
+                    //     editor : location_editor
+                    // },
                     {
                         title : "Date",
                         field : "dtr_date",
@@ -805,33 +835,33 @@
                             
                     //     }, 
                     // },
-                    // {
-                    //     title : 'Reg Hol Pay',
-                    //     field : 'reghol_pay',
-                    //     width : 90,
-                    //     template : "# if(reghol_pay==0){#  #} else{# #= reghol_pay #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
+                    {
+                        title : 'Reg Hol Pay',
+                        field : 'reghol_pay',
+                        width : 90,
+                        template : "# if(reghol_pay==0){#  #} else{# #= reghol_pay #  #}#",
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
                             
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
                             
-                    //     }, 
-                    // },
-                    // {
-                    //     title : 'Reg Hol Hrs',
-                    //     field : 'reghol_hrs',
-                    //     template : "# if(reghol_hrs==0){#  #} else{# #= reghol_hrs #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
+                        }, 
+                    },
+                    {
+                        title : 'Reg Hol Hrs',
+                        field : 'reghol_hrs',
+                        template : "# if(reghol_hrs==0){#  #} else{# #= reghol_hrs #  #}#",
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
                             
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
                             
-                    //     }, 
-                    // },
+                        }, 
+                    },
                     // {
                     //     title : 'Reg Hol OT',
                     //     field : 'reghol_ot',
@@ -1190,6 +1220,32 @@
                         //console.log(e.sender.text());
                         //console.log(selectedRow.set("schedule_desc"));
                         selectedRow.set("schedule_desc",e.sender.text());
+
+                        
+                    }
+                    
+                });
+            }
+
+            function location_editor(container, options)
+            {
+                $('<input name="' + options.field + '"/>')
+                .appendTo(container)
+                .kendoDropDownList({
+                //.kendoComboBox({
+                    //autoBind: false,
+                    autoWidth: true,
+                    dataTextField: "location_name",
+                    dataValueField: "id",
+                    dataSource: viewModel.ds.locations,
+                    change : function(e)
+                    {
+                        let grid = $("#dtrgrid").data("kendoGrid");
+                        let selectedRow = grid.dataItem(grid.select());
+                        //console.log(e.sender);
+                        //console.log(e.sender.text());
+                        //console.log(selectedRow.set("schedule_desc"));
+                        selectedRow.set("location_name",e.sender.text());
 
                         
                     }

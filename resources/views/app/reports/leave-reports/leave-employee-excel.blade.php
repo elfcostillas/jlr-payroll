@@ -16,7 +16,7 @@
 ?>
 <table border=1 style="border-collapse:collapse;" >
     <tr>
-        <td style="border:1px solid black;"  >Name</td>
+        <td style="border:1px solid black;">Name</td>
         <td style="border:1px solid black;">Date</td>
         <td style="border:1px solid black;">Type</td>
         <td style="border:1px solid black;">Reason</td>

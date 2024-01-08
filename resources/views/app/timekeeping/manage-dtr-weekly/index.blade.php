@@ -104,10 +104,10 @@
                    <table style="width:100%">
                         <tr>
                             <td>
-                                <div style="width:920px;" id="dtrgrid"></div>
+                                <div style="width:924px;" id="dtrgrid"></div>
                             </td>
                             <td style="width:170px;background-color: #f8f9fa;vertical-align:top;">
-                                <div id="raw-logs"></div>
+                                <div style="height:300px;overflow:scrollable;" id="raw-logs"></div>
                             </td>
                         </tr>
                    </table>
