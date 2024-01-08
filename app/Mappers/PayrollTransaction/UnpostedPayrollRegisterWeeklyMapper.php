@@ -286,6 +286,7 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
                     // ->where('time_in','!=','00:00')
                     // ->where('time_out','!=','00:00')
                     ->where('ndays','>',0)
+                    ->orWhere('reghol_pay','>',0)
                     // ->where('employees.biometric_id','=',897)
                     ->groupBy(DB::raw('
                                 payroll_period_weekly.id,
