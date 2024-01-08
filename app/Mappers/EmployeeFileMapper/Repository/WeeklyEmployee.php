@@ -183,7 +183,7 @@ class WeeklyEmployee
 
         // /* Legal Hours */
         $this->payreg['leghol_count_amount'] =  round($this->rates['daily_rate'] * $this->payreg['leghol_count'],2);
-        // $this->payreg['leghol_hrs_amount'] = round($this->rates['hourly_rate'] * $this->payreg['leghol_hrs'],2);
+        $this->payreg['leghol_hrs_amount'] = round($this->rates['hourly_rate'] * $this->payreg['leghol_hrs'],2);
         // $this->payreg['leghol_ot_amount'] = round($this->rates['hourly_rate'] * 2 * 1.3 * $this->payreg['leghol_ot'],2);
         // $this->payreg['leghol_nd_amount'] = round($this->rates['hourly_rate'] * 2 * 0.1 * $this->payreg['leghol_nd'],2);
         // $this->payreg['leghol_rd_amount'] = round($this->rates['hourly_rate'] * 1.6 * $this->payreg['leghol_rd'],2);

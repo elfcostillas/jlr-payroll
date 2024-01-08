@@ -853,6 +853,7 @@
                         title : 'Reg Hol Hrs',
                         field : 'reghol_hrs',
                         template : "# if(reghol_hrs==0){#  #} else{# #= reghol_hrs #  #}#",
+                        width:90,
                         attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
