@@ -822,7 +822,8 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
             foreach($dtr as $rec)
             {
                
-                $rec->ndays = ($rec->time_in!='' && $rec->time_out!='' && $rec->holiday_type==NULL && $rec->time_in!='00:00' && $rec->time_out!='00:00') ? 1 : 0;
+                //$rec->ndays = ($rec->time_in!='' && $rec->time_out!='' && $rec->holiday_type==NULL && $rec->time_in!='00:00' && $rec->time_out!='00:00') ? 1 : 0;
+                $rec->ndays = ($rec->time_in!='' && $rec->time_out!='' && $rec->time_in!='00:00' && $rec->time_out!='00:00') ? 1 : 0;
                 
                 if($rec->ot_in_s > 0 && $rec->ot_out_s > 0){
                     if($rec->ot_out_s >= $rec->ot_in_s){
