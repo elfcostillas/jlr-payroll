@@ -472,12 +472,18 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
                                     ->join("employee_names_vw",'employee_names_vw.biometric_id','=','payrollregister_unposted_weekly.biometric_id')
                                     ->leftJoin('departments','departments.id','=','employees.dept_id')
                                     ->leftJoin('job_titles','employees.job_title_id','=','job_titles.id')
+                                    ->leftJoin('weekly_tmp_locations',function($join) use ($period){
+                                        $join->on('weekly_tmp_locations.biometric_id','=','employees.biometric_id');
+                                        $join->where('weekly_tmp_locations.period_id','=',$period);
+                                    })
                                     ->where([
-                                        ['location_id','=',$location->id],
+                                        // ['location_id','=',$location->id],
                                         ['payrollregister_unposted_weekly.period_id','=',$period],
                                         ['user_id','=',$user->id],
                                     
-                                    ])->orderBy('employees.pay_type','DESC')->orderBy('employee_names_vw.employee_name','ASC')->get();
+                                    ])
+                                    ->whereRaw("COALESCE(weekly_tmp_locations.loc_id,employees.location_id) = $location->id")
+                                    ->orderBy('employees.pay_type','DESC')->orderBy('employee_names_vw.employee_name','ASC')->get();
             foreach($employees as $employee)
             {   
                 $employee->otherEarnings = $this->otherEarnings($employee->biometric_id,$period);

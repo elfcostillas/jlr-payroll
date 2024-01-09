@@ -140,7 +140,7 @@ class WeeklyEmployee
 
     public function compute($period)
     {   
-       
+        
         $this->setPayRates();
         $this->payreg['daily_rate'] = $this->rates['daily_rate'];
 
@@ -239,6 +239,7 @@ class WeeklyEmployee
         $this->payreg['gross_pay'] = $this->repo->getGrossPay($this->payreg);
 
         if($this->payreg['pay_type']!='3'){
+          
             $this->computeContribution($period);
         }
         

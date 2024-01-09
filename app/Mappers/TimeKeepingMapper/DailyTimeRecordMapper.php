@@ -23,6 +23,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
     public function prepDTRbyPeriod($period_id,$type)
     {
         $blank_dtr = [];
+        $blank_loc = [];
         //LEFT JOIN work_schedules_default ON employees.dept_id = work_schedules_default.dept_id
         if($type=='semi'){
 
@@ -49,7 +50,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
 
             $range = $this->model->select('date_from','date_to')->from('payroll_period')->where('payroll_period.id',$period_id)->first();
         }else{
-            $empWithPunch = $this->model->select('employees.biometric_id','sched_mtwtf','sched_sat')->from('employees')
+            $empWithPunch = $this->model->select('employees.biometric_id','sched_mtwtf','sched_sat','location_id')->from('employees')
             //->leftJoin('edtr_raw','edtr_raw.biometric_id','=','employees.biometric_id')
             // ->join('payroll_period_weekly',function($join){
             //     //$join->whereBetween('punch_date',['payroll_period_weekly.date_from','payroll_period_weekly.date_to']);
@@ -62,7 +63,6 @@ class DailyTimeRecordMapper extends AbstractMapper {
             ->distinct()
             ->get();
             $range = $this->model->select('date_from','date_to')->from('payroll_period_weekly')->where('payroll_period_weekly.id',$period_id)->first();
-
         }
 
     
@@ -86,12 +86,22 @@ class DailyTimeRecordMapper extends AbstractMapper {
                 }
                 array_push($blank_dtr,['biometric_id' => $emp->biometric_id, 'dtr_date' => $date->format('Y-m-d'),'schedule_id' => $sched ]);
             }
-           
+
+            if($type=='weekly'){
+                array_push($blank_loc,[
+                   
+                    'biometric_id' => $emp->biometric_id,
+                    'loc_id' => $emp->location_id,
+                    'period_id' => $period_id,
+                ]);
+            }
         }
 
         $result = DB::table('edtr')->insertOrIgnore($blank_dtr);
 
-
+        if($type=='weekly'){
+            $result = DB::table('weekly_tmp_locations')->insertOrIgnore($blank_loc);
+        }
         return $result;
       
     }
@@ -112,7 +122,8 @@ class DailyTimeRecordMapper extends AbstractMapper {
                             ->distinct()
                             ->orderBy('empname','ASC');
         }else{
-            $result = $this->model->select(DB::raw("employees.id,employees.biometric_id,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) as empname"))
+           
+            $result = $this->model->select(DB::raw("employees.id,employees.biometric_id,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) as empname,weekly_tmp_locations.loc_id,location_name"))
                             ->from('edtr')
                             ->join('employees','edtr.biometric_id','=','employees.biometric_id')
                             ->join('payroll_period_weekly',function($join){
@@ -121,6 +132,11 @@ class DailyTimeRecordMapper extends AbstractMapper {
                             ->where('pay_type',3)
                             ->where('exit_status',1)
                             ->where('payroll_period_weekly.id',$period_id)
+                            ->leftJoin('weekly_tmp_locations',function($join) use ($period_id){
+                                $join->on('weekly_tmp_locations.biometric_id','=','employees.biometric_id');
+                                $join->where('weekly_tmp_locations.period_id','=',$period_id);
+                            })
+                            ->leftJoin('locations','locations.id','=','weekly_tmp_locations.loc_id')
                             ->distinct()
                             ->orderBy('empname','ASC');
         }
@@ -131,7 +147,9 @@ class DailyTimeRecordMapper extends AbstractMapper {
         if($filter['filter']!=null){
 			foreach($filter['filter']['filters'] as $f)
 			{
-				
+				if($f['field'] == 'location_name'){
+                    $result->where('location_name','like','%'.$f['value'].'%');
+                }
                 //$result->where($f['field'],'like','%'.$f['value'].'%');
                 // if($f['field']=='empname'){
                 //     $result->where('lastname','like','%'.$f['value'].'%')
@@ -845,6 +863,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
                 switch($rec->holiday_type)
                 {   
+                // work here
                  
                     case 'SH': 
                             $rec->sphol_pay = $rec->ndays;

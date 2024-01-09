@@ -59,6 +59,7 @@ use App\Http\Controllers\Compentsations\OtherIncomeWeeklyAppController;
 
 use App\Http\Controllers\Reports\TardinessReportsController;
 use App\Http\Controllers\Memo\TardinessMemoController;
+use App\Http\Controllers\Timekeeping\ManageLocationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,6 +89,16 @@ Route::get('dashboard', [DashBoardController::class,'index'])->middleware(['auth
 
 Route::middleware('auth')->prefix('timekeeping')->group(function(){
     
+    Route::prefix('manage-location')->middleware('access:timekeeping/payroll-period')->group(function(){
+        Route::get('/',[ManageLocationController::class,'index']);
+        Route::get('list',[ManageLocationController::class,'list']);
+        Route::get('get-employee-list/{period_id}',[ManageLocationController::class,'employeeList']);
+
+        Route::post('update',[ManageLocationController::class,'update']);
+
+       
+    });
+
     Route::prefix('payroll-period')->middleware('access:timekeeping/payroll-period')->group(function(){
         Route::get('/',[PayrollPeriodController::class,'index']);
         Route::get('list',[PayrollPeriodController::class,'list']);

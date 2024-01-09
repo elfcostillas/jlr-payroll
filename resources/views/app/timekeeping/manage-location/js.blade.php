@@ -17,7 +17,6 @@
                 selectedPeriod : null,
                 selectedEmployee : null,
                 ds : {
-                
                     locations : new kendo.data.DataSource({
                         transport : {
                             read : {
@@ -27,15 +26,13 @@
                                 complete : function(e){
                                     
                                 }
-                            },
-                           
-                           
-                        },
+                            }
+                        }
                     }),
                     maingrid : new kendo.data.DataSource({
                         transport : {
                             read : {
-                                url : 'payroll-period-weekly/list',
+                                url : 'manage-location/list',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -62,16 +59,24 @@
                             }
                         }
                     }),
-                    subgrid :  new kendo.data.DataSource({ //timekeeping/manage-dtr-weekly/get-employee-list/1
+                    subgrid :  new kendo.data.DataSource({ //timekeeping/manage-location/get-employee-list/1
                         transport : {
                             read : {
-                                url : 'manage-dtr-weekly/get-employee-list/0',
+                                url : 'manage-location/get-employee-list/0',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
                                     
                                 }
                             },
+                            update : {
+                                url : 'manage-location/update',
+                                type : 'post',
+                                dataType : 'json',
+                                complete : function(e){
+                                    viewModel.ds.subgrid.read();
+                                }
+                            }
                            
                         },
                         pageSize :12,
@@ -84,7 +89,10 @@
                                 id : 'id',
                                 fields : {
                                     biometric_id : { type : 'number',editable : false },
-                                    empname : { type: 'string'}
+                                    empname : { type: 'string', editable : false},
+                                    loc_id : { type: "number" },
+                                    location_name : { type: "string" },
+                                    period_id : { type: "number" },
                                 }
                             }
                         }
@@ -92,7 +100,7 @@
                     dtrgrid :  new kendo.data.DataSource({
                         transport : {
                             read : {
-                                url : 'manage-dtr-weekly/get-employee-dtr-logs/0/0',
+                                url : 'manage-location/get-employee-dtr-logs/0/0',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -100,7 +108,7 @@
                                 }
                             },
                             update : {
-                                url : 'manage-dtr-weekly/update-dtr',
+                                url : 'manage-location/update-dtr',
                                 type : 'post',
                                 dataType : 'json',
                                 complete : function (e){
@@ -110,34 +118,10 @@
                             parameterMap : function(data,type)
                             {
                                 console.log(type);
-                                if(type=='update' || type=='create'){
+                                if(type=='update'){
                                     $.each(data.models,function(index,value){
                                         value.dtr_date =  kendo.toString(value.dtr_date,'yyyy-MM-dd')
-
-                                        if(value.time_in!=null){
-                                        
-                                            value.time_in = pad(value.time_in,4);
-                                            value.time_in = (value.time_in.includes(':')) ? value.time_in : value.time_in.substring(0,2)+':'+ value.time_in.substring(2,4);
-                                        }
-
-                                        if(value.time_out!=null){
-                                            value.time_out = pad(value.time_out,4);
-                                            value.time_out = (value.time_out.includes(':')) ? value.time_out : value.time_out.substring(0,2)+':'+ value.time_out.substring(2,4);
-                                        }
-
-                                        if(value.ot_in!=null){
-                                            value.ot_in = pad(value.ot_in,4);
-                                            value.ot_in = (value.ot_in.includes(':')) ? value.ot_in : value.ot_in.substring(0,2)+':'+ value.ot_in.substring(2,4);
-                                        }
-
-                                        if(value.ot_out!=null){
-                                            value.ot_out = pad(value.ot_out,4);
-                                            value.ot_out = (value.ot_out.includes(':')) ? value.ot_out : value.ot_out.substring(0,2)+':'+ value.ot_out.substring(2,4);
-                                        }
-
                                     });
-
-                                    
                                 }
                                 return data;
                             }
@@ -200,7 +184,6 @@
                                     reghol_rdndot : { type:'number', },
                                     sphol_rdndot : { type:'number', },
                                     dblhol_rdndot  : { type:'number', },
-                                    loc_id  : { type:'number', },
 
                                     holiday_type : { type:'string', editable : false }
                                 }
@@ -226,7 +209,7 @@
                     sched : new kendo.data.DataSource({
                         transport : {
                             read : {
-                                url : 'manage-dtr-weekly/get-employee-schedules',
+                                url : 'manage-location/get-employee-schedules',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -251,10 +234,10 @@
                         let tr = $(e.target).closest("tr");
                         let data = this.dataItem(tr);
 
-                        $.post('manage-dtr-weekly/prepare',{
+                        $.post('manage-location/prepare',{
                             period_id : data.id
                         },function(){
-                            let empListUrl = `manage-dtr-weekly/get-employee-list/${data.id}`;
+                            let empListUrl = `manage-location/get-employee-list/${data.id}`;
                             viewModel.ds.subgrid.transport.options.read.url = empListUrl;
                             viewModel.ds.subgrid.read();
                         });
@@ -263,7 +246,7 @@
                         let tr = $(e.target).closest("tr");
                         let data = this.dataItem(tr);
 
-                        $.post('manage-dtr-weekly/compute-all',{
+                        $.post('manage-location/compute-all',{
                             period_id : data.id
                         },function(){
                             Swal.fire({
@@ -289,7 +272,7 @@
                             viewModel.functions.showPop(data);
                             viewModel.set('selectedEmployee',data.biometric_id);
 
-                            let rawLogsUrl = `manage-dtr-weekly/get-employee-raw-logs/${viewModel.selectedPeriod.id}/${data.biometric_id}`;
+                            let rawLogsUrl = `manage-location/get-employee-raw-logs/${viewModel.selectedPeriod.id}/${data.biometric_id}`;
                             // viewModel.ds.rawlogs.transport.options.read.url = rawLogsUrl;
                             // viewModel.ds.rawlogs.read();
                             $.get(rawLogsUrl,function(data){
@@ -298,7 +281,7 @@
                             });
 
 
-                            let dtrUrl = `manage-dtr-weekly/get-employee-dtr-logs/${viewModel.selectedPeriod.id}/${data.biometric_id}`;
+                            let dtrUrl = `manage-location/get-employee-dtr-logs/${viewModel.selectedPeriod.id}/${data.biometric_id}`;
                             viewModel.ds.dtrgrid.transport.options.read.url = dtrUrl;
                             viewModel.ds.dtrgrid.read();
 
@@ -312,7 +295,7 @@
                     drawLogs : function()
                     {
                         
-                        $.post('manage-dtr-weekly/draw-logs',{
+                        $.post('manage-location/draw-logs',{
                             period_id : viewModel.selectedPeriod.id,
                             biometric_id : viewModel.selectedEmployee
                         },function(){
@@ -322,7 +305,7 @@
                     drawLogsM : function()
                     {
                         
-                        $.post('manage-dtr-weekly/draw-logs-manual',{
+                        $.post('manage-location/draw-logs-manual',{
                             period_id : viewModel.selectedPeriod.id,
                             biometric_id : viewModel.selectedEmployee
                         },function(){
@@ -332,7 +315,7 @@
                     compute : function()
                     {
                         
-                        $.post('manage-dtr-weekly/compute-logs',{
+                        $.post('manage-location/compute-logs',{
                             period_id : viewModel.selectedPeriod.id,
                             biometric_id : viewModel.selectedEmployee
                         },function(){
@@ -346,7 +329,7 @@
                         var myWindow = $("#pop");
                         
                         myWindow.kendoWindow({
-                            width: "1284", //1124 - 1152
+                            width: "1124", //1124 - 1152
                             height: "460",
                             //title: "Employee Information",
                             visible: false,
@@ -397,22 +380,10 @@
                         template : "#= (data.date_to) ? kendo.toString(data.date_to,'MM/dd/yyyy') : ''  #",
                         
                     },
-                    // {
-                    //     title : "Man Hours",
-                    //     field : "man_hours",
-                    //     //template : "#=  : ''  #",
-                    //     width : 110,    
-                    // },
+                   
                     {
-                        command: { text : 'Prepare',click : viewModel.buttonHandler.prepare , },
-                        attributes : { style : 'font-size:10pt !important;'},
-                        width : 80
-                    },
-                    {
-                        command: { text : 'Compute All',click : viewModel.buttonHandler.computeAll , },
-                        attributes : { style : 'font-size:10pt !important;'},
-                        width : 105
-                    },
+                        width : 90
+                    }
                   
                 ],
                 change : function(e){
@@ -422,7 +393,7 @@
                     viewModel.set('selectedPeriod',selectedItem);
 
                     //console.log(selectedItem.id);
-                    let empListUrl = `manage-dtr-weekly/get-employee-list/${selectedItem.id}`;
+                    let empListUrl = `manage-location/get-employee-list/${selectedItem.id}`;
                     viewModel.ds.subgrid.transport.options.read.url = empListUrl;
                     viewModel.ds.subgrid.read();
 
@@ -448,6 +419,7 @@
                 height : 550,
                 scrollable: true,
                 selectable : true,
+                editable : 'inline',
                 columns : [
                     {
                         title : "Bio ID",
@@ -461,16 +433,20 @@
                     },
                     {
                         title : "Location",
-                        field : "location_name",
-                        filterable: {
-                            ui: cityFilter
-                        }
+                        field : "loc_id",
+                        width : 180,    
+                        template : "#=  data.location_name #",
+                        editor : locationEditor
                     },
+                    // {
+                    //     command: { text : 'Edit',click : viewModel.buttonHandler.manage },
+                    //     attributes : { style : 'font-size:10pt !important;'},
+                    //     width : 85
+                    // },
                     {
-                        command: { text : 'Edit',click : viewModel.buttonHandler.manage },
-                        attributes : { style : 'font-size:10pt !important;'},
-                        width : 85
-                    },
+                        command : ['edit'],
+                        width : 200
+                    }
                   
                 ],
                 
@@ -518,20 +494,6 @@
                         },
                         locked : true,
                     },
-                    // {
-                    //     title : "Location",
-                    //     field : "loc_id",
-                    //     width : 80,
-                    //      attributes: {
-                    //         style: "font-size: 9pt"
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt"
-                    //     },
-                    //     locked : true,
-                    //     template : "#if(data.location_name==null){# #} else {#  #=data.location_name# #}#",
-                    //     editor : location_editor
-                    // },
                     {
                         title : "Date",
                         field : "dtr_date",
@@ -582,7 +544,6 @@
                         },    
                         template : "# if(time_in=='00:00'||time_in==null){#  #} else{# #= time_in #  #}#",
                         locked : true,
-                        editor : timeEditor
                     },
                     {
                         title : "Time Out",
@@ -598,7 +559,6 @@
                         },
                         template : "# if(time_out=='00:00'||time_out==null){#  #} else{# #= time_out #  #}#",
                         locked : true,
-                        editor : timeEditor
                     },
                     {
                         title : "Days",
@@ -614,7 +574,7 @@
                             
                         },
                         aggregates : ['sum'], 
-                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n1')#</div>" 
                     },
                     {
                         title : "Late",
@@ -691,12 +651,10 @@
                             style: "font-size: 9pt;text-align:center"
                             
                         },
-                        template : "# if(ot_in=='00:00'||ot_in==null){#  #} else{# #= ot_in #  #}#",
                         headerAttributes: {
                             style: "font-size: 9pt;text-align:center"
                             
-                        },
-                        editor : timeEditor
+                        }    
                     },
                     {
                         title : "OT Out",
@@ -709,9 +667,7 @@
                         headerAttributes: {
                             style: "font-size: 9pt;text-align:center"
                             
-                        },
-                        template : "# if(ot_out=='00:00'||ot_out==null){#  #} else{# #= ot_out #  #}#",
-                        editor : timeEditor
+                        }    
                     },
                     {
                         title : "Reg OT",
@@ -730,479 +686,7 @@
                         footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>",
                         editor : dataEditor
                     },
-                    // {
-                    //     title : "ND OT",
-                    //     field : "night_diff_ot",
-                    //     width : 60, 
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     template : "# if(night_diff_ot==0){#  #} else{# #= night_diff_ot #  #}#",
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     aggregates : ['sum'], 
-                    //     footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
-                    //     editor : dataEditor
-
-                    // },
-                    // {
-                    //     title : '-',
-                    //     width : 15,
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // },
-                    // {
-                    //     title : "RD Hrs",
-                    //     field : "restday_hrs",
-                    //     width : 75, 
-                    //     template : "# if(restday_hrs==0){#  #} else{# #= restday_hrs #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    // },
-                    // {
-                    //     title : "RD OT",
-                    //     field : "restday_ot",
-                    //     width : 75, 
-                    //     template : "# if(restday_ot==0){#  #} else{# #= restday_ot #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    // },
-                    // {
-                    //     title : "RD ND",
-                    //     field : "restday_nd",
-                    //     width : 75, 
-                    //     template : "# if(restday_nd==0){#  #} else{# #= restday_nd #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    // },
-                    // {
-                    //     title : "RD ND OT",
-                    //     field : "restday_ndot",
-                    //     width : 75, 
-                    //     template : "# if(restday_ndot==0){#  #} else{# #= restday_ndot #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    // },
-                    // {
-                    //     title : '-',
-                    //     width : 15,
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // },
-                    
-                    // {
-                    //     title : 'Hol Type',
-                    //     field : 'holiday_type',
-                    //     width : 90,
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // },
-                    {
-                        title : 'Reg Hol Pay',
-                        field : 'reghol_pay',
-                        width : 85,
-                        template : "# if(reghol_pay==0){#  #} else{# #= reghol_pay #  #}#",
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
-                            
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
-                            
-                        }, 
-                    },
-                    {
-                        title : 'Reg Hol Hrs',
-                        field : 'reghol_hrs',
-                        template : "# if(reghol_hrs==0){#  #} else{# #= reghol_hrs #  #}#",
-                        width:85,
-                        attributes: {
-                            style: "font-size: 9pt;text-align:center",
-                            
-                        },
-                        headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
-                            
-                        }, 
-                    },
-                    // {
-                    //     title : 'Reg Hol OT',
-                    //     field : 'reghol_ot',
-                    //     template : "# if(reghol_ot==0){#  #} else{# #= reghol_ot #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // },
-                    // {
-                    //     title : 'Reg Hol RD',
-                    //     field : 'reghol_rd',
-                    //     template : "# if(reghol_rd==0){#  #} else{# #= reghol_rd #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // },
-                    // {
-                    //     title : 'Reg Hol RD ND',
-                    //     field : 'reghol_rdnd',
-                    //     template : "# if(reghol_rdnd==0){#  #} else{# #= reghol_rdnd #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // },
-                    // {
-                    //     title : 'Reg Hol RD OT',
-                    //     field : 'reghol_rdot',
-                    //     template : "# if(reghol_rdot==0){#  #} else{# #= reghol_rdot #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // },
-                    // {
-                    //     title : 'Reg Hol ND',
-                    //     field : 'reghol_nd',
-                    //     template : "# if(reghol_nd==0){#  #} else{# #= reghol_nd #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // },
-                    // {
-                    //     title : 'Reg Hol ND OT',
-                    //     field : 'reghol_ndot',
-                    //     template : "# if(reghol_ndot==0){#  #} else{# #= reghol_ndot #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // },
-                    // {
-                    //     title : 'Reg Hol RD ND OT',
-                    //     field : 'reghol_rdndot',
-                    //     template : "# if(reghol_rdndot==0){#  #} else{# #= reghol_rdndot #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // },
-                    // {
-                    //     title : '-', 
-                    //     width : 15
-                    // },
-                    // {
-                    //     title : 'SP Hol pay',
-                    //     field : 'sphol_pay',
-                    //     template : "# if(sphol_pay==0){#  #} else{# #= sphol_pay #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // },
-                    // {
-                    //     title : 'SP Hol Hrs',
-                    //     field : 'sphol_hrs',
-                    //     template : "# if(sphol_hrs==0){#  #} else{# #= sphol_hrs #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // },
-                    // {
-                    //     title : 'SP Hol OT',
-                    //     field : 'sphol_ot',
-                    //     template : "# if(sphol_ot==0){#  #} else{# #= sphol_ot #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // },
-                    // {
-                    //     title : 'SP Hol RD',
-                    //     field : 'sphol_rd',
-                    //     template : "# if(sphol_rd==0){#  #} else{# #= sphol_rd #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // },
-                    // {
-                    //     title : 'SP Hol RD ND',
-                    //     field : 'sphol_rdnd',
-                    //     template : "# if(sphol_rdnd==0){#  #} else{# #= sphol_rdnd #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // },
-                    // {
-                    //     title : 'SP Hol RD OT',
-                    //     field : 'sphol_rdot',
-                    //     template : "# if(sphol_rdot==0){#  #} else{# #= sphol_rdot #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // },
-                    // {
-                    //     title : 'SP Hol ND',
-                    //     field : 'sphol_nd',
-                    //     template : "# if(sphol_nd==0){#  #} else{# #= sphol_nd #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // }, 
-                    // {
-                    //     title : 'SP Hol ND OT',
-                    //     field : 'sphol_ndot',
-                    //     template : "# if(sphol_ndot==0){#  #} else{# #= sphol_ndot #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // }, 
-                    // {
-                    //     title : 'SP Hol RD ND OT',
-                    //     field : 'sphol_rdndot',
-                    //     template : "# if(sphol_rdndot==0){#  #} else{# #= sphol_rdndot #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // }, 
-                    // {
-                    //     title : '-', 
-                    //     width : 15
-                    // }, 
-                    // {
-                    //     title : 'DBL Hol Pay',
-                    //     field : 'dblhol_pay',
-                    //     template : "# if(dblhol_pay==0){#  #} else{# #= dblhol_pay #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // },
-                    // {
-                    //     title : 'DBL Hol Hrs',
-                    //     field : 'dblhol_hrs',
-                    //     template : "# if(dblhol_hrs==0){#  #} else{# #= dblhol_hrs #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // },
-                    // {
-                    //     title : 'DBL Hol OT',
-                    //     field : 'dblhol_ot',
-                    //     template : "# if(dblhol_ot==0){#  #} else{# #= dblhol_ot #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // },
-                    // {
-                    //     title : 'DBL Hol RD',
-                    //     field : 'dblhol_rd',
-                    //     template : "# if(dblhol_rd==0){#  #} else{# #= dblhol_rd #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // },
-                    // {
-                    //     title : 'DBL Hol RD ND',
-                    //     field : 'dblhol_rdnd',
-                    //     template : "# if(dblhol_rdnd==0){#  #} else{# #= dblhol_rdnd #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // },
-                    // {
-                    //     title : 'DBL Hol RDOT',
-                    //     field : 'dblhol_rdot',
-                    //     template : "# if(dblhol_rdot==0){#  #} else{# #= dblhol_rdot #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // },
-                    // {
-                    //     title : 'DBL Hol ND',
-                    //     field : 'dblhol_nd',
-                    //     template : "# if(dblhol_nd==0){#  #} else{# #= dblhol_nd #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // }, 
-                    // {
-                    //     title : 'DBL Hol ND OT',
-                    //     field : 'dblhol_ndot',
-                    //     template : "# if(dblhol_ndot==0){#  #} else{# #= dblhol_ndot #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // }, 
-                    // {
-                    //     title : 'DBL Hol RD ND OT',
-                    //     field : 'dblhol_rdndot',
-                    //     template : "# if(dblhol_rdndot==0){#  #} else{# #= dblhol_rdndot #  #}#",
-                    //     attributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     },
-                    //     headerAttributes: {
-                    //         style: "font-size: 9pt;text-align:center",
-                            
-                    //     }, 
-                    // }, 
+          
                    
                   
                 ],
@@ -1235,7 +719,15 @@
                 });
             }
 
-            function location_editor(container, options)
+            function dataEditor(container, options){
+                $('<input name="' + options.field + '"/>')
+                .appendTo(container)
+                .kendoTextBox({
+               
+                });
+            }
+
+            function locationEditor(container, options)
             {
                 $('<input name="' + options.field + '"/>')
                 .appendTo(container)
@@ -1248,55 +740,16 @@
                     dataSource: viewModel.ds.locations,
                     change : function(e)
                     {
-                        let grid = $("#dtrgrid").data("kendoGrid");
+                        let grid = $("#subgrid").data("kendoGrid");
                         let selectedRow = grid.dataItem(grid.select());
                         //console.log(e.sender);
                         //console.log(e.sender.text());
                         //console.log(selectedRow.set("schedule_desc"));
-                        selectedRow.set("location_name",e.sender.text());
+                        // selectedRow.set("schedule_desc",e.sender.text());
 
                         
                     }
                     
-                });
-            }
-
-            function dataEditor(container, options){
-                $('<input name="' + options.field + '"/>')
-                .appendTo(container)
-                .kendoTextBox({
-               
-                });
-            }
-
-            function timeEditor(container, options){
-                $('<input name="' + options.field + '"/>')
-                .appendTo(container)
-                .kendoTextBox({
-                    change : function(e){
-                        // console.log(this);//
-                        let time = this.value();
-
-                        // console.log(time);
-
-                        let grid = $("#dtrgrid").data("kendoGrid");
-                        let selectedRow = grid.dataItem(grid.select());
-
-                        let vtext = pad(time,4);
-                        vtext = (vtext.includes(':')) ? vtext : vtext.substring(0,2)+':'+ vtext.substring(2,4);
-                                        
-                        selectedRow.set(options.field,vtext);
-                    }
-               
-                });
-            }
-
-            function cityFilter(element) {
-                element.kendoDropDownList({
-                    dataSource:  viewModel.ds.locations,
-                    optionLabel: "",
-                    dataTextField: "location_name",
-                    dataValueField: "location_name",
                 });
             }
 
