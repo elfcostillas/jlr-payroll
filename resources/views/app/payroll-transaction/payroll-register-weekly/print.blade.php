@@ -6,22 +6,28 @@
     <title>Document</title>
     <style>
         * {
-            font-size: 8pt;
+            font-size: 7pt;
         }
 
         .pr4{
             text-align : right;
             padding-right : 4px;
-            width: 55px;
+            width: 45px;
+        }
+
+        @page {
+            margin : 20px 20px 20px 20px;
         }
     </style>
 </head>
 <body>
     <?php 
         $ctr=1; 
-        $colspan = 15; 
+       
 
         $arr = [];
+
+        $additional = count($headers);
     ?>
 
     <table border=0 style="width:100%;margin-bottom:2px;">
@@ -45,38 +51,41 @@
             <?php 
                 $location_total = 0;
                 $location_gtotal = 0; 
+
+                $colspan = 11; 
+
+               
+                
+               
+                
             ?>
 
             <table border=1  style="width:100%;border-collapse:collapse;margin-bottom:6px;" class="btable">
                 <tr>
-                    <td colspan=18 > {{ $location->location_name }}</td>  
+                    <td colspan={{ 16 + $additional }} > {{ $location->location_name }}</td>  
                 </tr>
                 <thead>
                     <tr>
                         <th >No.</th>
                         <th >Dept</th>
                         <th > Job Title </th>
-                        
                         <th >Name</th>
                         <th >Daily Rate</th>
-                    
                         <th >No Days</th>
                         <th >Basic Pay</th>
-                    
                         <th >Late (Hrs)</th>
                         <th >Late Amount</th>
                         <th >Earnings</th>
                         <th >Retro Pay</th>
-
                         @foreach($headers as $key => $val)
                             <th >{{ $label[$key] }}</th>
                             @php $colspan++; @endphp
                         @endforeach
-                        <th  >Gross Pay</th>
+                        <th> Gross Pay</th>
                         <th> PPE </th>
                         <th> Canteen </th>
-                        <th  >Total Deduction</th>
-                        <th  >Net Pay</th>
+                        <th> Total Deduction</th>
+                        <th> Net Pay</th>
                     
                     </tr>
                 </thead>
@@ -88,34 +97,29 @@
                         }else {
                             $stylee = 'white';
                         }
-
-                       
+     
                     ?>
                     
-                    <tr style="background-color:{{$stylee}};">
+                    <tr style="background-color:{{ $stylee }};">
                         <td style="text-align:right;width:30px;padding-right:6px;" >{{ $ctr++ }}</td>
-                        <td style="width:60px" > {{ $employee->dept_code }}</td>
-                        <td style="width:90px" > {{ $employee->job_title_name }}</td>
-                    
+                        <td style="width:50px" > {{ $employee->dept_code }}</td>
+                        <td style="width:60px" > {{ $employee->job_title_name }}</td>
                         <td style="text-align:left;"> {{ $employee->employee_name }} </td> 
                         <td class="pr4" style="text-align:right;"> {{ number_format($employee->daily_rate,2) }}</td>
-
                         <td class="pr4"  style="text-align:right;"> {{ number_format($employee->ndays,2) }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ number_format($employee->basic_pay,2) }}</td>
-
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->late_eq>0) ? number_format($employee->late_eq,2) : ''; }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->late_eq_amount>0) ? number_format($employee->late_eq_amount,2) : ''; }}</td>
-
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['earnings']>0) ? number_format($employee->otherEarnings['earnings'],2) : ''; }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['retro_pay']>0) ? number_format($employee->otherEarnings['retro_pay'],2) : ''; }}</td>
 
                         @foreach($headers as $key => $val)
                             <td class="pr4"  style="text-align:right;">{{ ($employee->$key > 0) ? number_format($employee->$key,2) : '' }}</td>
                         @endforeach
-                        <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($employee->gross_total > 0) ? number_format($employee->gross_total,2) : '' }}</td>
+                        <td class="pr4"  style="text-align:right;font-weight:bold;">{{ ($employee->gross_total > 0) ? number_format($employee->gross_total,2) : '' }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['deductions']>0) ? number_format($employee->otherEarnings['deductions'],2) : ''; }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['canteen']>0) ? number_format($employee->otherEarnings['canteen'],2) : ''; }}</td>
-                        <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;" >{{ ($employee->total_deduction>0) ? number_format($employee->total_deduction,2) : ''; }}</td>
+                        <td class="pr4"  style="text-align:right;font-weight:bold;" >{{ ($employee->total_deduction>0) ? number_format($employee->total_deduction,2) : ''; }}</td>
                         <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:double;{{ ($employee->net_pay < ($employee->gross_total*0.3)) ? 'color:red'  : '' }};" >{{ ($employee->net_pay>0) ? number_format($employee->net_pay,2) :  number_format($employee->net_pay,2) }}</td>
                     </tr>
 
@@ -133,7 +137,7 @@
 
                 @endforeach
                 <tr>
-                    <td colspan = 13 ></td>
+                    <td colspan = {{ $colspan }} ></td>
                     <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_total > 0) ? number_format($location_total,2) : '' }}</td>
                     <td></td>
                     <td></td>
