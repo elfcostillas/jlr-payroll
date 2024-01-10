@@ -24,7 +24,8 @@ class ManageLocationMapper extends AbstractMapper {
     {
         $result = $this->model->select(DB::raw('payroll_period_weekly.*'))
                 ->join('payroll_period_weekly','payroll_period_weekly.id','=','weekly_tmp_locations.period_id')
-                ->distinct();
+                ->distinct()
+                ->orderBy('payroll_period_weekly.id','DESC');
                 // ->groupBy('payroll_period_weekly.period_id');
 
         $total = $result->count();
