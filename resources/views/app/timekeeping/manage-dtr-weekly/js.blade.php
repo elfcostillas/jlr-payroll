@@ -857,7 +857,7 @@
                         }, 
                     },
                     {
-                        title : 'Reg Hol Hrs',
+                        title : 'Reg Hol Hrs (Premium)',
                         field : 'reghol_hrs',
                         template : "# if(reghol_hrs==0){#  #} else{# #= reghol_hrs #  #}#",
                         width:85,
@@ -866,7 +866,7 @@
                             
                         },
                         headerAttributes: {
-                            style: "font-size: 9pt;text-align:center",
+                            style: "font-size: 9pt;text-align:center;text-wrap: wrap;",
                             
                         }, 
                     },
