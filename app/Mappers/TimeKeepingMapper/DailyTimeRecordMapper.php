@@ -536,7 +536,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                             })
                             ->where('payroll_period_weekly.id',$period_id);
                             
-        $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,time_to_sec(work_schedules.time_in) as sched_in,holidays.holiday_type,time_to_sec(edtr.time_in) as actual_in,time_to_sec(ot_in) as ot_in_s,time_to_sec(ot_out) as ot_out_s"))
+        $result = $this->model->select(DB::raw("COALESCE(weekly_tmp_locations.loc_id,employees.location_id) as location,edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,time_to_sec(work_schedules.time_in) as sched_in,case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type,time_to_sec(edtr.time_in) as actual_in,time_to_sec(ot_in) as ot_in_s,time_to_sec(ot_out) as ot_out_s,reghol_hrs"))
         //$result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,CONCAT(lastname,', ',firstname) as empname,DATE_FORMAT(dtr_date,'%a') AS day_name,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) as work_sched,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,night_diff_ot,ifnull(schedule_id,0) schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc,case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type,ot_in,ot_out,restday_hrs,restday_ot,restday_nd,restday_ndot,reghol_pay,reghol_hrs,reghol_ot,reghol_rd,reghol_rdnd,reghol_nd,reghol_ndot,sphol_pay,sphol_hrs,sphol_ot,sphol_rd,sphol_rdnd,sphol_nd,sphol_ndot,dblhol_pay,dblhol_hrs,dblhol_ot,dblhol_rd,dblhol_rdnd,dblhol_nd,dblhol_ndot,dblhol_rdot,sphol_rdot,reghol_rdot,reghol_rdndot,sphol_rdndot,dblhol_rdndot"))
                             ->from('edtr')
         ->from('edtr')
@@ -544,7 +544,12 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
         ->join('payroll_period_weekly',function($join){
             $join->whereRaw('dtr_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
         })
+       
         ->leftJoin('employees','employees.biometric_id','=','edtr.biometric_id')
+        ->join('weekly_tmp_locations',function($join) use ($period_id){
+            $join->on('weekly_tmp_locations.biometric_id','=','employees.biometric_id');
+            $join->whereRaw('weekly_tmp_locations.period_id = '.$period_id);
+        })
         //->leftJoin('holidays','edtr.dtr_date','=','holidays.holiday_date')
         ->leftJoinSub($holidays,'holidays',function($join) { //use ($type)
 						$join->on('holidays.location_id','=','employees.location_id');
@@ -764,6 +769,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
     public function computeLogs($dtr,$type)
     {
+        
         if($type=='semi'){
             foreach($dtr as $rec)
             {
@@ -841,7 +847,9 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
             {
                
                 //$rec->ndays = ($rec->time_in!='' && $rec->time_out!='' && $rec->holiday_type==NULL && $rec->time_in!='00:00' && $rec->time_out!='00:00') ? 1 : 0;
-                $rec->ndays = ($rec->time_in!='' && $rec->time_out!='' && $rec->time_in!='00:00' && $rec->time_out!='00:00') ? 1 : 0;
+                if($rec->ndays==0 || $rec->ndays==''){
+                    $rec->ndays = ($rec->time_in!='' && $rec->time_out!='' && $rec->time_in!='00:00' && $rec->time_out!='00:00') ? 1 : 0;
+                }
                 
                 if($rec->ot_in_s > 0 && $rec->ot_out_s > 0){
                     if($rec->ot_out_s >= $rec->ot_in_s){
@@ -860,27 +868,57 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                 } else {
                     $rec->over_time = 0;
                 }
+               
 
                 switch($rec->holiday_type)
                 {   
                 // work here
                  
                     case 'SH': 
-                            $rec->sphol_pay = $rec->ndays;
+
+                            $flag = $this->checkLastWorkingDay($rec->dtr_date,$rec->location,$rec->biometric_id);
+
+                            $rec->sphol_pay = ($rec->ndays==0 || $rec->ndays =='') ? 1 : 0;
                             $rec->sphol_nd = $rec->night_diff;
                             $rec->sphol_ot = $rec->overt_time;
                             $rec->sphol_ndot = $rec->night_diff_ot;
                         break;
                     
                     case 'LH': 
-                            $rec->reghol_pay = $rec->ndays;
+                          
+                            $flag = $this->checkLastWorkingDay($rec->dtr_date,$rec->location,$rec->biometric_id);
+
+                            if(($rec->time_in != "" && $rec->time_in != "00:00") && ($rec->time_out !="" && $rec->time_out !="00:00") || $rec->ndays ==1)
+                            {
+                                
+                                
+                                $rec->reghol_pay = 0;
+                                $rec->ndays = 1;
+                            }else{
+
+
+                                if($flag){
+                                    $rec->reghol_pay = 1;
+                                    $rec->ndays = 0;
+                                    
+                                    
+
+                                }else{
+                                    if($rec->reghol_pay!=0){
+    
+                                    }
+                                    
+                                }
+                            }
+                          
+                            // $rec->reghol_pay = ($rec->ndays==0 || $rec->ndays =='') ? 1 : 0;
                             $rec->reghol_nd = $rec->night_diff;
                             $rec->reghol_ot = $rec->overt_time;
                             $rec->reghol_ndot = $rec->night_diff_ot;
                         break; 
                     
                     case 'DBL': 
-                            $rec->dblhol_pay =  $rec->ndays;
+                            $rec->dblhol_pay =  ($rec->ndays==0 || $rec->ndays =='') ? 1 : 0;
                             $rec->dblhol_nd = $rec->night_diff;
                             $rec->dblhol_ot = $rec->overt_time;
                             $rec->dblhol_ndot = $rec->night_diff_ot;
@@ -891,7 +929,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                
 
                 if(in_array($rec->holiday_type,['SH','LH','DBL'])){
-                    $rec->ndays = 0;
+                    // $rec->ndays = 0;
                     $rec->night_diff = 0;
                     $rec->overt_time = 0;
                     $rec->night_diff_ot = 0;
@@ -900,6 +938,72 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                 $this->updateValid($rec->toArray());
             }
         }
+    }
+
+    function checkLastWorkingDay($holiday,$location,$biometric_id)
+    {
+        $flag = true;
+        $ctr = 1;
+
+        $isEntitled = false;
+
+        $holiday = Carbon::createFromFormat("Y-m-d",$holiday);
+
+        do {
+            $holiday->subDay();
+
+            if($holiday->format('D')!='Sun'){
+                    /*  
+                        SELECT holidays.id 
+                        FROM holidays INNER JOIN holiday_location ON holidays.id = holiday_location.holiday_id
+                        WHERE holidays.holiday_date = '' AND holiday_location.location_id = ''
+
+                        check if its holiday
+                    */
+                $date = DB::table('holidays')
+                            ->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
+                            ->select()
+                            ->where('holidays.holiday_date','=',$holiday->format('Y-m-d'))
+                            ->where('holiday_location.location_id','=',$location);
+    
+                $worked = DB::table('edtr')->select('ndays')
+                    ->where('biometric_id','=',$biometric_id)
+                    ->where('dtr_date','=',$holiday->format('Y-m-d'))
+                    ->first();
+                
+               
+        
+                if($date->count()<1){ // means it is not a holiday
+                    $flag = false;
+                    if($worked->ndays>0){
+                        $isEntitled = true;
+                    }
+
+
+                } else {
+        
+                     
+                        
+                        if($worked->ndays>0){
+                            $isEntitled = true;
+    
+                           
+                        }
+
+                }
+
+            }
+            
+            if($flag){
+                $ctr++;
+                if($ctr>=7){
+                    $flag = false;
+                }
+            }
+           
+        }while($flag);
+
+        return $isEntitled;
     }
 
     public function getEmployeeForPrint($period_id,$type)

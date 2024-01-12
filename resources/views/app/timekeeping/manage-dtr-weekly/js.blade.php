@@ -220,6 +220,7 @@
                             { field : "sh_ot" , aggregate: "sum" },
                             { field : "shot_rd" , aggregate: "sum" },
                             { field : "sun_ot" , aggregate: "sum" },
+                            { field : "reghol_pay" , aggregate: "sum" },
                            
                         ]
                     }),
@@ -259,23 +260,23 @@
                             viewModel.ds.subgrid.read();
                         });
                     },
-                    computeAll : function(e){
-                        let tr = $(e.target).closest("tr");
-                        let data = this.dataItem(tr);
+                    // computeAll : function(e){
+                    //     let tr = $(e.target).closest("tr");
+                    //     let data = this.dataItem(tr);
 
-                        $.post('manage-dtr-weekly/compute-all',{
-                            period_id : data.id
-                        },function(){
-                            Swal.fire({
-                            //position: 'top-end',
-                            icon: 'success',
-                            title: 'DTR Logs has been processed.',
-                            showConfirmButton: false,
-                            timer: 1000
-                            });	
-                        });
+                    //     $.post('manage-dtr-weekly/compute-all',{
+                    //         period_id : data.id
+                    //     },function(){
+                    //         Swal.fire({
+                    //         //position: 'top-end',
+                    //         icon: 'success',
+                    //         title: 'DTR Logs has been processed.',
+                    //         showConfirmButton: false,
+                    //         timer: 1000
+                    //         });	
+                    //     });
 
-                    },
+                    // },
                     manage : function(e){
                         let tr = $(e.target).closest("tr");
                         let data = this.dataItem(tr);
@@ -409,8 +410,8 @@
                         width : 80
                     },
                     {
-                        command: { text : 'Compute All',click : viewModel.buttonHandler.computeAll , },
-                        attributes : { style : 'font-size:10pt !important;'},
+                        // command: { text : 'Compute All',click : viewModel.buttonHandler.computeAll , },
+                        // attributes : { style : 'font-size:10pt !important;'},
                         width : 105
                     },
                   
@@ -855,6 +856,9 @@
                             style: "font-size: 9pt;text-align:center",
                             
                         }, 
+                        aggregates : ['sum'], 
+                        footerTemplate: "<div style='text-align:center;font-size:9pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>",
+                      
                     },
                     {
                         title : 'Reg Hol Hrs (Premium)',

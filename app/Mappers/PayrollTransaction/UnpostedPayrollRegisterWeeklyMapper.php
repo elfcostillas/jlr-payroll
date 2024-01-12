@@ -213,8 +213,10 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
     {
 
         $user = Auth::user();
+        // COALESCE(weekly_tmp_locations.loc_id,employees.location_id) as location,
         $result = $this->model->select(DB::raw("
                         'weekly' AS emp_level,
+                       
                         payroll_period_weekly.id AS period_id,
                         employees.biometric_id,
                         lastname,
@@ -278,6 +280,7 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
                         $join->whereRaw('edtr.dtr_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
                     })
                     ->join('employees','edtr.biometric_id','=','employees.biometric_id')
+                   
                     ->where('payroll_period_weekly.id','=',$period_id)
                     ->whereIn('pay_type',[3])
                     ->where('exit_status',1)
