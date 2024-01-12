@@ -27,8 +27,8 @@
                         pageSize :11,
                      
                         schema : {
-                            data : "data",
-                            total : "total",
+                            // data : "data",
+                            // total : "total",
                             model : {
                                 id : 'id',
                                 fields : {
