@@ -177,10 +177,10 @@ class WeeklyEmployee
         */
         if($this->data['retired']=='Y'){
             $this->payreg['reg_ot_amount'] = round(($this->rates['hourly_rate'] * 1.25) * $this->payreg['reg_ot'],2);
-            $this->payreg['leghol_ot_amount'] = round(($this->rates['hourly_rate'] * 2.60) * $this->payreg['reghol_ot'],2);
+            $this->payreg['leghol_ot_amount'] = round(($this->rates['hourly_rate'] * 2.60) * $this->payreg['leghol_ot'],2);
         }else{
             $this->payreg['reg_ot_amount'] = round(($this->rates['hourly_rate'] * 1.0) * $this->payreg['reg_ot'],2);
-            $this->payreg['leghol_ot_amount'] = round(($this->rates['hourly_rate'] * 1.0) * $this->payreg['reghol_ot'],2);
+            $this->payreg['leghol_ot_amount'] = round(($this->rates['hourly_rate'] * 1.0) * $this->payreg['leghol_ot'],2);
         }
         
         // $this->payreg['reg_nd_amount'] = round(($this->rates['hourly_rate'] * 0.1) * $this->payreg['reg_nd'],2);
