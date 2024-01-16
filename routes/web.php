@@ -56,7 +56,7 @@ use  App\Http\Controllers\Deductions\GovernmentLoanController;
 use App\Http\Controllers\Compentsations\OtherCompensationController;
 use App\Http\Controllers\Compentsations\FixCompensationController;
 use App\Http\Controllers\Compentsations\OtherIncomeWeeklyAppController;
-
+use App\Http\Controllers\Memo\AWOLMemoController;
 use App\Http\Controllers\Reports\TardinessReportsController;
 use App\Http\Controllers\Memo\TardinessMemoController;
 use App\Http\Controllers\Timekeeping\ManageLocationController;
@@ -627,6 +627,11 @@ Route::middleware('auth')->prefix('memo')->group(function(){
         Route::get('print/{id}',[TardinessMemoController::class,'print']);
         Route::get('year',[TardinessMemoController::class,'getYear']);
         Route::post('save',[TardinessMemoController::class,'save']);
+    }); 
+
+    Route::prefix('awol')->middleware('access:memo/awol')->controller(AWOLMemoController::class)->group(function(){
+        Route::get('/','index');
+      
     }); 
 }); 
 

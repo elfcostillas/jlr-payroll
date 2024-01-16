@@ -347,7 +347,7 @@
                         var myWindow = $("#pop");
                         
                         myWindow.kendoWindow({
-                            width: "1284", //1124 - 1152
+                            width: "1370", //1124 - 1152
                             height: "460",
                             //title: "Employee Information",
                             visible: false,
@@ -874,6 +874,22 @@
                             
                         }, 
                     },
+                    {
+                        title : 'Reg Hol OT (Premium)',
+                        field : 'reghol_ot',
+                        template : "# if(reghol_ot==0){#  #} else{# #= reghol_ot #  #}#",
+                        width:85,
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center;text-wrap: wrap;",
+                            
+                        }, 
+                    },
+
+                    
                     // {
                     //     title : 'Reg Hol OT',
                     //     field : 'reghol_ot',
