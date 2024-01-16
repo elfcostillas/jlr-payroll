@@ -91,6 +91,7 @@ class PayrollRegisterWeeklyController extends Controller
                         break;
                 }
             }
+     
             
             $person = new WeeklyEmployee($employee,new Daily);
             $person->compute($period);

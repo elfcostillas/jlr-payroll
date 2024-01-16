@@ -211,7 +211,7 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
 
     public function getEmployeeWithDTRW($period_id,$emp_level)
     {
-
+        
         $user = Auth::user();
         // COALESCE(weekly_tmp_locations.loc_id,employees.location_id) as location,
         $result = $this->model->select(DB::raw("
@@ -288,9 +288,13 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
                     // ->whereNotNull('time_out')
                     // ->where('time_in','!=','00:00')
                     // ->where('time_out','!=','00:00')
-                    ->where('ndays','>',0)
-                    ->orWhere('reghol_pay','>',0)
+                    // ->where('ndays','>',0)
+                    // ->orWhere('reghol_pay','>',0)
                     // ->where('employees.biometric_id','=',897)
+                    ->where(function($query){
+                        $query->where('ndays','>',0)
+                        ->orWhere('reghol_pay','>',0);
+                    })
                     ->groupBy(DB::raw('
                                 payroll_period_weekly.id,
                                 employees.biometric_id,

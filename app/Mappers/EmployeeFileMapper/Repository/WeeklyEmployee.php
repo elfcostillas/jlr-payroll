@@ -250,7 +250,7 @@ class WeeklyEmployee
         $this->payreg['gross_pay'] = $this->repo->getGrossPay($this->payreg);
 
         if($this->payreg['pay_type']!='3'){
-          
+            dd($this->payreg);
             $this->computeContribution($period);
         }
         
