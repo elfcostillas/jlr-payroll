@@ -12,11 +12,11 @@
         .pr4{
             text-align : right;
             padding-right : 4px;
-            width: 45px;
+            width: 42px;
         }
 
         @page {
-            margin : 20px 20px 20px 20px;
+            margin : 15px 15px 15px 15px;
         }
     </style>
 </head>
@@ -54,10 +54,6 @@
 
                 $colspan = 11; 
 
-               
-                
-               
-                
             ?>
 
             <table border=1  style="width:100%;border-collapse:collapse;margin-bottom:6px;" class="btable">
@@ -101,7 +97,7 @@
                     ?>
                     
                     <tr style="background-color:{{ $stylee }};">
-                        <td style="text-align:right;width:30px;padding-right:6px;" >{{ $ctr++ }}</td>
+                        <td style="text-align:right;width:25px;padding-right:6px;" >{{ $ctr++ }}</td>
                         <td style="width:50px" > {{ $employee->dept_code }}</td>
                         <td style="width:60px" > {{ $employee->job_title_name }}</td>
                         <td style="text-align:left;"> {{ $employee->employee_name }} </td> 

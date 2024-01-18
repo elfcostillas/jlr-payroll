@@ -5,12 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-
+    <script src="{{ asset('theme/plugins/jquery/jquery.min.js') }}"></script>
+    <script>
+        $(document).ready(function(){
+            $("table#rowClick tr").click(function(){
+                $(this).toggleClass("active");
+        
+            });
+        });
+    </script>
     <style>
             * {
                 font-family: 'Consolas';
                 font-size : 9pt;
             }
+
+            .active {
+                background-color: #90e0ef;
+            }
+
+            table tr.active {background: #90e0ef;}
 
             div#container2 {
                 max-width:  1320px;
@@ -108,7 +122,7 @@
        //ndays,basic_pay,late_eq,late_eq_amount,under_time,under_time_amount
     ?>
     <div id="" >
-        <table style="border-collapse:collapse;white-space:nowrap;" border=1 >
+        <table id="rowClick" style="border-collapse:collapse;white-space:nowrap;" border=1 >
             <thead>
                 <tr>
                         <th style="padding : 0px 4px;min-width: 30px">No.</th>

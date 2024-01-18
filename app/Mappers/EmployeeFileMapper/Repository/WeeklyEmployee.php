@@ -153,6 +153,10 @@ class WeeklyEmployee
             }
         }
 
+        // if($this->payreg['biometric_id'] == 37 ){
+        //     dd($this->payreg);
+        // }
+
         $this->setDaysWorked();
 
         $this->payreg['late_eq_amount'] = round($this->rates['hourly_rate'] * $this->payreg['late_eq'],2);
