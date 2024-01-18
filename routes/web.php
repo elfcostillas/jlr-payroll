@@ -19,6 +19,8 @@ use App\Http\Controllers\Timekeeping\FTPController;
 use App\Http\Controllers\Timekeeping\LeavesAbsencesController;
 use App\Http\Controllers\Timekeeping\LeaveCreditsController;
 use App\Http\Controllers\Timekeeping\DTRSummaryController;
+use App\Http\Controllers\Timekeeping\AttController;
+use App\Http\Controllers\Timekeeping\ManageLocationController;
 
 use App\Http\Controllers\Settings\LocationController;
 use App\Http\Controllers\Settings\DefaultScheduleController;
@@ -59,7 +61,7 @@ use App\Http\Controllers\Compentsations\OtherIncomeWeeklyAppController;
 use App\Http\Controllers\Memo\AWOLMemoController;
 use App\Http\Controllers\Reports\TardinessReportsController;
 use App\Http\Controllers\Memo\TardinessMemoController;
-use App\Http\Controllers\Timekeeping\ManageLocationController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -88,6 +90,13 @@ Route::get('dashboard', function () {
 Route::get('dashboard', [DashBoardController::class,'index'])->middleware(['auth'])->name('dashboard');
 
 Route::middleware('auth')->prefix('timekeeping')->group(function(){
+
+    Route::prefix('att')->middleware('access:timekeeping/att')->group(function(){
+        Route::get('/',[AttController::class,'index']);
+        Route::post('download',[AttController::class,'download']);
+       
+       
+    });
     
     Route::prefix('manage-location')->middleware('access:timekeeping/payroll-period')->group(function(){
         Route::get('/',[ManageLocationController::class,'index']);
