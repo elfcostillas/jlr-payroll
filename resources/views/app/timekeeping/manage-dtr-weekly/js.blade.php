@@ -13,6 +13,11 @@
     <script>
         $(document).ready(function(){
 
+            let stopOption = [
+                { text: "N", value: "N" },
+                { text: "Y", value: "Y" },
+            ];
+
             var viewModel = kendo.observable({ 
                 selectedPeriod : null,
                 selectedEmployee : null,
@@ -201,7 +206,7 @@
                                     sphol_rdndot : { type:'number', },
                                     dblhol_rdndot  : { type:'number', },
                                     loc_id  : { type:'number', },
-
+                                    cont : { type : "string" },
                                     holiday_type : { type:'string', editable : false }
                                 }
                             }
@@ -347,7 +352,7 @@
                         var myWindow = $("#pop");
                         
                         myWindow.kendoWindow({
-                            width: "1370", //1124 - 1152
+                            width: "1376", //1124 - 1152
                             height: "460",
                             //title: "Employee Information",
                             visible: false,
@@ -537,7 +542,7 @@
                         title : "Date",
                         field : "dtr_date",
                         template : "#= (data.dtr_date) ? kendo.toString(data.dtr_date,'MM/dd/yyyy')  : ''  #",
-                        width : 90,
+                        width : 85,
                          attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -604,7 +609,7 @@
                     {
                         title : "Days",
                         field : "ndays",
-                        width : 70,
+                        width : 60,
                          attributes: {
                             style: "font-size: 9pt;text-align:center"
                             
@@ -652,7 +657,7 @@
                     {
                         title : "UT",
                         field : "under_time",
-                        width : 80,
+                        width : 60,
                         attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
@@ -887,6 +892,21 @@
                             style: "font-size: 9pt;text-align:center;text-wrap: wrap;",
                             
                         }, 
+                    },
+                    {
+                        title : '-',
+                        field : 'cont',
+                        template : "# if(cont=='N'){#  #} else{# #= cont #  #}#",
+                        width:45,
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center;text-wrap: wrap;",
+                            
+                        }, 
+                        editor : stopEditor
                     },
 
                     
@@ -1317,6 +1337,21 @@
                     optionLabel: "",
                     dataTextField: "location_name",
                     dataValueField: "location_name",
+                });
+            }
+
+            function stopEditor(container, options)
+            {
+                $('<input name="' + options.field + '"/>')
+                .appendTo(container)
+                .kendoDropDownList({
+                //.kendoComboBox({
+                    //autoBind: false,
+                    autoWidth: true,
+                    dataTextField: "text",
+                    dataValueField: "value",
+                    dataSource: stopOption,
+                   
                 });
             }
 

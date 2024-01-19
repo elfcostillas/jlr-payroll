@@ -55,5 +55,72 @@ class FailureToPunchV2Mapper extends AbstractMapper {
         return $result->get();
     }
 
+    public function post($arr)
+    {
+        $blanks = [];
+
+        DB::connection('mysql')->table('edtr_raw')
+            ->where('src','=','ftp')
+            ->where('biometric_id',$arr['biometric_id'])
+            ->where('punch_date','=',$arr['ftp_date'])
+            ->delete();
+
+        if($arr['time_in']){
+            array_push($blanks,[
+                'punch_date' => $arr['ftp_date'],
+                'punch_time' => $arr['time_in'],
+                'biometric_id' => $arr['biometric_id'],
+                'cstate' => 'C/In',
+                'src' => 'ftp',
+            ]);
+        }
+
+        if($arr['time_out']){
+            array_push($blanks,[
+                'punch_date' => $arr['ftp_date'],
+                'punch_time' => $arr['time_out'],
+                'biometric_id' => $arr['biometric_id'],
+                'cstate' => 'C/Out',
+                'src' => 'ftp',
+            ]);
+        }
+
+        if($arr['ot_in']){
+            array_push($blanks,[
+                'punch_date' => $arr['ftp_date'],
+                'punch_time' => $arr['ot_in'],
+                'biometric_id' => $arr['biometric_id'],
+                'cstate' => 'OT/In',
+                'src' => 'ftp',
+            ]);
+        }
+
+        if($arr['ot_out']){
+            array_push($blanks,[
+                'punch_date' => $arr['ftp_date'],
+                'punch_time' => $arr['ot_out'],
+                'biometric_id' => $arr['biometric_id'],
+                'cstate' => 'OT/Out',
+                'src' => 'ftp',
+            ]);
+        }
+
+        $result = DB::connection('mysql')->table('edtr_raw')->insertOrIgnore($blanks);
+
+    }
+
        
 }
+
+/*
+ "biometric_id" => "205"
+  "ftp_date" => "2024-01-18"
+  "ftp_type" => "PR"
+  "ftp_reason" => "sdfsdfsd"
+  "time_in" => "01:00"
+  "time_out" => null
+  "ot_in" => null
+  "ot_out" => null
+  "ftp_status" => "POSTED"
+  "created_by" => "1"
+  "created_on" => "2024-01-18 14:30:05"*/

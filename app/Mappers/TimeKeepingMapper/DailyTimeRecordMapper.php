@@ -179,7 +179,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
     public function getRawLogs($biometric_id,$period_id,$type)
     {
         if($type=='semi'){
-            $result = $this->model->select('biometric_id','punch_date','punch_time','cstate')
+            $result = $this->model->select('biometric_id','punch_date','punch_time','cstate','src')
                     ->from('edtr_raw')
                     ->where('biometric_id',$biometric_id)
                     ->join('payroll_period',function($join){
@@ -191,7 +191,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
         }else{
            // $range = $this->model->select('date_from','date_to')->from('payroll_period_weekly')->where('id',$period_id)->first();
           
-            $result = $this->model->select('biometric_id','punch_date','punch_time','cstate')
+            $result = $this->model->select('biometric_id','punch_date','punch_time','cstate','src')
                     ->from('edtr_raw')
                    
                     ->join('payroll_period_weekly',function($join){
@@ -238,7 +238,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
         ->where('payroll_period_weekly.id',$period_id)
         ->orderBy('dtr_date');
         */
-        $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,night_diff_ot,ifnull(schedule_id,0) schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc,case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type,ot_in,ot_out,restday_hrs,restday_ot,restday_nd,restday_ndot,reghol_pay,reghol_hrs,reghol_ot,reghol_rd,reghol_rdnd,reghol_nd,reghol_ndot,sphol_pay,sphol_hrs,sphol_ot,sphol_rd,sphol_rdnd,sphol_nd,sphol_ndot,dblhol_pay,dblhol_hrs,dblhol_ot,dblhol_rd,dblhol_rdnd,dblhol_nd,dblhol_ndot,dblhol_rdot,sphol_rdot,reghol_rdot,reghol_rdndot,sphol_rdndot,dblhol_rdndot"))
+        $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,night_diff_ot,ifnull(schedule_id,0) schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc,case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type,ot_in,ot_out,restday_hrs,restday_ot,restday_nd,restday_ndot,reghol_pay,reghol_hrs,reghol_ot,reghol_rd,reghol_rdnd,reghol_nd,reghol_ndot,sphol_pay,sphol_hrs,sphol_ot,sphol_rd,sphol_rdnd,sphol_nd,sphol_ndot,dblhol_pay,dblhol_hrs,dblhol_ot,dblhol_rd,dblhol_rdnd,dblhol_nd,dblhol_ndot,dblhol_rdot,sphol_rdot,reghol_rdot,reghol_rdndot,sphol_rdndot,dblhol_rdndot,cont"))
         ->from('edtr')
         ->where('edtr.biometric_id',$biometric_id)
         ->join('payroll_period_weekly',function($join){
@@ -536,7 +536,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                             })
                             ->where('payroll_period_weekly.id',$period_id);
                             
-        $result = $this->model->select(DB::raw("COALESCE(weekly_tmp_locations.loc_id,employees.location_id) as location,edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,time_to_sec(work_schedules.time_in) as sched_in,case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type,time_to_sec(edtr.time_in) as actual_in,time_to_sec(ot_in) as ot_in_s,time_to_sec(ot_out) as ot_out_s,reghol_hrs,reghol_ot"))
+        $result = $this->model->select(DB::raw("COALESCE(weekly_tmp_locations.loc_id,employees.location_id) as location,edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,time_to_sec(work_schedules.time_in) as sched_in,case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type,time_to_sec(edtr.time_in) as actual_in,time_to_sec(ot_in) as ot_in_s,time_to_sec(ot_out) as ot_out_s,reghol_hrs,reghol_ot,cont"))
         //$result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,CONCAT(lastname,', ',firstname) as empname,DATE_FORMAT(dtr_date,'%a') AS day_name,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) as work_sched,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,night_diff_ot,ifnull(schedule_id,0) schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc,case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type,ot_in,ot_out,restday_hrs,restday_ot,restday_nd,restday_ndot,reghol_pay,reghol_hrs,reghol_ot,reghol_rd,reghol_rdnd,reghol_nd,reghol_ndot,sphol_pay,sphol_hrs,sphol_ot,sphol_rd,sphol_rdnd,sphol_nd,sphol_ndot,dblhol_pay,dblhol_hrs,dblhol_ot,dblhol_rd,dblhol_rdnd,dblhol_nd,dblhol_ndot,dblhol_rdot,sphol_rdot,reghol_rdot,reghol_rdndot,sphol_rdndot,dblhol_rdndot"))
                             ->from('edtr')
         ->from('edtr')
@@ -842,6 +842,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                 $this->updateValid($rec->toArray());
             }   
         }else {
+            
             //echo "im here";
             foreach($dtr as $rec)
             {
@@ -858,8 +859,6 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                         $ot = (($rec->ot_out_s + 86400)  - $rec->ot_in_s) ;
                     }
 
-                    
-
                     if($ot>=3600){
                         $cot = ($ot - ($ot % 1800))/3600;
                     }else{
@@ -870,7 +869,6 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                 } else {
                     $rec->over_time = 0;
                 }
-               
 
                 switch($rec->holiday_type)
                 {   
@@ -892,8 +890,6 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
                             if(($rec->time_in != "" && $rec->time_in != "00:00") && ($rec->time_out !="" && $rec->time_out !="00:00") || $rec->ndays ==1)
                             {
-                                
-                                
                                 $rec->reghol_pay = 0;
                                 $rec->ndays = 1;
                             }else{
@@ -902,9 +898,6 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                                 if($flag){
                                     $rec->reghol_pay = 1;
                                     $rec->ndays = 0;
-                                    
-                                    
-
                                 }else{
                                     if($rec->reghol_pay!=0){
     
@@ -912,14 +905,21 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                                     
                                 }
                             }
-                
+
+                            if($rec->cont=='Y')
+                            {
+                                $rec->ndays = 0;
+                                $rec->reghol_hrs =  $rec->over_time;
+                            }
                           
                             // $rec->reghol_pay = ($rec->ndays==0 || $rec->ndays =='') ? 1 : 0;
                             $rec->reghol_nd = $rec->night_diff;
-                            $rec->reghol_ot = $rec->over_time;
+                            $rec->reghol_ot = ($rec->cont=='Y') ? 0 :  $rec->over_time;
                             $rec->reghol_ndot = $rec->night_diff_ot;
                             $rec->over_time =0;
                             $rec->night_diff_ot =0;
+
+                           
 
                            
                         break; 

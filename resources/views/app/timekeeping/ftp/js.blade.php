@@ -121,6 +121,7 @@
                 toolbarHandler : {  
 
                     addFTP : function(e) {
+                        viewModel.form.model.ftp_status = 'DRAFT';
                         viewModel.functions.showPOP();
                     },
                     viewFTP : function(e) {
@@ -206,6 +207,49 @@
                             //viewModel.maingrid.ds.read();
                         });
                     },
+                    post : async function(e){ 
+                            await viewModel.functions.reAssignValues();
+                            
+                            if(viewModel.form.model.id != null){
+                                Swal.fire({
+                                    title: 'Finalize and Post FTP',
+                                    text: "You won't be able to revert this!",
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Finalize'
+                                }).then((result) => {
+                                    if (result.value) {    
+                                        
+                                        
+                                        viewModel.form.model.set('ftp_status','POSTED');
+                                        var json_data = JSON.stringify(viewModel.form.model);
+                                        
+                                        $.post('ftp/save',{
+                                            data : json_data
+                                        },function(data,status){
+                                            //console.log(status,data);
+                                            //console.log(data.error)
+                                            swal_success(data);
+
+                                            if(data!=null)
+                                            {
+                                                let url  = `ftp/read/${data}`;
+                                                setTimeout(function(){
+                                                    read(url,viewModel);
+                                                }, 500);
+                                            }   
+
+                                            viewModel.ds.maingrid.read();
+                                            
+                                        },'json');
+                                    }
+                                });
+                            }else{
+                                custom_error("Please save document first.");
+                            }
+                    },
                     clear : function(e){
                         for (var key in obj) {
                             //console.log(key); //console.log(key + " -> " + p[key]);
@@ -245,7 +289,21 @@
                     }
                 },
                 callBack : function(e){
+                    if(viewModel.form.model.ftp_status=='POSTED'){
+                        activeToolbar.hide();
+                        postedToolbar.show();
 
+                        // let ptoolbar = $("#toolbar2").data("kendoToolBar");
+
+                        // if(super_user=='Y'){
+                        //     ptoolbar.show($("#reOpenBtn"));
+                        // }else {
+                        //     ptoolbar.hide($("#reOpenBtn"));
+                        // }
+                    }else{
+                        activeToolbar.show();
+                        postedToolbar.hide();
+                    }
                 }
             });
 
@@ -256,7 +314,14 @@
                     buttonCount : 5
                 },
                 noRecords: true,
-                filterable : true,
+                filterable : {
+                    extra: false,
+                    operators: {
+                        string: {
+                            contains : "Contains"
+                        }
+                    }
+                },
                 sortable : true,
                 height : 550,
                 scrollable: true,
@@ -318,6 +383,12 @@
                     {
                         title : "Remarks",
                         field : "ftp_reason",
+                    },
+                    {
+                        title : "Status",
+                        field : "ftp_status",
+                        attributes : { style : 'text-align:center;'},
+                        width : 85,    
                     },
                     {
                         command: { text : 'View',icon : '' ,click : viewModel.toolbarHandler.viewFTP },
@@ -434,14 +505,19 @@
                     viewModel.form.model.set(e.sender.element[0].id,'');
                 }
 
-          
             }
-
 
             var activeToolbar = $("#toolbar").kendoToolBar({
                 items : [
                     { id : 'saveBtn', type: "button", text: "Save", icon: 'save', click : viewModel.buttonHandler.save },
+                    { id : 'postBtn', type: "button", text: "Post", icon: 'print', click : viewModel.buttonHandler.post },
                     { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
+                ]
+            });
+
+            var postedToolbar = $("#toolbar2").kendoToolBar({
+                items : [
+                
                 ]
             });
 

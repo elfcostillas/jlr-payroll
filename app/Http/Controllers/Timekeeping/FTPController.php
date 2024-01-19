@@ -81,16 +81,20 @@ class FTPController extends Controller
         $data = json_decode($request->data);
 
         $data_arr = (array) $data;
-        
-
-        $data_arr['created_by'] = $user->id;
-        $data_arr['created_on'] = now(); 
 
         if($data_arr['id']==null || $data_arr['id']==0 || $data_arr['id']=='')
         {
+            $data_arr['created_by'] = $user->id;
+            $data_arr['created_on'] = now(); 
+           
+            $data_arr['ftp_status'] = 'DRAFT'; 
             $result = $this->mapper2->insertValid($data_arr);
         }else {
+
             $result = $this->mapper2->updateValid($data_arr);
+            if(!is_object($result)){
+                $this->mapper2->post($data_arr);
+            }
         }
 
         if(is_object($result)){

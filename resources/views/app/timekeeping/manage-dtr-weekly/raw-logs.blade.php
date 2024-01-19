@@ -25,6 +25,11 @@
     .tbheader{
         background-color : #949494;
     }
+
+    .ftp {
+        font-weight: bold;
+        background-color: #FCE205;
+    }
 </style>
 <div id="rawlogbox" style="vertical-align:top;min-height:220px;">
     <table id="rawlogtable" style="border-collapse:collapse;">
@@ -44,7 +49,7 @@
             ?>
             <tr class={{ ($rowCtr%2==0) ? 'rowEven' : 'rowOdd';  }}>
                 <td>{{ date_format($punch_date,'m/d/Y') }}</td>
-                <td>{{ $log->punch_time }}</td>
+                <td class="{{ $log->src  }}" >{{ $log->punch_time }}</td>
                 <td>{{ $log->cstate }}</td>
             </tr>
         @endforeach

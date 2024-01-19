@@ -104,7 +104,7 @@
                     <table style="width:100%">
                         <tr>
                             <td>
-                                <div style="width:1175px;" id="dtrgrid"></div>
+                                <div style="width:1181px;" id="dtrgrid"></div>
                             </td>
                             <td style="width:170px;background-color: #f8f9fa;vertical-align:top;">
                                 <div style="height:300px;overflow:scrollable;" id="raw-logs"></div>
