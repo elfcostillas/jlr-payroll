@@ -125,7 +125,7 @@
 
                         read(url,viewModel);
                         viewModel.buttonHandler.clear();
-                        viewModel.form.model.ftp_status = 'DRAFT';
+                        
                         
                         viewModel.functions.showPOP();
 
@@ -261,6 +261,7 @@
                             //console.log(key); //console.log(key + " -> " + p[key]);
                             viewModel.form.model.set(key,null);
                         }
+                        viewModel.form.model.ftp_status = 'DRAFT';
                     }
                 },
                 functions : {
@@ -524,7 +525,7 @@
 
             var postedToolbar = $("#toolbar2").kendoToolBar({
                 items : [
-                
+                    { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
                 ]
             });
 
