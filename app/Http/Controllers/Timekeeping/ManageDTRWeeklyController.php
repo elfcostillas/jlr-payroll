@@ -22,6 +22,12 @@ class ManageDTRWeeklyController extends Controller
         return view('app.timekeeping.manage-dtr-weekly.index');
 
     }
+
+    public function index_sub()
+    {
+        return view('app.timekeeping.manage-dtr-weekly.index-sub');
+    }
+
     public function prepareDTR(Request $request)
     {
         $result = $this->mapper->prepDTRbyPeriod($request->period_id,'weekly');
