@@ -121,8 +121,14 @@
                 toolbarHandler : {  
 
                     addFTP : function(e) {
+                        let url  = `ftp/read/0`;
+
+                        read(url,viewModel);
+                        viewModel.buttonHandler.clear();
                         viewModel.form.model.ftp_status = 'DRAFT';
+                        
                         viewModel.functions.showPOP();
+
                     },
                     viewFTP : function(e) {
                         e.preventDefault(); 
@@ -289,6 +295,7 @@
                     }
                 },
                 callBack : function(e){
+                    console.log(viewModel.form.model.ftp_status);
                     if(viewModel.form.model.ftp_status=='POSTED'){
                         activeToolbar.hide();
                         postedToolbar.show();
