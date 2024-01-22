@@ -136,7 +136,7 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
 
     //timekeeping/manage-dtr-weekly
 
-    Route::prefix('manage-dtr-weekly')->middleware('access:timekeeping/manage-dtr-weekly')->group(function(){
+    Route::prefix('manage-dtr-weekly')->group(function(){
         Route::get('/',[ManageDTRWeeklyController::class,'index']);
 
         Route::post('prepare',[ManageDTRWeeklyController::class,'prepareDTR']);
