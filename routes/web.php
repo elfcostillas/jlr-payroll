@@ -195,6 +195,8 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
 
         Route::post('compute-all',[ManageDTRController::class,'onetimebigtime']);
         Route::get('set-sched/{period_id}',[ManageDTRController::class,'scheduleSetter']);
+
+        Route::get('payroll-period',[PayrollPeriodController::class,'list']);
     });
 
     Route::prefix('upload-log')->group(function(){
@@ -317,8 +319,6 @@ Route::middleware('auth')->prefix('employee-files')->group(function(){
         Route::get('job-titles/{id}',[EmployeeWeeklyController::class,'getJobTitles']);
 
         Route::get('biometric-assignment',[EmployeeWeeklyController::class,'bioAssignment']);
-
-       
         
     });
 

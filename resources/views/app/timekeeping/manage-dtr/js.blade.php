@@ -40,7 +40,7 @@
                     maingrid : new kendo.data.DataSource({
                         transport : {
                             read : {
-                                url : 'payroll-period/list',
+                                url : 'manage-dtr/payroll-period',
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -444,7 +444,7 @@
                         command: [
                             { text : 'Prepare',click : viewModel.buttonHandler.prepare , },
                             { text : 'Download',click : viewModel.buttonHandler.download , },
-                            { text : 'Compute All',click : viewModel.buttonHandler.computeAll , }
+                            // { text : 'Compute All',click : viewModel.buttonHandler.computeAll , }
                         ],
                         attributes : { style : 'font-size:10pt !important;'},
                         width : 280

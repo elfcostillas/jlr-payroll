@@ -26,6 +26,7 @@ class AccessRights
         ->count();
 
         if($result==0){
+           
             return response()->json(['error'=>'Unauthorized access on this link.']);
         }
 

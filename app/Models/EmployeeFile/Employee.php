@@ -40,7 +40,7 @@ class Employee extends Model
         'exit_status',
         'exit_date',
         'contact_no',
-        'division_id',
+        'company_id',
         'dept_id',
         'location_id',
         'pay_type',
