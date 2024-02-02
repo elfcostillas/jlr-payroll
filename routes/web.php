@@ -592,6 +592,7 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::get('web-view/{period}/{div}/{dept}/{bio_id}',[PayslipWeeklyController::class,'webView']);
         Route::get('print/{period}/{div}/{dept}/{bio_id}',[PayslipWeeklyController::class,'print']);
         Route::get('dtr-summary/{period}/{div}/{dept}/{bio_id}',[PayslipWeeklyController::class,'dtrSummary']);
+        Route::get('pdf-view/{period}/{div}/{dept}/{bio_id}',[PayslipWeeklyController::class,'pdfView']);
     });
 
     Route::prefix('bank-transmittal')->group(function(){

@@ -89,7 +89,7 @@ class PostedPayrollRegisterWeeklyMapper extends AbstractMapper {
     }
 
     function getData($period_id){
-        $qry = "SELECT DISTINCT employees.biometric_id,employee_name,lastname,firstname,basic_salary
+        $qry = "SELECT DISTINCT employees.biometric_id,employee_name,lastname,firstname,basic_salary,retired
         FROM employees INNER JOIN edtr ON employees.biometric_id = edtr.biometric_id
         INNER JOIN employee_names_vw ON employees.biometric_id = employee_names_vw.biometric_id
         INNER JOIN payroll_period_weekly ON dtr_date BETWEEN date_from AND date_to

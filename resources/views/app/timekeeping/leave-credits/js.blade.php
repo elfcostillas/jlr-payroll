@@ -160,7 +160,7 @@
                         width : 100,
                     },
                     {
-                        title : 'Empployee Name',
+                        title : 'Employee Name',
                         field : 'employee_name',
                         //width : 320,
                     },

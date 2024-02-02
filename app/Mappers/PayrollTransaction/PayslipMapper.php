@@ -595,7 +595,13 @@ class PayslipMapper extends AbstractMapper {
                     ->from('payrollregister_posted_weekly')
                     ->join('employees','employees.biometric_id','=','payrollregister_posted_weekly.biometric_id')
                     ->leftJoin('departments','departments.id','=','dept_id')
-                    ->leftJoin('locations','locations.id','=','location_id')
+
+                    // ->leftJoin('locations','locations.id','=','location_id')
+                    ->leftJoin('weekly_tmp_locations',function($join){
+                        $join->on('employees.biometric_id','=','weekly_tmp_locations.biometric_id');
+                        $join->on('weekly_tmp_locations.period_id','=','payrollregister_posted_weekly.period_id');
+                    })
+                    ->leftJoin('locations','locations.id','=','weekly_tmp_locations.loc_id')
                     ->leftJoin('posted_weekly_compensation',function($join){
                         $join->on('posted_weekly_compensation.period_id','=','payrollregister_posted_weekly.period_id');
                         $join->on('posted_weekly_compensation.biometric_id','=','payrollregister_posted_weekly.biometric_id');
@@ -607,6 +613,7 @@ class PayslipMapper extends AbstractMapper {
 
         if($division != 0 && $division != "" && $division != null){
             $result->where('division_id',$division);
+            // $result->where('weekly_tmp_locations.loc_id',$division);
         }
 
         if($department != 0 && $department != "" && $department != null){

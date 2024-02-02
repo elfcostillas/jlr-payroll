@@ -75,7 +75,8 @@
         </tr>
         @foreach($line[$emp->biometric_id] as $key => $value)
             <?php 
-                $amount = compute($key,$value,$emp->basic_salary);
+            
+                $amount = compute($key,$value,$emp->basic_salary,$emp->retired);
                 $totalPerEmp += $amount; 
             ?>
             <tr>
@@ -98,13 +99,18 @@
 @endforeach
 
 <?php
-    function compute($key,$value,$rate){
+    function compute($key,$value,$rate,$retired){
        
         $daily_rate  = $rate;
         $hourly_rate = $rate / 8;
         switch($key){
             case 'over_time' :
-                $amount = $value * round($hourly_rate * 1.25,2);
+                if($retired=='Y'){
+                    $amount = $value * round($hourly_rate * 1.25,2);
+                }else{
+                    $amount = $value * round($hourly_rate * 1.0,2);
+                }
+                
             break;
             case 'ndays':
                 $amount = $value * $daily_rate;

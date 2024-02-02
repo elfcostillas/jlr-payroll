@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Mappers\PayrollTransaction\PayslipMapper;
 use App\Mappers\EmployeeFileMapper\EmployeeMapper;
 use App\Mappers\PayrollTransaction\PostedPayrollRegisterWeeklyMapper;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PayslipWeeklyController  extends Controller
 {
@@ -65,6 +66,49 @@ class PayslipWeeklyController  extends Controller
             $label[$value->var_name] = $value->col_label;
         }
 
-        return view('app.payroll-transaction.payslip-weekly.dtr-summary',['data'=> $result,'headers'=>$headers,'label' => $label]);
+        // return view('app.payroll-transaction.payslip-weekly.dtr-summary',['data'=> $result,'headers'=>$headers,'label' => $label]);
+
+        $pdf = PDF::loadView('app.payroll-transaction.payslip-weekly.dtr-summary-pdf',['data'=> $result,'headers'=>$headers,'label' => $label])->setPaper('A4','portrait');
+        $pdf->output();
+
+        $dom_pdf = $pdf->getDomPDF();
+    
+        $canvas = $dom_pdf->get_canvas();
+        $canvas->page_text(40, 812, date_format(now(),"m/d/Y H:i:s"), null, 10, array(0, 0, 0));
+        $canvas->page_text(510, 812, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+
+        return $pdf->stream('DTR.pdf'); 
+    }
+
+    public function pdfView(Request $request)
+    {   
+        $period_label = $this->payslip->getPeriodLabelWeekly($request->period);
+        $result = $this->payslip->getDataWeekly($request->period,$request->div,$request->dept,$request->bio_id);
+      
+        // return view('app.payroll-transaction.payslip-weekly.payslip-web',['data' => $result,'period_label' =>$period_label]);
+        $pdf = PDF::loadView('app.payroll-transaction.payslip-weekly.payslip-pdf',['data' => $result,'period_label' =>$period_label])->setPaper('A4','portrait');
+
+        $pdf->output();
+        // $pdf->output();
+        // $dom_pdf = $pdf->getDomPDF();
+
+        // $canvas = $pdf->get_canvas();
+        // $canvas->page_text(510, 812, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+
+        // $dom_pdf = $pdf->getDomPDF();
+        // // dd($pdf);
+        // $canvas = $dom_pdf->get_canvas();
+       
+        // $canvas->page_text(510, 812, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 9, array(0, 0, 0));
+        // $pdf->output();
+
+        // $pdf = PDF::loadView($this->dir.'.print',['header'=>$printHeader,'suppliers'=> $suppliers,'detail' => $printDetail,'mr_no' => $mr_no])->setPaper('A4','portrait');
+        $dom_pdf = $pdf->getDomPDF();
+        //$pdf->output();
+        $canvas = $dom_pdf->get_canvas();
+        $canvas->page_text(40, 812, date_format(now(),"m/d/Y H:i:s"), null, 10, array(0, 0, 0));
+        $canvas->page_text(510, 812, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+
+        return $pdf->stream('Payslip.pdf'); 
     }
 }
