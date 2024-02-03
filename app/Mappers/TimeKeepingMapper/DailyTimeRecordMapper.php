@@ -183,7 +183,8 @@ class DailyTimeRecordMapper extends AbstractMapper {
                     ->from('edtr_raw')
                     ->where('biometric_id',$biometric_id)
                     ->join('payroll_period',function($join){
-                        $join->whereRaw('punch_date between payroll_period.date_from and payroll_period.date_to');
+                        // $join->whereRaw('punch_date between payroll_period.date_from and payroll_period.date_to');
+                        $join->whereRaw('punch_date between payroll_period.date_from and DATE_ADD(payroll_period.date_to,INTERVAL 1 DAY)');
                     })
                     ->where('payroll_period.id',$period_id)
                     ->orderBy('punch_date')
