@@ -496,6 +496,8 @@ Route::middleware('auth')->prefix('reports')->group(function(){
         Route::get('/',[EmployeeReportController::class,'index']);
         Route::get('generate',[EmployeeReportController::class,'generate']);
         Route::get('generate-weekly',[EmployeeReportController::class,'generateWeekly']);
+
+        Route::get('print-weekly',[EmployeeReportController::class,'printWeekly']);
     });
 
     Route::prefix('leave-reports')->group(function(){

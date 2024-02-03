@@ -70,16 +70,17 @@
                         <div class="card-body"> 
                             <table class="formTable" border=0 style="width:100%">
                                 <tr>
+                                    <td colspan=2>Location</td>
                                     <td colspan=2>Division</td>
                                     <td colspan=2>Department</td>
                                     <td colspan=2></td>
                                 </tr>
                                 <tr>
-                                    
-                                    <td colspan=2><input type="text" id="division_id" data-bind="value:form.model.division_id" ></td>
+                                    <td colspan=2><input type="text" id="location_id" ></td>
+                                    <td colspan=2><input type="text" id="division_id" ></td>
                                     <td colspan=2><input type="text" id="dept_id" ></td>
                                     <td colspan=2></td>
-                                    <td colspan=2></td>
+                                    
                                 </tr>
                                 <tr>
                                     <td colspan="2"><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download'><i class="fas fa-download"></i> Download Excel</button></td>
@@ -91,7 +92,64 @@
                     </div>
                 </div>
             </div>
-           
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-secondary">
+                        <div class="card-header"> Quick Reports </div>
+                        <div class="card-body"> 
+                            <table class="formTable" border=0 style="width:100%">
+                                <tr>
+                                    <td colspan=2>Location</td>
+                                    <td colspan=2>Division</td>
+                                    <td colspan=2>Department</td>
+                                    <td colspan=2></td>
+                                </tr>
+                                <tr>
+                                    <td colspan=2><input type="text" id="location_id_qr" ></td>
+                                    <td colspan=2><input type="text" id="division_id_qr" ></td>
+                                    <td colspan=2><input type="text" id="dept_id_qr" ></td>
+                                    <td colspan=2></td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><button type="button" class="btn btn-block btn-danger btn-sm" data-bind='click:buttonHandler.download_qr'><i class="fas fa-download"></i> Print </button></td>
+                                    <!-- <td colspan="2"><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download_weekly_qr'><i class="fas fa-download"></i> Download Weekly</button></td> -->
+                                    <td colspan="4"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-secondary">
+                        <div class="card-header"> Employee Records - Weekly</div>
+                        <div class="card-body"> 
+                            <table class="formTable" border=0 style="width:100%">
+                                <tr>
+                                    <td colspan=2>Location</td>
+                                    <td colspan=2>Division</td>
+                                    <td colspan=2>Department</td>
+                                    <td colspan=2></td>
+                                </tr>
+                                <tr>
+                                    <td colspan=2><input type="text" id="location_id_w" ></td>
+                                    <td colspan=2><input type="text" id="division_id_w"></td>
+                                    <td colspan=2><input type="text" id="dept_id_w" ></td>
+                                    <td colspan=2></td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download'><i class="fas fa-download"></i> Download Excel</button></td>
+                                    <td colspan="2"><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download_weekly'><i class="fas fa-download"></i> Download Weekly</button></td>
+                                    <td colspan="2"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
         </div>
     </div>
 @endsection

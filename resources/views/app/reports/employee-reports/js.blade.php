@@ -100,6 +100,27 @@
                             }
                         }
                     }),
+                    division_w : new kendo.data.DataSource({
+                        transport : {
+                            read : {
+                                url : '../employee-files/divisions-departments/division/get-divisions',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                   
+                                }
+                            },
+                        },
+                        schema : {
+                            model : {
+                                id : 'id',
+                                fields : {
+                                    div_code : { type : 'string' },
+                                    div_name : { type : 'string' },
+                                }
+                            }
+                        }
+                    }),
                     department : new kendo.data.DataSource({
                         transport : {
                             read : {
@@ -122,6 +143,69 @@
                         }
                     }),
                     
+                    department_w : new kendo.data.DataSource({
+                        transport : {
+                            read : {
+                                url : '../employee-files/divisions-departments/department/list-option/1',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },
+                        },
+                        schema : {
+                            model : {
+                                id : 'id',
+                                fields : {
+                                    div_code : { type : 'string' },
+                                    div_name : { type : 'string' },
+                                }
+                            }
+                        }
+                    }),
+                    location : new kendo.data.DataSource({
+                        transport : {
+                            read : {
+                                url : '../settings/locations/get-locations',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },
+                        },
+                        schema : {
+                            model : {
+                                id : 'id',
+                                fields : {
+                                    div_code : { type : 'string' },
+                                    div_name : { type : 'string' },
+                                }
+                            }
+                        }
+                    }),
+                    location_w: new kendo.data.DataSource({
+                        transport : {
+                            read : {
+                                url : '../settings/locations/get-locations',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },
+                        },
+                        schema : {
+                            model : {
+                                id : 'id',
+                                fields : {
+                                    // div_code : { type : 'string' },
+                                    // div_name : { type : 'string' },
+                                }
+                            }
+                        }
+                    }),
                 },
                 buttonHandler : {  
                     download : function()
@@ -132,6 +216,10 @@
                     {
                         process2();
                     },
+                    download_qr : function()
+                    {
+                        process3();
+                    }
 
             
                 },
@@ -165,25 +253,94 @@
                 dataTextField: "dept_name",
                 dataValueField: "id",
                 dataSource: viewModel.ds.department,
-                index: 1,
+                index: 0,
+                //change: onChange
+                optionLabel: {
+                    dept_name: "ALL",
+                    id: "0"
+                }
+            });
+
+            $("#location_id").kendoDropDownList({
+                dataTextField: "location_name",
+                dataValueField: "id",
+                dataSource: viewModel.ds.location,
+                index: 0,
+                optionLabel: {
+                    location_name: "ALL",
+                    id: "0"
+                }
                 //change: onChange
             });
+            
+            $("#location_id_qr").kendoDropDownList({
+                dataTextField: "location_name",
+                dataValueField: "id",
+                dataSource: viewModel.ds.location_w,
+                index: 0,
+                optionLabel: {
+                    location_name: "ALL",
+                    id: "0"
+                }
+                //change: onChange
+            });
+
+            $("#dept_id_qr").kendoDropDownList({
+                dataTextField: "dept_name",
+                dataValueField: "id",
+                dataSource: viewModel.ds.department_w,
+                index: 0,
+                //change: onChange
+                optionLabel: {
+                    dept_name: "ALL",
+                    id: "0"
+                }
+            });
+
+            $("#division_id_qr").kendoDropDownList({
+                dataTextField: "div_name",
+                dataValueField: "id",
+                dataSource: viewModel.ds.division_w,
+                //index: 1,
+                change: function(e){
+                    let selected = e.sender.dataItem();
+                    let deptUrl = `../employee-files/divisions-departments/department/list-option/${selected.id}`;
+                    viewModel.ds.department_w.transport.options.read.url = deptUrl;
+                    viewModel.ds.department_w.read();
+                },
+                optionLabel: {
+                    div_name: "ALL",
+                    id: "0"
+                }
+            });
+
 
             function process()
             {
               
                 let div =  $("#division_id").data("kendoDropDownList").value();
                 let dept =  $("#dept_id").data("kendoDropDownList").value();
-                let url = `employee-report/generate?division=${div}&department=${dept}`;
+                let url = `employee-report/generate?division=${div}&department=${dept}&location=${loc}`;
                 window.open(url);
             }
 
             function process2()
             {
-               
+                let loc =  $("#location_id").data("kendoDropDownList").value();
                 let div =  $("#division_id").data("kendoDropDownList").value();
                 let dept =  $("#dept_id").data("kendoDropDownList").value();
-                let url = `employee-report/generate?division=${div}&department=${dept}`;
+                let url = `employee-report/generate-weekly?division=${div}&department=${dept}&location=${loc}`;
+                window.open(url);
+                // console.log(url);
+            }
+
+            function process3()
+            {
+                let loc =  $("#location_id_qr").data("kendoDropDownList").value();
+                let div =  $("#division_id_qr").data("kendoDropDownList").value();
+                let dept =  $("#dept_id_qr").data("kendoDropDownList").value();
+
+                let url = `employee-report/print-weekly?division=${div}&department=${dept}&location=${loc}`;
                 window.open(url);
             }
             
