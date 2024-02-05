@@ -9,6 +9,15 @@
         * {
             font-size : 10pt;
         }
+
+        #header {
+            position : fixed;
+            top : -40px;
+        }
+
+        @page {
+            margin-top : 60px;
+        }
     </style>
 </head>
 <body>
@@ -19,9 +28,14 @@
     $line = [];
    
 ?>
+<div id="header"><b>DTR - SUPPORT GROUP </b> <br>
+Period : {{ $period_label->drange }}
+</div>
 
 @foreach($data as $emp)
-<div style="page-break-inside : avoid;margin-top:14px;">
+
+
+<div style="page-break-inside : avoid;margin-top:0px;">
     <?php
         $ctr = 1;
     ?>
@@ -120,7 +134,7 @@
         </tr>
     </table>
 </div>
-<hr>
+
 @endforeach
 
 <?php

@@ -152,7 +152,7 @@
     <?php  $total = 0; ?>
 
     
-        <table border=1 style="border-collapse:collapse; width:200;  float:left;margin-right:12px;">
+        <table border=1 style="page-break-inside:avoid;border-collapse:collapse; width:200;  float:left;margin-right:12px;">
             <tr>
                 <td colspan=2> No of Employees</td> 
 

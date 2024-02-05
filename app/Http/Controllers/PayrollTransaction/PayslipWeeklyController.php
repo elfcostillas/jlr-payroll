@@ -9,6 +9,7 @@ use App\Mappers\PayrollTransaction\PayslipMapper;
 use App\Mappers\EmployeeFileMapper\EmployeeMapper;
 use App\Mappers\PayrollTransaction\PostedPayrollRegisterWeeklyMapper;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Mappers\TimeKeepingMapper\PayrollPeriodWeeklyMapper;
 
 class PayslipWeeklyController  extends Controller
 {
@@ -16,12 +17,14 @@ class PayslipWeeklyController  extends Controller
     private $payslip;
     private $employee;
     private $posted;
+    private $period;
 
-    public function __construct(PayslipMapper $payslip,EmployeeMapper $employee,PostedPayrollRegisterWeeklyMapper $posted)
+    public function __construct(PayslipMapper $payslip,EmployeeMapper $employee,PostedPayrollRegisterWeeklyMapper $posted,PayrollPeriodWeeklyMapper $period)
     {
        $this->payslip = $payslip;
        $this->employee = $employee;
        $this->posted = $posted;
+       $this->period = $period;
     
     }  
 
@@ -55,6 +58,8 @@ class PayslipWeeklyController  extends Controller
        
         $result = $this->posted->getData($request->period);
 
+        $period_label = $this->period->makeRange($request->period);
+
         foreach($headers as $key => $value){
           
             if($value==0){
@@ -65,10 +70,10 @@ class PayslipWeeklyController  extends Controller
         foreach($colHeaders  as  $value ){
             $label[$value->var_name] = $value->col_label;
         }
-
+    
         // return view('app.payroll-transaction.payslip-weekly.dtr-summary',['data'=> $result,'headers'=>$headers,'label' => $label]);
 
-        $pdf = PDF::loadView('app.payroll-transaction.payslip-weekly.dtr-summary-pdf',['data'=> $result,'headers'=>$headers,'label' => $label])->setPaper('A4','portrait');
+        $pdf = PDF::loadView('app.payroll-transaction.payslip-weekly.dtr-summary-pdf',['data'=> $result,'headers'=>$headers,'label' => $label,'period_label' => $period_label])->setPaper('A4','portrait');
         $pdf->output();
 
         $dom_pdf = $pdf->getDomPDF();

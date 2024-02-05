@@ -61,24 +61,23 @@ class EmployeeReportController extends Controller
     {
         $filter = [
             // 'division' =>  $request->input('divison'),
-            'location' => $request->input('division'),
-            'division' => $request->input('location'),
+            'location' => $request->input('location'),
+            'division' => $request->input('division'),
             'department' => $request->input('department'),
         ];
         
+        $result = $this->emp_mapper->generateWeeklyEmployeeQR($filter);
 
-        dd($filter);
+        $pdf = PDF::loadView('app.reports.employee-reports.employee-quickreports',['data'=> $result])->setPaper('A4','portrait');
+        $pdf->output();
 
-        // $pdf = PDF::loadView('app.payroll-transaction.payslip-weekly.dtr-summary-pdf',['data'=> $result,'headers'=>$headers,'label' => $label])->setPaper('A4','portrait');
-        // $pdf->output();
-
-        // $dom_pdf = $pdf->getDomPDF();
+        $dom_pdf = $pdf->getDomPDF();
     
-        // $canvas = $dom_pdf->get_canvas();
-        // $canvas->page_text(40, 812, date_format(now(),"m/d/Y H:i:s"), null, 10, array(0, 0, 0));
-        // $canvas->page_text(510, 812, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+        $canvas = $dom_pdf->get_canvas();
+        $canvas->page_text(40, 812, date_format(now(),"m/d/Y H:i:s"), null, 10, array(0, 0, 0));
+        $canvas->page_text(510, 812, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
 
-        // return $pdf->stream('WeeklyReport.pdf'); 
+        return $pdf->stream('EmployeeQuickReports.pdf'); 
     }
 
 

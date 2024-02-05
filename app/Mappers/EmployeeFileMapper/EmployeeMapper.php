@@ -297,6 +297,32 @@ class EmployeeMapper extends AbstractMapper {
 		
 	}
 
+	public function generateWeeklyEmployeeQR($filter)
+	{
+		$location = DB::table('locations')->select();
+		
+		if($filter['location']!=0){
+			$location->where('id',$filter['location']);
+		}
+		$location =	$location->get();
+
+		foreach($location as $loc)
+		{
+			$employees = DB::table('employees')->where('location_id',$loc->id)
+				->leftJoin('employee_names_vw','employee_names_vw.biometric_id','=','employees.biometric_id')
+				->where('employees.exit_status',1)
+				->where('pay_type',3)
+				->select('employees.id','employee_name')
+				->orderBy('lastname','asc')
+				->orderBy('firstname','asc')
+				->get();
+
+			$loc->employees = $employees;
+		}
+
+		return $location;
+	}
+
 
 
 
