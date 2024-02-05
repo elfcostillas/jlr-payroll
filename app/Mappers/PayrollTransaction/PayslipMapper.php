@@ -110,6 +110,9 @@ class PayslipMapper extends AbstractMapper {
             $result->where('employees.biometric_id',$biometric_id);
         }
 
+        $result->orderBy('lastname','ASC');
+        $result->orderBy('firstname','ASC');
+
         $data = $result->get();
 
        
@@ -623,6 +626,9 @@ class PayslipMapper extends AbstractMapper {
         if($biometric_id != 0 && $biometric_id != "" && $biometric_id != null){
             $result->where('employees.biometric_id',$biometric_id);
         }
+
+        $result->orderBy('lastname','ASC');
+        $result->orderBy('firstname','ASC');
 
         $data = $result->get();
 
