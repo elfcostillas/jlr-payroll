@@ -76,4 +76,29 @@ class ManageLocationMapper extends AbstractMapper {
             'data' => $result->get()
         ];
     }
+
+    public function ListEmployeeByLocation($period_id) 
+    {
+        $location = DB::table('locations')->select();
+		
+		$location =	$location->get();
+
+        foreach($location as $loc)
+		{
+            
+            $employees = $this->model->select('weekly_tmp_locations.period_id','weekly_tmp_locations.id','weekly_tmp_locations.biometric_id','employee_name as employee_name','weekly_tmp_locations.loc_id','location_name')
+            ->join('employee_names_vw','employee_names_vw.biometric_id','=','weekly_tmp_locations.biometric_id')
+            ->join('employees','weekly_tmp_locations.biometric_id','=','employees.biometric_id')
+            ->join('locations','locations.id','=','weekly_tmp_locations.loc_id')
+            ->where('weekly_tmp_locations.period_id','=',$period_id)
+            ->where('weekly_tmp_locations.loc_id',$loc->id)
+            ->get();
+        
+            $loc->employees = $employees;
+        }
+
+       
+
+        return $location;
+    }
 }

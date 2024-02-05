@@ -102,7 +102,7 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::get('/',[ManageLocationController::class,'index']);
         Route::get('list',[ManageLocationController::class,'list']);
         Route::get('get-employee-list/{period_id}',[ManageLocationController::class,'employeeList']);
-
+        Route::get('print/{period_id}',[ManageLocationController::class,'print']);
         Route::post('update',[ManageLocationController::class,'update']);
 
        

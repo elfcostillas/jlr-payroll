@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Timekeeping;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mappers\TimeKeepingMapper\ManageLocationMapper;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ManageLocationController extends Controller
 {
@@ -60,5 +61,24 @@ class ManageLocationController extends Controller
         $result = $this->mapper->updateValid($arr);
 
         return response()->json($result);
+    }
+
+    public function print(Request $request)
+    {
+        $data = $this->mapper->ListEmployeeByLocation($request->period_id);
+
+        $pdf = PDF::loadView('app.timekeeping.manage-location.print',[
+            'data' => $data
+            ])
+            ->setPaper('letter','portrait');
+
+      
+        $pdf->output();
+        $dom_pdf = $pdf->getDomPDF();
+        
+        $canvas = $dom_pdf ->get_canvas();
+        $canvas->page_text(510, 800, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+       
+        return $pdf->stream('EmployeeListByLocation.pdf'); 
     }
 }

@@ -245,19 +245,28 @@
                     computeAll : function(e){
                         let tr = $(e.target).closest("tr");
                         let data = this.dataItem(tr);
+                        
+                        // $.post('manage-location/compute-all',{
+                        //     period_id : data.id
+                        // },function(){
+                        //     Swal.fire({
+                        //     //position: 'top-end',
+                        //     icon: 'success',
+                        //     title: 'DTR Logs has been processed.',
+                        //     showConfirmButton: false,
+                        //     timer: 1000
+                        //     });	
+                        // });
 
-                        $.post('manage-location/compute-all',{
-                            period_id : data.id
-                        },function(){
-                            Swal.fire({
-                            //position: 'top-end',
-                            icon: 'success',
-                            title: 'DTR Logs has been processed.',
-                            showConfirmButton: false,
-                            timer: 1000
-                            });	
-                        });
+                    },
+                    print : function(e){
+                        let tr = $(e.target).closest("tr");
+                        let data = this.dataItem(tr);
 
+                        // console.log(data.id);
+                        let url = `manage-location/${data.id}`;
+
+                        window.open(url);
                     },
                     manage : function(e){
                         let tr = $(e.target).closest("tr");
@@ -382,8 +391,10 @@
                     },
                    
                     {
-                        width : 90
-                    }
+                        command: { text : 'Print',icon : 'print' ,click : viewModel.buttonHandler.print },
+                        attributes : { style : 'font-size:10pt !important;'},
+                        width : 85
+                    },
                   
                 ],
                 change : function(e){
