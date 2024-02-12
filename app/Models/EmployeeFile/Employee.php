@@ -51,8 +51,8 @@ class Employee extends Model
         'monthly_allowance',
         'sched_mtwtf',
         'sched_sat',
-        'retired'
-
+        'retired',
+        'dept_category'
     ];
 
 }

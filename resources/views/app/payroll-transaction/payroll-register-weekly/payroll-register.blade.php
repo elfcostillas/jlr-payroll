@@ -142,16 +142,18 @@
                         <th style="padding : 0px 4px;min-width:110px;" >Late Amount</th>
 
                        
-                        <th style="padding : 0px 4px;min-width:110px;" >Earnings</th>
-                        <th style="padding : 0px 4px;min-width:110px;" >Retro Pay</th>
+                       
 
                         @foreach($headers as $key => $val)
                             <th style="padding : 0px 4px;min-width:100px;" >{{ $labels[$key] }}</th>
                             @php $colspan++; @endphp
                         @endforeach
+                        <th style="padding : 0px 4px;min-width:110px;" >Other Earnings</th>
+                        <th style="padding : 0px 4px;min-width:110px;" >Retro Pay</th>
                         <th style="padding : 0px 4px;min-width:110px;" >Gross Pay</th>
-                        <th style="padding : 0px 4px;min-width:110px;" >PPE</th>
                         <th style="padding : 0px 4px;min-width:110px;" >Canteen</th>
+                        <th style="padding : 0px 4px;min-width:110px;" >PPE</th>
+                       
                         <th style="padding : 0px 4px;min-width:110px;" >Total Deduction</th>
                         <th style="padding : 0px 4px;min-width:110px;" >Net Pay</th>
                 </tr>
@@ -159,8 +161,7 @@
            
                   
                             @foreach($data as $employee)
-                          
-                               {{-- @php dd($employee->otherEarnings); @endphp --}}
+                               
                                 <tr style="vertical-align: top;">
                                     <th>{{ $rcount }}</th>
                                     <th style="width:120px;"> {{ $employee->biometric_id }} </th> 
@@ -181,16 +182,18 @@
                                     <td style="text-align:right;"> {{ ($employee->late_eq>0) ? number_format($employee->late_eq,2) : ''; }}</td>
                                     <td style="text-align:right;"> {{ ($employee->late_eq_amount>0) ? number_format($employee->late_eq_amount,2) : ''; }}</td>
                                 
-                                    <td style="text-align:right;"> {{ ($employee->otherEarnings['earnings']>0) ? number_format($employee->otherEarnings['earnings'],2) : ''; }}</td>
-                                    <td style="text-align:right;"> {{ ($employee->otherEarnings['retro_pay']>0) ? number_format($employee->otherEarnings['retro_pay'],2) : ''; }}</td>
-                                
+                                  
 
                                     @foreach($headers as $key => $val)
                                         <td style="text-align:right;">{{ ($employee->$key > 0) ? number_format($employee->$key,2) : '' }}</td>
                                     @endforeach
+                                        <td style="text-align:right;"> {{ ($employee->otherEarnings['earnings']>0) ? number_format($employee->otherEarnings['earnings'],2) : ''; }}</td>
+                                        <td style="text-align:right;"> {{ ($employee->otherEarnings['retro_pay']>0) ? number_format($employee->otherEarnings['retro_pay'],2) : ''; }}</td>
+                                
                                         <td style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($employee->gross_total > 0) ? number_format($employee->gross_total,2) : '' }}</td>
-                                        <td style="text-align:right;"> {{ ($employee->otherEarnings['deductions']>0) ? number_format($employee->otherEarnings['deductions'],2) : ''; }}</td>
                                         <td style="text-align:right;"> {{ ($employee->otherEarnings['canteen']>0) ? number_format($employee->otherEarnings['canteen'],2) : ''; }}</td>
+                                        <td style="text-align:right;"> {{ ($employee->otherEarnings['deductions']>0) ? number_format($employee->otherEarnings['deductions'],2) : ''; }}</td>
+
                                     <td style="text-align:right;font-weight:bold;border-bottom:1px solid;" >{{ ($employee->total_deduction>0) ? number_format($employee->total_deduction,2) : ''; }}</td>
                                     <td style="text-align:right;font-weight:bold;border-bottom:double;{{ ($employee->net_pay < ($employee->gross_total*0.3)) ? 'color:red'  : '' }};" >{{ ($employee->net_pay>0) ? number_format($employee->net_pay,2) :  number_format($employee->net_pay,2) }}</td>
                                 </tr>

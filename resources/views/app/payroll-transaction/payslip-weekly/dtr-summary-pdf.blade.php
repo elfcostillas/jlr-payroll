@@ -7,7 +7,7 @@
 
     <style>
         * {
-            font-size : 10pt;
+            font-size : 8pt;
         }
 
         #header {
@@ -17,6 +17,7 @@
 
         @page {
             margin-top : 60px;
+            border : 1px solid red;
         }
     </style>
 </head>
@@ -38,30 +39,43 @@ Period : {{ $period_label->drange }}
 <div style="page-break-inside : avoid;margin-top:0px;">
     <?php
         $ctr = 1;
+
+        $no_of_days = 0;
+        $total_ot = 0;
+
+        $totalPerEmp = 0; 
+
     ?>
-    <table border=1 style= "width: 100%;margin-bottom : 4px;border-collapse:collapse;" >
+    <table border=1 style= "margin-bottom : 4px;border-collapse:collapse;margin-bottom:12px;" >
+    
         <tr>
-            <td style="width:60px;text-align:center;">Bio ID</td>
-            <td style="width:220px;text-align:center;">Name</td>
-            <td style="text-align:center;" > Date </td>
-            <td style="text-align:center;" >Time In</td>
-            <td style="text-align:center;" >Time Out</td>
-            <td style="text-align:center;" > Day </td>
+            <td colspan="3" style="font-weight:bold;padding-left:4px;" > Name : {{ $emp->employee_name }} </td>
+            
+            <td colspan=2 style="text-align:center;">Daily Rate : {{ number_format($emp->basic_salary,2) }}</td>
+           
+        </tr>
+        <tr> 
+            <td colspan="5"  style="padding-left:4px;"> {{ $emp->dept_name }} - {{ $emp->job_title_name }} </td>
+        </tr> 
+        <tr>
+         
+            <td style="text-align:center; width:80px;" > Date </td>
+            <td style="text-align:center; width:80px;" >Time In</td>
+            <td style="text-align:center; width:80px;" >Time Out</td>
+            <td style="text-align:center; width:80px;" > Day </td>
             @foreach($headers as $key => $h)
                
-                <td > {{ $label[$key]}} </td>
+                <td style="text-align:center;width:100px;"> {{ $label[$key]}} (Hrs)</td>
             @endforeach
         </tr>
         <tr>
-           
-            <td style="text-align:right;padding-right:8px;" rowspan={{ count($emp->dtr)  }} > {{ $emp->biometric_id }} </td>
-            <td style="padding-left: 8px;" rowspan={{ count($emp->dtr) }} > {{ $emp->employee_name }} </td>
+
             @foreach($emp->dtr as $dtr)
                 
                     @php $date = Carbon::createFromFormat('Y-m-d',$dtr->dtr_date) @endphp
                     <td style="text-align:center;" >{{ $date->format('m/d/Y') }}</td>
-                    <td style="text-align:center;" >{{ $dtr->time_in }}</td>
-                    <td style="text-align:center;" >{{ $dtr->time_out }}</td>
+                    <td style="text-align:center;" >{{ ($dtr->time_in !='' && $dtr->time_in != '00:00') ? $dtr->time_in : '' }}</td>
+                    <td style="text-align:center;" >{{ ($dtr->time_out !='' && $dtr->time_out != '00:00') ? $dtr->time_out : '' }}</td>
                     <td style="text-align:center;" >{{ ($dtr->ndays>0) ? $dtr->ndays : '' }}</td>
                     @foreach($headers as $key => $h)
                         <td style="text-align:center;">{{ ($dtr->$key>0) ? $dtr->$key : '' }}</td>
@@ -73,7 +87,8 @@ Period : {{ $period_label->drange }}
                                 $line[$emp->biometric_id][$key] = 0;
                                 $line[$emp->biometric_id][$key] +=  ($dtr->$key>0) ? $dtr->$key : 0;
                             }
-                            
+                            $total_ot += $dtr->$key;
+                           
                         ?>
                     @endforeach
                     
@@ -96,43 +111,41 @@ Period : {{ $period_label->drange }}
                         $line[$emp->biometric_id]['ndays'] = 0;
                         $line[$emp->biometric_id]['ndays'] += ($dtr->ndays>0) ? $dtr->ndays : 0;
                     }
+
+                    $no_of_days = $line[$emp->biometric_id]['ndays'] ;
                     
                 ?>
             @endforeach
         <!-- </tr> -->
-    </table>
-    
-    <?php $totalPerEmp = 0;  ?>
-    <table  border=1 style= "margin-bottom : 16px;border-collapse:collapse;">
         <tr>
-            <td style="width:60px"></td>
-            <td style="width:60px"></td>
-            <td style="width:60px"></td>
-            <td style="width:60px"></td>
-            <td style="width:60px"></td>
+            <td></td>
+            <td></td>
+            <td style="text-align:right;padding-right:8px;" > <b>TOTAL</b></td>
+            <td style="text-align:center;" >{{  $no_of_days }}</td>
+            <td style="text-align:center;" >{{  $total_ot }}</td>
         </tr>
-        @foreach($line[$emp->biometric_id] as $key => $value)
+        
             <?php 
             
-                $amount = compute($key,$value,$emp->basic_salary,$emp->retired);
+                $amount = compute('ndays',$no_of_days,$emp->basic_salary,$emp->retired);
+                $ot_amount = compute('over_time',$total_ot,$emp->basic_salary,$emp->retired);
                 $totalPerEmp += $amount; 
             ?>
-            <tr>
-                <td></td>
-                <td>{{ $key }}</td>
-                <td style="text-align:right;padding-right: 6px;"> {{ ($key=='ndays') ? number_format($emp->basic_salary,2) : '' }}</td>
-                <td style="text-align:right;padding-right: 6px;">{{ ($value>0) ? number_format($value,2) : '' }} </td>
-                <td style="text-align:right;padding-right: 6px;">{{ ($amount>0) ? number_format($amount,2) : '' }} </td>
-            </tr>
-        @endforeach
+   
+        <tr> 
+            <td>&nbsp;</td>
+            <td></td>
+            <td style="text-align:right;padding-right:8px;" > <b>TOTAL PAY</b></td>
+            <td style="text-align:right;padding-right:8px;" >{{ ($amount>0) ? number_format($amount,2) : '' }}</td>
+            <td style="text-align:right;padding-right:8px;" >{{ ($ot_amount>0) ? number_format($ot_amount,2) : '' }}</td>
+        </tr> 
         <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td style="width:60px;text-align:right;padding-right: 6px;font-weight:bold;">{{ number_format($totalPerEmp,2) }}</td>
+            <td colspan=3 style="text-align:right;padding-right:8px;font-weight:bold;">TOTAL NET PAY</td>            
+            <td colspan=2 style="text-align:center;font-weight:bold;">{{ number_format($amount+$ot_amount,2) }}</td>            
         </tr>
     </table>
+    
+    
 </div>
 
 @endforeach
@@ -153,11 +166,44 @@ Period : {{ $period_label->drange }}
             break;
             case 'ndays':
                 $amount = $value * $daily_rate;
+                
             break;
 
             default :
                 $amount =0 ;
             break;
+        }
+
+        //return ($amount>0) ? round($amount,2) : '';
+        return round($amount,2);
+
+
+    }
+
+    function compute2($key,$key2,$value,$rate,$retired){
+        if($key==$key2){
+            $daily_rate  = $rate;
+            $hourly_rate = $rate / 8;
+            switch($key){
+                case 'over_time' :
+                    if($retired=='Y'){
+                        $amount = $value * round($hourly_rate * 1.25,2);
+                    }else{
+                        $amount = $value * round($hourly_rate * 1.0,2);
+                    }
+                    dd($key);
+                break;
+                case 'ndays':
+                    $amount = $value * $daily_rate;
+                    
+                break;
+
+                default :
+                    $amount =0 ;
+                break;
+            }
+        }else {
+            $amount = 0;
         }
 
         //return ($amount>0) ? round($amount,2) : '';

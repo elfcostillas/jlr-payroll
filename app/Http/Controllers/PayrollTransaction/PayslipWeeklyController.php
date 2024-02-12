@@ -45,7 +45,7 @@ class PayslipWeeklyController  extends Controller
     public function webView(Request $request)
     {
         $period_label = $this->payslip->getPeriodLabelWeekly($request->period);
-        $result = $this->payslip->getDataWeekly($request->period,$request->div,$request->dept,$request->bio_id);
+        $result = $this->payslip->getDataWeekly($request->period,$request->div,$request->dept,$request->bio_id,$request->loc);
       
         return view('app.payroll-transaction.payslip-weekly.payslip-web',['data' => $result,'period_label' =>$period_label]);
     }
@@ -55,8 +55,11 @@ class PayslipWeeklyController  extends Controller
         $label = [];
         $headers = $this->posted->getHeaders($request->period)->toArray();
         $colHeaders = $this->posted->getColHeaders();
+
+        $location = $this->posted->getLocation($request->loc);
        
-        $result = $this->posted->getData($request->period);
+        $result = $this->posted->getData($request->loc,$request->period,$request->div,$request->dept,$request->bio_id);
+        // $result = $this->posted->getData($request->period);
 
         $period_label = $this->period->makeRange($request->period);
 
@@ -70,6 +73,8 @@ class PayslipWeeklyController  extends Controller
         foreach($colHeaders  as  $value ){
             $label[$value->var_name] = $value->col_label;
         }
+
+        
     
         // return view('app.payroll-transaction.payslip-weekly.dtr-summary',['data'=> $result,'headers'=>$headers,'label' => $label]);
 
@@ -79,8 +84,8 @@ class PayslipWeeklyController  extends Controller
         $dom_pdf = $pdf->getDomPDF();
     
         $canvas = $dom_pdf->get_canvas();
-        $canvas->page_text(40, 812, date_format(now(),"m/d/Y H:i:s"), null, 10, array(0, 0, 0));
-        $canvas->page_text(510, 812, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+        $canvas->page_text(40, 812, date_format(now(),"m/d/Y H:i:s") ." - $location ", null, 10, array(0, 0, 0));
+        $canvas->page_text(510, 812, "Page {PAGE_NUM} of {PAGE_COUNT} ", null, 10, array(0, 0, 0));
 
         return $pdf->stream('DTR.pdf'); 
     }
@@ -88,11 +93,14 @@ class PayslipWeeklyController  extends Controller
     public function pdfView(Request $request)
     {   
         $period_label = $this->payslip->getPeriodLabelWeekly($request->period);
-        $result = $this->payslip->getDataWeekly($request->period,$request->div,$request->dept,$request->bio_id);
+
+        $result = $this->payslip->getDataWeekly($request->period,$request->div,$request->dept,$request->bio_id,$request->loc);
       
         // return view('app.payroll-transaction.payslip-weekly.payslip-web',['data' => $result,'period_label' =>$period_label]);
         $pdf = PDF::loadView('app.payroll-transaction.payslip-weekly.payslip-pdf',['data' => $result,'period_label' =>$period_label])->setPaper('A4','portrait');
 
+        $location = $this->posted->getLocation($request->loc);
+        
         $pdf->output();
         // $pdf->output();
         // $dom_pdf = $pdf->getDomPDF();
@@ -111,8 +119,8 @@ class PayslipWeeklyController  extends Controller
         $dom_pdf = $pdf->getDomPDF();
         //$pdf->output();
         $canvas = $dom_pdf->get_canvas();
-        $canvas->page_text(40, 812, date_format(now(),"m/d/Y H:i:s"), null, 10, array(0, 0, 0));
-        $canvas->page_text(510, 812, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+        $canvas->page_text(40, 812, date_format(now(),"m/d/Y H:i:s")." - $location ", null, 10, array(0, 0, 0));
+        $canvas->page_text(510, 812, "Page {PAGE_NUM} of {PAGE_COUNT} ", null, 10, array(0, 0, 0));
 
         return $pdf->stream('Payslip.pdf'); 
     }

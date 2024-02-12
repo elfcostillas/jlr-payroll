@@ -71,12 +71,14 @@
                             <table class="formTable" border="0" style="width:100%">
                                 <tr>
                                     <td width="25%">Payroll Period</td>
+                                    <td width="25%">Location</td>
                                     <td width="25%">Division</td>
                                     <td width="25%">Department</td>
                                     <td width="25%">Employee</td>
                                 </tr>
                                 <tr>
                                     <td><input type="text" id="posted_period"> </td>
+                                    <td><input type="text" id="location_id"> </td>
                                     <td><input type="text" id="division_id"> </td>
                                     <td><input type="text" id="department_id"> </td>
                                     <td><input type="text" id="biometric_id"> </td>

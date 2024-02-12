@@ -175,6 +175,7 @@ class PayrollRegisterWeeklyController extends Controller
     {
         $period = $request->id;
         $headers = $this->mapper->getHeaders($period)->toArray();
+
         $colHeaders = $this->mapper->getColHeaders();
 
         foreach($headers as $key => $value){

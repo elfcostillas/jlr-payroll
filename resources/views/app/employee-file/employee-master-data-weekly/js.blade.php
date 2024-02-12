@@ -36,6 +36,13 @@
                     { text: "Widowed/Widower", value: 4 },
                 ];
 
+                let category = [
+                    { text: "", value: '' },
+                    { text: "Mining - Quarry", value: 1 },
+                    { text: "Milling- Plant", value: 2 },
+                   
+                ];
+
             let obj = {
                     id : null,
                     firstname: null,
@@ -81,7 +88,8 @@
                     date_regularized: null,
                     sched_mtwtf: null,
                     sched_sat: null,
-                    retired : null
+                    retired : null,
+                    dept_category : null
                     
 
             };
@@ -134,7 +142,8 @@
                         date_regularized: null,
                         sched_mtwtf: null,
                         sched_sat: null,
-                        retired : null
+                        retired : null,
+                        dept_category: null,
                     },
                     mirror : {
                         is_daily : false,
@@ -410,6 +419,7 @@
                         viewModel.form.model.set('location_id',($('#location_id').data('kendoDropDownList').value()!='') ? $('#location_id').data('kendoDropDownList').value() : 0 );
                         viewModel.form.model.set('sched_mtwtf',($('#sched_mtwtf').data('kendoDropDownList').value()!='') ? $('#sched_mtwtf').data('kendoDropDownList').value() : null );
                         viewModel.form.model.set('sched_sat',($('#sched_sat').data('kendoDropDownList').value()!='') ? $('#sched_sat').data('kendoDropDownList').value() : null );
+                        viewModel.form.model.set('dept_category',($('#dept_category').data('kendoDropDownList').value()!='') ? $('#dept_category').data('kendoDropDownList').value() : null );
                         //viewModel.form.model.set('deduct_sss',(viewModel.form.model.deduct_sss) ? 'Y':'N');
                         
 
@@ -692,6 +702,22 @@
                 }
                 //change: onChange ":3,"
             });
+
+            $("#dept_category").kendoDropDownList({
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: category,
+                index: 0,
+                // optionLabel: {
+                //     schedule_desc: "",
+                //     schedule_id: null
+                // },
+                dataBound : function(e){
+                  
+                }
+                //change: onChange ":3,"
+            });
+            
 
             $("#sched_sat").kendoDropDownList({
                 dataTextField: "schedule_desc",

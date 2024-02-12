@@ -79,7 +79,8 @@ class PostedPayrollRegisterWeeklyMapper extends AbstractMapper {
     public function getColHeaders()
     {   
         //SELECT var_name,col_label FROM payreg_header;
-        $result = $this->model->select('var_name','col_label')->from('payreg_header2');
+       
+        $result = $this->model->select('var_name','col_label')->from('payreg_header2')->orderBy('sort_no','asc');
         return $result->get();
 
     }
@@ -88,16 +89,28 @@ class PostedPayrollRegisterWeeklyMapper extends AbstractMapper {
 
     }
 
-    function getData($period_id){
-        $qry = "SELECT DISTINCT employees.biometric_id,employee_name,lastname,firstname,basic_salary,retired
+    function getData($loc,$period_id,$div,$dept,$bio){
+        // dd($loc,$period,$div,$dept,$bio);
+        if($loc > 0){
+            $and = " and weekly_tmp_locations.loc_id = $loc ";
+        }
+        else{
+            $and = "";
+        }
+
+        $qry = "SELECT DISTINCT employees.biometric_id,employee_name,lastname,firstname,basic_salary,retired,job_title_name,dept_name
         FROM employees INNER JOIN edtr ON employees.biometric_id = edtr.biometric_id
         INNER JOIN employee_names_vw ON employees.biometric_id = employee_names_vw.biometric_id
         INNER JOIN payroll_period_weekly ON dtr_date BETWEEN date_from AND date_to
-        AND payroll_period_weekly.id = $period_id AND employees.pay_type = 3 ORDER BY lastname,firstname";
+        LEFT JOIN job_titles ON job_title_id = job_titles.id
+        LEFT JOIN departments ON employees.dept_id = departments.id
+        LEFT JOIN weekly_tmp_locations on weekly_tmp_locations.biometric_id = employees.biometric_id and weekly_tmp_locations.period_id  = payroll_period_weekly.id 
+        WHERE payroll_period_weekly.id = $period_id AND employees.pay_type = 3 $and
+        AND (time_in IS NOT NULL AND time_out IS NOT NULL AND time_in != '00:00' AND time_out != '00:00' )
+        ORDER BY lastname,firstname";
 
         $result = DB::select($qry);
         
-
         foreach($result as $emp){
             
             $dtr_qry = "SELECT edtr.* FROM edtr INNER JOIN payroll_period_weekly ON dtr_date BETWEEN date_from AND date_to
@@ -110,6 +123,17 @@ class PostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         }
 
         return $result;
+    }
+
+    public function getLocation($id)
+    {
+        if($id == 0)
+        {
+            return "All locations";
+        }else {
+            $location = DB::table('locations')->where('id',$id)->first();
+            return $location->location_name;
+        }
     }
 
     public function unpost($period_id)

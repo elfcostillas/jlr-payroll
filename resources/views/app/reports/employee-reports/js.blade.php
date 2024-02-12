@@ -317,7 +317,7 @@
 
             function process()
             {
-              
+                let loc =  $("#location_id").data("kendoDropDownList").value();
                 let div =  $("#division_id").data("kendoDropDownList").value();
                 let dept =  $("#dept_id").data("kendoDropDownList").value();
                 let url = `employee-report/generate?division=${div}&department=${dept}&location=${loc}`;

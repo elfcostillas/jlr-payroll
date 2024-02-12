@@ -591,10 +591,11 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
 
         Route::get('posted-period',[PayslipWeeklyController::class,'getPostedPeriods']);
         Route::get('get-employees/{period}/{div}/{dept}',[PayslipWeeklyController::class,'getEmployees']);
-        Route::get('web-view/{period}/{div}/{dept}/{bio_id}',[PayslipWeeklyController::class,'webView']);
+        Route::get('web-view/{loc}/{period}/{div}/{dept}/{bio_id}',[PayslipWeeklyController::class,'webView']);
         Route::get('print/{period}/{div}/{dept}/{bio_id}',[PayslipWeeklyController::class,'print']);
-        Route::get('dtr-summary/{period}/{div}/{dept}/{bio_id}',[PayslipWeeklyController::class,'dtrSummary']);
-        Route::get('pdf-view/{period}/{div}/{dept}/{bio_id}',[PayslipWeeklyController::class,'pdfView']);
+        Route::get('dtr-summary/{loc}/{period}/{div}/{dept}/{bio_id}',[PayslipWeeklyController::class,'dtrSummary']);
+        Route::get('pdf-view/{loc}/{period}/{div}/{dept}/{bio_id}',[PayslipWeeklyController::class,'pdfView']);
+        Route::get('get-locations',[LocationController::class,'listOption']);
     });
 
     Route::prefix('bank-transmittal')->group(function(){

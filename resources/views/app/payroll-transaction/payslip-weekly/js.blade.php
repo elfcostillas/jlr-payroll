@@ -67,6 +67,27 @@
                             }
                         }
                     }),
+                    location : new kendo.data.DataSource({
+                        transport : {
+                            read : {
+                                url : 'payslip-weekly/get-locations',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },
+                        },
+                        schema : {
+                            model : {
+                                id : 'id',
+                                fields : {
+                                    div_code : { type : 'string' },
+                                    div_name : { type : 'string' },
+                                }
+                            }
+                        }
+                    }),
                     employees : new kendo.data.DataSource({
                         transport : {
                             read : {
@@ -92,6 +113,7 @@
                 },
                 buttonHandler : {
                     pdf : function(e){
+                        let location = $("#location_id").data("kendoDropDownList").value();
                         let period = $("#posted_period").data("kendoDropDownList").value();
                         let division = ($("#division_id").data("kendoDropDownList").value()=='') ? 0 : $("#division_id").data("kendoDropDownList").value();
                         let department = ($("#department_id").data("kendoDropDownList").value()=='') ? 0 : $("#department_id").data("kendoDropDownList").value();
@@ -100,10 +122,11 @@
                         // let department = $("#department_id").data("kendoDropDownList").value(); 
                         // let biometric_id = ($("#biometric_id").data("kendoComboBox").value()!="") ? $("#biometric_id").data("kendoComboBox").value() : 0;
 
-                        let url = `payslip-weekly/pdf-view/${period}/${division}/${department}/${biometric_id}`;
+                        let url = `payslip-weekly/pdf-view/${location}/${period}/${division}/${department}/${biometric_id}`;
                         window.open(url);
                     },
                     web : function(e){
+                        let location = $("#location_id").data("kendoDropDownList").value();
                         let period = $("#posted_period").data("kendoDropDownList").value();
                         let division = ($("#division_id").data("kendoDropDownList").value()=='') ? 0 : $("#division_id").data("kendoDropDownList").value();
                         let department = ($("#department_id").data("kendoDropDownList").value()=='') ? 0 : $("#department_id").data("kendoDropDownList").value();
@@ -112,19 +135,21 @@
                         // let department = $("#department_id").data("kendoDropDownList").value(); 
                         // let biometric_id = ($("#biometric_id").data("kendoComboBox").value()!="") ? $("#biometric_id").data("kendoComboBox").value() : 0;
 
-                        let url = `payslip-weekly/web-view/${period}/${division}/${department}/${biometric_id}`;
+                        let url = `payslip-weekly/web-view/${location}/${period}/${division}/${department}/${biometric_id}`;
                         window.open(url);
                     },
                     dtr : function(e){
+                        let location = $("#location_id").data("kendoDropDownList").value();
                         let period = $("#posted_period").data("kendoDropDownList").value();
-                        let division = ($("#division_id").data("kendoDropDownList").value()=='') ? 0 : $("#division_id").data("kendoDropDownList").value();
-                        let department = ($("#department_id").data("kendoDropDownList").value()=='') ? 0 : $("#department_id").data("kendoDropDownList").value();
-                        let biometric_id = ($("#biometric_id").data("kendoComboBox").value()=='') ? 0 : $("#biometric_id").data("kendoComboBox").value();
+                        // let division = ($("#division_id").data("kendoDropDownList").value()=='') ? 0 : $("#division_id").data("kendoDropDownList").value();
+                        // let department = ($("#department_id").data("kendoDropDownList").value()=='') ? 0 : $("#department_id").data("kendoDropDownList").value();
+                        // let biometric_id = ($("#biometric_id").data("kendoComboBox").value()=='') ? 0 : $("#biometric_id").data("kendoComboBox").value();
 
                         // let department = $("#department_id").data("kendoDropDownList").value(); 
                         // let biometric_id = ($("#biometric_id").data("kendoComboBox").value()!="") ? $("#biometric_id").data("kendoComboBox").value() : 0;
 
-                        let url = `payslip-weekly/dtr-summary/${period}/${division}/${department}/${biometric_id}`;
+                        // let url = `payslip-weekly/dtr-summary/${location}/${period}/${division}/${department}/${biometric_id}`;
+                        let url = `payslip-weekly/dtr-summary/${location}/${period}/0/0/0`;
                         window.open(url);
                     }
                 }
@@ -141,6 +166,8 @@
                 
             });
 
+
+
             $("#division_id").kendoDropDownList({
                 dataTextField: "div_name",
                 dataValueField: "id",
@@ -155,6 +182,20 @@
                 optionLabel: {
                     id: 0,
                     div_name: "ALL"
+                }
+            });
+
+            $("#location_id").kendoDropDownList({
+                dataTextField: "location_name",
+                dataValueField: "id",
+                dataSource: viewModel.ds.location,
+                index: 0,
+                change: function(e){
+                   
+                },
+                optionLabel: {
+                    id: 0,
+                    location_name: "ALL"
                 }
             });
 

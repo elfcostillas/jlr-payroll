@@ -590,9 +590,9 @@ class PayslipMapper extends AbstractMapper {
         return $result->get();
     }
 
-    public function getDataWeekly($period_id,$division,$department,$biometric_id)
+    public function getDataWeekly($period_id,$division,$department,$biometric_id,$location)
     {
-        //dd($period_id,$division,$department,$biometric_id);
+        // dd($period_id,$division,$department,$biometric_id,$location);
 
         $result = $this->model->select(DB::raw("payrollregister_posted_weekly.*,dept_id,division_id,concat(lastname,', ',firstname) as employee_name,suffixname,dept_name,location_name"))
                     ->from('payrollregister_posted_weekly')
@@ -625,6 +625,10 @@ class PayslipMapper extends AbstractMapper {
 
         if($biometric_id != 0 && $biometric_id != "" && $biometric_id != null){
             $result->where('employees.biometric_id',$biometric_id);
+        }
+
+        if($location != 0 && $location != "" && $location != null){
+            $result->where('weekly_tmp_locations.loc_id',$location);
         }
 
         $result->orderBy('lastname','ASC');

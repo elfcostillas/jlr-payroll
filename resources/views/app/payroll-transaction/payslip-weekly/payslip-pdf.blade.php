@@ -31,7 +31,7 @@
                             <td style="width:10%;"></td>
                             <td style="width:40%;"></td>
                             <td style="width:30%;"></td>
-                            <td colspan=2 style="font-size : 9pt;">{{ $e->location_name }}</td>
+                            <td colspan=2 style="font-size : 9pt;"></td>
                         
                         </tr>
                         <tr>

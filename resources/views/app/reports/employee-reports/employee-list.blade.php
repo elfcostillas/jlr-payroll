@@ -23,8 +23,8 @@
         <td>Employee Type</td>
         <td>Bank Account</td>
         <td>Basic Rate</td>
-        <td>Daily Allowance</td>
         <td>Monthly Allowance</td>
+        <td>Daily Allowance</td>
         <td>Date Hired</td>
     </tr>
     

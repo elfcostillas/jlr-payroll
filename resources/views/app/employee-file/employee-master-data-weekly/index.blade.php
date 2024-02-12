@@ -222,15 +222,13 @@
                                 <td colspan=2>Exit Status</td>
                                 <td colspan=2>Exit Date</td>
                                 <td colspan=2>Level</td>
-                                <td></td>
-                                <td></td>
+                                <td colspan=2>Category</td>
                             </tr>
                             <tr>
                                 <td colspan=2><input type="text" id="exit_status" data-bind="value:form.model.exit_status"></td>
                                 <td colspan=2><input type="text" id="exit_date" data-bind="value:form.model.exit_date"></td>
                                 <td colspan=2><input type="text" id="emp_level" data-bind="value:form.model.emp_level"></td>
-                                <td></td>
-                                <td></td>
+                                <td colspan=2><input type="text" id="dept_category" data-bind="value:form.model.dept_category"></td>
                             </tr>
                             <tr>
                                 <td colspan=2>Mon - Fri</td>
