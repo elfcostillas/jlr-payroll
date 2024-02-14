@@ -6,6 +6,8 @@
     <script>
         $(document).ready(function(){
 
+           
+
             let obj = {
                     id : null,
                     firstname: null,
@@ -38,6 +40,7 @@
             };
 
             var viewModel = kendo.observable({ 
+                included : [],
                 form : {
                     model : {
                         // id : null,
@@ -219,6 +222,11 @@
                     download_qr : function()
                     {
                         process3();
+                    },
+                    download_custom : function()
+                    {
+                        let url = 'employee-report/custom-report';
+                        window.open(url);
                     }
 
             
@@ -343,6 +351,38 @@
                 let url = `employee-report/print-weekly?division=${div}&department=${dept}&location=${loc}`;
                 window.open(url);
             }
+
+            $('input:checkbox.include_header').click(function(){
+			var url = '';
+                if($(this).prop('checked')){
+                    url = 'employee-report/include-header';
+                }else{
+                    url = 'employee-report/remove-header';
+                }
+                if($("#userid").val()!=""){
+                    $.post(url,{ header_id : this.value  },function(data){	});
+                }
+                
+            });
+
+            $.ajax({
+                url:'employee-report/get-header',
+                type:"GET",
+                dataType:"json",
+                success: function(data){
+                
+                    let header = data;  
+
+                    let h = [];
+                    
+                    header.forEach(function(item,index){
+                        h.push(item.id.toString());
+                    });
+
+                    viewModel.set('included',h);
+
+                }	
+            });
             
             kendo.bind($("#viewModel"),viewModel);
 

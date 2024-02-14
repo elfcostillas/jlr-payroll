@@ -23,7 +23,10 @@ class EmployeeReportController extends Controller
     }
 
     public function index(){
-        return view('app.reports.employee-reports.index');
+
+        $headers = $this->emp_mapper->headers();
+
+        return view('app.reports.employee-reports.index',['headers' => $headers]);
     }
 
     public function generate(Request $request)
@@ -79,6 +82,39 @@ class EmployeeReportController extends Controller
 
         return $pdf->stream('EmployeeQuickReports.pdf'); 
     }
+
+    public function includeHeader(Request $request)
+    {
+        $result = $this->emp_mapper->include($request->header_id);
+    }
+
+    public function removeHeader(Request $request)
+    {
+        $result = $this->emp_mapper->remove($request->header_id);
+    }
+
+    public function getHeader(Request $request)
+    {
+        $result = $this->emp_mapper->getHeader();
+
+        return response()->json($result);
+    }
+
+    public function customReport()
+    {
+        $header = $this->emp_mapper->getHeader();
+
+        $filter = [
+            'division' =>  null,
+            'department'=> null
+        ];
+
+        $result = $this->emp_mapper->customReport();
+
+        return view('app.reports.employee-reports.custom-report',['headers' => $header, 'data' => $result]);
+        
+    }
+
 
 
     

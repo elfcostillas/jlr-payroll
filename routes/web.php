@@ -498,6 +498,11 @@ Route::middleware('auth')->prefix('reports')->group(function(){
         Route::get('generate-weekly',[EmployeeReportController::class,'generateWeekly']);
 
         Route::get('print-weekly',[EmployeeReportController::class,'printWeekly']);
+
+        Route::post('include-header',[EmployeeReportController::class,'includeHeader']);
+        Route::post('remove-header',[EmployeeReportController::class,'removeHeader']);
+        Route::get('get-header',[EmployeeReportController::class,'getHeader']);
+        Route::get('custom-report',[EmployeeReportController::class,'customReport']);
     });
 
     Route::prefix('leave-reports')->group(function(){

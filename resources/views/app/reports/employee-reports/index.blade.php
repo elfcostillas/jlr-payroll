@@ -121,6 +121,27 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-secondary">
+                        <div class="card-header"> Employee List </div>
+                        <div class="card-body"> 
+                            <div style="height : 12rem;" >
+                                @foreach($headers as $header)
+                                    <span style="float:left;margin:4px;width :200px;display:block;"> <input type="checkbox" class="include_header" data-bind="checked:included" style="margin-right : 8px;" value="{{ $header->id }}" name="" id=""> {{ $header->header_label }}  </span>
+                                @endforeach
+                            </div>
+                            <table class="formTable" border=0 style="width:100%">
+                              
+                                    <td colspan="2"><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download_custom'><i class="fas fa-download"></i> Download Excel</button></td>
+                                    <td colspan="2"></td>
+                                    <td colspan="4"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- <div class="row">
                 <div class="col-md-12">
                     <div class="card card-secondary">

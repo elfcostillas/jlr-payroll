@@ -141,6 +141,62 @@ class EmployeeMapper extends AbstractMapper {
 		return $result->get();
 	}
 
+	public function customReport()
+	{
+		$locations = DB::table('locations')->select()->get();
+		
+		foreach($locations as $location)
+		{
+			$divisions= DB::table('divisions')->select()->get();
+			//echo $location->location_name .'<br>';
+			$location->division = $divisions;
+
+			foreach($location->division as $divs)
+			{	
+				//echo $divs->div_name .'<br>';
+				$departments= DB::table('departments')->where('dept_div_id','=',$divs->id)->select()->get();
+				$divs->departments = $departments;
+
+				foreach($divs->departments as $div_departments)
+				{
+					//echo $div_departments->dept_name .'<br>';
+
+					
+					$employees = $this->model->select(DB::raw('employees.*,dept_code,div_code,emp_exit_status.status_desc,emp_emp_stat.estatus_desc,pay_description,job_title_name'))
+						->leftJoin('departments','departments.id','=','dept_id')
+						->leftJoin('divisions','divisions.id','=','division_id')
+						->leftJoin('civil_status','employees.civil_status','=','civil_status.id')
+						->leftJoin('emp_exit_status','exit_status','=','emp_exit_status.id')
+						->leftJoin('emp_emp_stat','employee_stat','=','emp_emp_stat.id')
+						->leftJoin('emp_pay_types','pay_type','=','emp_pay_types.id')
+						->leftJoin('job_titles','job_titles.id','=','job_title_id')
+						->where('pay_type','<>',3)
+						->where('exit_status','=',1)
+						->where('employees.dept_id','=',$div_departments->id)
+						->where('location_id','=',$location->id)
+						->where('division_id','=',$divs->id)
+						->orderBy('lastname','asc')
+						->orderBy('firstname','asc')
+						->get();
+
+					$div_departments->employees = $employees;
+						
+						// if($location->id==1 && $divs->id==3 && $div_departments->id ==7 ){
+						// 	echo ($employees);
+						// }
+
+						
+				}
+			}
+			
+		}
+
+			// dd($locations);
+			
+			return $locations;
+
+	}
+
 	public function generateReportWeekly($filter)
 	{
 		$result = $this->model->select(DB::raw('employees.*,dept_code,div_code,emp_exit_status.status_desc,emp_emp_stat.estatus_desc,pay_description'))
@@ -323,7 +379,32 @@ class EmployeeMapper extends AbstractMapper {
 		return $location;
 	}
 
+	public function headers()
+	{
+		$result = DB::table("masterlist_header")->orderBy('sort','asc');
 
+		return $result->get();
+	}
+
+	function include($id)
+	{
+		DB::table('masterlist_header')->where('id','=',$id)->update([ 'include' => 'Y' ]); 
+	}
+
+	function remove($id)
+	{
+		DB::table('masterlist_header')->where('id','=',$id)->update([ 'include' => 'N' ]); 
+	}
+
+	function getHeader()
+	{
+		$result = DB::table('masterlist_header')->where('include','=','Y'); 
+
+		return $result->get();
+	}
+
+
+	
 
 
 }
