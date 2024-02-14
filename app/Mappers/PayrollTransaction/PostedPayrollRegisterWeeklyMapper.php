@@ -96,6 +96,7 @@ class PostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         }
         else{
             $and = "";
+            //AND employees.pay_type = 3
         }
 
         $qry = "SELECT DISTINCT employees.biometric_id,employee_name,lastname,firstname,basic_salary,retired,job_title_name,dept_name
@@ -105,7 +106,7 @@ class PostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         LEFT JOIN job_titles ON job_title_id = job_titles.id
         LEFT JOIN departments ON employees.dept_id = departments.id
         LEFT JOIN weekly_tmp_locations on weekly_tmp_locations.biometric_id = employees.biometric_id and weekly_tmp_locations.period_id  = payroll_period_weekly.id 
-        WHERE payroll_period_weekly.id = $period_id AND employees.pay_type = 3 $and
+        WHERE payroll_period_weekly.id = $period_id  $and
         AND (time_in IS NOT NULL AND time_out IS NOT NULL AND time_in != '00:00' AND time_out != '00:00' )
         ORDER BY lastname,firstname";
 
