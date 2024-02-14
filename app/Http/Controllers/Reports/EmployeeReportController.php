@@ -8,17 +8,20 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Excel\EmployeeRecords;
 use App\Mappers\EmployeeFileMapper\EmployeeMapper;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Excel\CustomEmployeeList;
 
 class EmployeeReportController extends Controller
 {
     //
     private $excel;
     private $emp_mapper;
+    private $custom_excel;
 
-    public function __construct(EmployeeRecords $excel,EmployeeMapper $emp_mapper)
+    public function __construct(EmployeeRecords $excel,EmployeeMapper $emp_mapper,CustomEmployeeList $custom_excel)
     {
         $this->excel = $excel;
         $this->emp_mapper = $emp_mapper;
+        $this->custom_excel = $custom_excel;
 
     }
 
@@ -109,9 +112,15 @@ class EmployeeReportController extends Controller
             'department'=> null
         ];
 
+       
+
         $result = $this->emp_mapper->customReport();
 
-        return view('app.reports.employee-reports.custom-report',['headers' => $header, 'data' => $result]);
+        $this->custom_excel->setValues($header,$result);
+
+        return Excel::download($this->custom_excel,'EmployeeData.xlsx');
+   
+        // return view('app.reports.employee-reports.custom-report',['headers' => $header, 'data' => $result]);
         
     }
 

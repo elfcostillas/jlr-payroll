@@ -136,15 +136,20 @@
             <td> {{ $row->day_name }}</td>
             <td> {{ Carbon::createFromFormat('Y-m-d',$row->dtr_date)->format('m/d/Y') }}</td>
             <td> {{ $row->work_sched }}</td>
-            <td> {{ $row->time_in }}</td>
-            <td> {{ $row->time_out }}</td>
+            
+            <td> {{ ($row->time_in == '00:00') ? '' : $row->time_in }}</td>
+            <td> {{ ($row->time_out == '00:00') ? '' : $row->time_out }}</td>
+          
             <td> {{ nformat($row->ndays) }}</td>
             <td> {{ nformat($row->late) }}</td>
             <td> {{ nformat($row->late_eq) }}</td>
             <td> {{ nformat($row->under_time) }}</td>
             <td> {{ nformat($row->night_diff) }}</td>
-            <td> {{ nformat($row->ot_in) }}</td>
-            <td> {{ nformat($row->ot_out) }}</td>
+
+            <td> {{ ($row->ot_in == '00:00') ? '' : $row->ot_in }}</td>
+            <td> {{ ($row->ot_out == '00:00') ? '' : $row->ot_out }}</td>
+
+
             <td> {{ nformat($row->over_time) }}</td>
             <td> {{ nformat($row->night_diff_ot) }}</td>
             <td> {{ nformat($row->restday_hrs) }}</td>
