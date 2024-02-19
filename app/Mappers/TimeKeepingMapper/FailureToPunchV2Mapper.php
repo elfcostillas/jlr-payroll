@@ -59,11 +59,16 @@ class FailureToPunchV2Mapper extends AbstractMapper {
     {
         $blanks = [];
 
+        // DB::connection('mysql')->table('edtr_raw')
+        //     ->where('src','=','ftp')
+        //     ->where('biometric_id',$arr['biometric_id'])
+        //     ->where('punch_date','=',$arr['ftp_date'])
+        //     ->delete();
+
         DB::connection('mysql')->table('edtr_raw')
-            ->where('src','=','ftp')
-            ->where('biometric_id',$arr['biometric_id'])
-            ->where('punch_date','=',$arr['ftp_date'])
-            ->delete();
+        ->where('src','=','ftp')
+        ->where('src_id','=',$arr['id'])
+        ->delete();
 
         if($arr['time_in']){
             array_push($blanks,[
