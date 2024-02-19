@@ -72,6 +72,7 @@ class FailureToPunchV2Mapper extends AbstractMapper {
                 'biometric_id' => $arr['biometric_id'],
                 'cstate' => 'C/In',
                 'src' => 'ftp',
+                'src_id' => $arr['id']
             ]);
         }
 
@@ -82,6 +83,7 @@ class FailureToPunchV2Mapper extends AbstractMapper {
                 'biometric_id' => $arr['biometric_id'],
                 'cstate' => 'C/Out',
                 'src' => 'ftp',
+                'src_id' => $arr['id']
             ]);
         }
 
@@ -92,6 +94,7 @@ class FailureToPunchV2Mapper extends AbstractMapper {
                 'biometric_id' => $arr['biometric_id'],
                 'cstate' => 'OT/In',
                 'src' => 'ftp',
+                'src_id' => $arr['id']
             ]);
         }
 
@@ -102,6 +105,7 @@ class FailureToPunchV2Mapper extends AbstractMapper {
                 'biometric_id' => $arr['biometric_id'],
                 'cstate' => 'OT/Out',
                 'src' => 'ftp',
+                'src_id' => $arr['id']
             ]);
         }
 

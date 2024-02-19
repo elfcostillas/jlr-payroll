@@ -262,6 +262,8 @@
                             viewModel.form.model.set(key,null);
                         }
                         viewModel.form.model.ftp_status = 'DRAFT';
+                        viewModel.callBack();
+                        
                     }
                 },
                 functions : {
