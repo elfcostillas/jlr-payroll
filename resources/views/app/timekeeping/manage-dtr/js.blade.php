@@ -712,7 +712,8 @@
                         headerAttributes: {
                             style: "font-size: 9pt;text-align:center"
                             
-                        }    
+                        },
+                        template : "# if(ot_in=='00:00'||ot_in==null){#  #} else{# #= ot_in #  #}#",    
                     },
                     {
                         title : "OT Out",
@@ -725,7 +726,8 @@
                         headerAttributes: {
                             style: "font-size: 9pt;text-align:center"
                             
-                        }    
+                        },
+                        template : "# if(ot_out=='00:00'||ot_out==null){#  #} else{# #= ot_out #  #}#",    
                     },
                     {
                         title : "Reg OT",
