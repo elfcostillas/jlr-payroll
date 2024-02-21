@@ -110,13 +110,14 @@ class DailyTimeRecordMapper extends AbstractMapper {
     {
 
         if($type=='semi'){
-            $result = $this->model->select(DB::raw("employees.id,employees.biometric_id,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) as empname,dept_name"))
+            $result = $this->model->select(DB::raw("employees.id,employees.biometric_id,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) as empname,dept_name,div_name"))
                             ->from('edtr')
                             ->join('employees','edtr.biometric_id','=','employees.biometric_id')
                             ->join('payroll_period',function($join){
                                 $join->whereRaw('dtr_date between payroll_period.date_from and payroll_period.date_to');
                             })
                             ->join('departments','employees.dept_id','=','departments.id')
+                            ->join('divisions','employees.division_id','=','divisions.id')
                             ->whereIn('pay_type',[1,2])
                             ->where('exit_status',1)
                             ->where('payroll_period.id',$period_id)
@@ -149,6 +150,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
         if($filter['filter']!=null){
 			foreach($filter['filter']['filters'] as $f)
 			{
+             
 				if($f['field'] == 'location_name'){
                     $result->where('location_name','like','%'.$f['value'].'%');
                 }
@@ -167,7 +169,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
 
                 if($f['field']=='dept_name'){
                     $result->where(function($query) use ($f) {
-                        $query->where('dept_name','like','%'.$f['value'].'%');
+                        $query->where('div_name','like','%'.$f['value'].'%');
                     });
                 }
 			}
@@ -1287,7 +1289,8 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
     public function listDepartment()
     {
-        $result = DB::table('departments')->select();
+        // $result = DB::table('departments')->select();
+        $result = DB::table('divisions')->select();
 
         return $result->get();
     }

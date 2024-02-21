@@ -264,6 +264,49 @@
                         viewModel.form.model.ftp_status = 'DRAFT';
                         viewModel.callBack();
                         
+                    },
+                    reopen : async function(e){
+                        await viewModel.functions.reAssignValues();
+                            
+                            if(viewModel.form.model.id != null){
+                                Swal.fire({
+                                    title: 'Reopen FTP',
+                                    text: "You won't be able to revert this!",
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Finalize'
+                                }).then((result) => {
+                                    if (result.value) {    
+                                        
+                                        
+                                        viewModel.form.model.set('ftp_status','DRAFT');
+                                        var json_data = JSON.stringify(viewModel.form.model);
+                                        
+                                        $.post('ftp/save',{
+                                            data : json_data
+                                        },function(data,status){
+                                            //console.log(status,data);
+                                            //console.log(data.error)
+                                            swal_success(data);
+
+                                            if(data!=null)
+                                            {
+                                                let url  = `ftp/read/${data}`;
+                                                setTimeout(function(){
+                                                    read(url,viewModel);
+                                                }, 500);
+                                            }   
+
+                                            viewModel.ds.maingrid.read();
+                                            
+                                        },'json');
+                                    }
+                                });
+                            }else{
+                                custom_error("Please save document first.");
+                            }
                     }
                 },
                 functions : {
@@ -528,6 +571,7 @@
             var postedToolbar = $("#toolbar2").kendoToolBar({
                 items : [
                     { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
+                    { id : 'reopenBtn', type: "button", text: "Set to Draft", icon: 'save', click : viewModel.buttonHandler.reopen },
                 ]
             });
 

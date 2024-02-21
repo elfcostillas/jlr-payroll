@@ -265,23 +265,23 @@
                             viewModel.ds.subgrid.read();
                         });
                     },
-                    // computeAll : function(e){
-                    //     let tr = $(e.target).closest("tr");
-                    //     let data = this.dataItem(tr);
+                    computeAll : function(e){
+                        let tr = $(e.target).closest("tr");
+                        let data = this.dataItem(tr);
 
-                    //     $.post('manage-dtr-weekly/compute-all',{
-                    //         period_id : data.id
-                    //     },function(){
-                    //         Swal.fire({
-                    //         //position: 'top-end',
-                    //         icon: 'success',
-                    //         title: 'DTR Logs has been processed.',
-                    //         showConfirmButton: false,
-                    //         timer: 1000
-                    //         });	
-                    //     });
+                        $.post('manage-dtr-weekly/compute-all',{
+                            period_id : data.id
+                        },function(){
+                            Swal.fire({
+                            //position: 'top-end',
+                            icon: 'success',
+                            title: 'DTR Logs has been processed.',
+                            showConfirmButton: false,
+                            timer: 1000
+                            });	
+                        });
 
-                    // },
+                    },
                     manage : function(e){
                         let tr = $(e.target).closest("tr");
                         let data = this.dataItem(tr);
@@ -415,7 +415,7 @@
                         width : 80
                     },
                     {
-                        // command: { text : 'Compute All',click : viewModel.buttonHandler.computeAll , },
+                        command: { text : 'Compute All',click : viewModel.buttonHandler.computeAll , },
                         // attributes : { style : 'font-size:10pt !important;'},
                         width : 105
                     },

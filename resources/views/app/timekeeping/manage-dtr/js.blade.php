@@ -513,8 +513,8 @@
                 ],
                 columns : [
                     {
-                        title : "Department",
-                        field : "dept_name",
+                        title : "Division",
+                        field : "div_name",
                         width : 220,    
                         filterable: {
                             ui: deptFilter
@@ -544,8 +544,8 @@
                 element.kendoDropDownList({
                     dataSource:  viewModel.ds.departments,
                     optionLabel: "",
-                    dataTextField: "dept_name",
-                    dataValueField: "dept_name",
+                    dataTextField: "div_name",
+                    dataValueField: "div_name",
                     autoWidth : true
                 });
             }
