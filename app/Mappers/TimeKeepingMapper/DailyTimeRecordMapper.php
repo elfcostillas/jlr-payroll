@@ -110,7 +110,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
     {
 
         if($type=='semi'){
-            $result = $this->model->select(DB::raw("employees.id,employees.biometric_id,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) as empname,dept_name,div_name"))
+            $result = $this->model->select(DB::raw("employees.id,employees.biometric_id,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) as empname,concat(div_code,' - ',dept_name) as dept_name,div_name"))
                             ->from('edtr')
                             ->join('employees','edtr.biometric_id','=','employees.biometric_id')
                             ->join('payroll_period',function($join){
@@ -169,7 +169,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
 
                 if($f['field']=='dept_name'){
                     $result->where(function($query) use ($f) {
-                        $query->where('div_name','like','%'.$f['value'].'%');
+                        $query->where('dept_name','like','%'.$f['value'].'%');
                     });
                 }
 			}
@@ -1289,8 +1289,8 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
     public function listDepartment()
     {
-        // $result = DB::table('departments')->select();
-        $result = DB::table('divisions')->select();
+        $result = DB::table('departments')->select();
+        // $result = DB::table('divisions')->select();
 
         return $result->get();
     }
