@@ -295,6 +295,13 @@ class ManageDTRController extends Controller
             echo $qry.'<br>';
         }
     }
+
+    public function listDepartment(Request $request)
+    {
+        $result = $this->mapper->listDepartment();
+
+        return response()->json($result);
+    }
     
 }
 

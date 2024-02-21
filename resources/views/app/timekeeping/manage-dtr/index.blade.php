@@ -81,10 +81,10 @@
     <h4> Manage DTR - Semi Monthly <h4>
 @endsection
 @section('content')
-    <div class="container">
+    <div class="">
         <div id="viewModel" >
             <div class="row">
-                <div class="col-md-7">
+                <div class="col-md-6">
                     <div class="card card-secondary">
                         <div class="card-header"> Payroll Period </div>
                         <div class="card-body"> 
@@ -92,7 +92,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-6">
                     <div class="card card-secondary">
                         <div class="card-header"> Employee List </div>
                         <div class="card-body"> 
@@ -100,7 +100,9 @@
                         </div>
                     </div>
                 </div>
-                <div id="pop" style="display:none;">
+                
+            </div>
+            <div id="pop" style="display:none;">
                    <table style="width:100%">
                         <tr>
                             <td>
@@ -112,7 +114,6 @@
                         </tr>
                    </table>
                 </div>
-            </div>
         </div>
     </div>
 @endsection </div>

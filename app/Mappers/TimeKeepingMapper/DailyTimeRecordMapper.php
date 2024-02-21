@@ -110,17 +110,19 @@ class DailyTimeRecordMapper extends AbstractMapper {
     {
 
         if($type=='semi'){
-            $result = $this->model->select(DB::raw("employees.id,employees.biometric_id,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) as empname"))
+            $result = $this->model->select(DB::raw("employees.id,employees.biometric_id,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) as empname,dept_name"))
                             ->from('edtr')
                             ->join('employees','edtr.biometric_id','=','employees.biometric_id')
                             ->join('payroll_period',function($join){
                                 $join->whereRaw('dtr_date between payroll_period.date_from and payroll_period.date_to');
                             })
+                            ->join('departments','employees.dept_id','=','departments.id')
                             ->whereIn('pay_type',[1,2])
                             ->where('exit_status',1)
                             ->where('payroll_period.id',$period_id)
                             ->distinct()
                             ->orderBy('empname','ASC');
+                            // departments ON employees.dept_id = departments.id 
         }else{
            
             $result = $this->model->select(DB::raw("employees.id,employees.biometric_id,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) as empname,weekly_tmp_locations.loc_id,location_name"))
@@ -160,6 +162,12 @@ class DailyTimeRecordMapper extends AbstractMapper {
                     $result->where(function($query) use ($f) {
                         $query->where('lastname','like','%'.$f['value'].'%')
                             ->orWhere('firstname','like','%'.$f['value'].'%');
+                    });
+                }
+
+                if($f['field']=='dept_name'){
+                    $result->where(function($query) use ($f) {
+                        $query->where('dept_name','like','%'.$f['value'].'%');
                     });
                 }
 			}
@@ -1275,6 +1283,13 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
         $result = DB::select($qry);
 
         return $result;
+    }
+
+    public function listDepartment()
+    {
+        $result = DB::table('departments')->select();
+
+        return $result->get();
     }
 
    

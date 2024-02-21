@@ -246,6 +246,28 @@
                                 }
                             }
                         }
+                    }),
+                    departments : new kendo.data.DataSource({
+                        transport : {
+                            read : {
+                                url : 'manage-dtr/list-department',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },
+                           
+                        },
+                        schema : {
+                            model : {
+                                id : 'schedule_id',
+                                fields : {
+                                    id : { type:'number',  },
+                                    dept_name : { type:'string',  },
+                                }
+                            }
+                        }
                     })
                 },
                 buttonHandler : {
@@ -491,6 +513,14 @@
                 ],
                 columns : [
                     {
+                        title : "Department",
+                        field : "dept_name",
+                        width : 220,    
+                        filterable: {
+                            ui: deptFilter
+                        }
+                    },
+                    {
                         title : "Bio ID",
                         field : "biometric_id",
                         width : 80,    
@@ -509,6 +539,16 @@
                 ],
                 
             });
+
+            function deptFilter(element) {
+                element.kendoDropDownList({
+                    dataSource:  viewModel.ds.departments,
+                    optionLabel: "",
+                    dataTextField: "dept_name",
+                    dataValueField: "dept_name",
+                    autoWidth : true
+                });
+            }
 
             $("#dtrgrid").kendoGrid({
                 dataSource : viewModel.ds.dtrgrid,

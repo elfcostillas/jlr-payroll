@@ -197,6 +197,10 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::get('set-sched/{period_id}',[ManageDTRController::class,'scheduleSetter']);
 
         Route::get('payroll-period',[PayrollPeriodController::class,'list']);
+
+        Route::get('list-department',[ManageDTRController::class,'listDepartment']);
+
+        
     });
 
     Route::prefix('upload-log')->group(function(){
