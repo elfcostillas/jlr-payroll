@@ -151,5 +151,10 @@ class ManageDTRWeeklyController extends Controller
 
         return response()->json(true);        
     }
+
+    public function download($period_id)
+    {
+        dd($period_id);
+    }
     
 }

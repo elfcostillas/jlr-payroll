@@ -81,7 +81,7 @@
     <h4> Manage DTR - Weekly <h4>
 @endsection
 @section('content')
-    <div class="container">
+    <div class="">
         <div id="viewModel" >
             <div class="row">
                 <div class="col-md-6">

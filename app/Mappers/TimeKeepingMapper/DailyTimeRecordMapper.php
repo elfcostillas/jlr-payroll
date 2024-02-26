@@ -7,6 +7,7 @@ use App\Libraries\Filters;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Carbon\CarbonPeriod;
+use Illuminate\Support\Collection;
 
 class DailyTimeRecordMapper extends AbstractMapper {
 
@@ -1295,11 +1296,176 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
         return $result->get();
     }
 
+    public function dtr($period_id,$type) // download dtr weekly
+    {
+
+    }
+
+    public function attendance_report($date_from,$date_to)
+    {
+        $result = DB::table('employees')
+                            ->join('employee_names_vw','employee_names_vw.biometric_id','=','employees.biometric_id')
+                            ->select(DB::raw("employee_names_vw.*"))
+                            ->where('employees.exit_status','=',1)
+                            ->where('employees.pay_type','<>',3)
+                            ->where('employees.date_hired','<',$date_from)
+                            ->select();
+
+        return $result->get();
+    }
+
+    public function awol_setter($year)
+    {
+        $start = $year.'-01-01';
+        $end = $year.'-12-31';
+
+        $ctr = 0;
+
+        $holidays_arr = [];
+
+        $holidays = DB::table('holidays')->select('holiday_date')->whereBetween('holiday_date',[$start,$end])->get();
+
+        foreach($holidays as $holiday)
+        {
+            array_push($holidays_arr,$holiday->holiday_date);
+        }
+
+        $result = DB::table('edtr')
+            ->select(DB::raw("edtr.*"))
+            ->join('employees','employees.biometric_id','=','edtr.biometric_id')
+            ->where('employees.exit_status','=',1)
+            ->where('employees.pay_type','<>',3)
+            ->where('employees.date_hired','<',$start)
+            ->whereBetween('dtr_date',[$start,$end])
+            ->orderBy('id','ASC')
+            ->chunk(1000,function(Collection $logs) use ($holidays_arr){
+                foreach($logs as $log)
+                {
+                    $this->checkLog($log,$holidays_arr);
+                }
+            });
+
+    }
+
+    public function checkLog($log,$holidays){
+
+        $with_leave = false;
+        $in_holiday = false;
+
+        $awol_flag = 'Y';
+
+        $leave = DB::table('leave_request_header')->join('leave_request_detail','leave_request_header.id','=','leave_request_detail.header_id')
+        ->select('biometric_id','leave_type','with_pay','without_pay')
+        ->where('document_status','=','POSTED')
+        ->whereNotNull('received_by')
+        ->where('is_canceled','=','N')
+        ->where('leave_date','=',$log->dtr_date)
+        ->where('leave_request_header.biometric_id','=',$log->biometric_id)
+        ->first();
+
+        // dd($leave);/
+
+        if($leave)
+        {
+            switch($leave->leave_type)
+            {
+                case 'VL' : 
+                        $log->vl_wp = $leave->with_pay;
+                        $log->vl_wop = $leave->without_pay;
+
+                    break;
+                
+                case 'SL' : 
+                        $log->sl_wp = $leave->with_pay;
+                        $log->sl_wop = $leave->without_pay;
+                    break;
+
+                case 'UT' : 
+                        $log->under_time = $leave->with_pay + $leave->without_pay;
+                    break;
+
+                default : 
+                        $log->other_leave = $leave->with_pay + $leave->without_pay;
+                    break;
+                
+            }
+
+            $with_leave = true;
+        }
+
+       
+        $in_holiday = (in_array($log->dtr_date,$holidays));
+
+        if(($log->time_in == null || $log->time_in == '00:00' || $log->time_in=="") && ($log->time_out == null || $log->time_out == '00:00' || $log->time_out==""))
+        {
+           // dd($holidays->toArray());
+
+           
+
+            if($in_holiday || $with_leave) {
+                $awol_flag = 'Y';
+            }
+        }else {
+            $awol_flag = 'N';
+        }
+
+        $log->awol = $awol_flag;
+
+        $result = $this->updateValid((array) $log);
+
+        if(!$result)
+        {
+            dd('oh no!');
+        }
+    }
+
    
 
 }
 
 /*
+
+ +"id": "674"
+  +"biometric_id": "1"
+  +"encoded_on": "2023-02-03 10:41:43"
+  +"encoded_by": "1"
+  +"request_date": "2023-02-03 10:41:43"
+  +"leave_type": "VL"
+  +"date_from": "2023-01-05"
+  +"date_to": "2023-01-06"
+  +"remarks": "celebrate 1st year anniversary with wife"
+  +"acknowledge_status": "Approved"
+  +"acknowledge_time": "2023-06-06 14:16:31"
+  +"acknowledge_by": "1"
+  +"received_by": "1"
+  +"received_time": "2023-02-03 10:41:43"
+  +"dept_id": null
+  +"division_id": null
+  +"job_title_id": null
+  +"document_status": "POSTED"
+  +"reliever_id": null
+  +"ack_by_reliver": null
+  +"deny_reason": null
+  +"line_id": "889"
+  +"header_id": "674"
+  +"leave_date": "2023-01-05"
+  +"is_canceled": "N"
+  +"time_from": "07:45"
+  +"time_to": "17:00"
+  +"days": "1.00"
+  +"with_pay": "8.00"
+  +"without_pay": "0.00"
+  +"leave_remarks": null
+
+SELECT biometric_id,leave_type,with_pay + without_pay 
+FROM leave_request_header INNER JOIN leave_request_detail ON leave_request_header.id = leave_request_detail.header_id
+WHERE document_status = 'POSTED' AND received_by IS NOT NULL AND is_canceled = 'N' AND leave_date = '2023-01-01' AND leave_request_header.biometric_id = 847;
+
+
+SELECT * FROM filed_leaves_vw INNER JOIN employees ON filed_leaves_vw.biometric_id = employees.biometric_id 
+WHERE employees.exit_status = 1 AND employees.date_hired < 
+
+
 
 SELECT DISTINCT edtr.biometric_id FROM edtr INNER JOIN payroll_period_weekly ON dtr_date BETWEEN date_from AND date_to 
 INNER JOIN employees ON edtr.biometric_id = employees.biometric_id 

@@ -345,6 +345,14 @@
                             viewModel.ds.dtrgrid.read();
                         });
                     },
+                    download : function(e){
+                        let tr = $(e.target).closest("tr");
+                        let data = this.dataItem(tr);
+
+                        let url = `manage-dtr-weekly/download/${data.id}`;
+
+                        window.open(url);
+                    }
                 },
                 functions : {
                     showPop : function(data)
@@ -412,7 +420,12 @@
                     {
                         command: { text : 'Prepare',click : viewModel.buttonHandler.prepare , },
                         attributes : { style : 'font-size:10pt !important;'},
-                        width : 80
+                        width : 100
+                    },
+                    {
+                        command: { text : 'Download',click : viewModel.buttonHandler.download , },
+                        attributes : { style : 'font-size:10pt !important;'},
+                        width : 100
                     },
                     {
                         command: { text : 'Compute All',click : viewModel.buttonHandler.computeAll , },

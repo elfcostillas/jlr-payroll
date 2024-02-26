@@ -46,6 +46,8 @@ class DailyTimeRecord extends Model
         'dblhol_rdot',
         'sphol_rdot',
         'reghol_rdot',
+        'awol',
+        'other_leave',
 
     ];
 }

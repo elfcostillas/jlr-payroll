@@ -61,7 +61,7 @@ use App\Http\Controllers\Compentsations\OtherIncomeWeeklyAppController;
 use App\Http\Controllers\Memo\AWOLMemoController;
 use App\Http\Controllers\Reports\TardinessReportsController;
 use App\Http\Controllers\Memo\TardinessMemoController;
-
+use App\Http\Controllers\Reports\AttendanceReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -152,6 +152,8 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::post('compute-logs',[ManageDTRWeeklyController::class,'computeLogs']);
         Route::post('draw-logs-manual',[ManageDTRWeeklyController::class,'drawLogsM']);
         Route::post('compute-all',[ManageDTRWeeklyController::class,'computeAll']);
+
+        Route::get('download/{period_id}',[ManageDTRWeeklyController::class,'download']);
         
     });
 
@@ -540,6 +542,14 @@ Route::middleware('auth')->prefix('reports')->group(function(){
 
         Route::get('generate-ot/{from}/{to}/{hr1}/{hr2}',[ManHoursController::class,'generateReportOT']);
         Route::get('pdf-ot/{from}/{to}/{hr1}/{hr2}',[ManHoursController::class,'viewPDFOT']);
+       
+       
+    });
+
+    Route::prefix('attendance')->group(function(){
+        Route::get('/',[AttendanceReportController::class,'index']);
+        Route::get('generate-detailed/{from}/{to}',[AttendanceReportController::class,'generate']);
+        Route::get('awol-setter/{year}',[AttendanceReportController::class,'setAWOL']);
        
        
     });
