@@ -1396,20 +1396,28 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
        
         $in_holiday = (in_array($log->dtr_date,$holidays));
 
-        if(($log->time_in == null || $log->time_in == '00:00' || $log->time_in=="") && ($log->time_out == null || $log->time_out == '00:00' || $log->time_out==""))
+        if(($log->time_in == null || $log->time_in == '00:00' || $log->time_in=="" ) && ($log->time_out == null || $log->time_out == '00:00' || $log->time_out==""))
         {
            // dd($holidays->toArray());
 
-           
-
+          
             if($in_holiday || $with_leave) {
+                $awol_flag = 'N';
+            }else{
                 $awol_flag = 'Y';
             }
         }else {
             $awol_flag = 'N';
         }
 
+        if($log->dtr_date=='2023-01-01')
+        {
+            dd($awol_flag,$log->time_in);
+        }
+
         $log->awol = $awol_flag;
+
+
 
         $result = $this->updateValid((array) $log);
 
