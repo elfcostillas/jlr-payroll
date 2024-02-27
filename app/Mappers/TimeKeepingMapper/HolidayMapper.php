@@ -38,7 +38,7 @@ class HolidayMapper extends AbstractMapper {
 
 		$total = $result->count();
 
-		$result->limit($filter['pageSize'])->skip($filter['skip'])->orderBy('id','DESC');
+		$result->limit($filter['pageSize'])->skip($filter['skip'])->orderBy('holiday_date','DESC');
 
 		return [
 			'total' => $total,
