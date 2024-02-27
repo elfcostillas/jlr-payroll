@@ -51,8 +51,8 @@ class EmployeeReportController extends Controller
     {
         $filter = [
             // 'division' =>  $request->input('divison'),
-            'location' =>  $request->input('division'),
-            'division' =>  $request->input('location'),
+            'location' =>  $request->input('location'),
+            'division' =>  $request->input('division'),
             'department'=> $request->input('department'),
         ];
 
