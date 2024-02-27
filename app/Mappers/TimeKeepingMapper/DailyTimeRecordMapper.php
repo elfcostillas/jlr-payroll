@@ -1336,6 +1336,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
             ->where('employees.exit_status','=',1)
             ->where('employees.pay_type','<>',3)
             ->where('employees.date_hired','<',$start)
+            ->whereRaw('WEEKDAY(dtr_date) not in (5,6)')
             ->whereBetween('dtr_date',[$start,$end])
             ->orderBy('id','ASC')
             ->chunk(1000,function(Collection $logs) use ($holidays_arr){
