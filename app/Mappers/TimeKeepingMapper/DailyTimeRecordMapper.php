@@ -1410,11 +1410,6 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
             $awol_flag = 'N';
         }
 
-        if($log->dtr_date=='2023-01-01')
-        {
-            dd($awol_flag,$log->time_in);
-        }
-
         $log->awol = $awol_flag;
 
 
