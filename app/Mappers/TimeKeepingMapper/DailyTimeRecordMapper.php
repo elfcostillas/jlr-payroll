@@ -1303,13 +1303,71 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
     public function attendance_report($date_from,$date_to)
     {
+
+        //SELECT biometric_id,COUNT(awol) AS awol FROM edtr WHERE dtr_date BETWEEN '2023-01-01' AND '2023-12-31' GROUP BY biometric_id;
+
+        $awol = DB::table('edtr')->select(DB::raw("biometric_id,COUNT(awol) AS awol_count"))
+                ->whereBetween('dtr_date',[$date_from,$date_to])
+                ->where('awol','=','Y')
+                ->groupBy('biometric_id');
+        
+        $vl = DB::table('edtr')->select(DB::raw("biometric_id,COUNT(id) AS vl_count"))
+                ->whereBetween('dtr_date',[$date_from,$date_to])
+                ->where(function($query){
+                    $query->where('vl_wp', '>',0)
+                    ->orWhere('vl_wop', '>', 0);
+                })
+                ->groupBy('biometric_id');
+        
+        $sl = DB::table('edtr')->select(DB::raw("biometric_id,COUNT(id) AS sl_count"))
+                ->whereBetween('dtr_date',[$date_from,$date_to])
+                ->where(function($query){
+                    $query->where('sl_wp', '>',0)
+                    ->orWhere('sl_wop', '>', 0);
+                })
+                ->groupBy('biometric_id');
+
+        $ut = DB::table('edtr')->select(DB::raw("biometric_id,COUNT(id) AS ut_count"))
+                ->whereBetween('dtr_date',[$date_from,$date_to])
+                ->where('under_time','>',0)
+                ->groupBy('biometric_id');
+        
+        $others = DB::table('edtr')->select(DB::raw("biometric_id,COUNT(id) AS others_count"))
+                ->whereBetween('dtr_date',[$date_from,$date_to])
+                ->where('other_leave','>',0)
+                ->groupBy('biometric_id');
+
+        $tardy = DB::table('edtr')->select(DB::raw("biometric_id,COUNT(id) AS tardy_count"))
+            ->whereBetween('dtr_date',[$date_from,$date_to])
+            ->where('late','>',0)
+            ->groupBy('biometric_id');
+
         $result = DB::table('employees')
                             ->join('employee_names_vw','employee_names_vw.biometric_id','=','employees.biometric_id')
-                            ->select(DB::raw("employee_names_vw.*"))
+                            ->select(DB::raw("employee_names_vw.*,awol.awol_count,vl.vl_count,sl.sl_count,ut_count,others_count,tardy_count"))
                             ->where('employees.exit_status','=',1)
                             ->where('employees.pay_type','<>',3)
                             ->where('employees.date_hired','<',$date_from)
-                            ->select();
+                            ->leftJoinSub($awol,'awol',function($join) { //use ($type)
+                                $join->on('awol.biometric_id','=','employees.biometric_id');
+                            })
+                            ->leftJoinSub($vl,'vl',function($join) { //use ($type)
+                                $join->on('vl.biometric_id','=','employees.biometric_id');
+                            })
+                            ->leftJoinSub($sl,'sl',function($join) { //use ($type)
+                                $join->on('sl.biometric_id','=','employees.biometric_id');
+                            })
+                            ->leftJoinSub($ut,'ut',function($join) { //use ($type)
+                                $join->on('ut.biometric_id','=','employees.biometric_id');
+                            })
+                            ->leftJoinSub($others,'others',function($join) { //use ($type)
+                                $join->on('others.biometric_id','=','employees.biometric_id');
+                            })
+                            ->leftJoinSub($tardy,'tardy',function($join) { //use ($type)
+                                $join->on('tardy.biometric_id','=','employees.biometric_id');
+                            });
+
+        
 
         return $result->get();
     }
@@ -1428,6 +1486,8 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 }
 
 /*
+
+SELECT biometric_id,COUNT(awol) AS awol FROM edtr WHERE dtr_date BETWEEN '2023-01-01' AND '2023-12-31' GROUP BY biometric_id;
 
  +"id": "674"
   +"biometric_id": "1"

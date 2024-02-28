@@ -50,17 +50,16 @@ class EmployeeRecords implements ShouldAutoSize,WithColumnFormatting,FromView,Wi
 
     public function columnFormats(): array
     {
-        return [
-            //'A' => NumberFormat::FORMAT_NUMBER,
-			// 'D' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-			// 'E' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-			// 'F' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-			// 'G' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-			// 'H' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-			// 'I' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-            // 'J' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
-            // 'K' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2
-            
-        ];
+        $cols = [];
+
+        $col = 'C';
+        for($x=4;$x<100;$x++){
+         
+            $cols[$col]=NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2;
+            $col++;
+        }
+
+        return $cols;
+      
     }
 }
