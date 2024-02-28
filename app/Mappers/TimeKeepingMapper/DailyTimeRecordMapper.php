@@ -1344,7 +1344,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
         $result = DB::table('employees')
                             ->join('employee_names_vw','employee_names_vw.biometric_id','=','employees.biometric_id')
-                            ->select(DB::raw("employee_names_vw.*,awol.awol_count,vl.vl_count,sl.sl_count,ut_count,others_count,tardy_count"))
+                            ->select(DB::raw("employee_names_vw.*,ifnull(awol.awol_count,0) awol_count ,ifnull(vl.vl_count,0 ) vl_count,ifnull(sl.sl_count,0) sl_count,ifnull(ut_count,0) ut_count,ifnull(others_count,0) others_count,ifnull(tardy_count,0) tardy_count"))
                             ->where('employees.exit_status','=',1)
                             ->where('employees.pay_type','<>',3)
                             ->where('employees.date_hired','<',$date_from)
@@ -1365,7 +1365,9 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                             })
                             ->leftJoinSub($tardy,'tardy',function($join) { //use ($type)
                                 $join->on('tardy.biometric_id','=','employees.biometric_id');
-                            });
+                            })
+                            ->orderByRaw("(ifnull(awol_count,0) + ifnull(vl_count,0) + ifnull(sl_count,0) + ifnull(ut_count,0) + ifnull(others_count,0) + ifnull(tardy_count,0)) asc,lastname asc");
+                            // ->orderByRaw("(ifnull(awol_count,0) , ifnull(vl_count,0) , ifnull(sl_count,0) , ifnull(ut_count,0) , ifnull(others_count,0) , ifnull(tardy_count,0)) asc");
 
         
 
