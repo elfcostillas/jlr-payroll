@@ -204,7 +204,8 @@
                                     sphol_rdndot : { type:'number', },
                                     dblhol_rdndot  : { type:'number', },
 
-                                    holiday_type : { type:'string', editable : false }
+                                    holiday_type : { type:'string', editable : false },
+                                    awol : { type:'string' }
                                 }
                             }
                         },
@@ -1249,6 +1250,19 @@
                         title : 'DBL Hol RD ND OT',
                         field : 'dblhol_rdndot',
                         template : "# if(dblhol_rdndot==0){#  #} else{# #= dblhol_rdndot #  #}#",
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        }, 
+                    }, 
+                    {
+                        title : 'AWOL',
+                        field : 'awol',
+                       
                         attributes: {
                             style: "font-size: 9pt;text-align:center",
                             
