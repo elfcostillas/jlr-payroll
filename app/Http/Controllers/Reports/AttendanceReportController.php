@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Reports;
 
 use App\Http\Controllers\Controller;
 use App\Mappers\TimeKeepingMapper\DailyTimeRecordMapper;
+use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AttendanceReportController extends Controller
 {
@@ -31,4 +33,55 @@ class AttendanceReportController extends Controller
     {
         $result = $this->dtr_mapper->awol_setter($year);
     }
+
+    public function fillBlank()
+    {
+        /*
+        
+        SELECT employees.biometric_id,lastname,firstname,date_hired,no_of_days FROM employees 
+        LEFT JOIN (SELECT biometric_id,COUNT(id) AS no_of_days FROM edtr WHERE dtr_date BETWEEN '2023-01-01' AND '2023-12-31' GROUP BY biometric_id) dtr
+        ON dtr.biometric_id = employees.biometric_id
+        WHERE date_hired < '2023-01-01' AND exit_status = 1
+        AND no_of_days < 365;
+        */ 
+
+        $blank_dtr = [];
+        
+        $period = CarbonPeriod::create('2023-01-01','2023-12-31');
+
+        $employees = DB::table('edtr')
+                        ->join('employees','edtr.biometric_id','=','employees.biometric_id')
+                        ->select(DB::raw("employees.biometric_id,COUNT(edtr.id) AS no_of_days,sched_mtwtf,sched_sat"))
+                        ->whereBetween('dtr_date',['2023-01-01','2023-12-31'])->groupBy('employees.biometric_id')->havingRaw("no_of_days < 365")
+                        ->get();
+
+        foreach($employees as $employee)
+        {
+            
+            foreach ($period as $date) {
+                switch ($date->format('D')){
+                    case 'Mon': case 'Tue': case 'Wed': case 'Thu': case 'Fri':
+                            $sched = $employee->sched_mtwtf;
+                        break;
+                        
+                    case 'Sat' :
+                            $sched = $employee->sched_sat;
+                        break;
+                    
+                    default : 
+                            $sched = 0;
+                        break;
+                }
+                array_push($blank_dtr,['biometric_id' => $employee->biometric_id, 'dtr_date' => $date->format('Y-m-d'),'schedule_id' => $sched ]);
+            }
+
+         
+        }
+
+        $result = DB::table('edtr')->insertOrIgnore($blank_dtr);
+
+        
+    }
+
+
 }

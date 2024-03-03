@@ -1381,6 +1381,8 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
         $ctr = 0;
 
+        DB::table('edtr')->whereBetween('dtr_date',[$start,$end])->update(['awol' => 'N']);
+
         $holidays_arr = [];
 
         $holidays = DB::table('holidays')->select('holiday_date')->whereBetween('holiday_date',[$start,$end])->get();
@@ -1391,7 +1393,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
         }
 
         $result = DB::table('edtr')
-            ->select(DB::raw("edtr.*"))
+            ->select(DB::raw("edtr.*,weekday(dtr_date) as day_num,division_id,dept_id"))
             ->join('employees','employees.biometric_id','=','edtr.biometric_id')
             ->where('employees.exit_status','=',1)
             ->where('employees.pay_type','<>',3)
@@ -1414,6 +1416,9 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
         $in_holiday = false;
 
         $awol_flag = 'Y';
+
+        $no_saturday = [8,9,11,10];
+        $no_saturday_emp = [129,428,167,69,1822,1812,695,840,907,39,895,889,41,1807,557,564,533];
 
         $leave = DB::table('leave_request_header')->join('leave_request_detail','leave_request_header.id','=','leave_request_detail.header_id')
         ->select('biometric_id','leave_type','with_pay','without_pay')
@@ -1460,12 +1465,20 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
         if(($log->time_in == null || $log->time_in == '00:00' || $log->time_in=="" ) && ($log->time_out == null || $log->time_out == '00:00' || $log->time_out==""))
         {
            // dd($holidays->toArray());
-
           
             if($in_holiday || $with_leave) {
                 $awol_flag = 'N';
             }else{
-                $awol_flag = 'Y';
+                
+                if($log->day_num == 5){
+                    if(in_array($log->dept_id,$no_saturday) || in_array($log->biometric_id,$no_saturday_emp)){
+                        $awol_flag = 'N';
+                    }else {
+                        $awol_flag = 'Y';
+                    }
+                }else {
+                    $awol_flag = 'Y';
+                }
             }
         }else {
             $awol_flag = 'N';
