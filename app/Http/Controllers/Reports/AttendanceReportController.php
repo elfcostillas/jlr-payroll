@@ -26,7 +26,9 @@ class AttendanceReportController extends Controller
     {
         $result = $this->dtr_mapper->attendance_report($from,$to);
 
-        return view('app.reports.attendance.web',['data' => $result]);
+        $range = $from.'|'.$to;
+
+        return view('app.reports.attendance.web',['data' => $result,'range' => $range]);
     }
 
     public function setAWOL($year)
@@ -49,12 +51,24 @@ class AttendanceReportController extends Controller
         
         $period = CarbonPeriod::create('2023-01-01','2023-12-31');
 
-        $employees = DB::table('edtr')
-                        ->join('employees','edtr.biometric_id','=','employees.biometric_id')
-                        ->select(DB::raw("employees.biometric_id,COUNT(edtr.id) AS no_of_days,sched_mtwtf,sched_sat"))
-                        ->whereBetween('dtr_date',['2023-01-01','2023-12-31'])->groupBy('employees.biometric_id')->havingRaw("no_of_days < 365")
+        // $employees = DB::table('edtr')
+        //                 ->join('employees','edtr.biometric_id','=','employees.biometric_id')
+        //                 ->select(DB::raw("employees.biometric_id,COUNT(edtr.id) AS no_of_days,sched_mtwtf,sched_sat"))
+        //                 ->whereBetween('dtr_date',['2023-01-01','2023-12-31'])->groupBy('employees.biometric_id')->havingRaw("no_of_days < 365")
+        //                 ->whereRaw("date_hired < '2023-01-01'")
+        //                 ->where('exit_status','=',1)
+        //                 ->get();
+
+        // dd($employees);
+
+        $employees = DB::table("employees")
+                        ->select('biometric_id','sched_mtwtf','sched_sat')
+                        ->whereRaw("date_hired < '2023-01-01'")
+                        ->where('exit_status','=',1)
+                        ->where('pay_type','<>',3)
                         ->get();
 
+      
         foreach($employees as $employee)
         {
             
@@ -74,13 +88,45 @@ class AttendanceReportController extends Controller
                 }
                 array_push($blank_dtr,['biometric_id' => $employee->biometric_id, 'dtr_date' => $date->format('Y-m-d'),'schedule_id' => $sched ]);
             }
-
-         
         }
 
         $result = DB::table('edtr')->insertOrIgnore($blank_dtr);
 
         
+    }
+
+    public function sub($from,$to,$biometric_id,$type)
+    {
+        $result = DB::table('edtr')->whereBetween('dtr_date',[$from,$to])
+                // ->select('dtr_date','time_in,time_out')
+                ->select(
+                    'dtr_date',
+                    'time_in',
+                    'time_out',
+                    'late',
+                    'under_time',
+                    'vl_wp',
+                    'vl_wop',
+                    'sl_wp',
+                    'sl_wop',
+                    'other_leave',
+                    'awol'
+                )
+
+                ->where('biometric_id','=',$biometric_id);
+
+                if($type=="LATE"){
+                    $result = $result->where('late','>',0);
+                }   
+
+            
+
+                $result = $result->get();
+
+        
+
+        // return view();
+        return view('app.reports.attendance.sub',['data' => $result]);
     }
 
 

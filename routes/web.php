@@ -551,6 +551,7 @@ Route::middleware('auth')->prefix('reports')->group(function(){
         Route::get('generate-detailed/{from}/{to}',[AttendanceReportController::class,'generate']);
         Route::get('awol-setter/{year}',[AttendanceReportController::class,'setAWOL']);
         Route::get('fill-blank',[AttendanceReportController::class,'fillBlank']);
+        Route::get('sub/{from}/{to}/{biometric_id}/{type}',[AttendanceReportController::class,'sub']);
        
        
     });
