@@ -26,6 +26,14 @@
         });
     });
 </script>
+
+<style>
+    a:link {
+        text-decoration: none;
+        color : black;
+    }
+
+</style>
 <body>
     <table border=1 style="border-collapse:collapse;">
         <tr>
@@ -36,18 +44,18 @@
             <td style="width:80px;text-align:center" >AWOL</td>
             <td style="width:80px;text-align:center" >VL</td>
             <td style="width:80px;text-align:center" >SL</td>
-            <td style="width:80px;text-align:center" >Other Leaves</td>
+            <!-- <td style="width:80px;text-align:center" >Other Leaves</td> -->
         </tr>
         @foreach($data as $row)
             <tr>
                 <td> {{ $cntr++ }}</td>
                 <td> {{ $row->employee_name }} - {{ $row->biometric_id }} </td>
-                <td style="text-align:center;"> <a class="tardy" href="{{$range.'|'.$row->biometric_id.'|'.'LATE'}}"  >{{ $row->tardy_count }} </a> </td>
-                <td style="text-align:center;"> <a class="tardy" href="{{$range.'|'.$row->biometric_id.'|'.'LATE'}}"  >{{ $row->ut_count }} </a> </td>
-                <td style="text-align:center;"> <a class="tardy" href="{{$range.'|'.$row->biometric_id.'|'.'LATE'}}"  >{{ $row->awol_count }}  </a></td>
-                <td style="text-align:center;"> <a class="tardy" href="{{$range.'|'.$row->biometric_id.'|'.'LATE'}}"  >{{ $row->vl_count }}  </a></td>
-                <td style="text-align:center;"> <a class="tardy" href="{{$range.'|'.$row->biometric_id.'|'.'LATE'}}"  >{{ $row->sl_count }}  </a></td>
-                <td style="text-align:center;"> <a class="tardy" href="{{$range.'|'.$row->biometric_id.'|'.'LATE'}}"  >{{ $row->others_count }} </a> </td>
+                <td style="text-align:center;"> @if($row->tardy_count > 0) <a class="tardy" href="{{$range.'|'.$row->biometric_id.'|'.'LATE'}}"  >{{ $row->tardy_count }} </a> @endif </td>
+                <td style="text-align:center;"> @if($row->ut_count > 0) <a class="tardy" href="{{$range.'|'.$row->biometric_id.'|'.'UT'}}"  >{{ $row->ut_count }} </a> @endif </td>
+                <td style="text-align:center;"> @if($row->awol_count > 0)<a class="tardy" href="{{$range.'|'.$row->biometric_id.'|'.'AWOL'}}"  >{{ $row->awol_count }}  </a> @endif </td>
+                <td style="text-align:center;"> @if($row->vl_count > 0) <a class="tardy" href="{{$range.'|'.$row->biometric_id.'|'.'VL'}}"  >{{ $row->vl_count }}  </a> @endif </td>
+                <td style="text-align:center;"> @if($row->sl_count > 0) <a class="tardy" href="{{$range.'|'.$row->biometric_id.'|'.'SL'}}"  >{{ $row->sl_count }}  </a> @endif </td>
+                <!-- <td style="text-align:center;"> <a class="tardy" href="{{$range.'|'.$row->biometric_id.'|'.'LATE'}}"  >{{ $row->others_count }} </a> </td> -->
             </tr>
         @endforeach
     </table>

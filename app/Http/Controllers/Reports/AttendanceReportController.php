@@ -119,6 +119,31 @@ class AttendanceReportController extends Controller
                     $result = $result->where('late','>',0);
                 }   
 
+                
+                if($type=="UT"){
+                    $result = $result->where('under_time','>',0);
+                }   
+
+                
+                if($type=="AWOL"){
+                    $result = $result->where('awol','=','Y');
+                }   
+
+            
+                if($type=="VL"){
+                    $result = $result->where(function($query){
+                        $query->where('vl_wp','>',0)
+                        ->orWhere('vl_wop','>',0);
+                    });
+                }   
+
+                if($type=="SL"){
+                    $result = $result->where(function($query){
+                        $query->where('sl_wp','>',0)
+                        ->orWhere('sl_wop','>',0);
+                    });
+                }   
+
             
 
                 $result = $result->get();

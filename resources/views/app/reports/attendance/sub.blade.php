@@ -15,10 +15,14 @@
 <?php
 
     use Carbon\Carbon;
+
+    $ctr = 1;
+
 ?>
 <body>
     <table border=1 style="border-collapse:collapse;">
         <tr>
+            <td></td>
             <td>Day</td>
             <td>Date</td>
             <td>Time IN</td>
@@ -38,6 +42,7 @@
             ?>
           
             <tr>
+                <td> {{ $ctr++ }} </td>
                 <td> {{ $date->format('l') }} </td>
                 <td>{{ $row->dtr_date  }}</td>
                 <td>{{ $row->time_in  }}</td>
