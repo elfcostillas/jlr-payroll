@@ -1347,7 +1347,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                             ->select(DB::raw("employee_names_vw.*,ifnull(awol.awol_count,0) awol_count ,ifnull(vl.vl_count,0 ) vl_count,ifnull(sl.sl_count,0) sl_count,ifnull(ut_count,0) ut_count,ifnull(others_count,0) others_count,ifnull(tardy_count,0) tardy_count"))
                             ->where('employees.exit_status','=',1)
                             ->where('employees.pay_type','<>',3)
-                            ->where('employees.date_hired','<',$date_from)
+                            ->where('employees.date_hired','<',$date_to)
                             ->leftJoinSub($awol,'awol',function($join) { //use ($type)
                                 $join->on('awol.biometric_id','=','employees.biometric_id');
                             })
