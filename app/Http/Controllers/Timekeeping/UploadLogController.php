@@ -40,28 +40,59 @@ class UploadLogController extends Controller
         $thisFile = Storage::get($path);
         $content = explode("\n",mb_convert_encoding($thisFile, 'UTF-8', 'UTF-8'));
 
-        foreach($content as $line)
-        {
-            $data = preg_split("/\s+/", trim($line));
-			if( $data[0] !="AC-No." && $data[0] !="" ){
-				if(count($data)==5){
-					if($data[4]!=""){
-						$data[3] = $data[4];
-					}
+		$new_content = array_chunk($content,10000);
 
-					$date = date_format(Carbon::createFromFormat('m/d/Y',$data[1]),'Y-m-d');
-					array_push($logs,['punch_date'=> $date,'punch_time' => $data[2], 'biometric_id' => $data[0],'cstate' => $data[3] ]);
-					//array_push($dtr,['dtr_date' => $date,'bio_metric_id' => $data[0]]);
-				}else{
-					if(count($data)==4){
+		// dd($new_content);
+
+		foreach($new_content as $chunk){
+			// dd($chunk);
+			$logs = [];
+			
+			foreach($chunk as $line)
+			{
+				$data = preg_split("/\s+/", trim($line));
+				if( $data[0] !="AC-No." && $data[0] !="" ){
+					if(count($data)==5){
+						if($data[4]!=""){
+							$data[3] = $data[4];
+						}
+
 						$date = date_format(Carbon::createFromFormat('m/d/Y',$data[1]),'Y-m-d');
 						array_push($logs,['punch_date'=> $date,'punch_time' => $data[2], 'biometric_id' => $data[0],'cstate' => $data[3] ]);
+						//array_push($dtr,['dtr_date' => $date,'bio_metric_id' => $data[0]]);
+					}else{
+						if(count($data)==4){
+							$date = date_format(Carbon::createFromFormat('m/d/Y',$data[1]),'Y-m-d');
+							array_push($logs,['punch_date'=> $date,'punch_time' => $data[2], 'biometric_id' => $data[0],'cstate' => $data[3] ]);
+						}
 					}
 				}
+				$result = $this->mapper->insertDB($logs);
 			}
-        }
+		}
+
+        // foreach($content as $line)
+        // {
+        //     $data = preg_split("/\s+/", trim($line));
+		// 	if( $data[0] !="AC-No." && $data[0] !="" ){
+		// 		if(count($data)==5){
+		// 			if($data[4]!=""){
+		// 				$data[3] = $data[4];
+		// 			}
+
+		// 			$date = date_format(Carbon::createFromFormat('m/d/Y',$data[1]),'Y-m-d');
+		// 			array_push($logs,['punch_date'=> $date,'punch_time' => $data[2], 'biometric_id' => $data[0],'cstate' => $data[3] ]);
+		// 			//array_push($dtr,['dtr_date' => $date,'bio_metric_id' => $data[0]]);
+		// 		}else{
+		// 			if(count($data)==4){
+		// 				$date = date_format(Carbon::createFromFormat('m/d/Y',$data[1]),'Y-m-d');
+		// 				array_push($logs,['punch_date'=> $date,'punch_time' => $data[2], 'biometric_id' => $data[0],'cstate' => $data[3] ]);
+		// 			}
+		// 		}
+		// 	}
+        // }
 		
-		$result = $this->mapper->insertDB($logs);
+		// $result = $this->mapper->insertDB($logs);
         //$result2 = $this->edtr->insertDB($dtr);
 		
         if(is_object($result)){
