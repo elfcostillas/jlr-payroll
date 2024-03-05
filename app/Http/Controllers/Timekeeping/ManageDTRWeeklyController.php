@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers\Timekeeping;
 
+use App\Excel\WeeklyDTR;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mappers\TimeKeepingMapper\DailyTimeRecordMapper;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ManageDTRWeeklyController extends Controller
 {
     //
     private $mapper;
+    private $excel;
 
-    public function __construct(DailyTimeRecordMapper $mapper)
+    public function __construct(DailyTimeRecordMapper $mapper,WeeklyDTR $excel)
     {
         $this->mapper = $mapper;
+        $this->excel = $excel;
     }
 
     public function index()
@@ -154,7 +158,11 @@ class ManageDTRWeeklyController extends Controller
 
     public function download($period_id)
     {
-        dd($period_id);
+        $result = $this->mapper->downloadWeekly($period_id);
+
+        $this->excel->setValues($result);
+        return Excel::download($this->excel,'DTR-Sumamry'.$period_id.'.xlsx');
+        // return view('app.timekeeping.manage-dtr-weekly.excel',['data' => $result ]);
     }
     
 }

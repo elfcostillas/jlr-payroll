@@ -1496,6 +1496,45 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
         }
     }
 
+    function downloadWeekly($period_id)
+    {
+        $tmp = DB::table('weekly_tmp_locations')->select('biometric_id','loc_id')->where('period_id','=',$period_id);
+
+        // $result = DB::table('employees')->where('exit_status','=',1)->where('pay_type','=',3);
+        $period = DB::table('payroll_period_weekly')->where('id','=',$period_id)->first();
+
+        $locations = DB::table('locations')->get();
+
+        foreach($locations as $location)
+        {
+            $employees =  DB::table('employees')
+                            ->leftJoinSub($tmp,'tmp',function($join){
+                                $join->on('tmp.biometric_id','=','employees.biometric_id');
+                            })  
+                            ->join('employee_names_vw','employee_names_vw.biometric_id','=','employees.biometric_id')
+                            ->select('employees.biometric_id','employee_names_vw.employee_name')
+                            ->where('employees.exit_status','=',1)->where('pay_type','=',3)
+                            ->whereRaw("COALESCE(tmp.loc_id,employees.location_id) = ". $location->id)
+                            ->get();
+
+                foreach($employees as $employee)
+                {
+                    $dtr = DB::table('edtr')
+                            ->whereBetween('dtr_date',[$period->date_from,$period->date_to])
+                            ->where('biometric_id',$employee->biometric_id)
+                            ->orderBy('dtr_date','ASC')
+                            ->get();
+
+                    $employee->dtr = $dtr;
+                }
+
+            $location->employees = $employees;
+        }
+
+        return $locations;
+
+    }
+
    
 
 }
