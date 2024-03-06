@@ -1397,7 +1397,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
             ->join('employees','employees.biometric_id','=','edtr.biometric_id')
             ->where('employees.exit_status','=',1)
             ->where('employees.pay_type','<>',3)
-            ->where('employees.date_hired','<',$start)
+            ->where('employees.date_hired','<',$end)
             ->whereRaw('WEEKDAY(dtr_date) not in (6)')
             ->whereBetween('dtr_date',[$start,$end])
             ->orderBy('id','ASC')
