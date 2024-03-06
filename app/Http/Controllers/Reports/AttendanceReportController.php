@@ -154,5 +154,64 @@ class AttendanceReportController extends Controller
         return view('app.reports.attendance.sub',['data' => $result]);
     }
 
+    public function setTARDY($year)
+    {
+        $from = $year.'-01-01';
+        $to = $year.'-12-31';
+
+        $dtrs = DB::table('edtr')->join('employees','edtr.biometric_id', '=','employees.biometric_id')
+                ->select(DB::raw("edtr.id,edtr.biometric_id,dtr_date,schedule_id,WEEKDAY(dtr_date) AS day_num,sched_mtwtf,sched_sat"))
+                ->where('exit_status',1)->where('pay_type','<>',3)->where(function($query){
+                    $query->where('edtr.schedule_id',0)->orWhereNull('edtr.schedule_id');
+                })
+                ->whereBetween('dtr_date',[$from,$to])
+                ->whereRaw("WEEKDAY(dtr_date) <> 6 ")
+                ->get();
+
+        dd($dtrs);
+        
+        $ctr = 1;
+
+        echo "START => ".now()."<br>";
+
+        foreach($dtrs as $dtr){
+          
+            switch($dtr->day_num)
+            {
+                    case 0 : case '0' :
+                    case 1 : case '1' :
+                    case 2 : case '2' :
+                    case 3 : case '3' :
+                    case 4 : case '4' :
+                        // dd($dtr->day_num);
+                        $affected = DB::table('edtr')
+                                        ->where('id', $dtr->id)
+                                        ->update(['schedule_id' => $dtr->sched_mtwtf]);
+
+                        $ctr++;
+                    break;
+
+                    case 5 :  case '5' :
+                        // dd($dtr->day_num);
+                        $affected = DB::table('edtr')
+                                        ->where('id', $dtr->id)
+                                        ->update(['schedule_id' => $dtr->sched_sat]);
+                        $ctr++;
+                    break;
+            }
+        }
+
+        echo "Records Updated => ".$ctr."<br>";
+
+        echo "END => ".now()."<br>";
+    }
+
 
 }
+
+
+/*
+SELECT edtr.id,edtr.biometric_id,dtr_date,schedule_id,WEEKDAY(dtr_date) AS day_num FROM edtr INNER JOIN employees ON edtr.biometric_id = employees.biometric_id 
+WHERE exit_status = 1 AND pay_type <> 3 AND edtr.schedule_id = 0 AND dtr_date BETWEEN '2023-07-01' AND '2023-09-30'
+AND WEEKDAY(dtr_date) != 6 ;
+*/

@@ -552,6 +552,8 @@ Route::middleware('auth')->prefix('reports')->group(function(){
         Route::get('awol-setter/{year}',[AttendanceReportController::class,'setAWOL']);
         Route::get('fill-blank',[AttendanceReportController::class,'fillBlank']);
         Route::get('sub/{from}/{to}/{biometric_id}/{type}',[AttendanceReportController::class,'sub']);
+
+        Route::get('tardy-setter/{year}',[AttendanceReportController::class,'setTARDY']);
        
        
     });
