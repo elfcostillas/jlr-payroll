@@ -246,14 +246,74 @@ class LeaveReportsMapper extends AbstractMapper {
         return $divisions;
     }
 
-    public function getData($start,$end)
+    public function getDivisions2($from,$to)
+    {
+        //
+        //SELECT departments.dept_code FROM employees INNER JOIN departments ON employees.dept_id = departments.id
+        
+        //INNER JOIN `employee_names_vw` ON `employee_names_vw`.`biometric_id` = `edtr`.`biometric_id` 
+        $qa = $this->model->select(DB::raw("101 AS id,'Quality Assurance' div_name")); // DB::select("SELECT 101 AS id,'QA' div_name");
+        
+        $result = $this->model->select('id','div_name')->from('divisions')->union($qa);
+
+        $divisions = $result->get();
+
+        foreach($divisions as $div)
+        {
+            //select estatus_desc from employees left join emp_emp_stat on employees.employee_stat = emp_emp_stat.id
+            if($div->id != 101){
+                $emp = $this->model->select('employees.biometric_id','div_code','employee_names_vw.employee_name','departments.dept_code','estatus_desc',DB::raw('ifnull(date_format(date_hired,"%m/%d/%Y"),"wala gi set ni maria mae") as date_hired'))
+                    ->from('employees')
+                    ->join('employee_names_vw','employee_names_vw.biometric_id','=','employees.biometric_id')
+                    ->leftJoin('departments','employees.dept_id','=','departments.id')
+                    ->leftJoin('emp_emp_stat','employees.employee_stat','=','emp_emp_stat.id')
+                    ->leftJoin('divisions','employees.division_id','=','divisions.id')
+                    ->where('employees.division_id',$div->id)
+                    ->where('employees.exit_status',1)
+                    ->where('employees.pay_type','!=',3)
+                    ->where('employees.dept_id','!=',5)
+                    ->where('employees.date_hired','<',$from)
+                    ->whereNotNull('employees.date_hired')
+                    ->orderBy('employees.dept_id','asc')
+                    ->orderBy('lastname','asc')
+                    ->orderBy('firstname','asc')
+                    ->get();
+            }else{
+                $emp = $this->model->select('employees.biometric_id','div_code','employee_names_vw.employee_name','departments.dept_code','estatus_desc',DB::raw('ifnull(date_format(date_hired,"%m/%d/%Y"),"wala gi set ni maria mae") as date_hired'))
+                    ->from('employees')
+                    ->join('employee_names_vw','employee_names_vw.biometric_id','=','employees.biometric_id')
+                    ->where('employees.division_id',2)
+                    ->leftJoin('departments','employees.dept_id','=','departments.id')
+                    ->leftJoin('emp_emp_stat','employees.employee_stat','=','emp_emp_stat.id')
+                    ->leftJoin('divisions','employees.division_id','=','divisions.id')
+                    ->where('employees.exit_status',1)
+                    ->where('employees.pay_type','!=',3)
+                    ->where('employees.dept_id','=',5)
+                   
+                    // ->whereBetween('employees.date_hired',[$from,$to])
+                    ->where('employees.date_hired','<',$from)
+                    ->whereNotNull('employees.date_hired')
+                    ->orderBy('employees.dept_id','asc')
+                    ->orderBy('lastname','asc')
+                    ->orderBy('firstname','asc')
+                    ->get();
+            }
+           
+            $div->emp = $emp;
+        }
+
+        return $divisions;
+    }
+
+    public function getData($start,$end,$from,$to)
     {
 
         if($start == '2023-01-01'){
             $sub_qry = "SELECT employees.biometric_id, tardy_count as late_count,0 as in_minutes FROM employees 
             INNER JOIN manual_tardy ON employees.biometric_id = manual_tardy.biometric_id
             WHERE  emp_level >= 3
-            and job_title_id != 12";
+            and job_title_id != 12
+            and date_hired between '$from' and '$to'";
         }
         else{
             // $sub_qry = " SELECT employees.biometric_id,COUNT(dtr_date) late_count,SUM((TIME_TO_SEC(edtr.time_in)- TIME_TO_SEC(work_schedules.time_in))/60) AS in_minutes FROM edtr 
@@ -286,12 +346,17 @@ class LeaveReportsMapper extends AbstractMapper {
             and emp_level >= 3
             and job_title_id != 12
             and holiday_type is null 
+            and date_hired between '$from' and '$to'
+            and date_hired is not null
             GROUP BY employees.biometric_id,lastname,firstname
             ORDER BY lastname";
+        
         }
 
+        $awol = "SELECT biometric_id,COUNT(id) AS awol_count FROM edtr WHERE awol = 'Y' AND dtr_date BETWEEN '$start' AND '$end' GROUP BY biometric_id";
+
         $qry = "SELECT employees.biometric_id,IFNULL(sl_count,0) sl_count,IFNULL(vl_count,0) vl_count,IFNULL(el_count,0) el_count,IFNULL(ut_count,0) ut_count,
-        IFNULL(bl_count,0) bl_count,IFNULL(mp_count,0) mp_count,IFNULL(o_count,0) o_count,IFNULL(svl_count,0) svl_count,IFNULL(late_count,0) late_count,IFNULL(in_minutes,0) in_minutes
+        IFNULL(bl_count,0) bl_count,IFNULL(mp_count,0) mp_count,IFNULL(o_count,0) o_count,IFNULL(svl_count,0) svl_count,IFNULL(late_count,0) late_count,IFNULL(in_minutes,0) in_minutes,IFNULL(awol_count,0) awol_count
         FROM employees LEFT JOIN 
         (
         SELECT biometric_id,COUNT(leave_date) AS sl_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
@@ -369,7 +434,14 @@ class LeaveReportsMapper extends AbstractMapper {
         LEFT JOIN (
             $sub_qry
        ) AS tardy ON employees.biometric_id = tardy.biometric_id
-        WHERE pay_type != 3";
+       LEFT JOIN (
+            $awol
+       ) AS awol ON employees.biometric_id = awol.biometric_id
+
+        WHERE pay_type != 3
+        and date_hired < '$end'
+        and exit_status = 1
+        and date_hired is not null";
 
         $result = DB::select($qry);
 

@@ -80,7 +80,7 @@
                 <td rowspan=2>No. </td>
                 {{-- <td rowspan=2>Biometric ID</td> --}}
                 <td rowspan=2 style="width:280px">Employee Name</td>
-                <td rowspan=2 style="">Department</td>
+                <td rowspan=2>Department</td>
                 @for($i = $index;$i<=$limit;$i++)
                     {{-- <td colspan=11>{{ $month[$i] }} {{ $year }}</td> --}}
                     <td colspan=12>{{ $month[$i] }} {{ $year }}</td>
@@ -142,14 +142,22 @@
                     $svl_count = 0;
                     $o_count = 0;
                     $in_minutes =0;
+                    $awol_count =0;
                 ?>
                 <tr>
+                   
                     <td> {{ $ctr++ }} </td>
                     {{-- <td> {{ $emp->biometric_id }} </td> --}}
                     <td style="white-space:nowrap"> {{ $emp->employee_name }} </td>
-                    <td> {{ $emp->dept_code }} </td>
+                    <td style="white-space:nowrap"> {{ $emp->div_code }} - {{ $emp->dept_code }}  </td>
                     @for($i = $index;$i<=$limit;$i++)
                         <?php
+                            
+                            // if($i ==7 || $emp->biometric_id ==7)
+                            // {
+                            //    dd( $tableData[$emp->biometric_id][$i]['late_count']);
+                            // }   
+
                             $late_count  +=$tableData[$emp->biometric_id][$i]['late_count'];
                             $sl_count  +=$tableData[$emp->biometric_id][$i]['sl_count'];
                             $vl_count  +=$tableData[$emp->biometric_id][$i]['vl_count'];
@@ -160,6 +168,8 @@
                             $svl_count  +=$tableData[$emp->biometric_id][$i]['svl_count'];
                             $o_count  +=$tableData[$emp->biometric_id][$i]['o_count'];
                             $in_minutes +=$tableData[$emp->biometric_id][$i]['in_minutes'];
+
+                            $awol_count +=$tableData[$emp->biometric_id][$i]['awol_count'];
 
 
                         ?>
@@ -174,7 +184,7 @@
                         <td  class="grey">{{ nformat($tableData[$emp->biometric_id][$i]['svl_count']) }}</td>
                         <td >{{ nformat($tableData[$emp->biometric_id][$i]['o_count']) }}</td>
                         <td  class="grey"></td>
-                        <td ></td>
+                        <td >{{ nformat($tableData[$emp->biometric_id][$i]['awol_count']) }}</td>
                         {{-- <td style="white-space:nowrap" >{{ convert($tableData[$emp->biometric_id][$i]['in_minutes']) }}</td> --}}
                         {{-- <td style="white-space:nowrap" >{{ convert($tableData[$emp->biometric_id][$i]['in_minutes']) }}</td> --}}
                         <td  class="grey" style="white-space:nowrap" >{{ convertoToDecimal($tableData[$emp->biometric_id][$i]['in_minutes']) }}</td>

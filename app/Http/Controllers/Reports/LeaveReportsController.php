@@ -143,16 +143,16 @@ class LeaveReportsController extends Controller
             $index = (int) $from->month;
             $limit = (int) $to->month;
 
-            $divisions = $this->mapper->getDivisions();
+            $divisions = $this->mapper->getDivisions2($from,$to);
 
             for($i = $index;$i<=$limit; $i++)
             {
                 $start = date('Y-m-d',strtotime($from->year.'-'.$i.'-01'));
                 $end = date('Y-m-t',strtotime($start));
 
-                //dd($start,$end);
+                //dd($start,$end)
 
-                $data = $this->mapper->getData($start,$end);
+                $data = $this->mapper->getData($start,$end,$from,$to);
 
                 foreach($data as $row) {
                    
@@ -167,8 +167,14 @@ class LeaveReportsController extends Controller
                     $tableData[$row->biometric_id][$i]['svl_count'] = $row->svl_count;
                     $tableData[$row->biometric_id][$i]['late_count'] = $row->late_count;
                     $tableData[$row->biometric_id][$i]['in_minutes'] = $row->in_minutes;
+
+                    $tableData[$row->biometric_id][$i]['awol_count'] = $row->awol_count;
+
+                 
                 }
             }
+
+          
             
         }
 
