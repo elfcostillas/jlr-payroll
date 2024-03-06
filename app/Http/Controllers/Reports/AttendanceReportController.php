@@ -33,7 +33,9 @@ class AttendanceReportController extends Controller
 
     public function setAWOL($year)
     {
-        $result = $this->dtr_mapper->awol_setter($year);
+        echo "START => ".now()."<br>";
+            $result = $this->dtr_mapper->awol_setter($year);
+        echo "END => ".now()."<br>";
     }
 
     public function fillBlank()
@@ -168,8 +170,6 @@ class AttendanceReportController extends Controller
                 ->whereRaw("WEEKDAY(dtr_date) <> 6 ")
                 ->get();
 
-        dd($dtrs);
-        
         $ctr = 1;
 
         echo "START => ".now()."<br>";

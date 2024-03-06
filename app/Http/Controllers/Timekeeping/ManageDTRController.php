@@ -148,7 +148,7 @@ class ManageDTRController extends Controller
             $dtr = $this->mapper->getSemiDTR($bio_id->biometric_id,$period_id);
             $this->mapper->mapRawLogs2($dtr);
 
-            $dtr2 = $this->mapper->putLeavesUT($bio_id->biometric_id,$period_id);
+            // $dtr2 = $this->mapper->putLeavesUT($bio_id->biometric_id,$period_id);
 
             $dtr3 = $this->mapper->getSemiDTRforComputation($bio_id->biometric_id,$period_id);
 
