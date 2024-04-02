@@ -112,6 +112,7 @@
                                     time_out: {type:"string"},
                                     ot_in: {type:"string"},
                                     ot_out: {type:"string"},
+                                    created_on : { type : "date"  }
                                     
                                 }
                             }
@@ -438,11 +439,19 @@
                         field : "ftp_reason",
                     },
                     {
+                        title : "Create Date",
+                        field : "created_on",
+                        attributes : { style : 'text-align:center;'},
+                        template : "#= (data.created_on) ? kendo.toString(data.created_on,'MM/dd/yyyy HH:mm:ss') : ''  #",
+                        width : 140,    
+                    },
+                    {
                         title : "Status",
                         field : "ftp_status",
                         attributes : { style : 'text-align:center;'},
                         width : 85,    
                     },
+                   
                     {
                         command: { text : 'View',icon : '' ,click : viewModel.toolbarHandler.viewFTP },
                         attributes : { style : 'font-size:10pt !important;'},
