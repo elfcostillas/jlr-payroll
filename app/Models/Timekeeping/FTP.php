@@ -23,7 +23,8 @@ class FTP extends Model
         'encoded_on',
         'hr_received',
         'hr_received_by',
-        'hr_received_on'
+        'hr_received_on',
+        'isChecked'
     ];
 
 

@@ -11,6 +11,11 @@
                     { text: "Official Business", value: "OB" },
                     { text: "Personal Reason", value: "PR" },
                 ];
+
+            let stopOption = [
+                { text: "N", value: "N" },
+                { text: "Y", value: "Y" },
+            ];
             
             let obj = {
                 id : null,
@@ -101,18 +106,20 @@
                                 fields : {
                                     id : { type : "number", editable : false },
                                     biometric_id : {type:"number",editable : false},
-                                    ftp_date : {type:"date"},
-                                    ftp_time : {type:"string"},
-                                    ftp_state : {type:"string"},
-                                    encoded_by : {type:"number"},
-                                    ftp_reason : {type:"string"},
-                                    employee_name: {type:"string"},
+                                    ftp_date : {type:"date",editable : false},
+                                    ftp_time : {type:"string",editable : false},
+                                    ftp_state : {type:"string",editable : false},
+                                    encoded_by : {type:"number" ,editable : false},
+                                    ftp_reason : {type:"string",editable : false},
+                                    employee_name: {type:"string",editable : false},
+                                    ftp_remarks: {type:"string",editable : false},
 
-                                    time_in: {type:"string"},
-                                    time_out: {type:"string"},
-                                    ot_in: {type:"string"},
-                                    ot_out: {type:"string"},
-                                    created_on : { type : "date"  }
+                                    time_in: {type:"string",editable : false},
+                                    time_out: {type:"string",editable : false},
+                                    ot_in: {type:"string",editable : false},
+                                    ot_out: {type:"string",editable : false},
+                                    created_on : { type : "date" ,editable : false },
+                                    isChecked : { type : "string"  }
                                     
                                 }
                             }
@@ -193,8 +200,6 @@
                             data : json_data
                         },function(data,staus){
                             swal_success(data);
-
-                          
 
                             if(data!=null)
                             {
@@ -380,9 +385,15 @@
                 height : 550,
                 scrollable: true,
                 // toolbar : [{ name :'create',text:'Add FTP' }],
-                toolbar : [{ template : kendo.template($("#template").html())} ],
-                editable : "inline",
+                toolbar : [{ template : kendo.template($("#template").html())},'save' ],
+                editable : true,
                 columns : [
+                    {
+                        title : "-",
+                        field : "isChecked",
+                        width : 70,
+                        editor : stopEditor
+                    },
                     {
                         title : "FTP ID",
                         field : "id",
@@ -455,11 +466,27 @@
                     {
                         command: { text : 'View',icon : '' ,click : viewModel.toolbarHandler.viewFTP },
                         attributes : { style : 'font-size:10pt !important;'},
-                        width : 70
+                        width : 70,
+                        
                     },
                   
                 ]
             });
+
+            function stopEditor(container, options)
+            {
+                $('<input name="' + options.field + '"/>')
+                .appendTo(container)
+                .kendoDropDownList({
+                //.kendoComboBox({
+                    //autoBind: false,
+                    autoWidth: true,
+                    dataTextField: "text",
+                    dataValueField: "value",
+                    dataSource: stopOption,
+                   
+                });
+            }
 
             $('input:checkbox.urights').click(function(){
 			var url = '';

@@ -244,6 +244,8 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::get('employee-list',[FTPController::class,'getEmployees']);
         Route::get('read/{id}',[FTPController::class,'readByID']);
 
+        Route::post('update',[FTPController::class,'update']);
+
 
         
     });
