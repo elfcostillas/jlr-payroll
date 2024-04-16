@@ -46,7 +46,17 @@ class FTPController extends Controller
 
     public function update(Request $request)
     {
-        $result = $this->mapper2->updateValid($request->all());
+        // $result = $this->mapper2->updateValid($request->all());
+
+        // if(is_object($result)){
+		// 	return response()->json($result)->setStatusCode(500, 'Error');
+		// }
+
+        // return response()->json($result);
+
+        $data = $request->only(['id','isChecked']);
+        
+        $result = $this->mapper2->updateValid($data);
 
         if(is_object($result)){
 			return response()->json($result)->setStatusCode(500, 'Error');
