@@ -24,7 +24,7 @@
                            
                            
                         },
-                        pageSize :11,
+                        pageSize :20,
                      
                         schema : {
                             // data : "data",
