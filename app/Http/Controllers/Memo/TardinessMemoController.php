@@ -364,7 +364,78 @@ class TardinessMemoController extends Controller
                     break;
             }
         }else{
-            dd('oh no');
+            switch($memo->memo_month)
+            {
+                case 1 :
+                    $total = count($details);
+                    $months = "January";
+
+                break;
+                case 2 :
+                    $total = count($details);
+                    $months = "January, February";
+
+                break;
+                case 3 :
+
+                        $breakdown = '';
+
+                        $january = date('Y-m-d',strtotime($memo->memo_year.'-01-01'));
+
+                        $janFilter = array(
+                            'from' => $january,
+                            'to' => date('Y-m-t',strtotime($january)),
+                        );
+
+                        $firstMonth =  $this->mapper->getLates($memo->biometric_id,$janFilter);
+
+                        $february = date('Y-m-d',strtotime($memo->memo_year.'-02-01'));
+
+                        $febFilter = array(
+                            'from' => $february,
+                            'to' => date('Y-m-t',strtotime($february)),
+                        );
+
+                        $secondMonth =  $this->mapper->getLates($memo->biometric_id,$febFilter);
+
+
+                        $total = count($firstMonth) + count($secondMonth) + count($details);
+                        $months = "January, February, March";
+
+                        // $ifilter = array(
+                        //     'from' => $iStart,
+                        //     'to' => date('Y-m-t',strtotime($iStart)),
+                        // );
+
+                        if(count($firstMonth)>0){
+                            $breakdown .= "Last January you incurred a total of (".count($firstMonth).") tardiness occurrence";
+                        }
+
+                        // $secondMonth =  $this->mapper->getLates($memo->biometric_id,$ifilter);
+
+                        if(count($secondMonth)>0){
+                            if(count($firstMonth)>0){
+                                $breakdown .= " and last February you incurred a total of (".count($secondMonth).") tardiness occurrence.";
+                        
+                            }else {
+                                $breakdown  = "Last February you incurred a total of (".count($secondMonth).") tardiness occurrence.";
+                            }
+                        }else {
+                            if(count($firstMonth)>0){
+                                $breakdown .= ".";
+                            }
+                        }
+                       
+                        $months = "January, February, March";
+
+                break;
+                case 4 :
+                    $total = count($details);
+                    $months = "April";
+
+                break;
+            }
+                
         }
 
         $total_str = "A total of ($total) occurrence for ($months) period(s).";
