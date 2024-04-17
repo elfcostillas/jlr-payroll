@@ -367,12 +367,32 @@ class TardinessMemoController extends Controller
             switch($memo->memo_month)
             {
                 case 1 :
+                    $breakdown = '';
+
+                    $january = date('Y-m-d',strtotime($memo->memo_year.'-01-01'));
+
                     $total = count($details);
                     $months = "January";
 
                 break;
                 case 2 :
-                    $total = count($details);
+                    $breakdown = '';
+
+                    $january = date('Y-m-d',strtotime($memo->memo_year.'-01-01'));
+
+                    $janFilter = array(
+                        'from' => $january,
+                        'to' => date('Y-m-t',strtotime($january)),
+                    );
+
+                    $firstMonth =  $this->mapper->getLates($memo->biometric_id,$janFilter);
+
+                    if(count($firstMonth)>0){
+                        $breakdown .= "Last January you incurred a total of (".count($firstMonth).") tardiness occurrence";
+                    }
+
+                    $total = count($firstMonth) + count($details);
+
                     $months = "January, February";
 
                 break;
