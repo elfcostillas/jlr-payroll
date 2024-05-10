@@ -30,6 +30,7 @@
                         <td>Time Out</td>
                         <td>Days</td>
                         <td>OT</td>
+                        <td>ClockIn/ClockOut</td>
                     </tr>
                     @foreach($employee->dtr as $dtr)
                             <?php
@@ -45,6 +46,7 @@
                             
                                 <td> {{ ($dtr->ndays>0) ? $dtr->ndays : '' }}</td>
                                 <td> {{ ($dtr->over_time>0) ? $dtr->over_time : '' }}</td>
+                                <td> {{ $dtr->cincout }} </td>
                             
                             </tr>
                     @endforeach

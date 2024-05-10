@@ -1503,7 +1503,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
         // $result = DB::table('employees')->where('exit_status','=',1)->where('pay_type','=',3);
         $period = DB::table('payroll_period_weekly')->where('id','=',$period_id)->first();
 
-        $locations = DB::table('locations')->get();
+        $locations = DB::table('locations')->get();                
 
         foreach($locations as $location)
         {
@@ -1519,9 +1519,21 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
                 foreach($employees as $employee)
                 {
-                    $dtr = DB::table('edtr')
-                            ->whereBetween('dtr_date',[$period->date_from,$period->date_to])
-                            ->where('biometric_id',$employee->biometric_id)
+                    $raw = DB::table('edtr_raw')
+                        ->select(DB::raw("biometric_id,punch_date,GROUP_CONCAT(punch_time ORDER BY punch_time ASC SEPARATOR ' ') AS cincout"))
+                        ->whereBetween('punch_date',[$period->date_from,$period->date_to])
+                        // ->where('punch_time','<>','00:00')
+                        ->where('biometric_id',$employee->biometric_id)
+                        ->groupBy('biometric_id')
+                        ->groupBy('punch_date');
+                    
+                    $dtr = DB::table('edtr')->select(DB::raw("edtr.*,cincout"))
+                            ->leftJoinSub($raw, 'rawdtr', function ($join) {
+                                $join->on('rawdtr.biometric_id', '=', 'edtr.biometric_id');
+                                $join->on('rawdtr.punch_date', '=', 'edtr.dtr_date');
+                            })
+                            ->whereBetween('edtr.dtr_date',[$period->date_from,$period->date_to])
+                            ->where('edtr.biometric_id',$employee->biometric_id)
                             ->orderBy('dtr_date','ASC')
                             ->get();
 
