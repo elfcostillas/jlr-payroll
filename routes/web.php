@@ -54,6 +54,7 @@ use  App\Http\Controllers\Deductions\OneTimeDeductionController;
 use  App\Http\Controllers\Deductions\FixedDeductionController;
 use  App\Http\Controllers\Deductions\InstallmentDeductionController;
 use  App\Http\Controllers\Deductions\GovernmentLoanController;
+use  App\Http\Controllers\Deductions\WeeklyDeductionController;
 
 use App\Http\Controllers\Compentsations\OtherCompensationController;
 use App\Http\Controllers\Compentsations\FixCompensationController;
@@ -495,6 +496,13 @@ Route::middleware('auth')->prefix('deductions')->group(function(){
         Route::get('list-payroll-period',[GovernmentLoanController::class,'getPayrollPeriod']);
         Route::get('list-types',[GovernmentLoanController::class,'getTypes']);
         Route::post('save',[GovernmentLoanController::class,'save']);
+    });
+
+    Route::prefix('weekly')->group(function(){
+        Route::get('/',[WeeklyDeductionController::class,'index']);
+        Route::get('list',[WeeklyDeductionController::class,'list']);
+        Route::get('emp-list/{period_id}',[WeeklyDeductionController::class,'employeeList']);
+        Route::post('update',[OtherIncomeWeeklyAppController::class,'update']);
     });
 });
 
