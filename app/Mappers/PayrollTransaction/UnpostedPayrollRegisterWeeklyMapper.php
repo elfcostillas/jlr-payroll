@@ -30,7 +30,7 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         ORDER BY e.lastname,e.firstname;");
         */
         $result = DB::select("SELECT m.biometric_id,o.id AS period_id,e.basic_salary,
-        SUM(ndays) AS n_days,
+        SUM(ifnull(ndays,0)) AS n_days,
         SUM(over_time) n_ot,name_vw.employee_name,IFNULL(earnings,0.00) earnings,IFNULL(deductions,0.00) deductions,IFNULL(retro_pay,0.00) retro_pay,
         SUM(IF(IFNULL(sphol_hrs,0)>0,1,0)) sp,
         SUM(IFNULL(sphol_hrs,0)) AS sphol_hrs,
@@ -293,7 +293,8 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
                     // ->where('employees.biometric_id','=',897)
                     ->where(function($query){
                         $query->where('ndays','>',0)
-                        ->orWhere('reghol_pay','>',0);
+                        ->orWhere('reghol_pay','>',0)
+                        ->orWhere('over_time','>',0);
                     })
                     ->groupBy(DB::raw('
                                 payroll_period_weekly.id,
