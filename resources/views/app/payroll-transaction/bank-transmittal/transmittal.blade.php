@@ -8,6 +8,7 @@
 
     @else
         @foreach($data as $row)
+            
             <tr>
                 <td>{{ $row->bank_acct }}</td>
                 <td>{{ $row->net_pay }}</td>

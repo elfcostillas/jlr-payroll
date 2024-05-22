@@ -51,6 +51,14 @@ class BankTransmittal implements ShouldAutoSize,WithColumnFormatting,FromView,Wi
 
     public function columnFormats(): array
     {
-        return [];
+        // return [
+        //     'C' => NumberFormat::FORMAT_NUMBER_00
+        // ];
+
+        $cols = [];
+        $cols['B'] = NumberFormat::FORMAT_NUMBER_00;
+        return $cols;
+
+
     }
 }

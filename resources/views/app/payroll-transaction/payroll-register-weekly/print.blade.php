@@ -12,7 +12,7 @@
         .pr4{
             text-align : right;
             padding-right : 4px;
-            width: 42px;
+            width: 52px;
         }
 
         @page {
