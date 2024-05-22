@@ -307,6 +307,7 @@ class LeaveReportsMapper extends AbstractMapper {
 
     public function getData($start,$end,$from,$to)
     {
+        // dd($start,$end,$from,$to);
 
         if($start == '2023-01-01'){
             $sub_qry = "SELECT employees.biometric_id, tardy_count as late_count,0 as in_minutes FROM employees 
@@ -338,18 +339,24 @@ class LeaveReportsMapper extends AbstractMapper {
           
             LEFT JOIN (select holiday_date,location_id,holiday_type from holidays inner join holiday_location on holidays.id = holiday_location.holiday_id) as holidays on dtr_date = holidays.holiday_date and holidays.location_id = employees.location_id
             
-            WHERE (
-                (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
-                (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) <= TIME_TO_SEC(work_schedules.time_out) )
-                )
+            WHERE late > 0
             AND dtr_date BETWEEN '$start' AND '$end'
             and emp_level >= 3
             and job_title_id != 12
             and holiday_type is null 
-            and date_hired between '$from' and '$to'
+            
             and date_hired is not null
             GROUP BY employees.biometric_id,lastname,firstname
             ORDER BY lastname";
+
+            //echo $sub_qry; and date_hired between '$from' and '$to'
+
+            /*
+             WHERE (
+                (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
+                (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) <= TIME_TO_SEC(work_schedules.time_out) )
+                )
+                */
         
         }
 
@@ -444,6 +451,8 @@ class LeaveReportsMapper extends AbstractMapper {
         and date_hired is not null";
 
         $result = DB::select($qry);
+
+        // echo $qry;
 
         return $result;
     }   
