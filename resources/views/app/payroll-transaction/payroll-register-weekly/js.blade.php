@@ -165,6 +165,14 @@
                                     },'json');
                                 }
                             });
+                    },
+
+                    downloadRCBC : function(e){
+                        // alert();
+                        let period = $("#posted_period").data("kendoDropDownList");
+
+                        let url = `payroll-register-weekly/download-rcbc-template/${period.value()}`;
+                        window.open(url)
                     }
 
                     

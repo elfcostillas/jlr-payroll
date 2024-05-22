@@ -1,8 +1,8 @@
 <table border=1>
     <tr>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td>Acct. Number</td>
+        <td>Amount</td>
+        <td>Name</td>
     </tr>
     @if(is_string($data))
 

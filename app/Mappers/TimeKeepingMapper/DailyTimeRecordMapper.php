@@ -1374,10 +1374,14 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
         return $result->get();
     }
 
-    public function awol_setter($year)
+    public function awol_setter($year,$month)
     {
-        $start = $year.'-01-01';
-        $end = $year.'-12-31';
+        $start = $year.'-'.$month.'-01';
+        // $end = $year.'-'.$month.'-31';
+
+        $end = Carbon::createFromFormat('Y-m-d',$start)->format('Y-m-t');
+
+        // dd($year,$month,$end);
 
         $ctr = 0;
 

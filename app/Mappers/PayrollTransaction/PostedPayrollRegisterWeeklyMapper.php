@@ -151,6 +151,25 @@ class PostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         return array('success'=>'Payroll Period unposted successfully.');
         
     }
+
+    public function getPostedDataforRCBC($period_id)
+    {
+        $result = DB::table('payrollregister_posted_weekly')->select(DB::raw('employee_names_vw.employee_name,employees.bank_acct,payrollregister_posted_weekly.net_pay'))
+        ->leftJoin('employees','payrollregister_posted_weekly.biometric_id','=','employees.biometric_id')
+        ->leftJoin('employee_names_vw','payrollregister_posted_weekly.biometric_id','=','employee_names_vw.biometric_id')
+        ->where('period_id','=',$period_id);
+
+
+        return $result->get();
+
+    }
 }
+    /*
+    SELECT employee_names_vw.employee_name,employees.bank_acct,payrollregister_posted_weekly.net_pay FROM payrollregister_posted_weekly 
+    LEFT JOIN employees ON payrollregister_posted_weekly.biometric_id = employees.biometric_id
+    LEFT JOIN employee_names_vw ON payrollregister_posted_weekly.biometric_id = employee_names_vw.biometric_id
+    WHERE period_id = 23
+    ORDER BY employees.lastname,employees.firstname;
+    */
 
 ?>

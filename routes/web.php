@@ -559,11 +559,11 @@ Route::middleware('auth')->prefix('reports')->group(function(){
     Route::prefix('attendance')->group(function(){
         Route::get('/',[AttendanceReportController::class,'index']);
         Route::get('generate-detailed/{from}/{to}',[AttendanceReportController::class,'generate']);
-        Route::get('awol-setter/{year}',[AttendanceReportController::class,'setAWOL']);
+        Route::get('awol-setter/{year}/{month}',[AttendanceReportController::class,'setAWOL']);
         Route::get('fill-blank',[AttendanceReportController::class,'fillBlank']);
         Route::get('sub/{from}/{to}/{biometric_id}/{type}',[AttendanceReportController::class,'sub']);
 
-        Route::get('tardy-setter/{year}',[AttendanceReportController::class,'setTARDY']);
+        Route::get('tardy-setter/{year}/{month}',[AttendanceReportController::class,'setTARDY']);
        
        
     });
@@ -647,6 +647,9 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::get('posted-payroll',[PayrollRegisterWeeklyController::class,'getPostedPeriod']);
 
         Route::post('unpost',[PayrollRegisterWeeklyController::class,'unpost']);
+
+        Route::get('download-rcbc-template/{period_id}',[PayrollRegisterWeeklyController::class,'downloadRCBCTemplate']);
+        
 
         
     });

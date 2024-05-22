@@ -44,9 +44,13 @@ class PayrollPeriodWeeklyMapper extends AbstractMapper {
 
 		$posted = $this->model->select('period_id')->from('payrollregister_posted_weekly')->distinct()->get();
 
+		// dd($posted->pluck('period_id'));
+
 		$result = $this->model->select(DB::raw("id,CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) AS drange"))
 								->whereNotIn('id',$posted->pluck('period_id'))
+								// ->whereNotIn('id',$posted)
 								->orderBy('id','DESC');
+		// dd($result->get());
 
 		return $result->get();
 	}

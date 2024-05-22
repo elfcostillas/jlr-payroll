@@ -31,10 +31,10 @@ class AttendanceReportController extends Controller
         return view('app.reports.attendance.web',['data' => $result,'range' => $range]);
     }
 
-    public function setAWOL($year)
+    public function setAWOL($year,$month)
     {
         echo "START => ".now()."<br>";
-            $result = $this->dtr_mapper->awol_setter($year);
+            $result = $this->dtr_mapper->awol_setter($year,$month);
         echo "END => ".now()."<br>";
     }
 

@@ -17,6 +17,8 @@ use App\Mappers\EmployeeFileMapper\Repository\Daily;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Mappers\PayrollTransaction\PayslipMapper;
 
+use  App\Excel\BankTransmittal;
+
 class PayrollRegisterWeeklyController extends Controller
 {
     //
@@ -27,8 +29,10 @@ class PayrollRegisterWeeklyController extends Controller
     private $excel;
     private $payslip;
     private $posted;
+    private $rcbc;
+    
 
-    public function __construct(PostedPayrollRegisterWeeklyMapper $posted,PayslipMapper $payslip,EmployeeWeeklyMapper $employee,PayrollPeriodWeeklyMapper $period,UnpostedPayrollRegisterWeeklyMapper $mapper,UnpostedPayrollRegisterWeekly $excel)
+    public function __construct(PostedPayrollRegisterWeeklyMapper $posted,PayslipMapper $payslip,EmployeeWeeklyMapper $employee,PayrollPeriodWeeklyMapper $period,UnpostedPayrollRegisterWeeklyMapper $mapper,UnpostedPayrollRegisterWeekly $excel,BankTransmittal $rcbc)
     {
         $this->employee = $employee;
         $this->period = $period;
@@ -36,6 +40,8 @@ class PayrollRegisterWeeklyController extends Controller
         $this->excel = $excel;
         $this->payslip = $payslip;
         $this->posted = $posted;
+        $this->rcbc = $rcbc;
+        
     }
 
     public function index()
@@ -232,6 +238,16 @@ class PayrollRegisterWeeklyController extends Controller
         $result = $this->payslip->getWeeklyPosytedPeriod();
 
         return response()->json($result);
+    }
+
+    public function downloadRCBCTemplate(Request $request)
+    {
+        $result = $this->posted->getPostedDataforRCBC($request->period_id);
+
+        // dd($result);
+
+        $this->rcbc->setValues($result);
+        return Excel::download($this->rcbc,'BankTransmittal.xlsx');
     }
 
     
