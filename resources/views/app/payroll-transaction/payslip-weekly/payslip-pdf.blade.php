@@ -24,6 +24,7 @@
     <div id="main">
       
             @foreach($data as $e)
+
                 <!-- <div style ></div> -->
                 <div style="width:310px;padding : 4px 16px;border : 1px solid black;margin-right:4px;margin-bottom : 8px;display:inline-block;page-break-inside:avoid"> 
                     <table border=0 style="width:100%;" >
@@ -35,7 +36,7 @@
                         
                         </tr>
                         <tr>
-                            <td colspan = 5 style="font-weight:bold;font-size:11pt;">{{ $e->employee_name }}</td>
+                            <td colspan = 5 style="font-weight:bold;font-size:11pt;"> {{ $e->employee_name }}</td>
                             
                         </tr>
                         <tr>
@@ -51,8 +52,8 @@
                         </tr>
                         <tr>
                             <td></td>
-                            <td style="width:20%;font-size : 11pt;text-align:right;border-bottom: 1px solid black;"> {{ number_format($e->earnings,2) }}</td>
-                            <td style="width:20%;font-size : 11pt;text-align:right;border-bottom: 1px solid black;"> {{ number_format($e->retro_pay,2) }}</td>
+                            <td style="width:20%;font-size : 11pt;text-align:right;border-bottom: 1px solid black;"> {{ number_format($e->otherEearnings['earnings'],2) }}</td>
+                            <td style="width:20%;font-size : 11pt;text-align:right;border-bottom: 1px solid black;"> {{ number_format($e->otherEearnings['retro_pay'],2) }}</td>
                             <td></td>
                             <td style="width:20%;font-size : 11pt;text-align:right;border-bottom: 1px solid black;"> {{ number_format($e->total_deduction,2) }}</td>
                         </tr>

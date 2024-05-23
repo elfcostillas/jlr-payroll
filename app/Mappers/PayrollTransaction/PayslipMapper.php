@@ -527,6 +527,36 @@ class PayslipMapper extends AbstractMapper {
         );
     }
 
+    public function otherEearningsWeekly($period_id,$biometric_id)
+    {
+        // $total = 0;
+        // $query = "SELECT description,amount FROM posted_weekly_compensation 
+        // INNER JOIN compensation_types ON posted_weekly_compensation.compensation_type = compensation_types.id
+        // WHERE posted_weekly_compensation.biometric_id = $biometric_id AND period_id =  $period_id;
+
+        // $result = DB::select($query); 
+
+        // foreach($result as $earn)
+        // {
+        //     $total += $earn->amount;
+        // }
+        
+        // return array(
+        //     'total' => $total,
+        //     'list' => $result
+        // );
+
+        $query = "SELECT distinct earnings,retro_pay FROM posted_weekly_compensation WHERE period_id = $period_id AND biometric_id= $biometric_id";
+
+        $result = DB::select($query); 
+
+        return [
+            'earnings' => empty($result) ? 0 : $result[0]->earnings,
+            'retro_pay' => empty($result) ? 0 :$result[0]->retro_pay
+        ];
+    }
+
+
     public function fixedDeduction($period_id,$biometric_id)
     {
         $total = 0;
@@ -648,10 +678,11 @@ class PayslipMapper extends AbstractMapper {
                 $epay->specialHol = $this->specialHol($epay);
                 $epay->dblLegHol = $this->dblLegHol($epay);
                 $epay->allowances = $this->allowances($epay);
-                $epay->otherEearnings = $this->otherEearnings($period_id,$epay->biometric_id);
+                $epay->otherEearnings = $this->otherEearningsWeekly($period_id,$epay->biometric_id);
                 $epay->slvl = $this->slvl($epay);
                 $epay->fixedDeduction = $this->fixedDeduction($period_id,$epay->biometric_id);
                 $epay->installments = $this->installments($period_id,$epay->biometric_id);
+                
             }
             
             
