@@ -99,7 +99,11 @@
                                     deductions : { type: 'number', },
                                     retro_pay : { type: 'number', },
                                     canteen : { type: 'number', },
-                                    remarks : { type: 'string', },
+                                    remarks2 : { type: 'string', },
+
+                                    canteen_bpn : { type: 'number', },
+                                    canteen_bps : { type: 'number', },
+                                    canteen_agg : { type: 'number', },
                                 }
                             }
                         }
@@ -240,14 +244,43 @@
                         },
                         template : "# if(deductions==0){#  #} else{# #= kendo.toString(deductions,'n2') #  #}#",
                     },
+                    
+                    // {
+                    //     title : "Canteen",
+                    //     field : "canteen",
+                    //     width : 130,
+                    //     attributes : {
+                    //         style : "text-align:right"
+                    //     },
+                    //     template : "# if(canteen==0){#  #} else{# #= kendo.toString(canteen,'n2') #  #}#",
+                    // },
+                    
                     {
-                        title : "Canteen",
-                        field : "canteen",
+                        title : "Canteen BPN",
+                        field : "canteen_bpn",
                         width : 130,
                         attributes : {
                             style : "text-align:right"
                         },
-                        template : "# if(canteen==0){#  #} else{# #= kendo.toString(canteen,'n2') #  #}#",
+                        template : "# if(canteen_bpn==0){#  #} else{# #= kendo.toString(canteen_bpn,'n2') #  #}#",
+                    },
+                    {
+                        title : "Canteen BPS",
+                        field : "canteen_bps",
+                        width : 130,
+                        attributes : {
+                            style : "text-align:right"
+                        },
+                        template : "# if(canteen_bps==0){#  #} else{# #= kendo.toString(canteen_bps,'n2') #  #}#",
+                    },
+                    {
+                        title : "Canteen AGG",
+                        field : "canteen_agg",
+                        width : 130,
+                        attributes : {
+                            style : "text-align:right"
+                        },
+                        template : "# if(canteen_agg==0){#  #} else{# #= kendo.toString(canteen_agg,'n2') #  #}#",
                     },
                     {
                         title : "Remarks",

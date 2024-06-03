@@ -231,24 +231,24 @@
                         },
                         template : "# if(retro_pay==0){#  #} else{# #= kendo.toString(retro_pay,'n2') #  #}#",
                     },
-                    {
-                        title : "Deduction",
-                        field : "deductions",
-                        width : 130,
-                        attributes : {
-                            style : "text-align:right"
-                        },
-                        template : "# if(deductions==0){#  #} else{# #= kendo.toString(deductions,'n2') #  #}#",
-                    },
-                    {
-                        title : "Canteen",
-                        field : "canteen",
-                        width : 130,
-                        attributes : {
-                            style : "text-align:right"
-                        },
-                        template : "# if(canteen==0){#  #} else{# #= kendo.toString(canteen,'n2') #  #}#",
-                    },
+                    // {
+                    //     title : "Deduction",
+                    //     field : "deductions",
+                    //     width : 130,
+                    //     attributes : {
+                    //         style : "text-align:right"
+                    //     },
+                    //     template : "# if(deductions==0){#  #} else{# #= kendo.toString(deductions,'n2') #  #}#",
+                    // },
+                    // {
+                    //     title : "Canteen",
+                    //     field : "canteen",
+                    //     width : 130,
+                    //     attributes : {
+                    //         style : "text-align:right"
+                    //     },
+                    //     template : "# if(canteen==0){#  #} else{# #= kendo.toString(canteen,'n2') #  #}#",
+                    // },
                     {
                         title : "Remarks",
                         field : "remarks",

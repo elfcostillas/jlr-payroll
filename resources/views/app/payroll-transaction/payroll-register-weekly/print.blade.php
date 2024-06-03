@@ -30,6 +30,7 @@
 
         $over_all_gross_total = 0;
         $over_all_net_total = 0;
+        $over_all_cantenn_total = 0;
     ?>
 
     <table border=0 style="width:100%;margin-bottom:2px;">
@@ -56,6 +57,9 @@
 
                 $location_total = 0;
                 $location_gtotal = 0; 
+
+                $location_canteen_total = 0;
+               
 
                 $colspan = 11; 
 
@@ -138,13 +142,14 @@
 
                         $location_total += $employee->gross_total;
                         $location_gtotal += $employee->net_pay;
+                        $location_canteen_total += ($employee->otherEarnings['canteen']>0) ? $employee->otherEarnings['canteen'] : 0; 
                     ?>
 
                 @endforeach
                 <tr>
                     <td colspan = {{ $colspan }} style="text-align:right;padding-right:4px;" > <b>SUB TOTAL </b></td>
                     <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_total > 0) ? number_format($location_total,2) : '' }}</td>
-                    <td></td>
+                    <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_canteen_total > 0) ? number_format($location_canteen_total,2) : '' }}</td>
                     <td></td>
                     <td></td>
                     <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_gtotal > 0) ? number_format($location_gtotal,2) : '' }}</td>
@@ -157,6 +162,7 @@
             $location->summary = $summary; 
             $over_all_gross_total += $location_total;
             $over_all_net_total += $location_gtotal;
+            $over_all_cantenn_total += $location_canteen_total;
             
         @endphp
        
@@ -167,7 +173,7 @@
         <tr>
             <td colspan = {{ $colspan }} style="text-align:right;padding-right:4px;" > <b>GRAND TOTAL </b></td>
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_gross_total,2) }}</td>
-            <td class="pr4"></td>
+            <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_cantenn_total,2) }}</td>
             <td class="pr4"></td>
             <td class="pr4"></td>
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_net_total,2) }}</td>

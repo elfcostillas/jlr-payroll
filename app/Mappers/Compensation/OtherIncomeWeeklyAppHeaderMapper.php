@@ -53,11 +53,11 @@ AND unposted_weekly_compensation.period_id IN 1;
 
 SELECT period_id,earnings,deductions,biometric_id FROM unposted_weekly_compensation WHERE period_id = 1
 */
-        $data = $this->model->select('period_id','earnings','deductions','retro_pay','biometric_id','canteen','remarks')
+        $data = $this->model->select('period_id','earnings','deductions','retro_pay','biometric_id','canteen','remarks','canteen_bpn','canteen_bps','canteen_agg')
                     ->from('unposted_weekly_compensation')
                     ->where('period_id','=',$period_id);
 
-        $employees = $this->model->select(DB::raw("employee_names_vw.biometric_id,employee_names_vw.employee_name,$period_id as period_id,ifnull(d.earnings,0.00) earnings,ifnull(d.deductions,0.00) deductions,ifnull(d.retro_pay,0.00) retro_pay,ifnull(d.canteen,0.00) canteen,d.remarks"))
+        $employees = $this->model->select(DB::raw("employee_names_vw.biometric_id,employee_names_vw.employee_name,$period_id as period_id,ifnull(d.earnings,0.00) earnings,ifnull(d.deductions,0.00) deductions,ifnull(d.retro_pay,0.00) retro_pay,ifnull(d.canteen,0.00) canteen,d.remarks,ifnull(d.canteen_bpn,0.00) canteen_bpn,ifnull(d.canteen_bps,0.00) canteen_bps,ifnull(d.canteen_agg,0.00) as canteen_agg"))
                     ->from('employee_names_vw')
                     ->join('employees','employee_names_vw.biometric_id','=','employees.biometric_id')
                     //->leftJoin('unposted_weekly_compensation','employees.biometric_id','=','unposted_weekly_compensation.biometric_id')

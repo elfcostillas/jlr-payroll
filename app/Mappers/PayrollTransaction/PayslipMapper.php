@@ -556,6 +556,19 @@ class PayslipMapper extends AbstractMapper {
         ];
     }
 
+    public function deductionsWeekly($period_id,$biometric_id)
+    {
+       
+        $query = "SELECT distinct deductions,canteen  FROM posted_weekly_compensation WHERE period_id = $period_id AND biometric_id= $biometric_id";
+
+        $result = DB::select($query); 
+
+        return [
+            'deductions' => empty($result) ? 0 : $result[0]->deductions,
+            'canteen' => empty($result) ? 0 :$result[0]->canteen
+        ];
+    }
+
 
     public function fixedDeduction($period_id,$biometric_id)
     {
@@ -679,9 +692,10 @@ class PayslipMapper extends AbstractMapper {
                 $epay->dblLegHol = $this->dblLegHol($epay);
                 $epay->allowances = $this->allowances($epay);
                 $epay->otherEearnings = $this->otherEearningsWeekly($period_id,$epay->biometric_id);
-                $epay->slvl = $this->slvl($epay);
-                $epay->fixedDeduction = $this->fixedDeduction($period_id,$epay->biometric_id);
-                $epay->installments = $this->installments($period_id,$epay->biometric_id);
+                $epay->deductions = $this->deductionsWeekly($period_id,$epay->biometric_id);
+                // $epay->slvl = $this->slvl($epay);
+                // $epay->fixedDeduction = $this->fixedDeduction($period_id,$epay->biometric_id);
+                // $epay->installments = $this->installments($period_id,$epay->biometric_id);
                 
             }
             

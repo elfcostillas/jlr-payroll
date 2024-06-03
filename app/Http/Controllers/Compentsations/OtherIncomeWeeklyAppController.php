@@ -57,8 +57,11 @@ class OtherIncomeWeeklyAppController extends Controller
                                                         "earnings" => $line['earnings'],
                                                         "deductions" => $line['deductions'],
                                                         "retro_pay" => $line['retro_pay'],
-                                                        "canteen" => $line['canteen'],
-                                                        "remarks" => $line['remarks']
+                                                        "canteen" => $line['canteen_bpn'] + $line['canteen_bps'] + $line['canteen_agg'],
+                                                        "remarks" => $line['remarks'],
+                                                        "canteen_bpn" => $line['canteen_bpn'],
+                                                        "canteen_bps" => $line['canteen_bps'],
+                                                        "canteen_agg" => $line['canteen_agg'],
                                                     ]);
         }
 

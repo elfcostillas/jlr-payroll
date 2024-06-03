@@ -23,7 +23,7 @@
     
 </style>
 @section('title')
-    <h4> Other Income - Weekly <h4>
+    <h4> Deductions - Weekly <h4>
 @endsection
 @section('content')
     <div class="container">
