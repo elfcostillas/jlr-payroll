@@ -98,7 +98,7 @@
                                     earnings : { type: 'number', },
                                     deductions : { type: 'number', },
                                     retro_pay : { type: 'number', },
-                                    canteen : { type: 'number', },
+                                    canteen : { type: 'number', editable:false },
                                     remarks2 : { type: 'string', },
 
                                     canteen_bpn : { type: 'number', },
@@ -124,7 +124,7 @@
                         var myWindow = $("#pop");
                        
                         myWindow.kendoWindow({
-                            width: "1124", //1124 - 1152
+                            width: "1224", //1124 - 1152
                             height: "700",
                             title: "Weekly Empolyees - Deductions",
                             visible: false,
@@ -245,15 +245,7 @@
                         template : "# if(deductions==0){#  #} else{# #= kendo.toString(deductions,'n2') #  #}#",
                     },
                     
-                    // {
-                    //     title : "Canteen",
-                    //     field : "canteen",
-                    //     width : 130,
-                    //     attributes : {
-                    //         style : "text-align:right"
-                    //     },
-                    //     template : "# if(canteen==0){#  #} else{# #= kendo.toString(canteen,'n2') #  #}#",
-                    // },
+         
                     
                     {
                         title : "Canteen BPN",
@@ -281,6 +273,15 @@
                             style : "text-align:right"
                         },
                         template : "# if(canteen_agg==0){#  #} else{# #= kendo.toString(canteen_agg,'n2') #  #}#",
+                    },
+                               {
+                        title : "Canteen",
+                        field : "canteen",
+                        width : 130,
+                        attributes : {
+                            style : "text-align:right"
+                        },
+                        template : "# if(canteen==0){#  #} else{# #= kendo.toString(canteen,'n2') #  #}#",
                     },
                     {
                         title : "Remarks",
