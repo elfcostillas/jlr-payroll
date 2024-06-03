@@ -106,7 +106,13 @@
                                     canteen_agg : { type: 'number', },
                                 }
                             }
-                        }
+                        },
+                        aggregate : [
+                            { field : "canteen" , aggregate: "sum" },
+                            { field : "canteen_bpn" , aggregate: "sum" },
+                            { field : "canteen_bps" , aggregate: "sum" },
+                            { field : "canteen_agg" , aggregate: "sum" },
+                        ]
                     }),
                 },
                 buttonHandler : {
@@ -255,6 +261,7 @@
                             style : "text-align:right"
                         },
                         template : "# if(canteen_bpn==0){#  #} else{# #= kendo.toString(canteen_bpn,'n2') #  #}#",
+                        footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
                     },
                     {
                         title : "Canteen BPS",
@@ -264,6 +271,7 @@
                             style : "text-align:right"
                         },
                         template : "# if(canteen_bps==0){#  #} else{# #= kendo.toString(canteen_bps,'n2') #  #}#",
+                        footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
                     },
                     {
                         title : "Canteen AGG",
@@ -273,6 +281,7 @@
                             style : "text-align:right"
                         },
                         template : "# if(canteen_agg==0){#  #} else{# #= kendo.toString(canteen_agg,'n2') #  #}#",
+                        footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
                     },
                                {
                         title : "Canteen",
@@ -282,6 +291,7 @@
                             style : "text-align:right"
                         },
                         template : "# if(canteen==0){#  #} else{# #= kendo.toString(canteen,'n2') #  #}#",
+                        footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
                     },
                     {
                         title : "Remarks",
