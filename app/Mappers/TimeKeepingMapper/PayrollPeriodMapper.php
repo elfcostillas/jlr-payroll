@@ -16,6 +16,11 @@ class PayrollPeriodMapper extends AbstractMapper {
 		'man_hours' => 'required|sometimes',
     ];
 
+	public function find($id)
+	{
+		return $this->model->find($id);
+	}
+
     public function list($filter)
     {
         $result = $this->model->select('id','date_from','date_to','date_release','man_hours','inProgress');

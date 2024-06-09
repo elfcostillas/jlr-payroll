@@ -63,6 +63,9 @@ use App\Http\Controllers\Memo\AWOLMemoController;
 use App\Http\Controllers\Reports\TardinessReportsController;
 use App\Http\Controllers\Memo\TardinessMemoController;
 use App\Http\Controllers\Reports\AttendanceReportController;
+use App\Http\Controllers\Timekeeping\WeeklyDTRUploaderController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -228,6 +231,11 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::get('weekly-period',[ManualDTRController::class,'weeklyPeriod']);
 
         
+    });
+
+    Route::prefix('upload-weekly')->middleware('access:timekeeping/upload-weekly')->group(function(){
+        Route::get('/',[WeeklyDTRUploaderController::class,'index']);
+        Route::post('upload',[WeeklyDTRUploaderController::class,'upload']);
     });
     
     Route::prefix('ftp')->middleware('access:timekeeping/ftp')->group(function(){
@@ -503,6 +511,8 @@ Route::middleware('auth')->prefix('deductions')->group(function(){
         Route::get('list',[WeeklyDeductionController::class,'list']);
         Route::get('emp-list/{period_id}',[WeeklyDeductionController::class,'employeeList']);
         Route::post('update',[OtherIncomeWeeklyAppController::class,'update']);
+
+        Route::get('print/{period_id}',[WeeklyDeductionController::class,'print']);
     });
 });
 

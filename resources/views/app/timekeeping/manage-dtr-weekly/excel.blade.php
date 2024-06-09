@@ -23,7 +23,7 @@
                         <td> {{ $employee->biometric_id }} - {{ $employee->employee_name }} </td>
                     </tr>
                     <tr>
-                      
+                        <td>Biometric ID</td>
                         <td>Day</td>
                         <td>Date</td>
                         <td>Time In</td>
@@ -38,7 +38,7 @@
                             ?>
 
                             <tr>
-                            
+                                <td> {{ $employee->biometric_id }} </td>
                                 <td> {{ substr($date->format('l'),0,3)  }} </td>
                                 <td> {{ $date->format('m/d/Y')}}</td>
                                 <td> {{ ($dtr->time_in !='00:00') ? $dtr->time_in : '' }}</td>

@@ -1,8 +1,14 @@
 @section('jquery')
+    <script id="printTemplate" type="text/x-kendo-template">
+        <button class="k-grid-save-changes k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="events: { click: buttonHandler.print_file }">
+            <span class="k-icon k-i-print k-button-icon"></span> Print
+        </button>
+    </script>
     <script>
         $(document).ready(function(){
 
             var viewModel = kendo.observable({ 
+                selectedPeriod : null,
                 ds : {
                     maingrid : new kendo.data.DataSource({
                         transport : {
@@ -125,6 +131,8 @@
                         viewModel.ds.compgrid.transport.options.read.url = url;
                         viewModel.ds.compgrid.read();
 
+                        viewModel.selectedPeriod = data.id;
+
                         $("#period_id").val(data.drange)
                         
                         var myWindow = $("#pop");
@@ -146,6 +154,12 @@
                                 top : 0
                             }
                         }).data("kendoWindow").center().open();
+                    },
+                    print_file : function(e){
+                        // console.log(viewModel.selectedPeriod);
+                        let url = `weekly/print/${viewModel.selectedPeriod}`;
+
+                        window.open(url);
                     }
                 }
             });
@@ -181,7 +195,7 @@
                     // },
                     {
                         command: [
-                            { text : 'View',click : viewModel.buttonHandler.viewDeductions , },
+                            { text : 'View', click : viewModel.buttonHandler.viewDeductions , },
                            
                         ],
                         //attributes : { style : 'font-size:10pt !important;'},
@@ -210,7 +224,16 @@
                 sortable : true,
                 height : 550,
                 scrollable: true,
-                toolbar : ['save'],
+                // toolbar : ['save', kendo.template($("#printTemplate").html()) ], //
+                // toolbar : kendo.template($("#printTemplate").html()),
+                toolbar : [
+                    {
+                        name : 'save'
+                    },
+                    {
+                       template : kendo.template($("#printTemplate").html())
+                    }
+                ],
                 editable : true,
                 columns : [
                     {
@@ -306,6 +329,11 @@
             });
 
             $("#period_id").kendoTextBox();
+
+            function print()
+            {
+                console.log(123123);
+            }
 
             kendo.bind($("#viewModel"),viewModel);
 

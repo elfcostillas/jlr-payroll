@@ -245,6 +245,11 @@ class UploadLogController extends Controller
 		}
 	}	
 
+	public function upload_weekly(Request $request)
+	{
+
+	}
+
 }
 
 /*

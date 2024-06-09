@@ -34,8 +34,8 @@
                     <div class="card-body"> 
                         <div id="viewModel" >
                             <div id="maingrid"></div>
-                        </div>
-                        <div id="pop" style="display:none;background-color:#212529;">
+
+                            <div id="pop" style="display:none;background-color:#212529;">
                             <div class="card-body">
                                 <input type="text" id ="period_id" readonly>
                             </div>
@@ -44,6 +44,8 @@
 
                             </div>
                         </div>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
