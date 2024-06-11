@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Mappers\Compensation\OtherIncomeWeeklyAppHeaderMapper;
-use App\Mappers\TimeKeepingMapper\PayrollPeriodMapper;
+use App\Mappers\TimeKeepingMapper\PayrollPeriodWeeklyMapper;
 use Carbon\Carbon;
 
 class WeeklyDeductionController extends Controller
@@ -15,7 +15,7 @@ class WeeklyDeductionController extends Controller
     private $mapper;
     private $period;
 
-    public function __construct(OtherIncomeWeeklyAppHeaderMapper $mapper,PayrollPeriodMapper $period)
+    public function __construct(OtherIncomeWeeklyAppHeaderMapper $mapper,PayrollPeriodWeeklyMapper $period)
     {
         $this->mapper = $mapper;
         $this->period = $period;

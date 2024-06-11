@@ -14,6 +14,11 @@ class PayrollPeriodWeeklyMapper extends AbstractMapper {
     	
     ];
 
+	public function find($id)
+	{
+		return $this->model->find($id);
+	}
+
     public function list($filter)
     {
         $result = $this->model->select('id','date_from','date_to','date_release','man_hours');
