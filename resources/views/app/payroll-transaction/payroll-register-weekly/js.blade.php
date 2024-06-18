@@ -88,6 +88,11 @@
                         window.open(url)
                     },
 
+                    downloadPosted: function(){
+                        let period = $("#posted_period").data("kendoDropDownList");
+                        let url = `payroll-register-weekly/download-posted/${period.value()}`;
+                        window.open(url)
+                    },
                     post : function(){
 
                         let period = $("#unposted_period").data("kendoDropDownList");

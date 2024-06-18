@@ -514,6 +514,56 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         return $locations;
     }
 
+    public function getEmployeesPosted($period) /* Earnings and Deductions here */
+    {   
+
+        $locations = DB::table('locations')->get();
+
+        foreach($locations as $location)
+        {
+            
+            $user = Auth::user();
+            $employees = $this->model->select(DB::raw("employees.biometric_id,COALESCE(department_category.description,dept_code) dept_code,job_title_name,employee_names_vw.employee_name,payrollregister_posted_weekly.*,employees.pay_type,employees.monthly_allowance as mallowance,
+            employees.daily_allowance as dallowance,IF(employees.pay_type=1,employees.basic_salary/2,employees.basic_salary) AS basicpay,retired"))
+                                    ->from("payrollregister_posted_weekly")        
+                                    ->join("employees",'employees.biometric_id','=','payrollregister_posted_weekly.biometric_id')
+                                    ->join("employee_names_vw",'employee_names_vw.biometric_id','=','payrollregister_posted_weekly.biometric_id')
+                                    ->leftJoin('departments','departments.id','=','employees.dept_id')
+                                    ->leftJoin('job_titles','employees.job_title_id','=','job_titles.id')
+                                    ->leftJoin('weekly_tmp_locations',function($join) use ($period){
+                                        $join->on('weekly_tmp_locations.biometric_id','=','employees.biometric_id');
+                                        $join->where('weekly_tmp_locations.period_id','=',$period);
+                                    })
+                                    ->leftjoin('department_category','department_category.id','=','dept_category')
+                                    ->where([
+                                        // ['location_id','=',$location->id],
+                                        ['payrollregister_posted_weekly.period_id','=',$period],
+                                        // ['user_id','=',$user->id],
+                                    
+                                    ])
+                                    ->whereRaw("COALESCE(weekly_tmp_locations.loc_id,employees.location_id) = $location->id")
+                                    ->orderBy('employees.pay_type','DESC')->orderBy('employee_names_vw.employee_name','ASC')->get();
+            foreach($employees as $employee)
+            {   
+                $employee->otherEarnings = $this->otherEarnings($employee->biometric_id,$period);
+                // $employee->deductions = $this->deductions($employee->biometric_id,$period);
+                $employee->gov_deductions = collect(
+                    [
+                        'SSS Premium' => 0,
+                        'SSS WISP' => 0,
+                        'PhilHealt Premium' => 0,
+                        'PAG IBIG Contri' => 0,
+                    ]
+                );
+            
+            }
+
+            $location->employees = $employees;
+        }
+                   
+        return $locations;
+    }
+
     public function getEmployeesV1($period) /* Earnings and Deductions here */
     {   
 

@@ -18,7 +18,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Mappers\PayrollTransaction\PayslipMapper;
 
 use  App\Excel\BankTransmittal;
-
+use App\Excel\PayrollRegisterWeekly;
 class PayrollRegisterWeeklyController extends Controller
 {
     //
@@ -32,7 +32,7 @@ class PayrollRegisterWeeklyController extends Controller
     private $rcbc;
     
 
-    public function __construct(PostedPayrollRegisterWeeklyMapper $posted,PayslipMapper $payslip,EmployeeWeeklyMapper $employee,PayrollPeriodWeeklyMapper $period,UnpostedPayrollRegisterWeeklyMapper $mapper,UnpostedPayrollRegisterWeekly $excel,BankTransmittal $rcbc)
+    public function __construct(PostedPayrollRegisterWeeklyMapper $posted,PayslipMapper $payslip,EmployeeWeeklyMapper $employee,PayrollPeriodWeeklyMapper $period,UnpostedPayrollRegisterWeeklyMapper $mapper,PayrollRegisterWeekly $excel,BankTransmittal $rcbc)
     {
         $this->employee = $employee;
         $this->period = $period;
@@ -248,6 +248,33 @@ class PayrollRegisterWeeklyController extends Controller
 
         $this->rcbc->setValues($result);
         return Excel::download($this->rcbc,'BankTransmittal.xlsx');
+    }
+
+
+    public function downloadExcelPosted(Request $request)
+    {
+        $period = $request->id;
+        $headers = $this->mapper->getHeaders($period)->toArray();
+
+        $colHeaders = $this->mapper->getColHeaders();
+
+        foreach($headers as $key => $value){
+            if($value==0){
+                unset($headers[$key]);
+            }
+        }
+
+        $period_label = $this->period->makeRange($period);
+
+        foreach($colHeaders  as  $value ){
+            //dd($value->var_name,$vaue->col_label);
+            $label[$value->var_name] = $value->col_label;
+        }
+
+        $collections = $this->mapper->getEmployeesPosted($period);
+
+        $this->excel->setValues($collections,$label,$headers,$period_label);
+        return Excel::download($this->excel,'PayrollRegisterWeekly'.$period.'.xlsx');
     }
 
     
