@@ -19,6 +19,9 @@ use App\Mappers\PayrollTransaction\PayslipMapper;
 
 use  App\Excel\BankTransmittal;
 use App\Excel\PayrollRegisterWeekly;
+
+use App\Mappers\TimeKeepingMapper\DailyTimeRecordMapper;
+
 class PayrollRegisterWeeklyController extends Controller
 {
     //
@@ -30,9 +33,10 @@ class PayrollRegisterWeeklyController extends Controller
     private $payslip;
     private $posted;
     private $rcbc;
+    private $dtr;
     
 
-    public function __construct(PostedPayrollRegisterWeeklyMapper $posted,PayslipMapper $payslip,EmployeeWeeklyMapper $employee,PayrollPeriodWeeklyMapper $period,UnpostedPayrollRegisterWeeklyMapper $mapper,PayrollRegisterWeekly $excel,BankTransmittal $rcbc)
+    public function __construct(DailyTimeRecordMapper $dtr,PostedPayrollRegisterWeeklyMapper $posted,PayslipMapper $payslip,EmployeeWeeklyMapper $employee,PayrollPeriodWeeklyMapper $period,UnpostedPayrollRegisterWeeklyMapper $mapper,PayrollRegisterWeekly $excel,BankTransmittal $rcbc)
     {
         $this->employee = $employee;
         $this->period = $period;
@@ -41,6 +45,7 @@ class PayrollRegisterWeeklyController extends Controller
         $this->payslip = $payslip;
         $this->posted = $posted;
         $this->rcbc = $rcbc;
+        $this->dtr = $dtr;
         
     }
 
@@ -73,30 +78,41 @@ class PayrollRegisterWeeklyController extends Controller
        
     //     $data = $this->mapper->showComputed($period);
 
-    //     return view('app.payroll-transaction.payroll-register-weekly.payroll-register',['data' => $data]);
+    //     return view('app.payroll-transaction.payroll-register-weekly.payroll-register',['data' => $data]); 
+
+        //getWeeklyHolidaysforComputation + computeWeeklyHoliday
+     
+        $logs = $this->dtr->getWeeklyHolidaysforComputation($period);
+
+        if($logs->count()>0)
+        {
+                $this->dtr->computeWeeklyHoliday($logs,'weekly');
+         
+        }
+
    
         $employees = $this->mapper->getEmployeeWithDTRW($period,'non-confi');
 
         foreach($employees as $employee){
-            $holidays = $this->mapper->getHolidayCounts($employee->biometric_id,$employee->period_id);
+            // $holidays = $this->mapper->getHolidayCounts($employee->biometric_id,$employee->period_id);
 
-            $employee->actual_reghol = 0;
-            $employee->actual_sphol = 0;
-            $employee->actual_dblhol = 0;
+            // $employee->actual_reghol = 0;
+            // $employee->actual_sphol = 0;
+            // $employee->actual_dblhol = 0;
 
-            foreach($holidays as $holiday){
-                switch($holiday->holiday_type){
-                    case 1 : case '1' :
-                        $employee->actual_reghol += 1;
-                        break;
-                    case 2 : case '2' :
-                        $employee->actual_sphol += 1;
-                        break;
-                    case 3 : case '3' :
-                        $employee->actual_dblhol += 1;
-                        break;
-                }
-            }
+            // foreach($holidays as $holiday){
+            //     switch($holiday->holiday_type){
+            //         case 1 : case '1' :
+            //             $employee->actual_reghol += 1;
+            //             break;
+            //         case 2 : case '2' :
+            //             $employee->actual_sphol += 1;
+            //             break;
+            //         case 3 : case '3' :
+            //             $employee->actual_dblhol += 1;
+            //             break;
+            //     }
+            // }
      
             
             $person = new WeeklyEmployee($employee,new Daily);

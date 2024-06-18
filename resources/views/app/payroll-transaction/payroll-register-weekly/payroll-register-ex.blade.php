@@ -28,8 +28,9 @@
 
     <table border=0 style="width:100%;margin-bottom:2px;">
         <tr>
-            <td><span style="font-size:10;" >PAYROLL REGISTER <br> SUPPORT GROUP</span></td>
-            <td></td>
+            <td style="font-size:10;">PAYROLL REGISTER SUPPORT GROUP</td>
+        </tr>
+        <tr>
             <td style="width:200px" >Date / Time  Printed: {{ date_format(now(),'m/d/Y H:i:s') }}</td>
         </tr>
         <tr>

@@ -573,6 +573,45 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
         return $result->get();
     }
+
+
+    public function getWeeklyHolidaysforComputation($period_id)
+    {
+        $holidays = $this->model->select(DB::raw("holidays.*,location_id"))
+                            ->from('holidays')
+                            ->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
+                            ->join('payroll_period_weekly',function($join){
+                                $join->whereRaw('holiday_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
+                            })
+                            ->where('payroll_period_weekly.id',$period_id);
+        
+                            
+        $result = $this->model->select(DB::raw("COALESCE(weekly_tmp_locations.loc_id,employees.location_id) as location,edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,time_to_sec(work_schedules.time_in) as sched_in,case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type,time_to_sec(edtr.time_in) as actual_in,time_to_sec(ot_in) as ot_in_s,time_to_sec(ot_out) as ot_out_s,reghol_hrs,reghol_ot,cont"))
+        //$result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,CONCAT(lastname,', ',firstname) as empname,DATE_FORMAT(dtr_date,'%a') AS day_name,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) as work_sched,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,night_diff_ot,ifnull(schedule_id,0) schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc,case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type,ot_in,ot_out,restday_hrs,restday_ot,restday_nd,restday_ndot,reghol_pay,reghol_hrs,reghol_ot,reghol_rd,reghol_rdnd,reghol_nd,reghol_ndot,sphol_pay,sphol_hrs,sphol_ot,sphol_rd,sphol_rdnd,sphol_nd,sphol_ndot,dblhol_pay,dblhol_hrs,dblhol_ot,dblhol_rd,dblhol_rdnd,dblhol_nd,dblhol_ndot,dblhol_rdot,sphol_rdot,reghol_rdot,reghol_rdndot,sphol_rdndot,dblhol_rdndot"))
+                            ->from('edtr')
+        ->from('edtr')
+        // ->where('edtr.biometric_id',$biometric_id)
+        ->join('payroll_period_weekly',function($join){
+            $join->whereRaw('dtr_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
+        })
+       
+        ->leftJoin('employees','employees.biometric_id','=','edtr.biometric_id')
+        ->join('weekly_tmp_locations',function($join) use ($period_id){
+            $join->on('weekly_tmp_locations.biometric_id','=','employees.biometric_id');
+            $join->whereRaw('weekly_tmp_locations.period_id = '.$period_id);
+        })
+        // ->leftJoin('holidays','edtr.dtr_date','=','holidays.holiday_date')
+        ->joinSub($holidays,'holidays',function($join) { //use ($type)
+						$join->on('holidays.location_id','=','employees.location_id');
+						$join->on('holidays.holiday_date','=','edtr.dtr_date');
+		})
+        ->leftJoin('work_schedules','schedule_id','=','work_schedules.id')
+        ->where('payroll_period_weekly.id',$period_id)
+        ->orderBy('dtr_date');
+
+        return $result->get();
+    }
+
     // public function mapRawLogs($rawlogs)
     // {
     //     foreach($rawlogs as $logs)
@@ -959,6 +998,143 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
         }
     }
 
+    public function computeWeeklyHoliday($dtr,$type)
+    {
+       
+        if($type=='semi'){
+            
+        }else {
+            
+            //echo "im here";
+            foreach($dtr as $rec)
+            {
+               
+                
+                //$rec->ndays = ($rec->time_in!='' && $rec->time_out!='' && $rec->holiday_type==NULL && $rec->time_in!='00:00' && $rec->time_out!='00:00') ? 1 : 0;
+                if($rec->ndays==0 || $rec->ndays==''){
+                    // $rec->ndays = ($rec->time_in!='' && $rec->time_out!='' && $rec->time_in!='00:00' && $rec->time_out!='00:00') ? 1 : 0;
+                }
+                
+                // if($rec->ot_in_s > 0 && $rec->ot_out_s > 0){
+                //     if($rec->ot_out_s >= $rec->ot_in_s){
+                //         $ot = ($rec->ot_out_s - $rec->ot_in_s) ;
+                //     }else{
+                //         $ot = (($rec->ot_out_s + 86400)  - $rec->ot_in_s) ;
+                //     }
+
+                //     if($ot>=3600){
+                //         $cot = ($ot - ($ot % 1800))/3600;
+                //     }else{
+                //         $cot = 0;
+                //     }
+
+                //     $rec->over_time = $cot;
+                // } else {
+                //     $rec->over_time = 0;
+                // }
+
+                switch($rec->holiday_type)
+                {   
+                // work here
+                 
+                    case 'SH': 
+
+                            $flag = $this->checkLastWorkingDay($rec->dtr_date,$rec->location,$rec->biometric_id);
+                            // $rec->sphol_pay = ($rec->ndays==0 || $rec->ndays =='') ? 1 : 0;
+
+                            if($flag){
+                                $rec->sphol_pay = 1;
+                                // $rec->ndays = 0;
+                            }else{
+                                // if($rec->reghol_pay!=0){
+
+                                // }
+                                $rec->sphol_pay = 0;
+                                
+                            }
+                          
+                        break;
+                    
+                    case 'LH': 
+                          
+                            $flag = $this->checkLastWorkingDay($rec->dtr_date,$rec->location,$rec->biometric_id);
+
+                        
+
+                            if(($rec->time_in != "" && $rec->time_in != "00:00") && ($rec->time_out !="" && $rec->time_out !="00:00") || $rec->ndays >0)
+                            {
+                                // dd($rec,($rec->time_in != "" && $rec->time_in != "00:00") && ($rec->time_out !="" && $rec->time_out !="00:00") || (float) $rec->ndays >0);
+                                $rec->reghol_pay = 1; // from 0
+                                // $rec->ndays = 1;
+                            }else{
+
+                                
+                                if($flag){
+                                    $rec->reghol_pay = 1;
+                                    // $rec->ndays = 0;
+                                }else{
+                                    // if($rec->reghol_pay!=0){
+    
+                                    // }
+                                    $rec->reghol_pay = 0;
+                                    
+                                }
+                            }
+
+                            // if($rec->biometric_id == 58)
+                            // {
+                            //     dd($rec,$flag);
+                            // }
+
+                            // if($rec->cont=='Y')
+                            // {
+                            //     $rec->ndays = 0;
+                            //     $rec->reghol_hrs =  $rec->over_time;
+                            // }
+                          
+                            // $rec->reghol_pay = ($rec->ndays==0 || $rec->ndays =='') ? 1 : 0;
+                            // $rec->reghol_nd = $rec->night_diff;
+                            // $rec->reghol_ot = ($rec->cont=='Y') ? 0 :  $rec->over_time;
+                            // $rec->reghol_ndot = $rec->night_diff_ot;
+                            // $rec->over_time =0;
+                            // $rec->night_diff_ot =0;
+                        break; 
+                    
+                    case 'DBL': 
+                            // $rec->dblhol_pay =  ($rec->ndays==0 || $rec->ndays =='') ? 1 : 0;
+                            // $rec->dblhol_nd = $rec->night_diff;
+                            // $rec->dblhol_ot = $rec->overt_time;
+                            // $rec->dblhol_ndot = $rec->night_diff_ot;
+
+                            $flag = $this->checkLastWorkingDay($rec->dtr_date,$rec->location,$rec->biometric_id);
+
+                            if(($rec->time_in != "" && $rec->time_in != "00:00") && ($rec->time_out !="" && $rec->time_out !="00:00") || $rec->ndays >0)
+                            {
+                                $rec->dblhol_pay = 1; // from 0
+                                // $rec->ndays = 1;
+                            }else{
+
+
+                                if($flag){
+                                    $rec->dblhol_pay = 1;
+                                    // $rec->ndays = 0;
+                                }else{
+                                    // if($rec->dblhol_pay!=0){
+    
+                                    // }
+                                    $rec->dblhol_pay = 0;
+                                    
+                                }
+                            }
+                        break; 
+                    
+                } 
+
+                $this->updateValid($rec->toArray());
+            }
+        }
+    }
+
     function checkLastWorkingDay($holiday,$location,$biometric_id)
     {
         $flag = true;
@@ -997,18 +1173,12 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                     if($worked->ndays>0){
                         $isEntitled = true;
                     }
-
-
                 } else {
         
-                     
-                        
                         if($worked->ndays>0){
                             $isEntitled = true;
     
-                           
                         }
-
                 }
 
             }
