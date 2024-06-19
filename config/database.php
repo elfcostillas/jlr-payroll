@@ -67,11 +67,11 @@ return [
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
+            'host' => env('DB_HOST', '172.17.56.98'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'jlr_hris'),
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', ''),
+            'username' => env('DB_USERNAME', 'admin_prog'),
+            'password' => env('DB_PASSWORD', '557progadmin'),
 
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',

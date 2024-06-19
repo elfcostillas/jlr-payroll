@@ -187,8 +187,8 @@ class PayrollRegisterWeeklyController extends Controller
         //     'labels' => $label,
         //     ]);
 
-        $this->excel->setValues($collections,$label,$headers);
-        return Excel::download($this->excel,'PayrollRegisterWeekly'.$period.'.xlsx');
+        // $this->excel->setValues($collections,$label,$headers);
+        // return Excel::download($this->excel,'PayrollRegisterWeekly'.$period.'.xlsx');
 
         
     }
