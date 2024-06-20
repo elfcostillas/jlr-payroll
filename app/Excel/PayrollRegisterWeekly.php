@@ -93,6 +93,10 @@ class PayrollRegisterWeekly implements ShouldAutoSize,WithColumnFormatting,FromV
             'P'=> NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
             'Q'=> NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
             'R'=> NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
+            'S'=> NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
+            'T'=> NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
+            'U'=> NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
+            'V'=> NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
         ];
 
         // $col = 'D';

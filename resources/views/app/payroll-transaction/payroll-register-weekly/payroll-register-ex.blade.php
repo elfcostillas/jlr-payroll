@@ -23,7 +23,21 @@
         $over_all_net_total = 0;
         $over_all_cantenn_total = 0;
 
-        $over_all_ppe_total = 0;
+        $over_all_late_amount =0;
+        $over_all_ot_pay = 0;
+        $over_all_leg_hol_pay = 0;
+        $over_all_other_earning = 0;
+        $over_all_retro_pay =0;
+
+        $over_all_basic_pay =0;
+
+        $over_all_total_ded = 0;
+        $over_all_ppe = 0;
+
+        foreach($headers as $key => $val)
+        {
+            $over_all_dynamicCol[$key] = 0;
+        }
     ?>
 
     <table border=0 style="width:100%;margin-bottom:2px;">
@@ -53,10 +67,24 @@
                 $location_gtotal = 0; 
 
                 $location_canteen_total = 0;
-               
-                $ppe_total = 0;
 
-                $colspan = 11; 
+                $colspan = 6; 
+
+                $location_basic = 0;
+
+                $location_late_amount =0;
+                $location_ot_pay = 0;
+                $location_leg_hol_pay = 0;
+                $location_other_earning = 0;
+                $location_retro_pay =0;
+
+                $location_ppe = 0;
+                $location_total_ded =0;
+
+                foreach($headers as $key => $val)
+                {
+                    $location_dynamicCol[$key] = 0;
+                }
 
             ?>
 
@@ -78,7 +106,7 @@
                     
                         @foreach($headers as $key => $val)
                             <th >{{ $label[$key] }}</th>
-                            @php $colspan++; @endphp
+                            
                         @endforeach
                         <th >Other Earnings</th>
                         <th >Retro Pay</th>
@@ -114,7 +142,11 @@
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->late_eq_amount>0) ? $employee->late_eq_amount : ''; }}</td>
                        
                         @foreach($headers as $key => $val)
-                            <td class="pr4"  style="text-align:right;">{{ ($employee->$key > 0) ? $employee->$key : '' }}</td>
+                            <td class="pr4"  style="text-align:right;">{{ ($employee->$key > 0) ? number_format($employee->$key,2) : '' }}</td>
+                    
+                            <?php
+                                  $location_dynamicCol[$key] += $employee->$key;
+                            ?>
                         @endforeach
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['earnings']>0) ? $employee->otherEarnings['earnings'] : ''; }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['retro_pay']>0) ? $employee->otherEarnings['retro_pay'] : ''; }}</td>
@@ -124,7 +156,7 @@
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['deductions']>0) ? $employee->otherEarnings['deductions'] : ''; }}</td>
 
                         <td class="pr4"  style="text-align:right;font-weight:bold;" >{{ ($employee->total_deduction>0) ? $employee->total_deduction : ''; }}</td>
-                        <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:double;{{ ($employee->net_pay < ($employee->gross_total*0.3)) ? 'color:red'  : '' }};" >{{ ($employee->net_pay>0) ? $employee->net_pay :  $employee->net_pay }}</td>
+                        <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:double;" >{{ ($employee->net_pay>0) ? $employee->net_pay :  $employee->net_pay }}</td>
                     </tr>
 
                     <?php
@@ -135,47 +167,99 @@
                             $summary[$employee->dept_code][$employee->job_title_name] = 1;
                         }
                         
-                        $ppe_total += ($employee->otherEarnings['deductions']>0) ? $employee->otherEarnings['deductions'] : 0;
+                        $location_basic += $employee->basic_pay;
+
                         $location_total += $employee->gross_total;
                         $location_gtotal += $employee->net_pay;
                         $location_canteen_total += ($employee->otherEarnings['canteen']>0) ? $employee->otherEarnings['canteen'] : 0; 
+
+                        $location_late_amount += ($employee->late_eq_amount>0) ? $employee->late_eq_amount : 0; 
+                        
+                        $location_other_earning += ($employee->otherEarnings['earnings']>0) ?$employee->otherEarnings['earnings']: 0; 
+                        $location_retro_pay =($employee->otherEarnings['retro_pay']>0) ? $employee->otherEarnings['retro_pay']: 0;  
+
+                        $location_ppe += $employee->otherEarnings['deductions'];
+                        $location_total_ded +=$employee->total_deduction;
                     ?>
 
                 @endforeach
                 <tr>
                     <td colspan = {{ $colspan }} style="text-align:right;padding-right:4px;" > <b>SUB TOTAL </b></td>
-                    <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_total > 0) ? $location_total : '' }}</td>
-                    <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_canteen_total > 0) ? $location_canteen_total : '' }}</td>
-                    <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($ppe_total > 0) ? $ppe_total : '' }}</td>
-                    <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($ppe_total + $location_canteen_total > 0) ? $ppe_total + $location_canteen_total : '' }}</td>
-                    <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_gtotal > 0) ? $location_gtotal : '' }}</td>
+                    <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;"> {{ ($location_basic > 0) ? $location_basic : ''  }}</td> 
+                    <td class="pr4"></td>
+                    <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_late_amount > 0) ? $location_late_amount : '' }}</td>
+                    @foreach($headers as $key => $val)
+
+                        @if(str_contains($key,'amount'))
+                        <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;"> {{ $location_dynamicCol[$key]  }}</td>
+                        @else
+                            <td></td>
+                        @endif
+
+                        <?php
+                            $over_all_dynamicCol[$key] += $location_dynamicCol[$key];
+                        ?>
+                    @endforeach
+                    <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_other_earning > 0) ? $location_other_earning : '' }}</td>
+                    <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_retro_pay > 0) ? $location_retro_pay : '' }}</td>
+                    <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_total > 0) ? $location_total : '' }}</td>
+                    <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_canteen_total > 0) ? $location_canteen_total : '' }}</td>
+                    <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_ppe > 0) ? $location_ppe : '' }}</td>
+                    <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_total_ded > 0) ? $location_total_ded : '' }}</td>
+                    <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_gtotal > 0) ? $location_gtotal : '' }}</td>
                    
                 </tr>
             </table>
 
-        @endif
+        
         @php  
-            $location->summary = $summary; 
-            $over_all_gross_total += $location_total;
-            $over_all_net_total += $location_gtotal;
-            $over_all_cantenn_total += $location_canteen_total;
+        $location->summary = $summary; 
+                $over_all_gross_total += $location_total;
+                $over_all_net_total += $location_gtotal;
+                $over_all_cantenn_total += $location_canteen_total;
 
-            $over_all_ppe_total += $ppe_total;
+                $over_all_other_earning += $location_other_earning;
+                $over_all_retro_pay += $location_retro_pay;
+
+                $over_all_basic_pay += $location_basic;
+
+                $over_all_total_ded += $location_total_ded;
+                $over_all_ppe += $location_ppe;
             
         @endphp
        
-        
+        @endif
     @endforeach
 
-    <table border=1  style="width:100%;border-collapse:collapse;margin-bottom:6px;" class="btable">
+    <table border=0  style="width:100%;border-collapse:collapse;margin-bottom:6px;" class="btable">
         <tr>
-            <td colspan = {{ $colspan }} style="text-align:right;padding-right:4px;" > <b>GRAND TOTAL </b></td>
+           
+            <td class="pr4"></td>
+            <td class="pr4"></td>
+            <td class="pr4"></td>
+            <td class="pr4"></td>
+            <td class="pr4"></td>
+            <td style="text-align:right;padding-right:4px;" > <b>GRAND TOTAL </b></td>
+            <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_basic_pay }}</td> 
+                        <td></td>
+                        <td></td>
+            @foreach($headers as $key => $val)
+                @if(str_contains($key,'amount'))
+                    <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;"> {{ $over_all_dynamicCol[$key]  }}</td>
+                @else
+                    <td class="pr4"></td>
+                @endif
+            
+            @endforeach
+            <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_other_earning }}</td> 
+            <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_retro_pay }}</td>
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_gross_total }}</td>
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_cantenn_total }}</td>
-            <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_ppe_total }}</td>
-            <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_ppe_total + $over_all_cantenn_total }}</td>
+            <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_ppe }}</td>
+            <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_total_ded }}</td>
+            
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_net_total }}</td>
-
+          
         </tr>
     </table>
 
