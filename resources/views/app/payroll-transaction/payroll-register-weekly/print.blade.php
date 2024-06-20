@@ -157,14 +157,16 @@
                 </tr>
             </table>
 
+            @php  
+                $location->summary = $summary; 
+                $over_all_gross_total += $location_total;
+                $over_all_net_total += $location_gtotal;
+                $over_all_cantenn_total += $location_canteen_total;
+                
+            @endphp
+
         @endif
-        @php  
-            $location->summary = $summary; 
-            $over_all_gross_total += $location_total;
-            $over_all_net_total += $location_gtotal;
-            $over_all_cantenn_total += $location_canteen_total;
-            
-        @endphp
+       
        
         
     @endforeach
