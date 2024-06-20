@@ -469,7 +469,7 @@ class TardinessMemoController extends Controller
 
                     if(count($marchResult) >0)
                     {
-                        $breakdown = "Last March you incurred a total of (".count($marchResult).") tardiness occurrence. ";
+                        $breakdown = "Last April you incurred a total of (".count($marchResult).") tardiness occurrence. ";
                     }else{
                         $breakdown = '';
                     }
