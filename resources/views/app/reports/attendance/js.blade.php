@@ -6,6 +6,23 @@
     <script>
         $(document).ready(function(){
 
+            
+
+            let months = [
+                { text: "January", value: "1" },
+                { text: "February", value: "2" },
+                { text: "March", value: "3" },
+                { text: "April", value: "4" },
+                { text: "May", value: "5" },
+                { text: "June", value: "6" },
+                { text: "July", value: "7" },
+                { text: "August", value: "8" },
+                { text: "September", value: "9" },
+                { text: "October", value: "10" },
+                { text: "November", value: "11" },
+                { text: "December", value: "12" },
+            ];
+
             let obj = {
                     id : null,
                     firstname: null,
@@ -181,6 +198,24 @@
 
                         window.open(url);
                     },
+                    runTardy : function(e){
+                       
+                        let m = $("#scripts_months").data("kendoDropDownList").value();
+                        let y = $("#scripts_year").data("kendoDropDownList").value();
+
+                        let url = `attendance/tardy-setter/${y}/${m}`;
+
+                        window.open(url);
+                    },
+                    runAWOL : function(e){
+                        let m = $("#scripts_months").data("kendoDropDownList").value();
+                        let y = $("#scripts_year").data("kendoDropDownList").value();
+
+                        let url = `attendance/awol-setter/${y}/${m}`;
+
+                        window.open(url);
+                    },
+
                     // leaveByEmployee : function()
                     // {
                     //     let from =  kendo.toString($('#date_from').data('kendoDatePicker').value(),'yyyy-MM-dd');
@@ -242,7 +277,7 @@
                 format: "MM/dd/yyyy"
             });
 
-            $("#tardy_year").kendoDropDownList({
+            $("#scripts_year").kendoDropDownList({
                 dataSource: viewModel.ds.fy,
                 dataTextField: "fy",
                 dataValueField: "fy",
@@ -252,7 +287,15 @@
                 }
             });
 
-
+            $("#scripts_months").kendoDropDownList({
+                dataSource: months,
+                dataTextField: "text",
+                dataValueField: "value",
+                index : -1,
+                change : function(e){
+                    //console.log(e.sender.value())
+                }
+            });
 
             function process()
             {

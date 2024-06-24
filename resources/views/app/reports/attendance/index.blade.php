@@ -66,6 +66,34 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card card-secondary">
+                        <div class="card-header"> Scripts </div>
+                        <div class="card-body"> 
+                            <table class="formTable" border=0 style="width:100%">
+                                <tr>
+                                    <td>Month</td>
+                                    <td>Year</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td> <input type="text" id= "scripts_months" /></td>
+                                    <td><input type="text" id= "scripts_year" /></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.runTardy'><i class="fas fa-table"></i> Run Script (TARDY)</button></td>
+                                    <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.runAWOL'><i class="fas fa-table"></i> Run Script (AWOL)</button></td>
+                                  
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-secondary">
                         <div class="card-header"> Report </div>
                         <div class="card-body"> 
                             <table class="formTable" border=0 style="width:100%">
@@ -75,8 +103,7 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td></td>
-                                    
+                                    <td></td>        
                                 </tr>
                                 <tr>
                                     <td> <input type="text" name="" id="date_from"> </td>
