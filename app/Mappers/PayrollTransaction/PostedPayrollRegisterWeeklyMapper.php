@@ -163,8 +163,45 @@ class PostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         return $result->get();
 
     }
+
+    public function oTBeakDown($id)
+    {
+        $result = DB::table('payrollregister_posted_weekly')
+        
+        ->select(DB::raw("locations.location_altername,divisions.div_code,departments.dept_code,SUM(payrollregister_posted_weekly.reg_ot) AS ot_hrs,SUM(payrollregister_posted_weekly.reg_ot_amount) AS ot_hrs_pay"))
+        ->join('employees','payrollregister_posted_weekly.biometric_id','=','employees.biometric_id')
+        ->join('divisions','employees.division_id','=','divisions.id')
+        ->join('weekly_tmp_locations',function($join){
+            $join->on('employees.biometric_id','=','weekly_tmp_locations.biometric_id');
+            $join->on('payrollregister_posted_weekly.period_id','=','weekly_tmp_locations.period_id');
+        })
+        ->join('locations','locations.id','=','weekly_tmp_locations.loc_id')
+        ->join('payroll_period_weekly','payroll_period_weekly.id','=','payrollregister_posted_weekly.period_id')
+        ->join('departments','employees.dept_id','=','departments.id')
+        ->where('payrollregister_posted_weekly.period_id','=',$id)
+        ->groupBy('employees.division_id')
+        ->groupBy('employees.dept_id')
+        ->groupBy('weekly_tmp_locations.loc_id')
+        ->orderBy('locations.location_altername','DESC');
+
+
+        return $result->get();
+    }
 }
     /*
+
+    SELECT locations.location_altername,divisions.div_code,departments.dept_code,SUM(payrollregister_posted_weekly.reg_ot) AS ot_hrs,SUM(payrollregister_posted_weekly.reg_ot_amount) AS ot_hrs_pay FROM payrollregister_posted_weekly
+INNER JOIN employees ON payrollregister_posted_weekly.biometric_id = employees.biometric_id
+INNER JOIN divisions ON employees.division_id = divisions.id
+INNER JOIN weekly_tmp_locations ON employees.biometric_id = weekly_tmp_locations.biometric_id AND payrollregister_posted_weekly.period_id = weekly_tmp_locations.period_id
+INNER JOIN locations ON locations.id = weekly_tmp_locations.loc_id
+INNER JOIN payroll_period_weekly ON payroll_period_weekly.id = payrollregister_posted_weekly.period_id
+INNER JOIN departments ON employees.dept_id = departments.id
+WHERE payrollregister_posted_weekly.period_id = 27
+AND employees.dept_id != 5
+GROUP BY employees.division_id,employees.dept_id,weekly_tmp_locations.loc_id
+
+
     SELECT employee_names_vw.employee_name,employees.bank_acct,payrollregister_posted_weekly.net_pay FROM payrollregister_posted_weekly 
     LEFT JOIN employees ON payrollregister_posted_weekly.biometric_id = employees.biometric_id
     LEFT JOIN employee_names_vw ON payrollregister_posted_weekly.biometric_id = employee_names_vw.biometric_id

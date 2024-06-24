@@ -662,6 +662,9 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::get('download-rcbc-template/{period_id}',[PayrollRegisterWeeklyController::class,'downloadRCBCTemplate']);
         Route::get('download-posted/{id}',[PayrollRegisterWeeklyController::class,'downloadExcelPosted']);
 
+        Route::get('show-ot-breakdown/{id}',[PayrollRegisterWeeklyController::class,'showOTBreakdown']);
+
+
         
     });
 

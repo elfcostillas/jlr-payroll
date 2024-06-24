@@ -177,7 +177,16 @@
                         let period = $("#posted_period").data("kendoDropDownList");
 
                         let url = `payroll-register-weekly/download-rcbc-template/${period.value()}`;
-                        window.open(url)
+                        window.open(url);
+                    },
+                    showOTBreakdown : function(e)
+                    {
+                        let period = $("#posted_period").data("kendoDropDownList");
+
+                        let url = `payroll-register-weekly/show-ot-breakdown/${period.value()}`;
+                        
+                        window.open(url);
+
                     }
 
                     

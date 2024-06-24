@@ -293,5 +293,12 @@ class PayrollRegisterWeeklyController extends Controller
         return Excel::download($this->excel,'PayrollRegisterWeekly'.$period.'.xlsx');
     }
 
+    public function showOTBreakdown(Request $request)
+    {
+        $result = $this->posted->oTBeakDown($request->id);
+
+        return view('app.payroll-transaction.payroll-register-weekly.ot-breakdown',['data' => $result]);
+    }
+
     
 }
