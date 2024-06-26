@@ -63,6 +63,7 @@ use App\Http\Controllers\Memo\AWOLMemoController;
 use App\Http\Controllers\Reports\TardinessReportsController;
 use App\Http\Controllers\Memo\TardinessMemoController;
 use App\Http\Controllers\Reports\AttendanceReportController;
+use App\Http\Controllers\Reports\PayrollSupportGroupController;
 use App\Http\Controllers\Timekeeping\WeeklyDTRUploaderController;
 
 
@@ -577,6 +578,14 @@ Route::middleware('auth')->prefix('reports')->group(function(){
        
        
     });
+
+    Route::prefix('payroll-support-group')->group(function(){
+        Route::get('/',[PayrollSupportGroupController::class,'index']);
+        Route::get('period-list',[PayrollSupportGroupController::class,'periodList']);
+        Route::get('payroll-report/{id}',[PayrollSupportGroupController::class,'downloadPayrollReport']);
+        
+    });
+    
 
 
 });

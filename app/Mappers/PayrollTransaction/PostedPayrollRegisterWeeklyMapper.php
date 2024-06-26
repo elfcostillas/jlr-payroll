@@ -187,6 +187,36 @@ class PostedPayrollRegisterWeeklyMapper extends AbstractMapper {
 
         return $result->get();
     }
+
+    public function grossDeductionNetpay($id)
+    {
+        $result = DB::table('payrollregister_posted_weekly')
+        
+        ->select(DB::raw("locations.location_altername,divisions.div_code,departments.dept_code,SUM(payrollregister_posted_weekly.gross_total) AS gross_total,SUM(payrollregister_posted_weekly.net_pay) AS net_pay,SUM(posted_weekly_compensation.deductions) AS deductions,SUM(posted_weekly_compensation.canteen) AS canteen"))
+        ->join('employees','payrollregister_posted_weekly.biometric_id','=','employees.biometric_id')
+        ->join('divisions','employees.division_id','=','divisions.id')
+        ->join('weekly_tmp_locations',function($join){
+            $join->on('employees.biometric_id','=','weekly_tmp_locations.biometric_id');
+            $join->on('payrollregister_posted_weekly.period_id','=','weekly_tmp_locations.period_id');
+        })
+        ->join('locations','locations.id','=','weekly_tmp_locations.loc_id')
+        ->join('payroll_period_weekly','payroll_period_weekly.id','=','payrollregister_posted_weekly.period_id')
+        ->join('departments','employees.dept_id','=','departments.id')
+        ->leftJoin('posted_weekly_compensation',function($join){
+            $join->on('employees.biometric_id','=','posted_weekly_compensation.biometric_id');
+            $join->on('payrollregister_posted_weekly.period_id','=','posted_weekly_compensation.period_id');
+        })
+        ->where('payrollregister_posted_weekly.period_id','=',$id)
+        ->groupBy('employees.division_id')
+        ->groupBy('employees.dept_id')
+        ->groupBy('weekly_tmp_locations.loc_id')
+        ->orderBy('locations.location_altername','DESC');
+
+
+
+
+        return $result->get();
+    }
 }
     /*
 
