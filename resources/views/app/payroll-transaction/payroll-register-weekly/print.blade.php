@@ -16,7 +16,7 @@
         }
 
         @page {
-            margin : 24px 24px 24px 24px;
+            margin : 96px 24px 24px 24px;
         }
     </style>
 </head>
