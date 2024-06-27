@@ -1147,7 +1147,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
         do {
             $holiday->subDay();
 
-            if(($holiday->format('D')!='Sun' && $biometric_id != 217) || (!in_array($holiday->format('D'), ['Sun','Sat']) && $biometric_id == 217) ){
+            if(($holiday->format('D')!='Sun' && $biometric_id != 85) || (!in_array($holiday->format('D'), ['Sun','Sat']) && $biometric_id == 85) ){
                     /*  
                         SELECT holidays.id 
                         FROM holidays INNER JOIN holiday_location ON holidays.id = holiday_location.holiday_id
