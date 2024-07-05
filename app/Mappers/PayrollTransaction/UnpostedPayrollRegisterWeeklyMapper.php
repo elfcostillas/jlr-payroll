@@ -492,10 +492,11 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
                                     
                                     ])
                                     ->whereRaw("COALESCE(weekly_tmp_locations.loc_id,employees.location_id) = $location->id")
-                                    ->orderBy('employees.pay_type','DESC')
-                                    ->orderBy('employees.dept_id','ASC')
+                                    // ->orderBy('employees.pay_type','DESC')
+                                    ->orderBy('departments.dept_code','DESC')
                                     ->orderBy('job_title_id','ASC')
-                                    ->orderBy('employee_names_vw.employee_name','ASC')->get();
+                                    ->orderBy('employee_names_vw.employee_name','ASC')
+                                    ->get();
             foreach($employees as $employee)
             {   
                 $employee->otherEarnings = $this->otherEarnings($employee->biometric_id,$period);

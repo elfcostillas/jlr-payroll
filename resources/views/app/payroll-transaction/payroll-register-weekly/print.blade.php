@@ -136,6 +136,9 @@
                             $stylee = 'white';
                         }
      
+                        $color = ($employee->ndays==7) ? 'background-color:yellow ': '' ;
+
+                       
                     ?>
                     
                     <tr style="background-color:{{ $stylee }};">
@@ -144,13 +147,16 @@
                         <td style="width:86px" > {{ $employee->job_title_name }}</td>
                         <td style="text-align:left;"> {{ $employee->employee_name }} </td> 
                         <td class="pr4" style="text-align:right;"> {{ number_format($employee->daily_rate,2) }}</td>
-                        <td class="pr4"  style="text-align:right;"> {{ number_format($employee->ndays,2) }}</td>
+                        <td class="pr4"  style="text-align:right;{{$color}}"> {{ number_format($employee->ndays,2) }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ number_format($employee->basic_pay,2) }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->late_eq>0) ? number_format($employee->late_eq,2) : ''; }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->late_eq_amount>0) ? number_format($employee->late_eq_amount,2) : ''; }}</td>
                        
                         @foreach($headers as $key => $val)
-                            <td class="pr4"  style="text-align:right;">{{ ($employee->$key > 0) ? number_format($employee->$key,2) : '' }}</td>
+                            <?php
+                                $over30 = ($employee->$key >= 30 && $key == 'reg_ot' ) ? 'background-color:yellow ': '' ;
+                            ?> 
+                            <td class="pr4"  style="text-align:right;{{$over30}}">{{ ($employee->$key > 0) ? number_format($employee->$key,2) : '' }}</td>
                     
                             <?php
                                   $location_dynamicCol[$key] += $employee->$key;
