@@ -188,7 +188,7 @@ class TardinessMemoController extends Controller
                     break;
                 case 6 :
                     $march = date('Y-m-d',strtotime($memo->memo_year.'-04-01'));
-
+                    $breakdown = '';
                     $marchFilter = array(
                         'from' => $march,
                         'to' => date('Y-m-t',strtotime($march)),
@@ -214,7 +214,7 @@ class TardinessMemoController extends Controller
                             $breakdown .= " and last May you incurred a total of (".count($mayResult).") tardiness occurrence.";
                     
                         }else {
-                            $breakdown  = "Last May you incurred a total of (".count($mayResult).") tardiness occurrence.";
+                            $breakdown  .= "Last May you incurred a total of (".count($mayResult).") tardiness occurrence.";
                         }
                     }else {
                         if(count($marchResult)>0){
@@ -481,7 +481,7 @@ class TardinessMemoController extends Controller
                     break;
                 case 6 :
                     $march = date('Y-m-d',strtotime($memo->memo_year.'-04-01'));
-
+                    $breakdown = '';
                     $marchFilter = array(
                         'from' => $march,
                         'to' => date('Y-m-t',strtotime($march)),
