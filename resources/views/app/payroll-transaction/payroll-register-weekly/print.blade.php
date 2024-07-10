@@ -15,6 +15,12 @@
             width: 48px;
         }
 
+        .circle {
+            border : 1px solid black;
+            border-radius: 50%;
+            padding-right : 4px;
+        }
+
         @page {
             margin : 96px 24px 24px 24px;
         }
@@ -25,6 +31,25 @@
     
     <?php 
         $arr = [];
+
+        $ot_summ_label[3]='30 Hours';
+        $ot_summ_label[4]='40 Hours';
+        $ot_summ_label[5]='50 Hours';
+        $ot_summ_label[6]='60 Hours';
+        $ot_summ_label[7]='70 Hours';
+        $ot_summ_label[8]='80+ Hours';
+
+
+
+
+        $ot_summ_value = [
+            '3' => 0,
+            '4' => 0,
+            '5' => 0,
+            '6' => 0,
+            '7' => 0,
+            '8' => 0
+        ];
 
         $additional = count($headers);
 
@@ -131,23 +156,28 @@
 
                     <?php
                         if($employee->retired =='Y'){
-                            $stylee = '#BBC3CC;';
+                            // $stylee = '#BBC3CC;';
+                            $stylee = 'font-weight:bold;';
+                           
                         }else {
-                            $stylee = 'white';
+                            // $stylee = 'white';
+                            $stylee = '';
+                           
                         }
      
                         $color = ($employee->ndays==7) ? 'background-color:yellow ': '' ;
+                        $circle = ($employee->ndays==7) ? 'circle': '' ;
 
                        
                     ?>
                     
-                    <tr style="background-color:{{ $stylee }};">
+                    <tr style="{{ $stylee }};">
                         <td style="text-align:right;width:25px;padding-right:6px;" >{{ $ctr++ }}</td>
-                        <td style="width:72px" > {{ $employee->dept_code }}</td>
-                        <td style="width:86px" > {{ $employee->job_title_name }}</td>
+                        <td style="width:72px; white-space: nowrap;" >  {{ $employee->dept_code }}</td>
+                        <td style="width:86px; white-space: nowrap;" > {{ $employee->job_title_name }}</td>
                         <td style="text-align:left;"> {{ $employee->employee_name }} </td> 
-                        <td class="pr4" style="text-align:right;"> {{ number_format($employee->daily_rate,2) }}</td>
-                        <td class="pr4"  style="text-align:right;{{$color}}"> {{ number_format($employee->ndays,2) }}</td>
+                        <td class="" style="text-align:right;"> <div class="">{{ number_format($employee->daily_rate,2) }} </div> </td>
+                        <td class="pr4" style="text-align:right;"> <div class="{{ $circle}}">{{ number_format($employee->ndays,2) }}</div> </td>
                         <td class="pr4"  style="text-align:right;"> {{ number_format($employee->basic_pay,2) }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->late_eq>0) ? number_format($employee->late_eq,2) : ''; }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->late_eq_amount>0) ? number_format($employee->late_eq_amount,2) : ''; }}</td>
@@ -155,11 +185,39 @@
                         @foreach($headers as $key => $val)
                             <?php
                                 $over30 = ($employee->$key >= 30 && $key == 'reg_ot' ) ? 'background-color:yellow ': '' ;
+                                $over30circ = ($employee->$key >= 30 && $key == 'reg_ot' ) ? 'circle ': '' ;
                             ?> 
-                            <td class="pr4"  style="text-align:right;{{$over30}}">{{ ($employee->$key > 0) ? number_format($employee->$key,2) : '' }}</td>
+                            <td class="pr4"  style="text-align:right;"> <div class="{{ $over30circ}}"> {{ ($employee->$key > 0) ? number_format($employee->$key,2) : '' }} </div></td>
                     
                             <?php
                                   $location_dynamicCol[$key] += $employee->$key;
+                            ?>
+
+                            <?php
+                            if(($employee->$key >= 30 && $employee->$key <=39) && $key == 'reg_ot'){
+                                $ot_summ_value[3] +=1;
+                            }
+
+                            if(($employee->$key >= 40 && $employee->$key <=49) && $key == 'reg_ot'){
+                                $ot_summ_value[4] +=1;
+                            }
+
+                            if(($employee->$key >= 50 && $employee->$key <=59) && $key == 'reg_ot'){
+                                $ot_summ_value[5] +=1;
+                            }
+
+                            if(($employee->$key >= 60 && $employee->$key <=69) && $key == 'reg_ot'){
+                                $ot_summ_value[6] +=1;
+                            }
+
+                            if(($employee->$key >= 70 && $employee->$key <=79) && $key == 'reg_ot'){
+                                $ot_summ_value[7] +=1;
+                            }
+
+                            if(($employee->$key >= 80) && $key == 'reg_ot'){
+                                $ot_summ_value[8] +=1;
+                            }
+                            
                             ?>
                         @endforeach
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['earnings']>0) ? number_format($employee->otherEarnings['earnings'],2) : ''; }}</td>
@@ -332,6 +390,21 @@
             </table>
 
         @endforeach
+
+        <div style="display:block;position:relative;clear:both">
+            <table border=1 style="border-collapse: collapse;">
+                <tr>
+                    <td style="padding:2px;"> OVERTIME SUMMARY </td>
+                    <td></td>
+                </tr>
+                @foreach($ot_summ_label as $key => $value)
+                        <tr>
+                            <td style="padding:2px;"> {{ $value }} </td>
+                            <td style="padding:2px;text-align:right;width:24px;"> {{ $ot_summ_value[$key] }} </td>
+                        </tr>
+                @endforeach
+            </table>
+        </div>
   
 </body>
 </html>
