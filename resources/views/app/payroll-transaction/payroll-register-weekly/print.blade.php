@@ -155,18 +155,36 @@
                 @foreach($location->employees as $employee)
 
                     <?php
+                        $entitled = false;
+                        $entitled2 = false;
+
                         if($employee->retired =='Y'){
                             $stylee = '#BBC3CC;';
                             $stylee = 'font-weight:bold;';
+
                            
                         }else {
                             $stylee = 'white';
                             $stylee = '';
+
+                            
                            
                         }
      
                         $color = ($employee->ndays==7) ? 'background-color:yellow ': '' ;
                         $circle = ($employee->ndays==7) ? 'circle': '' ;
+
+                        $entitled = ($employee->ndays==7) ? true : false;
+
+                        $entitled2 = ($employee->reg_ot >= 30) ? true : false;
+
+                        if($entitled || $entitled2){
+                            $jtCircle = 'circle';
+                            $jtFill = 'yellow';
+                        }else{
+                            $jtCircle = '';
+                            $jtFill = 'white';
+                        }
 
                        
                     ?>
@@ -174,7 +192,7 @@
                     <tr style="{{ $stylee }};">
                         <td style="text-align:right;width:25px;padding-right:6px;" >{{ $ctr++ }}</td>
                         <td style="width:72px; white-space: nowrap;" >  {{ $employee->dept_code }}</td>
-                        <td style="width:86px; white-space: nowrap;" > {{ $employee->job_title_name }}</td>
+                        <td style="width:86px; white-space: nowrap;background-color:{{$jtFill}};" > <div class="{{$jtCircle}}"> {{ $employee->job_title_name }} </div></td>
                         <td style="text-align:left;"> {{ $employee->employee_name }} </td> 
                         <td class="" style="text-align:right;"> <div class="">{{ number_format($employee->daily_rate,2) }} </div> </td>
                         <td class="pr4" style="text-align:right;{{$color}}"> <div class="{{ $circle}}">{{ number_format($employee->ndays,2) }}</div> </td>
