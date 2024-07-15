@@ -1512,6 +1512,58 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
             ->where('late','>',0)
             ->groupBy('biometric_id');
 
+        $divisions = DB::table("divisions")->get();
+
+        foreach($divisions as $div)
+        {
+            $departments = DB::table("departments")->where('dept_div_id','=',$div->id)->get();
+                foreach($departments as $dept)
+                {
+                    $employees = $result = DB::table('employees')
+                    ->join('employee_names_vw','employee_names_vw.biometric_id','=','employees.biometric_id')
+                    ->select(DB::raw("employee_names_vw.*,ifnull(awol.awol_count,0) awol_count ,ifnull(vl.vl_count,0 ) vl_count,ifnull(sl.sl_count,0) sl_count,ifnull(ut_count,0) ut_count,ifnull(others_count,0) others_count,ifnull(tardy_count,0) tardy_count"))
+                    
+                    ->where('division_id','=',$div->id)
+                    ->where('dept_id','=',$dept->id)
+
+                    ->where('employees.exit_status','=',1)
+                    ->where('employees.pay_type','<>',3)
+                    ->where('employees.date_hired','<',$date_to)
+                    ->leftJoinSub($awol,'awol',function($join) { //use ($type)
+                        $join->on('awol.biometric_id','=','employees.biometric_id');
+                    })
+                    ->leftJoinSub($vl,'vl',function($join) { //use ($type)
+                        $join->on('vl.biometric_id','=','employees.biometric_id');
+                    })
+                    ->leftJoinSub($sl,'sl',function($join) { //use ($type)
+                        $join->on('sl.biometric_id','=','employees.biometric_id');
+                    })
+                    ->leftJoinSub($ut,'ut',function($join) { //use ($type)
+                        $join->on('ut.biometric_id','=','employees.biometric_id');
+                    })
+                    ->leftJoinSub($others,'others',function($join) { //use ($type)
+                        $join->on('others.biometric_id','=','employees.biometric_id');
+                    })
+                    ->leftJoinSub($tardy,'tardy',function($join) { //use ($type)
+                        $join->on('tardy.biometric_id','=','employees.biometric_id');
+                    })
+                    ->orderByRaw("(ifnull(awol_count,0) + ifnull(vl_count,0) + ifnull(sl_count,0) + ifnull(ut_count,0) + ifnull(others_count,0) + ifnull(tardy_count,0)) asc,lastname asc")
+                    ->get();
+
+                   
+
+                    $dept->employees = $employees;
+                   
+                }
+
+            $div->departments = $departments;
+        }
+
+        $result = $divisions;
+
+        return $result;
+
+         /*
         $result = DB::table('employees')
                             ->join('employee_names_vw','employee_names_vw.biometric_id','=','employees.biometric_id')
                             ->select(DB::raw("employee_names_vw.*,ifnull(awol.awol_count,0) awol_count ,ifnull(vl.vl_count,0 ) vl_count,ifnull(sl.sl_count,0) sl_count,ifnull(ut_count,0) ut_count,ifnull(others_count,0) others_count,ifnull(tardy_count,0) tardy_count"))
@@ -1537,11 +1589,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                                 $join->on('tardy.biometric_id','=','employees.biometric_id');
                             })
                             ->orderByRaw("(ifnull(awol_count,0) + ifnull(vl_count,0) + ifnull(sl_count,0) + ifnull(ut_count,0) + ifnull(others_count,0) + ifnull(tardy_count,0)) asc,lastname asc");
-                            // ->orderByRaw("(ifnull(awol_count,0) , ifnull(vl_count,0) , ifnull(sl_count,0) , ifnull(ut_count,0) , ifnull(others_count,0) , ifnull(tardy_count,0)) asc");
-
-        
-
-        return $result->get();
+            */ 
     }
 
     public function awol_setter($year,$month)
