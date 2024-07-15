@@ -291,7 +291,7 @@ class LeaveReportsMapper extends AbstractMapper {
                     ->where('employees.dept_id','=',5)
                    
                     // ->whereBetween('employees.date_hired',[$from,$to])
-                    ->where('employees.date_hired','<',$from)
+                    ->where('employees.date_hired','<',$to)
                     ->whereNotNull('employees.date_hired')
                     ->orderBy('employees.dept_id','asc')
                     ->orderBy('lastname','asc')
