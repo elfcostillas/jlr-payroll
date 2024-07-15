@@ -26,6 +26,7 @@
         <td>Monthly Allowance</td>
         <td>Daily Allowance</td>
         <td>Date Hired</td>
+        <td>Job Title</td>
     </tr>
     
     @foreach($data as $emp)
@@ -56,6 +57,8 @@
             <td>{{ $emp->monthly_allowance }}  </td>
             <td>{{ $emp->daily_allowance }}  </td>
             <td>{{ $emp->date_hired }} </td>
+            <td>{{ $emp->job_title__name }} </td>
+            
         </tr>
     @endforeach
 </table>
