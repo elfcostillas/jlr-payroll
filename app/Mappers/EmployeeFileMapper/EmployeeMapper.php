@@ -205,7 +205,7 @@ class EmployeeMapper extends AbstractMapper {
       
       select * from employees left join job_titles on employees.job_title_id = job_titles.id
 	  */
-		$result = $this->model->select(DB::raw('employees.*,dept_code,div_code,emp_exit_status.status_desc,emp_emp_stat.estatus_desc,pay_description,job_title__name'))
+		$result = $this->model->select(DB::raw('employees.*,dept_code,div_code,emp_exit_status.status_desc,emp_emp_stat.estatus_desc,pay_description,job_title_name'))
 		->leftJoin('departments','departments.id','=','dept_id')
 		->leftJoin('divisions','divisions.id','=','division_id')
 		->leftJoin('civil_status','employees.civil_status','=','civil_status.id')

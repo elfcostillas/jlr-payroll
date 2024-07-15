@@ -57,7 +57,7 @@
             <td>{{ $emp->monthly_allowance }}  </td>
             <td>{{ $emp->daily_allowance }}  </td>
             <td>{{ $emp->date_hired }} </td>
-            <td>{{ $emp->job_title__name }} </td>
+            <td>{{ $emp->job_title_name }} </td>
             
         </tr>
     @endforeach
