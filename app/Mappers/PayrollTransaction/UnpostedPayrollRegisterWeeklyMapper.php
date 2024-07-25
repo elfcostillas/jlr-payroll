@@ -612,15 +612,17 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
             'retro_pay' => 0,
             'deductions' => 0,
             'canteen' => 0,
+            'cash_advance' => 0
 
         ];
 
-        $earnings = DB::table('unposted_weekly_compensation')->select('earnings','retro_pay','deductions','canteen')
+        $earnings = DB::table('unposted_weekly_compensation')->select('earnings','retro_pay','deductions','canteen','cash_advance')
         ->where('period_id','=',$period_id)
         ->where('biometric_id','=',$biometric_id)
         ->first();
 
         $earning_array = [
+            'cash_advance' => ($earnings!=null) ? $earnings->cash_advance : 0,
             'earnings' => ($earnings!=null) ? $earnings->earnings : 0,
             'retro_pay' => ($earnings!=null) ? $earnings->retro_pay : 0,
             'deductions' => ($earnings!=null) ? $earnings->deductions : 0,

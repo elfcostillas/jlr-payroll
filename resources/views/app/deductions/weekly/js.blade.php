@@ -110,6 +110,7 @@
                                     canteen_bpn : { type: 'number', },
                                     canteen_bps : { type: 'number', },
                                     canteen_agg : { type: 'number', },
+                                    cash_advance: { type: 'number', },
                                 }
                             }
                         },
@@ -118,6 +119,7 @@
                             { field : "canteen_bpn" , aggregate: "sum" },
                             { field : "canteen_bps" , aggregate: "sum" },
                             { field : "canteen_agg" , aggregate: "sum" },
+                            { field : "cash_advance" , aggregate: "sum" },
                         ]
                     }),
                 },
@@ -264,10 +266,20 @@
                     //     },
                     //     template : "# if(retro_pay==0){#  #} else{# #= kendo.toString(retro_pay,'n2') #  #}#",
                     // },
+                    
+                    {
+                        title : "Cash Advance",
+                        field : "cash_advance",
+                        width : 110,
+                        attributes : {
+                            style : "text-align:right"
+                        },
+                        template : "# if(cash_advance==0){#  #} else{# #= kendo.toString(cash_advance,'n2') #  #}#",
+                    },
                     {
                         title : "Deduction",
                         field : "deductions",
-                        width : 130,
+                        width : 110,
                         attributes : {
                             style : "text-align:right"
                         },
@@ -279,7 +291,7 @@
                     {
                         title : "Canteen BPN",
                         field : "canteen_bpn",
-                        width : 130,
+                        width : 110,
                         attributes : {
                             style : "text-align:right"
                         },
@@ -289,7 +301,7 @@
                     {
                         title : "Canteen BPS",
                         field : "canteen_bps",
-                        width : 130,
+                        width : 110,
                         attributes : {
                             style : "text-align:right"
                         },
@@ -299,7 +311,7 @@
                     {
                         title : "Canteen AGG",
                         field : "canteen_agg",
-                        width : 130,
+                        width : 110,
                         attributes : {
                             style : "text-align:right"
                         },
@@ -309,7 +321,7 @@
                                {
                         title : "Canteen",
                         field : "canteen",
-                        width : 130,
+                        width : 110,
                         attributes : {
                             style : "text-align:right"
                         },

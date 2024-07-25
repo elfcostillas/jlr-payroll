@@ -151,6 +151,7 @@
                         <th style="padding : 0px 4px;min-width:110px;" >Other Earnings</th>
                         <th style="padding : 0px 4px;min-width:110px;" >Retro Pay</th>
                         <th style="padding : 0px 4px;min-width:110px;" >Gross Pay</th>
+                        <th style="padding : 0px 4px;min-width:110px;" >Cash Advance</th>
                         <th style="padding : 0px 4px;min-width:110px;" >Canteen</th>
                         <th style="padding : 0px 4px;min-width:110px;" >PPE</th>
                        
@@ -191,6 +192,7 @@
                                         <td style="text-align:right;"> {{ ($employee->otherEarnings['retro_pay']>0) ? number_format($employee->otherEarnings['retro_pay'],2) : ''; }}</td>
                                 
                                         <td style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($employee->gross_total > 0) ? number_format($employee->gross_total,2) : '' }}</td>
+                                        <td style="text-align:right;"> {{ ($employee->otherEarnings['cash_advance']>0) ? number_format($employee->otherEarnings['cash_advance'],2) : ''; }}</td>
                                         <td style="text-align:right;"> {{ ($employee->otherEarnings['canteen']>0) ? number_format($employee->otherEarnings['canteen'],2) : ''; }}</td>
                                         <td style="text-align:right;"> {{ ($employee->otherEarnings['deductions']>0) ? number_format($employee->otherEarnings['deductions'],2) : ''; }}</td>
 
