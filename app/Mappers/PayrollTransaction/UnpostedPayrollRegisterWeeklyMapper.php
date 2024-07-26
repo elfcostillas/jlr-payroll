@@ -179,7 +179,9 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         $compensation = $this->model->select('period_id','earnings','retro_pay','deductions','biometric_id','canteen','remarks','cash_advance','canteen_bps','canteen_bpn','canteen_agg')
                         ->from('unposted_weekly_compensation')->where('period_id',$period_id)->get()->toArray();
         
-      
+        DB::table('payrollregister_posted_weekly')->where('period_id',$period_id)->delete();
+        DB::table('posted_weekly_compensation')->where('period_id',$period_id)->delete();
+
         foreach($result as $line){
             unset($line['line_id']);
             array_push($tmp_array,$line);
