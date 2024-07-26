@@ -33,6 +33,7 @@
 
         $over_all_total_ded = 0;
         $over_all_ppe = 0;
+        $over_all_ca_total = 0;
 
         foreach($headers as $key => $val)
         {
@@ -67,6 +68,7 @@
                 $location_gtotal = 0; 
 
                 $location_canteen_total = 0;
+                $location_cash_advance = 0;
 
                 $colspan = 6; 
 
@@ -77,7 +79,7 @@
                 $location_leg_hol_pay = 0;
                 $location_other_earning = 0;
                 $location_retro_pay =0;
-
+                
                 $location_ppe = 0;
                 $location_total_ded =0;
 
@@ -111,7 +113,7 @@
                         <th >Other Earnings</th>
                         <th >Retro Pay</th>
                         <th> Gross Pay</th>
-                       
+                        <th> Cash Advance </th>
                         <th> Canteen </th>
                         <th> PPE </th>
                         <th> Total Deduction</th>
@@ -152,6 +154,7 @@
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['retro_pay']>0) ? $employee->otherEarnings['retro_pay'] : ''; }}</td>
 
                         <td class="pr4"  style="text-align:right;font-weight:bold;">{{ ($employee->gross_total > 0) ? $employee->gross_total : '' }}</td>
+                        <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['cash_advance']>0) ? $employee->otherEarnings['cash_advance'] : ''; }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['canteen']>0) ? $employee->otherEarnings['canteen'] : ''; }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['deductions']>0) ? $employee->otherEarnings['deductions'] : ''; }}</td>
 
@@ -172,6 +175,7 @@
                         $location_total += $employee->gross_total;
                         $location_gtotal += $employee->net_pay;
                         $location_canteen_total += ($employee->otherEarnings['canteen']>0) ? $employee->otherEarnings['canteen'] : 0; 
+                        $location_cash_advance += ($employee->otherEarnings['cash_advance']>0) ? $employee->otherEarnings['cash_advance'] : 0; 
 
                         $location_late_amount += ($employee->late_eq_amount>0) ? $employee->late_eq_amount : 0; 
                         
@@ -203,6 +207,7 @@
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_other_earning > 0) ? $location_other_earning : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_retro_pay > 0) ? $location_retro_pay : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_total > 0) ? $location_total : '' }}</td>
+                    <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_cash_advance > 0) ? $location_cash_advance : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_canteen_total > 0) ? $location_canteen_total : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_ppe > 0) ? $location_ppe : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_total_ded > 0) ? $location_total_ded : '' }}</td>
@@ -217,6 +222,7 @@
                 $over_all_gross_total += $location_total;
                 $over_all_net_total += $location_gtotal;
                 $over_all_cantenn_total += $location_canteen_total;
+                $over_all_ca_total += $location_cash_advance;
 
                 $over_all_other_earning += $location_other_earning;
                 $over_all_retro_pay += $location_retro_pay;
@@ -254,6 +260,7 @@
             <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_other_earning }}</td> 
             <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_retro_pay }}</td>
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_gross_total }}</td>
+            <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_ca_total }}</td>
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_cantenn_total }}</td>
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_ppe }}</td>
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_total_ded }}</td>
