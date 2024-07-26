@@ -173,7 +173,7 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         $tmp_array = [];
         $comp_array = [];
         
-        $compensation = $this->model->select('period_id','earnings','retro_pay','deductions','biometric_id')
+        $compensation = $this->model->select('period_id','earnings','retro_pay','deductions','biometric_id','cash_advance')
                         ->from('unposted_weekly_compensation')->where('period_id',$period_id)->get()->toArray();
         
       
