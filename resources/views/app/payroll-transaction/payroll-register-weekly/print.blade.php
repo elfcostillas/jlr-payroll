@@ -30,6 +30,9 @@
     <div style="page-break-after: always;" >
     
     <?php 
+
+        use Illuminate\Support\Facades\Auth;
+        
         $arr = [];
 
         $ot_summ_label[3]='30 Hours';
@@ -600,6 +603,32 @@
             @endforeach
         </div>
 
+        <div style="display:block;position:relative;clear:both;">
+            <table style="width:100%;margin-top:16px;" border=0>
+                <tr>
+                    <td style="width:25%;text-align:center;">Prepared By :</td>
+                    <td style="width:25%;text-align:center;">Checked By :</td>
+                    <td style="width:25%"></td>
+                    <td style="width:25%"></td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="height:30px;"></td>
+                </tr>
+                <tr>
+                    <td style="text-align:center;"> <u> &nbsp;&nbsp;&nbsp; {{ Auth::user()->name }} &nbsp;&nbsp;&nbsp;</u></td>
+                    <td style="text-align:center;"><u>&nbsp;&nbsp;&nbsp;Herbert B.Camasura&nbsp;&nbsp;&nbsp;</u></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td style="text-align:center;"> HR Supervisor </td>
+                    <td style="text-align:center;"> HR Manager</td>
+                    <td style="text-align:center;"> </td>
+                    <td style="text-align:center;"> </td>
+                </tr>
+            </table>
+            
+        </div>
         
         
   
