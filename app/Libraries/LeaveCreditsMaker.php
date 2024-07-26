@@ -56,13 +56,16 @@ class LeaveCreditsMaker {
             
             foreach($employees->get() as $emp){
                 $multiplier = 13 - $emp->m;
+
+                $vl = $multiplier * 0.83;
+                $sl = $multiplier * 0.16;
                
                 array_push($tmp_credits,
                     array(
                         'fy_year' => $c_year,
                         'biometric_id' => $emp->biometric_id,
-                        'vacation_leave' => $multiplier * 0.83,
-                        'sick_leave' =>  $multiplier * 0.16,
+                        'vacation_leave' =>  $this->customRound($vl),
+                        'sick_leave' => $this->customRound($sl),
                     )
                 );
             }
@@ -70,5 +73,28 @@ class LeaveCreditsMaker {
         }
 
         DB::table('leave_credits')->insertOrIgnore($tmp_credits);       
+    }
+
+    public function customRound($n)
+    {
+        $whole = $n;
+        $num = (int) $n;
+
+        $decimal = (float) $whole - $num;
+
+        if($decimal < 0.4)
+        {
+          
+            $new_decimal = 0;
+        }else if($decimal >= 0.4 && $decimal <= 0.7)
+        {
+            $new_decimal = 0.5;
+        }else{
+            $new_decimal = 0.0;
+            $num += 1;
+        }
+
+        return (float) $num + $new_decimal;
+
     }
 }
