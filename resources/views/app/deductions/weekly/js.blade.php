@@ -275,6 +275,7 @@
                             style : "text-align:right"
                         },
                         template : "# if(cash_advance==0){#  #} else{# #= kendo.toString(cash_advance,'n2') #  #}#",
+                        footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
                     },
                     {
                         title : "Deduction",

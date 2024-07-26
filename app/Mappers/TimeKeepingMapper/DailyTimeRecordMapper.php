@@ -1504,7 +1504,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
         
         $others = DB::table('edtr')->select(DB::raw("biometric_id,COUNT(id) AS others_count"))
                 ->whereBetween('dtr_date',[$date_from,$date_to])
-                ->where('other_leave','>',0)
+                ->where('other_leave','>=',0)
                 ->groupBy('biometric_id');
 
         $tardy = DB::table('edtr')->select(DB::raw("biometric_id,COUNT(id) AS tardy_count"))
@@ -1671,6 +1671,10 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                 case 'UT' : 
                         $log->under_time = $leave->with_pay + $leave->without_pay;
                     break;
+
+                case 'MP' : 
+                    $log->mlpl = 8;
+                break;
 
                 default : 
                         $log->other_leave = $leave->with_pay + $leave->without_pay;
