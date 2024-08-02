@@ -150,8 +150,6 @@ class LeaveReportsController extends Controller
                 $start = date('Y-m-d',strtotime($from->year.'-'.$i.'-01'));
                 $end = date('Y-m-t',strtotime($start));
 
-                //dd($start,$end)
-
                 $data = $this->mapper->getData($start,$end,$from,$to);
 
                 foreach($data as $row) {

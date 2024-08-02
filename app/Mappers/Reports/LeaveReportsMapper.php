@@ -309,11 +309,14 @@ class LeaveReportsMapper extends AbstractMapper {
     {
         // dd($start,$end,$from,$to);
 
+        // dd($to->format('Y-m-d'));
+
         if($start == '2023-01-01'){
             $sub_qry = "SELECT employees.biometric_id, tardy_count as late_count,0 as in_minutes FROM employees 
             INNER JOIN manual_tardy ON employees.biometric_id = manual_tardy.biometric_id
             WHERE  emp_level >= 3
             and job_title_id != 12
+            and exit_status = 1
             and date_hired between '$from' and '$to'";
         }
         else{
@@ -332,8 +335,8 @@ class LeaveReportsMapper extends AbstractMapper {
             // ORDER BY lastname,dtr_date";
             //SELECT departments.dept_code FROM employees INNER JOIN departments ON employees.dept_id = departments.id
 
-            $sub_qry = "SELECT employees.biometric_id,COUNT(dtr_date) late_count,SUM((TIME_TO_SEC(edtr.time_in)- TIME_TO_SEC(work_schedules.time_in))/60) AS in_minutes FROM edtr 
-            INNER JOIN employees ON edtr.biometric_id = employees.biometric_id
+            $sub_qry = "SELECT employees.biometric_id,COUNT(dtr_date) late_count,SUM((TIME_TO_SEC(edtr.time_in)- TIME_TO_SEC(work_schedules.time_in))/60) AS in_minutes FROM employees 
+            left JOIN edtr ON edtr.biometric_id = employees.biometric_id
             INNER JOIN work_schedules ON schedule_id = work_schedules.id
             INNER JOIN employee_names_vw ON employee_names_vw.biometric_id = edtr.biometric_id
           
@@ -344,7 +347,7 @@ class LeaveReportsMapper extends AbstractMapper {
             and emp_level >= 3
             and job_title_id != 12
             and holiday_type is null 
-            
+            and employees.exit_status = 1
             and date_hired is not null
             GROUP BY employees.biometric_id,lastname,firstname
             ORDER BY lastname";
@@ -446,8 +449,8 @@ class LeaveReportsMapper extends AbstractMapper {
        ) AS awol ON employees.biometric_id = awol.biometric_id
 
         WHERE pay_type != 3
-        and date_hired < '$end'
-        and exit_status = 1
+        and date_hired < '".$to->format('Y-m-d')."'
+        and employees.exit_status = 1
         and date_hired is not null";
 
         $result = DB::select($qry);
