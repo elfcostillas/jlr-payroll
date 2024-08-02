@@ -115,6 +115,7 @@ class EmployeeMapper extends AbstractMapper {
 	public function generateReport($filter)
 	{
 		
+		
 		$result = $this->model->select(DB::raw('employees.*,dept_code,div_code,emp_exit_status.status_desc,emp_emp_stat.estatus_desc,pay_description'))
 		->leftJoin('departments','departments.id','=','dept_id')
 		->leftJoin('divisions','divisions.id','=','division_id')
@@ -129,6 +130,10 @@ class EmployeeMapper extends AbstractMapper {
 
 		if($filter['department']!=0 && $filter['department']!='' ){
 			$result = $result->where('dept_id',$filter['department']);
+		}
+
+		if($filter['location']!=0 && $filter['location']!='' ){
+			$result = $result->where('location_id',$filter['location']);
 		}
 
 		$result->where('pay_type','<>',3);
