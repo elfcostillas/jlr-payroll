@@ -27,7 +27,7 @@
     }
 
     * {
-        font-family : "Helvetica";
+        font-family : "";
         font-size : 10pt;
     }
 
