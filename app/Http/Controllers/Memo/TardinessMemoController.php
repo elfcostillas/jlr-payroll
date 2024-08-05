@@ -228,6 +228,7 @@ class TardinessMemoController extends Controller
                     break;
                 case 7 :
                     $total = count($details);
+                    $breakdown = '';
                     $months = "July";
                     break;
                   
@@ -521,11 +522,13 @@ class TardinessMemoController extends Controller
                     break;
                 case 7 :
                     $total = count($details);
+                    $breakdown = '';
                     $months = "July";
                     break;
                   
                 case 8 :
                     $july = date('Y-m-d',strtotime($memo->memo_year.'-07-01'));
+                    $breakdown = '';
 
                     $julyFilter = array(
                         'from' => $july,
@@ -546,6 +549,7 @@ class TardinessMemoController extends Controller
                     break;
                 case 9 :
                     $july = date('Y-m-d',strtotime($memo->memo_year.'-07-01'));
+                    $breakdown = '';
 
                     $julyFilter = array(
                         'from' => $july,
@@ -585,11 +589,13 @@ class TardinessMemoController extends Controller
                     break;
                 case 10 :
                     $total = count($details);
+                    $breakdown = '';
                     $months = "October";
                    
                     break;
                 case 11 :
                     $oct = date('Y-m-d',strtotime($memo->memo_year.'-10-01'));
+                    $breakdown = '';
 
                     $octFilter = array(
                         'from' => $oct,
@@ -610,6 +616,7 @@ class TardinessMemoController extends Controller
                 case 12 :
                     $oct = date('Y-m-d',strtotime($memo->memo_year.'-10-01'));
 
+                    $breakdown = '';
                     $octFilter = array(
                         'from' => $oct,
                         'to' => date('Y-m-t',strtotime($oct)),
