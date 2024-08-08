@@ -111,6 +111,7 @@
                                     canteen_bps : { type: 'number', },
                                     canteen_agg : { type: 'number', },
                                     cash_advance: { type: 'number', },
+                                    office_account: { type: 'number', },
                                 }
                             }
                         },
@@ -120,6 +121,7 @@
                             { field : "canteen_bps" , aggregate: "sum" },
                             { field : "canteen_agg" , aggregate: "sum" },
                             { field : "cash_advance" , aggregate: "sum" },
+                            { field : "office_account" , aggregate: "sum" },
                         ]
                     }),
                 },
@@ -140,7 +142,7 @@
                         var myWindow = $("#pop");
                        
                         myWindow.kendoWindow({
-                            width: "1224", //1124 - 1152
+                            width: "1424", //1124 - 1152
                             height: "700",
                             title: "Weekly Empolyees - Deductions",
                             visible: false,
@@ -270,7 +272,7 @@
                     {
                         title : "Cash Advance",
                         field : "cash_advance",
-                        width : 110,
+                        width : 120,
                         attributes : {
                             style : "text-align:right"
                         },
@@ -278,9 +280,9 @@
                         footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
                     },
                     {
-                        title : "Deduction",
+                        title : "PPE",
                         field : "deductions",
-                        width : 110,
+                        width : 120,
                         attributes : {
                             style : "text-align:right"
                         },
@@ -292,7 +294,7 @@
                     {
                         title : "Canteen BPN",
                         field : "canteen_bpn",
-                        width : 110,
+                        width : 120,
                         attributes : {
                             style : "text-align:right"
                         },
@@ -302,7 +304,7 @@
                     {
                         title : "Canteen BPS",
                         field : "canteen_bps",
-                        width : 110,
+                        width : 120,
                         attributes : {
                             style : "text-align:right"
                         },
@@ -312,17 +314,17 @@
                     {
                         title : "Canteen AGG",
                         field : "canteen_agg",
-                        width : 110,
+                        width : 120,
                         attributes : {
                             style : "text-align:right"
                         },
                         template : "# if(canteen_agg==0){#  #} else{# #= kendo.toString(canteen_agg,'n2') #  #}#",
                         footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
                     },
-                               {
+                    {
                         title : "Canteen",
                         field : "canteen",
-                        width : 110,
+                        width : 120,
                         attributes : {
                             style : "text-align:right"
                         },
@@ -330,9 +332,19 @@
                         footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
                     },
                     {
+                        title : "Office Account",
+                        field : "office_account",
+                        width : 140,
+                        attributes : {
+                            style : "text-align:right"
+                        },
+                        template : "# if(office_account==0){#  #} else{# #= kendo.toString(office_account,'n2') #  #}#",
+                        footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" ,
+                    },
+                    {
                         title : "Remarks",
                         field : "remarks2",
-                        width : 220,
+                        width : 200,
                         attributes : {
                             // style : "text-align:right"
                         },

@@ -113,7 +113,6 @@ class PayrollRegisterWeeklyController extends Controller
             //             break;
             //     }
             // }
-     
             
             $person = new WeeklyEmployee($employee,new Daily);
             $person->compute($period);
@@ -153,7 +152,7 @@ class PayrollRegisterWeeklyController extends Controller
             'nopay' => $nopay,
             'headers' => $headers , 
             'labels' => $label,
-            ]);
+        ]);
     }
 
     public function downloadExcelUnposted(Request $request)

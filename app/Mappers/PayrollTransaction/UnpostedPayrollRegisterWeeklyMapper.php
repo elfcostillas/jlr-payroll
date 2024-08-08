@@ -176,7 +176,7 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         $tmp_array = [];
         $comp_array = [];
         
-        $compensation = $this->model->select('period_id','earnings','retro_pay','deductions','biometric_id','canteen','remarks','cash_advance','canteen_bps','canteen_bpn','canteen_agg')
+        $compensation = $this->model->select('period_id','earnings','retro_pay','deductions','biometric_id','canteen','remarks','cash_advance','canteen_bps','canteen_bpn','canteen_agg','office_account')
                         ->from('unposted_weekly_compensation')->where('period_id',$period_id)->get()->toArray();
         
         DB::table('payrollregister_posted_weekly')->where('period_id',$period_id)->delete();
@@ -614,11 +614,13 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
             'retro_pay' => 0,
             'deductions' => 0,
             'canteen' => 0,
-            'cash_advance' => 0
+            'cash_advance' => 0,
+            'office_account' => 0,
+            
 
         ];
 
-        $earnings = DB::table('unposted_weekly_compensation')->select('earnings','retro_pay','deductions','canteen','cash_advance')
+        $earnings = DB::table('unposted_weekly_compensation')->select('earnings','retro_pay','deductions','canteen','cash_advance','office_account')
         ->where('period_id','=',$period_id)
         ->where('biometric_id','=',$biometric_id)
         ->first();
@@ -629,6 +631,7 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
             'retro_pay' => ($earnings!=null) ? $earnings->retro_pay : 0,
             'deductions' => ($earnings!=null) ? $earnings->deductions : 0,
             'canteen' => ($earnings!=null) ? $earnings->canteen : 0,
+            'office_account' => ($earnings!=null) ? $earnings->office_account : 0,
         ];
         
         return $earning_array;

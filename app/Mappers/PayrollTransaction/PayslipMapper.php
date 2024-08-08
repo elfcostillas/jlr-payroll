@@ -559,7 +559,7 @@ class PayslipMapper extends AbstractMapper {
     public function deductionsWeekly($period_id,$biometric_id)
     {
        
-        $query = "SELECT distinct deductions,canteen,cash_advance FROM posted_weekly_compensation WHERE period_id = $period_id AND biometric_id= $biometric_id";
+        $query = "SELECT distinct deductions,canteen,cash_advance,office_account FROM posted_weekly_compensation WHERE period_id = $period_id AND biometric_id= $biometric_id";
 
         $result = DB::select($query); 
 
@@ -567,6 +567,7 @@ class PayslipMapper extends AbstractMapper {
             'deductions' => empty($result) ? 0 : $result[0]->deductions,
             'canteen' => empty($result) ? 0 :$result[0]->canteen,
             'cash_advance'=> empty($result) ? 0 :$result[0]->cash_advance,
+            'office_account'=> empty($result) ? 0 :$result[0]->office_account,
         ];
     }
 

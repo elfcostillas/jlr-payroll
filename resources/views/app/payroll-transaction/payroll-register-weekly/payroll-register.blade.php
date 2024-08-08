@@ -154,6 +154,7 @@
                         <th style="padding : 0px 4px;min-width:110px;" >Cash Advance</th>
                         <th style="padding : 0px 4px;min-width:110px;" >Canteen</th>
                         <th style="padding : 0px 4px;min-width:110px;" >PPE</th>
+                        <th style="padding : 0px 4px;min-width:110px;" >Office Acct</th>
                        
                         <th style="padding : 0px 4px;min-width:110px;" >Total Deduction</th>
                         <th style="padding : 0px 4px;min-width:110px;" >Net Pay</th>
@@ -194,8 +195,9 @@
                                         <td style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($employee->gross_total > 0) ? number_format($employee->gross_total,2) : '' }}</td>
                                         <td style="text-align:right;"> {{ ($employee->otherEarnings['cash_advance']>0) ? number_format($employee->otherEarnings['cash_advance'],2) : ''; }}</td>
                                         <td style="text-align:right;"> {{ ($employee->otherEarnings['canteen']>0) ? number_format($employee->otherEarnings['canteen'],2) : ''; }}</td>
+                                       
                                         <td style="text-align:right;"> {{ ($employee->otherEarnings['deductions']>0) ? number_format($employee->otherEarnings['deductions'],2) : ''; }}</td>
-
+                                        <td style="text-align:right;"> {{ ($employee->otherEarnings['office_account']>0) ? number_format($employee->otherEarnings['office_account'],2) : ''; }}</td>
                                     <td style="text-align:right;font-weight:bold;border-bottom:1px solid;" >{{ ($employee->total_deduction>0) ? number_format($employee->total_deduction,2) : ''; }}</td>
                                     <td style="text-align:right;font-weight:bold;border-bottom:double;{{ ($employee->net_pay < ($employee->gross_total*0.3)) ? 'color:red'  : '' }};" >{{ ($employee->net_pay>0) ? number_format($employee->net_pay,2) :  number_format($employee->net_pay,2) }}</td>
                                 </tr>

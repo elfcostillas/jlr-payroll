@@ -63,6 +63,7 @@ class WeeklyDeductionController extends Controller
                                                         "deductions" => $line['deductions'],
                                                         "retro_pay" => $line['retro_pay'],
                                                         "canteen" => $line['canteen'],
+                                                        "office_account" => $line['office_account'],
                                                         "remarks2" => $line['remarks2']
                                                     ]);
         }

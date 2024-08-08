@@ -64,6 +64,7 @@ class OtherIncomeWeeklyAppController extends Controller
                                                         "canteen_agg" => $line['canteen_agg'],
                                                         "remarks2" => $line['remarks2'],
                                                         "cash_advance" => $line['cash_advance'],
+                                                        "office_account" => $line['office_account']
                                                     ]);
         }
 

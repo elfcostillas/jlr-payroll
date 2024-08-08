@@ -110,7 +110,7 @@
                 $location_canteen_total = 0;
                 $location_cash_advance = 0;
 
-                $colspan = 6; 
+                $colspan = 7; 
 
                 $location_basic = 0;
 
@@ -132,7 +132,7 @@
 
             <table border=1  style="width:100%;border-collapse:collapse;margin-bottom:6px;" class="btable">
                 <tr>
-                    <td colspan={{ 16 + $additional }} > {{ $location->location_name }}</td>  
+                    <td colspan={{ 18 + $additional }} > {{ $location->location_name }}</td>  
                 </tr>
                 <thead>
                     <tr>
@@ -156,6 +156,7 @@
                         <th>Cash Advance</th>
                         <th> Canteen </th>
                         <th> PPE </th>
+                        <th> Office Acct. </th>
                         <th> Total Deduction</th>
                         <th> Net Pay</th>
                     
@@ -180,10 +181,10 @@
                            
                         }
      
-                        $color = ($employee->ndays==7) ? 'background-color:yellow ': '' ;
-                        $circle = ($employee->ndays==7) ? 'circle': '' ;
+                        $color = ($employee->ndays>=7) ? 'background-color:yellow ': '' ;
+                        $circle = ($employee->ndays>=7) ? 'circle': '' ;
 
-                        $entitled = ($employee->ndays==7) ? true : false;
+                        $entitled = ($employee->ndays>=7) ? true : false;
 
                         $entitled2 = ($employee->reg_ot >= 30) ? true : false;
 
@@ -393,6 +394,7 @@
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['cash_advance']>0) ? number_format($employee->otherEarnings['cash_advance'],2) : ''; }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['canteen']>0) ? number_format($employee->otherEarnings['canteen'],2) : ''; }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['deductions']>0) ? number_format($employee->otherEarnings['deductions'],2) : ''; }}</td>
+                        <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['office_account']>0) ? number_format($employee->otherEarnings['office_account'],2) : ''; }}</td>
 
                         <td class="pr4"  style="text-align:right;font-weight:bold;" >{{ ($employee->total_deduction>0) ? number_format($employee->total_deduction,2) : ''; }}</td>
                         <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:double;{{ ($employee->net_pay < ($employee->gross_total*0.3)) ? 'color:red'  : '' }};" >{{ ($employee->net_pay>0) ? number_format($employee->net_pay,2) :  number_format($employee->net_pay,2) }}</td>
