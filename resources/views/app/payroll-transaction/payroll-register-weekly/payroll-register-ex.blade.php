@@ -34,6 +34,7 @@
         $over_all_total_ded = 0;
         $over_all_ppe = 0;
         $over_all_ca_total = 0;
+        $over_all_office_account = 0;
 
         foreach($headers as $key => $val)
         {
@@ -82,6 +83,7 @@
                 
                 $location_ppe = 0;
                 $location_total_ded =0;
+                $location_office_account = 0;
 
                 foreach($headers as $key => $val)
                 {
@@ -116,6 +118,7 @@
                         <th> Cash Advance </th>
                         <th> Canteen </th>
                         <th> PPE </th>
+                        <th> Office Acct. </th>
                         <th> Total Deduction</th>
                         <th> Net Pay</th>
                     
@@ -144,7 +147,7 @@
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->late_eq_amount>0) ? $employee->late_eq_amount : ''; }}</td>
                        
                         @foreach($headers as $key => $val)
-                            <td class="pr4"  style="text-align:right;">{{ ($employee->$key > 0) ? number_format($employee->$key,2) : '' }}</td>
+                            <td class="pr4"  style="text-align:right;">{{ ($employee->$key > 0) ? $employee->$key : '' }}</td>
                     
                             <?php
                                   $location_dynamicCol[$key] += $employee->$key;
@@ -157,7 +160,7 @@
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['cash_advance']>0) ? $employee->otherEarnings['cash_advance'] : ''; }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['canteen']>0) ? $employee->otherEarnings['canteen'] : ''; }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['deductions']>0) ? $employee->otherEarnings['deductions'] : ''; }}</td>
-
+                        <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['office_account']>0) ? $employee->otherEarnings['office_account'] : ''; }}</td>
                         <td class="pr4"  style="text-align:right;font-weight:bold;" >{{ ($employee->total_deduction>0) ? $employee->total_deduction : ''; }}</td>
                         <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:double;" >{{ ($employee->net_pay>0) ? $employee->net_pay :  $employee->net_pay }}</td>
                     </tr>
@@ -183,6 +186,7 @@
                         $location_retro_pay =($employee->otherEarnings['retro_pay']>0) ? $employee->otherEarnings['retro_pay']: 0;  
 
                         $location_ppe += $employee->otherEarnings['deductions'];
+                        $location_office_account+= $employee->otherEarnings['office_account'];
                         $location_total_ded +=$employee->total_deduction;
                     ?>
 
@@ -210,6 +214,7 @@
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_cash_advance > 0) ? $location_cash_advance : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_canteen_total > 0) ? $location_canteen_total : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_ppe > 0) ? $location_ppe : '' }}</td>
+                    <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_office_account > 0) ? $location_office_account : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_total_ded > 0) ? $location_total_ded : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_gtotal > 0) ? $location_gtotal : '' }}</td>
                    
@@ -231,6 +236,7 @@
 
                 $over_all_total_ded += $location_total_ded;
                 $over_all_ppe += $location_ppe;
+                $over_all_office_account += $location_office_account;
             
         @endphp
        
@@ -263,6 +269,8 @@
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_ca_total }}</td>
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_cantenn_total }}</td>
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_ppe }}</td>
+            <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_office_account }}</td>
+           
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_total_ded }}</td>
             
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_net_total }}</td>
