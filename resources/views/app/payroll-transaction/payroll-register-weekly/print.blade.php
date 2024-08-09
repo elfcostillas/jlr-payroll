@@ -74,6 +74,7 @@
         $over_all_basic_pay =0;
 
         $over_all_total_ded = 0;
+        $over_all_office_account = 0;
         $over_all_ppe = 0;
 
         foreach($headers as $key => $val)
@@ -110,7 +111,7 @@
                 $location_canteen_total = 0;
                 $location_cash_advance = 0;
 
-                $colspan = 7; 
+                $colspan = 6; 
 
                 $location_basic = 0;
 
@@ -122,6 +123,7 @@
 
                 $location_ppe = 0;
                 $location_total_ded =0;
+                $location_office_account = 0;
 
                 foreach($headers as $key => $val)
                 {
@@ -422,6 +424,7 @@
                         $location_retro_pay =($employee->otherEarnings['retro_pay']>0) ? $employee->otherEarnings['retro_pay']: 0;  
 
                         $location_ppe += $employee->otherEarnings['deductions'];
+                        $location_office_account+= $employee->otherEarnings['office_account'];
                         $location_total_ded +=$employee->total_deduction;
                     ?>
 
@@ -449,6 +452,7 @@
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_cash_advance > 0) ? number_format($location_cash_advance,2) : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_canteen_total > 0) ? number_format($location_canteen_total,2) : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_ppe > 0) ? number_format($location_ppe,2) : '' }}</td>
+                    <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_office_account > 0) ? number_format($location_office_account,2) : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_total_ded > 0) ? number_format($location_total_ded,2) : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_gtotal > 0) ? number_format($location_gtotal,2) : '' }}</td>
                    
@@ -469,6 +473,7 @@
 
                 $over_all_total_ded += $location_total_ded;
                 $over_all_ppe += $location_ppe;
+                $over_all_office_account += $location_office_account;
                 
             @endphp
 
@@ -499,6 +504,7 @@
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_ca_total,2) }}</td>
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_cantenn_total,2) }}</td>
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_ppe,2) }}</td>
+            <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_office_account,2) }}</td>
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_total_ded,2) }}</td>
             
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_net_total,2) }}</td>
