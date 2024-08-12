@@ -541,33 +541,33 @@
 
              
             ?>
-        
-            <table border=1 style="page-break-inside:avoid;border-collapse:collapse; width:200px; float:left;margin-right:12px;">
-            <tr>
-                <td colspan=3 style="padding:2px;width:180px" >{{ $loc->location_name }}</td>
-            </tr>
-                @if($loc->employees->count()>0)
-                    @foreach($loc->summary as $dept => $count)
-                        @if(is_array($count))
-                            @foreach($count as $key => $value)
-                                <tr>
-                                    <td style="width:80px" >{{ $dept }}</td>
-                                    <td style="width:80px"> {{ $key }}</td>
-                                    <td style="width:40px;padding-right:5px;text-align:right;" >{{ $value }}</td>
-                                    @php $locTotal += $value; @endphp
-                                </tr>
-                            @endforeach
-                        @endif
-                        
-
-                    @endforeach
-                @endif
+            @if($loc->employees->count()>0)
+                <table border=1 style="page-break-inside:avoid;border-collapse:collapse; width:200px; float:left;margin-right:12px;">
                 <tr>
-                    <td colspan=2 >TOTAL</td>
-                    <td style="width:30px;padding-right:5px;text-align:right;" >{{ $locTotal }} </td>
+                    <td colspan=3 style="padding:2px;width:180px" >{{ $loc->location_name }}</td>
                 </tr>
-            </table>
+                    @if($loc->employees->count()>0)
+                        @foreach($loc->summary as $dept => $count)
+                            @if(is_array($count))
+                                @foreach($count as $key => $value)
+                                    <tr>
+                                        <td style="width:80px" >{{ $dept }}</td>
+                                        <td style="width:80px"> {{ $key }}</td>
+                                        <td style="width:40px;padding-right:5px;text-align:right;" >{{ $value }}</td>
+                                        @php $locTotal += $value; @endphp
+                                    </tr>
+                                @endforeach
+                            @endif
+                            
 
+                        @endforeach
+                    @endif
+                    <tr>
+                        <td colspan=2 >TOTAL</td>
+                        <td style="width:30px;padding-right:5px;text-align:right;" >{{ $locTotal }} </td>
+                    </tr>
+                </table>
+            @endif
         @endforeach
 
         <div style="display:block;position:relative;clear:both;margin-top:8px;">
