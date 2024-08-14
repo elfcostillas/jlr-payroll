@@ -198,7 +198,7 @@
                             $jtFill = 'white';
                         }
 
-                        if($employee->gross_total >= 4500)
+                        if($employee->gross_total >= 4500 && ( $employee->retired !='Y' &&  $employee->job_title_name != 'Transit Mixer Driver' ) )
                         {
                             $fourfive = 'yellow';
                             $fourfive_count++;
