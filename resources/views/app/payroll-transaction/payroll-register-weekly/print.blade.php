@@ -32,6 +32,8 @@
     <?php 
 
         use Illuminate\Support\Facades\Auth;
+
+        $fourfive_count = 0;
         
         $arr = [];
 
@@ -130,7 +132,7 @@
                     $location_dynamicCol[$key] = 0;
                 }
 
-                $fourfive_count = 0;
+               
 
             ?>
 
