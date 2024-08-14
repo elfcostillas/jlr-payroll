@@ -130,6 +130,8 @@
                     $location_dynamicCol[$key] = 0;
                 }
 
+                $fourfive_count = 0;
+
             ?>
 
             <table border=1  style="width:100%;border-collapse:collapse;margin-bottom:6px;" class="btable">
@@ -179,8 +181,6 @@
                             $stylee = 'white';
                             $stylee = '';
 
-                            
-                           
                         }
      
                         $color = ($employee->ndays>=7) ? 'background-color:yellow ': '' ;
@@ -196,6 +196,14 @@
                         }else{
                             $jtCircle = '';
                             $jtFill = 'white';
+                        }
+
+                        if($employee->gross_total >= 4500)
+                        {
+                            $fourfive = 'yellow';
+                            $fourfive_count++;
+                        }else{
+                            $fourfive = 'white';
                         }
 
                        
@@ -392,7 +400,7 @@
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['earnings']>0) ? number_format($employee->otherEarnings['earnings'],2) : ''; }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['retro_pay']>0) ? number_format($employee->otherEarnings['retro_pay'],2) : ''; }}</td>
 
-                        <td class="pr4"  style="text-align:right;font-weight:bold;">{{ ($employee->gross_total > 0) ? number_format($employee->gross_total,2) : '' }}</td>
+                        <td class="pr4"  style="text-align:right;font-weight:bold;background-color:{{$fourfive}};">{{ ($employee->gross_total > 0) ? number_format($employee->gross_total,2) : '' }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['cash_advance']>0) ? number_format($employee->otherEarnings['cash_advance'],2) : ''; }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['canteen']>0) ? number_format($employee->otherEarnings['canteen'],2) : ''; }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['deductions']>0) ? number_format($employee->otherEarnings['deductions'],2) : ''; }}</td>
@@ -588,6 +596,17 @@
             
                 
             ?>
+
+            <table border=1 style="border-collapse: collapse;float:left;margin-left :8px;">
+                <tr>
+                    <td style="padding:2px;"> Gross Pay more than 4,500 </td>
+                </tr>
+                <tr>
+                    <td style="padding:2px;text-align:center"> {{ $fourfive_count }} </td>
+      
+                </tr>
+               
+            </table>
 
             @foreach($otReport2 as $table)
             
