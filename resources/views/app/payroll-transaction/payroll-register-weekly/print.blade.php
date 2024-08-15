@@ -532,11 +532,14 @@
                 <td colspan=2> No of Employees</td> 
 
                 @foreach($data as $loc)
-                    <tr>
-                        <td style="padding:2px;width:180px" >{{ $loc->location_name }}</td>
-                        <td style="padding-right:5px;text-align:right;" >{{ $loc->employees->count() }} </td>
-                    </tr>
-                    {{$total += $loc->employees->count(); }}
+			@if($loc->employees->count()>0)
+					 <tr>
+						<td style="padding:2px;width:180px" >{{ $loc->location_name }}</td>
+						<td style="padding-right:5px;text-align:right;" >{{ $loc->employees->count() }} </td>
+					    </tr>
+					    {{$total += $loc->employees->count(); }}
+			@endif
+   
                 @endforeach
                 <tr>
                     <td>TOTAL</td>
