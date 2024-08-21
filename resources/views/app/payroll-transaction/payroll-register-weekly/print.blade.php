@@ -83,6 +83,8 @@
         {
             $over_all_dynamicCol[$key] = 0;
         }
+
+        $otherOTTotal = [];
     ?>
 
     <table border=0 style="width:100%;margin-bottom:2px;">
@@ -171,6 +173,43 @@
                 @foreach($location->employees as $employee)
 
                     <?php
+
+                        // QAD SSDiv RMC RMD  // otherOTTotal
+                    if($employee->reg_ot >= 30)
+                    {
+                        switch($employee->div_code)
+                        {
+                            case 'RMC';
+                                if($employee->dept_code=='QA'){
+                                    if(array_key_exists($employee->dept_code,$otherOTTotal))
+                                    {
+                                        $otherOTTotal[$employee->dept_code] += 1;
+                                    }else{
+                                        $otherOTTotal[$employee->dept_code] = 1;
+                                    }
+                                }else{
+                                    if(array_key_exists($employee->div_code,$otherOTTotal))
+                                    {
+                                        $otherOTTotal[$employee->div_code] += 1;
+                                    }else{
+                                        $otherOTTotal[$employee->div_code] = 1;
+                                    }
+                                }
+                               
+                            
+                            break;
+
+                            default :
+                                if(array_key_exists($employee->div_code,$otherOTTotal))
+                                {
+                                    $otherOTTotal[$employee->div_code] += 1;
+                                }else{
+                                    $otherOTTotal[$employee->div_code] = 1;
+                                }
+                            break;
+                        }
+                    }
+                    
                         $entitled = false;
                         $entitled2 = false;
 
@@ -613,9 +652,20 @@
                
             </table>
 
+            <table border=1 style="border-collapse: collapse;float:left;margin-left :8px;">
+                <tr >
+                    <td colspan=2 style="padding:0px 4px;"> Over Time >= 30 </td>
+                </tr>
+                @foreach($otherOTTotal as $key => $val)
+                    <td style="padding-left:4px;"> {{ $key }} </td>
+                    <td style="text-align:center"> {{ $val }} </td>
+                @endforeach 
+               
+            </table>
+
             @foreach($otReport2 as $table)
             
-                <table border=1 style="border-collapse:collapse;float:left;margin-left:21px;;width:300px;">
+                <table border=1 style="border-collapse:collapse;float:left;margin-left:14px;;width:300px;">
                     <tr>
                         <td colspan=3  style="padding:2px;text-align:center;"> {{ $ot_summ_label[$table] }}</td>
                     </tr>
@@ -634,6 +684,8 @@
                 </table>
             @endforeach
         </div>
+
+    
 
         <div style="display:block;position:relative;clear:both;">
             <table style="width:100%;margin-top:16px;" border=0>

@@ -475,12 +475,13 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         {
             
             $user = Auth::user();
-            $employees = $this->model->select(DB::raw("employees.biometric_id,COALESCE(department_category.description,dept_code) dept_code,job_title_name,employee_names_vw.employee_name,payrollregister_unposted_weekly.*,employees.pay_type,employees.monthly_allowance as mallowance,
+            $employees = $this->model->select(DB::raw("employees.biometric_id,COALESCE(department_category.description,dept_code) dept_code,division_id,div_code,job_title_name,employee_names_vw.employee_name,payrollregister_unposted_weekly.*,employees.pay_type,employees.monthly_allowance as mallowance,
             employees.daily_allowance as dallowance,IF(employees.pay_type=1,employees.basic_salary/2,employees.basic_salary) AS basicpay,retired"))
                                     ->from("payrollregister_unposted_weekly")        
                                     ->join("employees",'employees.biometric_id','=','payrollregister_unposted_weekly.biometric_id')
                                     ->join("employee_names_vw",'employee_names_vw.biometric_id','=','payrollregister_unposted_weekly.biometric_id')
                                     ->leftJoin('departments','departments.id','=','employees.dept_id')
+                                    ->leftJoin('divisions','divisions.id','=','employees.division_id')
                                     ->leftJoin('job_titles','employees.job_title_id','=','job_titles.id')
                                     ->leftJoin('weekly_tmp_locations',function($join) use ($period){
                                         $join->on('weekly_tmp_locations.biometric_id','=','employees.biometric_id');
