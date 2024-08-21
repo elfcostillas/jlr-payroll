@@ -87,7 +87,7 @@
                 <td style="width:10%;padding-left:9px;">No</td>
                 <td style="width:25%;padding-left:9px;"> Date</td>
                 <td style="width:40%;padding-left:9px;">Time Logs</td>
-                <td style="width:25%;padding-left:9px;"></td>
+                <td style="width:25%;padding-left:9px;">Hours Equivalent</td>
             </tr>
             @php $ctr=1; @endphp
             @foreach($details as $d)
@@ -98,7 +98,7 @@
                     <td style="text-align:center">{{ $ctr++ }} </td>
                     <td style="padding-left:9px;">{{ $dtr_date->format('m/d/Y') }}</td>
                     <td style="padding-left:9px;"> {{ $d->time_in }} - {{ $d->time_out }}</td>
-                    <td style="padding-left:9px;"> {{ round( $d->in_minutes/60,2) }}</td>
+                    <td style="padding-left:9px;"> {{ round( $d->in_minutes/60,2) }} hrs.</td>
                 </tr>
             @endforeach
         </table>
