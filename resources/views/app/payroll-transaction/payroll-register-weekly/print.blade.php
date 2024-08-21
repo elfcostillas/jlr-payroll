@@ -654,7 +654,7 @@
 
             <table border=1 style="border-collapse: collapse;float:left;margin-left :8px;">
                 <tr >
-                    <td colspan=2 style="padding:0px 4px;"> Over Time >= 30 </td>
+                    <td colspan=2 style="padding:0px 4px;"> Over Time >= 30++ </td>
                 </tr>
                 @foreach($otherOTTotal as $key => $val)
                 <tr>
