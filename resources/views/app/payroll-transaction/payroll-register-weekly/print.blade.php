@@ -657,8 +657,10 @@
                     <td colspan=2 style="padding:0px 4px;"> Over Time >= 30 </td>
                 </tr>
                 @foreach($otherOTTotal as $key => $val)
+                <tr>
                     <td style="padding-left:4px;"> {{ $key }} </td>
                     <td style="text-align:center"> {{ $val }} </td>
+                </tr>
                 @endforeach 
                
             </table>
