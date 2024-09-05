@@ -1043,7 +1043,8 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                             // $rec->sphol_pay = ($rec->ndays==0 || $rec->ndays =='') ? 1 : 0;
 
                             if($flag){
-                                $rec->sphol_pay = 1;
+                                $rec->sphol_pay = 0;
+                                // $rec->sphol_pay = 1;
                                 // $rec->ndays = 0;
                             }else{
                                 // if($rec->reghol_pay!=0){
