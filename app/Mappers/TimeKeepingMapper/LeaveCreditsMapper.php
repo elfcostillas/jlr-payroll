@@ -177,7 +177,53 @@ SELECT biometric_id,ROUND(SUM(with_pay)/8,2)
     }
 
     function getBalance($year,$start,$end,$biometric_id){
-        $qry = "  SELECT employees.biometric_id,lastname,firstname,suffixname,IFNULL(vacation_leave,0) vacation_leave,IFNULL(sick_leave,0) sick_leave,
+        $qry = "SELECT employees.biometric_id,lastname,firstname,suffixname,IFNULL(vacation_leave,0) vacation_leave,IFNULL(sick_leave,0) sick_leave,IFNULL(summer_vacation_leave,0) summer_vacation_leave,
+        IFNULL(VL_PAY,0) VL_PAY,IFNULL(SL_PAY,0) SL_PAY,IFNULL(SVL_PAY,0) SVL_PAY
+        FROM employees LEFT JOIN leave_credits ON leave_credits.biometric_id = employees.biometric_id
+        LEFT JOIN (
+          SELECT biometric_id,ROUND(SUM(with_pay)/8,2) AS VL_PAY FROM leave_request_header 
+              INNER JOIN leave_request_detail ON leave_request_header.id = header_id
+          WHERE leave_date BETWEEN '$start' AND '$end'  AND leave_request_header.acknowledge_status = 'Approved' AND document_status = 'POSTED'
+          AND with_pay > 0
+          AND is_canceled = 'N'
+          AND leave_type in ('VL','EL')
+          AND leave_request_header.received_by IS NOT NULL
+          GROUP BY biometric_id
+      ) AS vl ON employees.biometric_id = vl.biometric_id
+       LEFT JOIN (
+          SELECT biometric_id,ROUND(SUM(with_pay)/8,2) AS SL_PAY FROM leave_request_header 
+              INNER JOIN leave_request_detail ON leave_request_header.id = header_id
+          WHERE leave_date BETWEEN '$start' AND '$end' AND leave_request_header.acknowledge_status = 'Approved' AND document_status = 'POSTED'
+          AND with_pay > 0
+          AND is_canceled = 'N'
+          AND leave_type = 'SL'
+          AND leave_request_header.received_by IS NOT NULL
+          GROUP BY biometric_id
+      ) AS sl ON employees.biometric_id = sl.biometric_id
+       LEFT JOIN (
+          SELECT biometric_id,ROUND(SUM(with_pay)/8,2) AS SVL_PAY FROM leave_request_header 
+              INNER JOIN leave_request_detail ON leave_request_header.id = header_id
+          WHERE leave_date BETWEEN '$start' AND '$end' AND leave_request_header.acknowledge_status = 'Approved' AND document_status = 'POSTED'
+          AND with_pay > 0
+          AND is_canceled = 'N'
+          AND leave_type = 'SVL'
+          AND leave_request_header.received_by IS NOT NULL
+          GROUP BY biometric_id
+      ) AS svl ON employees.biometric_id = svl.biometric_id
+        WHERE leave_credits.fy_year = $year and employees.biometric_id = $biometric_id;";
+
+        $result = DB::select($qry);
+
+        return $result;
+
+    }
+
+
+}
+
+/*
+
+SELECT employees.biometric_id,lastname,firstname,suffixname,IFNULL(vacation_leave,0) vacation_leave,IFNULL(sick_leave,0) sick_leave,
         IFNULL(VL_PAY,0) VL_PAY,IFNULL(SL_PAY,0) SL_PAY
         FROM employees LEFT JOIN leave_credits ON leave_credits.biometric_id = employees.biometric_id
         LEFT JOIN (
@@ -200,18 +246,44 @@ SELECT biometric_id,ROUND(SUM(with_pay)/8,2)
           AND leave_request_header.received_by IS NOT NULL
           GROUP BY biometric_id
       ) AS sl ON employees.biometric_id = sl.biometric_id
-        WHERE leave_credits.fy_year = $year and employees.biometric_id = $biometric_id;";
+        WHERE leave_credits.fy_year = $year and employees.biometric_id = $biometric_id;
 
-        $result = DB::select($qry);
+SELECT employees.biometric_id,lastname,firstname,suffixname,IFNULL(vacation_leave,0) vacation_leave,IFNULL(sick_leave,0) sick_leave,IFNULL(summer_vacation_leave,0) summer_vacation_leave,
+        IFNULL(VL_PAY,0) VL_PAY,IFNULL(SL_PAY,0) SL_PAY,IFNULL(SVL_PAY,0) SVL_PAY
+        FROM employees LEFT JOIN leave_credits ON leave_credits.biometric_id = employees.biometric_id
+        LEFT JOIN (
+          SELECT biometric_id,ROUND(SUM(with_pay)/8,2) AS VL_PAY FROM leave_request_header 
+              INNER JOIN leave_request_detail ON leave_request_header.id = header_id
+          WHERE leave_date BETWEEN '2024-01-01' AND '2024-12-31'  AND leave_request_header.acknowledge_status = 'Approved' AND document_status = 'POSTED'
+          AND with_pay > 0
+          AND is_canceled = 'N'
+          AND leave_type in ('VL','EL')
+          AND leave_request_header.received_by IS NOT NULL
+          GROUP BY biometric_id
+      ) AS vl ON employees.biometric_id = vl.biometric_id
+       LEFT JOIN (
+          SELECT biometric_id,ROUND(SUM(with_pay)/8,2) AS SL_PAY FROM leave_request_header 
+              INNER JOIN leave_request_detail ON leave_request_header.id = header_id
+          WHERE leave_date BETWEEN '2024-01-01' AND '2024-12-31' AND leave_request_header.acknowledge_status = 'Approved' AND document_status = 'POSTED'
+          AND with_pay > 0
+          AND is_canceled = 'N'
+          AND leave_type = 'SL'
+          AND leave_request_header.received_by IS NOT NULL
+          GROUP BY biometric_id
+      ) AS sl ON employees.biometric_id = sl.biometric_id
+       LEFT JOIN (
+          SELECT biometric_id,ROUND(SUM(with_pay)/8,2) AS SVL_PAY FROM leave_request_header 
+              INNER JOIN leave_request_detail ON leave_request_header.id = header_id
+          WHERE leave_date BETWEEN '2024-01-01' AND '2024-12-31' AND leave_request_header.acknowledge_status = 'Approved' AND document_status = 'POSTED'
+          AND with_pay > 0
+          AND is_canceled = 'N'
+          AND leave_type = 'SVL'
+          AND leave_request_header.received_by IS NOT NULL
+          GROUP BY biometric_id
+      ) AS svl ON employees.biometric_id = svl.biometric_id
+        WHERE leave_credits.fy_year = 2024 and employees.biometric_id = 834;
 
-        return $result;
 
-    }
-
-
-}
-
-/*
 SELECT * FROM employees LEFT JOIN departments ON employees.dept_id = departments.id
 LEFT JOIN divisions ON divisions.id = division_id
 LEFT JOIN job_titles ON job_titles.id = employees.job_title_id

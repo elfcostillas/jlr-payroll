@@ -135,9 +135,11 @@ class LeaveRequestController extends Controller
             if($consumed){
                 $balance_vl = ($consumed[0]->vacation_leave - $consumed[0]->VL_PAY) * 8;  
                 $balance_sl = ($consumed[0]->sick_leave - $consumed[0]->SL_PAY) * 8;   
+                $balance_svl = ($consumed[0]->summer_vacation_leave - $consumed[0]->SVL_PAY) * 8;   
             }else {
                 $balance_vl = 0;
                 $balance_sl = 0;
+                $balance_svl = 0;
             }
 
             $w_pay = ($request->with_pay) ? $request->with_pay : 0;
@@ -146,6 +148,8 @@ class LeaveRequestController extends Controller
             if($header->leave_type == 'BL' || $header->leave_type == 'UT' || $header->leave_type == 'O '){
             
             }else {
+
+                /*
                 if($header->leave_type == 'SL'){
                     //if($balance_sl>0){
                     //  dd($balance_sl-$w_pay>=0,$w_pay>0);
@@ -173,8 +177,47 @@ class LeaveRequestController extends Controller
                         // $ye_pay = 0;
                         // $no_pay = $w_pay + $wo_pay;
                     }
-
                 
+                }
+                */
+
+                switch($header->leave_type)
+                {
+                    case 'SL':
+                        if(($balance_sl-$w_pay)>=0 || ($w_pay==0)){
+                            $ye_pay = ($balance_sl - $w_pay >=0) ? $w_pay : $w_pay - $balance_sl;
+                            $no_pay = ($balance_sl - $w_pay >=0) ? $wo_pay : ($balance_sl - $w_pay) + $wo_pay;
+                            //$balance_sl = ($balance_sl- $ye_pay <= 0) ? 0 : $balance_sl- $ye_pay;
+                        }else {
+                            return response()->json(['error' => 'Insufficient sick leave credits.'])->setStatusCode(500, 'Error');
+                            // $ye_pay = 0;
+                            // $no_pay = $w_pay + $wo_pay;
+                        }
+                        break;
+
+                    case 'VL':
+                        if(($balance_vl-$w_pay)>=0 || ($w_pay==0)){
+                            $ye_pay = ($balance_vl - $w_pay >=0) ? $w_pay : $w_pay - $balance_vl;
+                            $no_pay = ($balance_vl - $w_pay >=0) ? $wo_pay : ($balance_vl - $w_pay) + $wo_pay;
+                            $balance_vl = ($balance_vl- $ye_pay <= 0) ? 0 : $balance_vl- $ye_pay;
+                        }else {
+                            return response()->json(['error' => 'Insufficient vacation leave credits.'])->setStatusCode(500, 'Error');
+                            // $ye_pay = 0;
+                            // $no_pay = $w_pay + $wo_pay;
+                        }
+                        break;
+
+                    case 'SVL':
+                        if(($balance_svl-$w_pay)>=0 || ($w_pay==0)){
+                            $ye_pay = ($balance_svl - $w_pay >=0) ? $w_pay : $w_pay - $balance_svl;
+                            $no_pay = ($balance_svl - $w_pay >=0) ? $wo_pay : ($balance_svl - $w_pay) + $wo_pay;
+                            $balance_svl = ($balance_svl- $ye_pay <= 0) ? 0 : $balance_svl- $ye_pay;
+                        }else {
+                            return response()->json(['error' => 'Insufficient summer vacation leave credits.'])->setStatusCode(500, 'Error');
+                            // $ye_pay = 0;
+                            // $no_pay = $w_pay + $wo_pay;
+                        }
+                        break;
                 }
             }
 
