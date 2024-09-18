@@ -22,7 +22,7 @@
         }
 
         @page {
-            margin : 96px 24px 24px 24px;
+            margin : 92px 24px 24px 24px;
         }
     </style>
 </head>
@@ -140,7 +140,7 @@
 
             <table border=1  style="width:100%;border-collapse:collapse;margin-bottom:6px;" class="btable">
                 <tr>
-                    <td colspan={{ 18 + $additional }} > {{ $location->location_name }}</td>  
+                    <td colspan={{ 16 + $additional }} > {{ $location->location_name }}</td>  <!-- from 18 -> 16 --!>
                 </tr>
                 <thead>
                     <tr>
@@ -151,8 +151,8 @@
                         <th >Daily Rate</th>
                         <th >No Days</th>
                         <th >Basic Pay</th>
-                        <th >Late (Hrs)</th>
-                        <th >Late Amount</th>
+                       <!--  <th >Late (Hrs)</th>
+                        <th >Late Amount</th>  -->
                     
                         @foreach($headers as $key => $val)
                             <th >{{ $label[$key] }}</th>
@@ -258,8 +258,8 @@
                         <td class="" style="text-align:right;"> <div class="">{{ number_format($employee->daily_rate,2) }} </div> </td>
                         <td class="pr4" style="text-align:right;{{$color}}"> <div class="{{ $circle}}">{{ number_format($employee->ndays,2) }}</div> </td>
                         <td class="pr4"  style="text-align:right;"> {{ number_format($employee->basic_pay,2) }}</td>
-                        <td class="pr4"  style="text-align:right;"> {{ ($employee->late_eq>0) ? number_format($employee->late_eq,2) : ''; }}</td>
-                        <td class="pr4"  style="text-align:right;"> {{ ($employee->late_eq_amount>0) ? number_format($employee->late_eq_amount,2) : ''; }}</td>
+                     <!--    <td class="pr4"  style="text-align:right;"> {{ ($employee->late_eq>0) ? number_format($employee->late_eq,2) : ''; }}</td>
+                        <td class="pr4"  style="text-align:right;"> {{ ($employee->late_eq_amount>0) ? number_format($employee->late_eq_amount,2) : ''; }}</td> -->
                        
                         @foreach($headers as $key => $val)
                             <?php
@@ -273,7 +273,7 @@
                             ?>
 
                             <?php
-                            if(($employee->$key >= 30 && $employee->$key <=39) && $key == 'reg_ot'){
+                            if(($employee->$key >= 30 && $employee->$key <40) && $key == 'reg_ot'){
                                 $ot_summ_value[3] +=1;
 
                                 if(!in_array(3,$otReport2)){
@@ -300,7 +300,7 @@
                                
                             }
 
-                            if(($employee->$key >= 40 && $employee->$key <=49) && $key == 'reg_ot'){
+                            if(($employee->$key >= 40 && $employee->$key <50) && $key == 'reg_ot'){
                                 $ot_summ_value[4] +=1;
 
                                 if(!in_array(4,$otReport2)){
@@ -328,7 +328,7 @@
                               
                             }
 
-                            if(($employee->$key >= 50 && $employee->$key <=59) && $key == 'reg_ot'){
+                            if(($employee->$key >= 50 && $employee->$key <60) && $key == 'reg_ot'){
                                 $ot_summ_value[5] +=1;
 
                                 if(!in_array(5,$otReport2)){
@@ -355,7 +355,7 @@
                               
                             }
 
-                            if(($employee->$key >= 60 && $employee->$key <=69) && $key == 'reg_ot'){
+                            if(($employee->$key >= 60 && $employee->$key <70) && $key == 'reg_ot'){
                                 $ot_summ_value[6] +=1;
 
                                 if(!in_array(6,$otReport2)){
@@ -383,7 +383,7 @@
                                
                             }
 
-                            if(($employee->$key >= 70 && $employee->$key <=79) && $key == 'reg_ot'){
+                            if(($employee->$key >= 70 && $employee->$key <80) && $key == 'reg_ot'){
                                 $ot_summ_value[7] +=1;
 
                                 if(!in_array(7,$otReport2)){
@@ -481,8 +481,8 @@
                 <tr>
                     <td colspan = {{ $colspan }} style="text-align:right;padding-right:4px;" > <b>SUB TOTAL </b></td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;"> {{ ($location_basic > 0) ? number_format($location_basic,2) : ''  }}</td> <!-- BASIC -->
-                    <td class="pr4"></td><!-- Late Hrs -->
-                    <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_late_amount > 0) ? number_format($location_late_amount,2) : '' }}</td>
+                 <!--    <td class="pr4"></td>
+                    <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_late_amount > 0) ? number_format($location_late_amount,2) : '' }}</td> -->
                     @foreach($headers as $key => $val)
 
                         @if(str_contains($key,'amount'))
@@ -536,8 +536,8 @@
         <tr>
             <td style="text-align:right;padding-right:4px;" > <b>GRAND TOTAL </b></td>
             <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_basic_pay,2) }}</td> <!-- BASIC -->
-            <td class="pr4"></td> <!-- LATE HRS -->
-            <td class="pr4"></td> <!-- LATE AMT -->
+            <!--<td class="pr4"></td>  LATE HRS 
+            <td class="pr4"></td> LATE AMT -->
           
             @foreach($headers as $key => $val)
                 @if(str_contains($key,'amount'))
