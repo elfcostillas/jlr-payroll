@@ -12,7 +12,7 @@
         .pr4{
             text-align : right;
             padding-right : 4px;
-            width: 48px;
+            width: 52px;
         }
 
         .circle {
@@ -85,6 +85,9 @@
         }
 
         $otherOTTotal = [];
+
+        $departmentalTotalNet = [];
+        $departmentalTotalGross = [];
     ?>
 
     <table border=0 style="width:100%;margin-bottom:2px;">
@@ -155,7 +158,7 @@
                         <th >Late Amount</th>  -->
                     
                         @foreach($headers as $key => $val)
-                            <th >{{ $label[$key] }}</th>
+                            <th>{{ $label[$key] }}</th>
                           
                         @endforeach
                         <th >Other Earnings</th>
@@ -247,7 +250,21 @@
                             $fourfive = 'white';
                         }
 
-                       
+                        
+                        if(!isset($departmentalTotalNet[$employee->dept_code]))
+                        {
+                            $departmentalTotalNet[$employee->dept_code] = 0;
+                        }
+                        $departmentalTotalNet[$employee->dept_code] += $employee->net_pay;
+
+                        if(!isset($departmentalTotalGross[$employee->dept_code]))
+                        {
+                            $departmentalTotalGross[$employee->dept_code] = 0;
+                        }
+
+                        $departmentalTotalGross[$employee->dept_code] += $employee->gross_total;
+
+
                     ?>
                     
                     <tr style="{{ $stylee }};">
@@ -255,7 +272,7 @@
                         <td style="width:72px; white-space: nowrap;" >  {{ $employee->dept_code }}</td>
                         <td style="width:86px; white-space: nowrap;background-color:{{$jtFill}};" > <div class="{{$jtCircle}}"> {{ $employee->job_title_name }} </div></td>
                         <td style="text-align:left;"> {{ $employee->employee_name }} </td> 
-                        <td class="" style="text-align:right;"> <div class="">{{ number_format($employee->daily_rate,2) }} </div> </td>
+                        <td class="pr4" style="text-align:right;"> <div class="">{{ number_format($employee->daily_rate,2) }} </div> </td>
                         <td class="pr4" style="text-align:right;{{$color}}"> <div class="{{ $circle}}">{{ number_format($employee->ndays,2) }}</div> </td>
                         <td class="pr4"  style="text-align:right;"> {{ number_format($employee->basic_pay,2) }}</td>
                      <!--    <td class="pr4"  style="text-align:right;"> {{ ($employee->late_eq>0) ? number_format($employee->late_eq,2) : ''; }}</td>
@@ -685,6 +702,50 @@
                     @endforeach
                 </table>
             @endforeach
+
+            <table border=1 style="border-collapse:collapse;float:left;margin-left:14px;;width:180px;">
+                    <tr>
+                        <td colspan=2  style="padding:2px;text-align:center;"> Total Per Dept. (Net Pay) </td>
+                    </tr>
+                    <?php $totalPerDeptNet = 0;?>
+                    @foreach($departmentalTotalNet as $dept => $amount)
+                        <tr>
+                            <td>{{ $dept }}</td>
+                            <td style="text-align:right;padding-right:4px;">{{ number_format($amount,2) }}</td>
+                        </tr>
+                        <?php $totalPerDeptNet += $amount;?>
+                    @endforeach
+                        <tr>
+                            <td>TOTAL</td>
+                            <td style="text-align:right;padding-right:4px;">{{ number_format($totalPerDeptNet,2) }}</td>
+                        </tr>
+                   
+
+                </table>
+
+                <table border=1 style="border-collapse:collapse;float:left;margin-left:14px;;width:180px;">
+                    <tr>
+                        <td colspan=2  style="padding:2px;text-align:center;"> Total Per Dept. (Gross Pay) </td>
+                    </tr>
+                    <?php $totalPerDeptGross = 0;?>
+                    @foreach($departmentalTotalGross as $dept => $amount)
+                        <tr>
+                            <td>{{ $dept }}</td>
+                            <td style="text-align:right;padding-right:4px;"> {{ number_format($amount,2) }}</td>
+                        </tr>
+                        <?php $totalPerDeptGross += $amount;?>
+                    @endforeach
+                        <tr>
+                            <td>TOTAL</td>
+                            <td style="text-align:right;padding-right:4px;">{{ number_format($totalPerDeptGross,2) }}</td>
+                        </tr>
+                   
+
+                </table>
+
+
+            <!-- departmentalTotalNet
+departmentalTotalGross -->
         </div>
 
     

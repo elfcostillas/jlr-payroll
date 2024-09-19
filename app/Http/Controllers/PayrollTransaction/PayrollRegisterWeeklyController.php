@@ -220,7 +220,7 @@ class PayrollRegisterWeeklyController extends Controller
                 'label' => $label,
                 'period_label' => $period_label->drange 
             ])->setPaper('Folio','landscape');
-
+       
         $pdf->output();
         $dom_pdf = $pdf->getDomPDF();
     
