@@ -62,6 +62,7 @@ use App\Http\Controllers\Compentsations\OtherIncomeWeeklyAppController;
 use App\Http\Controllers\Memo\AWOLMemoController;
 use App\Http\Controllers\Reports\TardinessReportsController;
 use App\Http\Controllers\Memo\TardinessMemoController;
+use App\Http\Controllers\PayrollTransaction\ThirteenthMonthController;
 use App\Http\Controllers\Reports\AttendanceReportController;
 use App\Http\Controllers\Reports\PayrollSupportGroupController;
 use App\Http\Controllers\Timekeeping\WeeklyDTRUploaderController;
@@ -690,6 +691,15 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         // Route::post('post',[PayrollRegisterController::class,'postPayroll']);
         
     }); 
+
+    //thirteenth-month/weekly
+
+    Route::prefix('thirteenth-month-weekly')->middleware('access:payroll-transaction/thirteenth-month-weekly')->group(function(){
+      
+        // Route::get('unposted-payroll',[ThirteenthMonthController::class,'getUnpostedPeriod']);
+        Route::get('/',[ThirteenthMonthController::class,'index']);
+        Route::get('show-table/{year}',[ThirteenthMonthController::class,'showTable']);
+    });
 });
 
 
