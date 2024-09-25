@@ -745,6 +745,7 @@
                         <td  style="padding:2px;text-align:center;min-width:32px;"> BPN </td>
                         <td  style="padding:2px;text-align:center;min-width:32px;"> BPS </td>
                         <td  style="padding:2px;text-align:center;min-width:32px;"> AGG </td>
+                        <td  style="padding:2px;text-align:center;min-width:32px;"> TOTAL </td>
 
 
                     </tr>
@@ -752,14 +753,18 @@
                         $bpn_total = 0;
                         $bps_total = 0;
                         $agg_total = 0;
+
+                        $deptTotal[] = 0;
                     ?>
 
                     @foreach($empCountPerDept as $key => $val)
                         <tr>
                             <td>{{ $val }}</td>
                             <td style="text-align:center;"> {{ ($empCountPerDeptVal[$val][1] > 0) ? $empCountPerDeptVal[$val][1] : '' }}</td>
-                            <td style="text-align:center;"> {{ ($empCountPerDeptVal[$val][2] > 0) ? $empCountPerDeptVal[$val][1] : ''  }}</td>
-                            <td style="text-align:center;"> {{ ($empCountPerDeptVal[$val][3] > 0) ? $empCountPerDeptVal[$val][1] : ''  }}</td>
+                            <td style="text-align:center;"> {{ ($empCountPerDeptVal[$val][2] > 0) ? $empCountPerDeptVal[$val][2] : ''  }}</td>
+                            <td style="text-align:center;"> {{ ($empCountPerDeptVal[$val][3] > 0) ? $empCountPerDeptVal[$val][3] : ''  }}</td>
+
+                            <td style="text-align:center;"> {{ $empCountPerDeptVal[$val][1] + $empCountPerDeptVal[$val][2] + $empCountPerDeptVal[$val][3] }}</td>
                         </tr>
                         <?php 
                             $bpn_total +=  $empCountPerDeptVal[$val][1];
@@ -772,6 +777,7 @@
                             <td style="text-align:center;">{{  ($bpn_total > 0) ? $bpn_total : '' }}</td>
                             <td style="text-align:center;">{{  ($bps_total > 0) ? $bps_total  : '' }}</td>
                             <td style="text-align:center;">{{  ($agg_total > 0) ? $agg_total : '' }}</td>
+                            <td style="text-align:center;"> {{ $bpn_total + $bps_total + $agg_total }}</td>
                         </tr>
                    
 
