@@ -88,6 +88,9 @@
 
         $departmentalTotalNet = [];
         $departmentalTotalGross = [];
+
+        $empCountPerDept = [];  // new table holds the key id and department name
+        $empCountPerDeptVal = [];
     ?>
 
     <table border=0 style="width:100%;margin-bottom:2px;">
@@ -176,12 +179,24 @@
                 @foreach($location->employees as $employee)
 
                     <?php
+                    if(!array_key_exists($employee->dept_code,$empCountPerDept))
+                    {
+                        $empCountPerDept[$employee->dept_code] = $employee->dept_code;
+
+                        $empCountPerDeptVal[$employee->dept_code][1] = 0;
+                        $empCountPerDeptVal[$employee->dept_code][2] = 0;
+                        $empCountPerDeptVal[$employee->dept_code][3] = 0;
+                    }
+
+                    $empCountPerDeptVal[$employee->dept_code][$location->id] += 1;
 
                         // QAD SSDiv RMC RMD  // otherOTTotal
                     if($employee->reg_ot >= 30)
                     {
                         switch($employee->div_code)
                         {
+
+                           
                             case 'RMC';
                                 if($employee->dept_code=='QA'){
                                     if(array_key_exists($employee->dept_code,$otherOTTotal))
@@ -703,26 +718,6 @@
                 </table>
             @endforeach
 
-            <table border=1 style="border-collapse:collapse;float:left;margin-left:14px;;width:180px;">
-                    <tr>
-                        <td colspan=2  style="padding:2px;text-align:center;"> Total Per Dept. (Net Pay) </td>
-                    </tr>
-                    <?php $totalPerDeptNet = 0;?>
-                    @foreach($departmentalTotalNet as $dept => $amount)
-                        <tr>
-                            <td>{{ $dept }}</td>
-                            <td style="text-align:right;padding-right:4px;">{{ number_format($amount,2) }}</td>
-                        </tr>
-                        <?php $totalPerDeptNet += $amount;?>
-                    @endforeach
-                        <tr>
-                            <td>TOTAL</td>
-                            <td style="text-align:right;padding-right:4px;">{{ number_format($totalPerDeptNet,2) }}</td>
-                        </tr>
-                   
-
-                </table>
-
                 <table border=1 style="border-collapse:collapse;float:left;margin-left:14px;;width:180px;">
                     <tr>
                         <td colspan=2  style="padding:2px;text-align:center;"> Total Per Dept. (Gross Pay) </td>
@@ -742,6 +737,48 @@
                    
 
                 </table>
+
+                <table border=1 style="border-collapse:collapse;float:left;margin-left:14px;;width:180px;">
+                    <tr>
+                        <td  style="padding:2px;text-align:center; min-width:120px;"> Employee Count Per Dept. </td>
+
+                        <td  style="padding:2px;text-align:center;min-width:32px;"> BPN </td>
+                        <td  style="padding:2px;text-align:center;min-width:32px;"> BPS </td>
+                        <td  style="padding:2px;text-align:center;min-width:32px;"> AGG </td>
+
+
+                    </tr>
+                    <?php 
+                        $bpn_total = 0;
+                        $bps_total = 0;
+                        $agg_total = 0;
+                    ?>
+
+                    @foreach($empCountPerDept as $key => $val)
+                        <tr>
+                            <td>{{ $val }}</td>
+                            <td style="text-align:center;"> {{ ($empCountPerDeptVal[$val][1] > 0) ? $empCountPerDeptVal[$val][1] : '' }}</td>
+                            <td style="text-align:center;"> {{ ($empCountPerDeptVal[$val][2] > 0) ? $empCountPerDeptVal[$val][1] : ''  }}</td>
+                            <td style="text-align:center;"> {{ ($empCountPerDeptVal[$val][3] > 0) ? $empCountPerDeptVal[$val][1] : ''  }}</td>
+                        </tr>
+                        <?php 
+                            $bpn_total +=  $empCountPerDeptVal[$val][1];
+                            $bps_total +=  $empCountPerDeptVal[$val][2];
+                            $agg_total +=  $empCountPerDeptVal[$val][3];
+                        ?>
+                    @endforeach
+                        <tr>
+                            <td> TOTAL </td>
+                            <td style="text-align:center;">{{  ($bpn_total > 0) ? $bpn_total : '' }}</td>
+                            <td style="text-align:center;">{{  ($bps_total > 0) ? $bps_total  : '' }}</td>
+                            <td style="text-align:center;">{{  ($agg_total > 0) ? $agg_total : '' }}</td>
+                        </tr>
+                   
+
+                </table>
+
+
+                
 
 
             <!-- departmentalTotalNet

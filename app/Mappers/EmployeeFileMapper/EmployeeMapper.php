@@ -220,15 +220,16 @@ class EmployeeMapper extends AbstractMapper {
 		->leftJoin('job_titles','employees.job_title_id','=','job_titles.id');
 
 		if($filter['division']!=0){
-			$result = $result->where('division_id',$filter['division']);
+			$result = $result->where('employees.division_id',$filter['division']);
 		}
 
 		if($filter['department']!=0){
-			$result = $result->where('dept_id',$filter['department']);
+			
+			$result = $result->where('employees.dept_id',$filter['department']);
 		}
 
 		if($filter['location']!=0){
-			$result = $result->where('location_id',$filter['location']);
+			$result = $result->where('employees.location_id',$filter['location']);
 		}
 
 		$result->where('pay_type','=',3);
