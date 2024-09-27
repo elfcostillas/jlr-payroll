@@ -718,25 +718,7 @@
                 </table>
             @endforeach
 
-                <table border=1 style="border-collapse:collapse;float:left;margin-left:14px;;width:180px;">
-                    <tr>
-                        <td colspan=2  style="padding:2px;text-align:center;"> Total Per Dept. (Gross Pay) </td>
-                    </tr>
-                    <?php $totalPerDeptGross = 0;?>
-                    @foreach($departmentalTotalGross as $dept => $amount)
-                        <tr>
-                            <td>{{ $dept }}</td>
-                            <td style="text-align:right;padding-right:4px;"> {{ number_format($amount,2) }}</td>
-                        </tr>
-                        <?php $totalPerDeptGross += $amount;?>
-                    @endforeach
-                        <tr>
-                            <td>TOTAL</td>
-                            <td style="text-align:right;padding-right:4px;">{{ number_format($totalPerDeptGross,2) }}</td>
-                        </tr>
-                   
-
-                </table>
+              
 
                 
 
@@ -749,7 +731,27 @@ departmentalTotalGross -->
         </div>
 
         <div style="display:block;position:relative;clear:both;">
-            <table border=1 style="border-collapse:collapse;margin-top:8px;float:left;width:180px;">
+            <table border=1 style="border-collapse:collapse;float:left;margin-top:8px;width:180px;">
+                <tr>
+                    <td colspan=2  style="padding:2px;text-align:center;"> Total Per Dept. (Gross Pay) </td>
+                </tr>
+                <?php $totalPerDeptGross = 0;?>
+                @foreach($departmentalTotalGross as $dept => $amount)
+                    <tr>
+                        <td>{{ $dept }}</td>
+                        <td style="text-align:right;padding-right:4px;"> {{ number_format($amount,2) }}</td>
+                    </tr>
+                    <?php $totalPerDeptGross += $amount;?>
+                @endforeach
+                    <tr>
+                        <td>TOTAL</td>
+                        <td style="text-align:right;padding-right:4px;">{{ number_format($totalPerDeptGross,2) }}</td>
+                    </tr>
+                
+
+            </table>
+
+            <table border=1 style="border-collapse:collapse;margin-left:14px;margin-top:8px;float:left;width:180px;">
                 <tr>
                     <td  style="padding:2px;text-align:center; min-width:120px;"> Employee Count Per Dept. </td>
 
@@ -793,9 +795,6 @@ departmentalTotalGross -->
             </table>
 
         </div>
-
-    
-
         <div style="display:block;position:relative;clear:both;">
             <table style="width:100%;margin-top:16px;" border=0>
                 <tr>
