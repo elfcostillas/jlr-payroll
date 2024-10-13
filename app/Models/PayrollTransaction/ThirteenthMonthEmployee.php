@@ -34,6 +34,11 @@ class ThirteenthMonthEmployee {
         return (float) $this->basic_pay_arr[$period_id];
     }
 
+    public function getBiometricID()
+    {
+        return $this->employee_info->biometric_id;
+    }
+
     public function getName()
     {
         return $this->employee_info->lastname.' ,'.$this->employee_info->firstname.' '.substr($this->employee_info->middlename,0,1);
@@ -52,6 +57,6 @@ class ThirteenthMonthEmployee {
 
     public function getNetPay()
     {
-        return round($this->getGrossPay()/$this->basic_pays->count(),2);
+        return round($this->getGrossPay()/12,2);
     }
 }

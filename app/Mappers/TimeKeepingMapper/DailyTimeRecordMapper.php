@@ -1774,11 +1774,47 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
     }
 
+    public function downloadDTRSemi($period_id)
+    {
+        $employees = DB::table('employees')
+                    ->select(DB::raw("employees.id,CONCAT(lastname,', ', firstname) AS emp_name,emp_pay_types.pay_description,biometric_id,time_in,time_out"))
+                    ->leftJoin('emp_pay_types','emp_pay_types.id','=','pay_type')
+                    ->leftJoin('work_schedules','sched_mtwtf','=','work_schedules.id')
+                    ->where('exit_status',1)
+                    ->where('pay_type','!=',3)
+                    ->get();
+        //work_schedules ON sched_mtwtf = work_schedules.id
+        foreach($employees as $employee){
+
+            $dtr = DB::select(DB::raw("SELECT edtr.*,date_format(dtr_date,'%a') as day_name FROM edtr LEFT JOIN payroll_period ON dtr_date BETWEEN date_from AND date_to 
+                WHERE biometric_id = $employee->biometric_id AND payroll_period.id = $period_id
+                ORDER BY dtr_date ASC"));
+
+            foreach($dtr as $row)
+            {
+                $punch = DB::table('edtr_raw')->select(DB::raw("GROUP_CONCAT(punch_time ORDER BY punch_time ASC SEPARATOR ' ') AS cincout"))
+                    ->where('biometric_id', $employee->biometric_id)
+                    ->where('punch_date',$row->dtr_date)
+                    ->first();
+                $row->punch = $punch;
+            }
+
+            $employee->dtr = $dtr;
+        }
+
+       
+
+        return $employees;
+    }
+
    
 
 }
 
 /*
+SELECT GROUP_CONCAT(punch_time ORDER BY punch_time ASC SEPARATOR ' ') AS cincout FROM edtr_raw WHERE biometric_id = 847 AND punch_date = '2022-12-01'; 
+
+left join emp_pay_types on emp_pay_types.id = pay_type;
 
 SELECT biometric_id,COUNT(awol) AS awol FROM edtr WHERE dtr_date BETWEEN '2023-01-01' AND '2023-12-31' GROUP BY biometric_id;
 
