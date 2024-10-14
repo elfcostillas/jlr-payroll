@@ -699,6 +699,9 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         // Route::get('unposted-payroll',[ThirteenthMonthController::class,'getUnpostedPeriod']);
         Route::get('/',[ThirteenthMonthController::class,'index']);
         Route::get('show-table/{year}',[ThirteenthMonthController::class,'showTable']);
+        Route::get('print-payslip/{year}',[ThirteenthMonthController::class,'print']);
+        Route::post('post',[ThirteenthMonthController::class,'post']);
+        Route::post('insert-or-update',[ThirteenthMonthController::class,'insertOrUpdate']);
     });
 });
 

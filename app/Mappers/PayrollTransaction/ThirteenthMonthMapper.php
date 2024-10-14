@@ -109,4 +109,13 @@ class ThirteenthMonthMapper extends AbstractMapper
 
         return $result;
     }
+
+    function insertOrUpdate($key, $value)
+    {
+        DB::table('payrollregister_posted_weekly')
+        ->updateOrInsert(
+            ['biometric_id' => $key[0], 'period_id' => $key[1]],
+            ['basic_pay' => $value]
+        );
+    }
 }

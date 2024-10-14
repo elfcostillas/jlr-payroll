@@ -21,10 +21,19 @@ function nformat($n)
     
         });
 
-        $(".editable").on('blur',function(e){
+        $(".editable").on('change',function(e){
             let val = this.value.replace(/\,/g,''); 
 
-            console.log(val,this.id);
+            // console.log(val,this.id);
+            console.log(val == null,val);
+            if(val != null && val != 'null' && val != '') {
+                $.post('thirteenth-month-weekly/insert-or-update', {
+                    id :this.id,
+                    val : val
+                }, function($result){
+
+                });
+            }
         });
     });
 </script>
@@ -82,7 +91,7 @@ function nformat($n)
         <tr>
             <th  class="p02"> {{ $employee->getName() }}</th>
             @foreach($payroll_period as $period)
-                @if($period->id < 31)
+                @if($period->id > 3 && $period->id < 27)
                     <td  class="p02 r-align"> <input class="inputfield editable" id="{{$employee->getBiometricID()}}|{{$period->id}}" type="text" value="{{ nformat($employee->getBasicPay($period->id))}}"> </td>
                 @else
                     <td  class="p02 r-align"> <input type="text" class="inputfield" disabled value="{{nformat($employee->getBasicPay($period->id))}}  "> </td>
