@@ -14,13 +14,13 @@
 
 <style>
     @font-face {
-        font-family: arial;
-        src: url({{storage_path('/fonts/Helvetica.ttf')}}) format('truetype');
+        /* font-family: arial; */
+        /* src: url({{storage_path('/fonts/Helvetica.ttf')}}) format('truetype'); */
 
     }
 
     * {
-        font-family : "Helvetica"
+        /* font-family : "Arial" */
     }
 
     table {

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Mappers\TimeKeepingMapper\DailyTimeRecordMapper;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Excel\DTRExport;
+use App\Excel\SemiMonthlyDTR;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ManageDTRController extends Controller
@@ -14,11 +15,13 @@ class ManageDTRController extends Controller
     //
     private $mapper;
     private $excel;
+    private $template;
 
-    public function __construct(DailyTimeRecordMapper $mapper,DTRExport $excel)
+    public function __construct(DailyTimeRecordMapper $mapper,DTRExport $excel,SemiMonthlyDTR $template)
     {
         $this->mapper = $mapper;
         $this->excel = $excel;
+        $this->template = $template;
     }
 
     public function index()
@@ -74,11 +77,22 @@ class ManageDTRController extends Controller
     {
         $biometric_id = $request->biometric_id;
         $period_id = $request->period_id;
-      
-        $result = $this->mapper->getSemiDTRexp($period_id);
 
-        $this->excel->setValues($result);
-        return Excel::download($this->excel,'DTR'.$period_id.'.xlsx');
+        $result = $this->mapper->downloadDTRSemi($period_id);
+
+        // return view('app.timekeeping.manage-dtr.export-template',['data' => $result]);
+        
+        // $result = $this->mapper->getSemiDTRexp($period_id);
+
+        // foreach($result as $key => $value)
+        // {
+        //     dd($value);
+        // }
+       
+        $this->template->setValues($result);
+        return Excel::download($this->template,'DTR'.$period_id.'.xlsx');
+
+
 
         //return view('app.timekeeping.manage-dtr.dtr-download',['data' => $result ]);
         //return response()->json($result);

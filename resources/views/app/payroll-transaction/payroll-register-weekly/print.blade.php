@@ -12,7 +12,13 @@
         .pr4{
             text-align : right;
             padding-right : 4px;
-            width: 52px;
+            width: 50px;
+        }
+
+        .pr3 {
+            text-align : right;
+            padding-right : 4px;
+            width: 44px;
         }
 
         .circle {
@@ -22,7 +28,8 @@
         }
 
         @page {
-            margin : 92px 24px 24px 24px;
+            margin : 72px 24px 24px 24px;
+           
         }
     </style>
 </head>
@@ -67,7 +74,9 @@
         $over_all_net_total = 0;
         $over_all_cantenn_total = 0;
 
+        $over_all_late_hrs =0;
         $over_all_late_amount =0;
+
         $over_all_ot_pay = 0;
         $over_all_leg_hol_pay = 0;
         $over_all_other_earning = 0;
@@ -125,6 +134,7 @@
 
                 $location_basic = 0;
 
+                $location_late_hrs =0;
                 $location_late_amount =0;
                 $location_ot_pay = 0;
                 $location_leg_hol_pay = 0;
@@ -146,7 +156,7 @@
 
             <table border=1  style="width:100%;border-collapse:collapse;margin-bottom:6px;" class="btable">
                 <tr>
-                    <td colspan={{ 16 + $additional }} > {{ $location->location_name }}</td>  <!-- from 18 -> 16 --!>
+                    <td colspan={{ 18 + $additional }} > {{ $location->location_name }}</td>  
                 </tr>
                 <thead>
                     <tr>
@@ -157,8 +167,8 @@
                         <th >Daily Rate</th>
                         <th >No Days</th>
                         <th >Basic Pay</th>
-                       <!--  <th >Late (Hrs)</th>
-                        <th >Late Amount</th>  -->
+                        <th >Late (Hrs)</th>
+                        <th >Late Amount</th>
                     
                         @foreach($headers as $key => $val)
                             <th>{{ $label[$key] }}</th>
@@ -284,14 +294,14 @@
                     
                     <tr style="{{ $stylee }};">
                         <td style="text-align:right;width:25px;padding-right:6px;" >{{ $ctr++ }}</td>
-                        <td style="width:72px; white-space: nowrap;" >  {{ $employee->dept_code }}</td>
+                        <td style="width:64px; white-space: nowrap;" >  {{ $employee->dept_code }}</td>
                         <td style="width:86px; white-space: nowrap;background-color:{{$jtFill}};" > <div class="{{$jtCircle}}"> {{ $employee->job_title_name }} </div></td>
                         <td style="text-align:left;"> {{ $employee->employee_name }} </td> 
                         <td class="pr4" style="text-align:right;"> <div class="">{{ number_format($employee->daily_rate,2) }} </div> </td>
                         <td class="pr4" style="text-align:right;{{$color}}"> <div class="{{ $circle}}">{{ number_format($employee->ndays,2) }}</div> </td>
                         <td class="pr4"  style="text-align:right;"> {{ number_format($employee->basic_pay,2) }}</td>
-                     <!--    <td class="pr4"  style="text-align:right;"> {{ ($employee->late_eq>0) ? number_format($employee->late_eq,2) : ''; }}</td>
-                        <td class="pr4"  style="text-align:right;"> {{ ($employee->late_eq_amount>0) ? number_format($employee->late_eq_amount,2) : ''; }}</td> -->
+                        <td class="pr3"  style="text-align:right;"> {{ ($employee->late_eq>0) ? number_format($employee->late_eq,2) : ''; }}</td>
+                        <td class="pr3"  style="text-align:right;"> {{ ($employee->late_eq_amount>0) ? number_format($employee->late_eq_amount,2) : ''; }}</td> 
                        
                         @foreach($headers as $key => $val)
                             <?php
@@ -497,7 +507,7 @@
                         $location_gtotal += $employee->net_pay;
                         $location_canteen_total += ($employee->otherEarnings['canteen']>0) ? $employee->otherEarnings['canteen'] : 0; 
                         $location_cash_advance += ($employee->otherEarnings['cash_advance']>0) ? $employee->otherEarnings['cash_advance'] : 0; 
-
+                        $location_late_hrs += ($employee->late_eq>0) ? $employee->late_eq : 0; 
                         $location_late_amount += ($employee->late_eq_amount>0) ? $employee->late_eq_amount : 0; 
                         // $location_ot_pay  += ($employee->late_eq_amount>0) ? $employee->late_eq_amount : 0; 
                         // $location_leg_hol_pay = 0;
@@ -513,8 +523,8 @@
                 <tr>
                     <td colspan = {{ $colspan }} style="text-align:right;padding-right:4px;" > <b>SUB TOTAL </b></td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;"> {{ ($location_basic > 0) ? number_format($location_basic,2) : ''  }}</td> <!-- BASIC -->
-                 <!--    <td class="pr4"></td>
-                    <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_late_amount > 0) ? number_format($location_late_amount,2) : '' }}</td> -->
+                    <td class="pr3"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_late_hrs > 0) ? number_format($location_late_hrs,2) : '' }}</td>
+                    <td class="pr3"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_late_amount > 0) ? number_format($location_late_amount,2) : '' }}</td>
                     @foreach($headers as $key => $val)
 
                         @if(str_contains($key,'amount'))
@@ -555,12 +565,13 @@
                 $over_all_total_ded += $location_total_ded;
                 $over_all_ppe += $location_ppe;
                 $over_all_office_account += $location_office_account;
+
+                $over_all_late_hrs += $location_late_hrs;
+                $over_all_late_amount += $location_late_amount;
                 
             @endphp
 
         @endif
-       
-       
         
     @endforeach
     
@@ -568,8 +579,8 @@
         <tr>
             <td style="text-align:right;padding-right:4px;" > <b>GRAND TOTAL </b></td>
             <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_basic_pay,2) }}</td> <!-- BASIC -->
-            <!--<td class="pr4"></td>  LATE HRS 
-            <td class="pr4"></td> LATE AMT -->
+            <td class="pr3" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_late_hrs,2) }}</td>
+            <td class="pr3" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_late_amount,2) }}</td>
           
             @foreach($headers as $key => $val)
                 @if(str_contains($key,'amount'))
@@ -594,7 +605,6 @@
     </table>
 
     </div>
-
 
     <?php  $total = 0; ?>
     
@@ -718,14 +728,6 @@
                 </table>
             @endforeach
 
-              
-
-                
-
-
-                
-
-
             <!-- departmentalTotalNet
 departmentalTotalGross -->
         </div>
@@ -796,7 +798,7 @@ departmentalTotalGross -->
 
         </div>
         <div style="display:block;position:relative;clear:both;">
-            <table style="width:100%;margin-top:16px;" border=0>
+            <table style="width:100%;margin-top:12px;" border=0>
                 <tr>
                     <td style="width:25%;text-align:center;">Prepared By :</td>
                     <td style="width:25%;text-align:center;">Checked By :</td>

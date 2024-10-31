@@ -29,4 +29,14 @@ class ThirteenthMonthController extends Controller
 
        return view("app.payroll-transaction.thirteenth-month-weekly.table",['result' => $result['location'],'payroll_period' => $result['payroll_period'] ]);
     }
+
+    public function insertOrUpdate(Request $request)
+    {
+        $keys = explode('|',$request->id);
+
+        $this->mapper->insertOrUpdate($keys,$request->val);
+
+        return response()->json($keys);
+        // return response()->json($request->id,$request->val);
+    }
 }

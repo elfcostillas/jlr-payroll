@@ -117,7 +117,7 @@ class EmployeeController extends Controller
                 $record = $this->mapper->header($result);
                 $this->createLog('create',$result,$record);
             }
-            $this->mapper->createOn100($data_arr);
+            // $this->mapper->createOn100($data_arr);
         }else{
             $record = $this->mapper->header($data_arr['id']);
             
@@ -128,7 +128,7 @@ class EmployeeController extends Controller
                 //$record = $this->mapper->header($data_arr['id']);
                 $this->createLog('update',$data_arr['id'],$record);
             }
-            $this->mapper->createOn100($data_arr);
+            // $this->mapper->createOn100($data_arr);
         }
 
         if(is_object($result)){

@@ -548,7 +548,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                             })
                             ->where('payroll_period_weekly.id',$period_id);
                             
-        $result = $this->model->select(DB::raw("COALESCE(weekly_tmp_locations.loc_id,employees.location_id) as location,edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,time_to_sec(work_schedules.time_in) as sched_in,case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type,time_to_sec(edtr.time_in) as actual_in,time_to_sec(ot_in) as ot_in_s,time_to_sec(ot_out) as ot_out_s,reghol_hrs,reghol_ot,cont"))
+        $result = $this->model->select(DB::raw("COALESCE(weekly_tmp_locations.loc_id,employees.location_id) as location,edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,time_to_sec(work_schedules.time_in) as sched_in,case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type,time_to_sec(edtr.time_in) as actual_in,time_to_sec(ot_in) as ot_in_s,time_to_sec(ot_out) as ot_out_s,reghol_hrs,reghol_ot,cont,time_to_sec(work_schedules.out_am) as sched_outam,time_to_sec(work_schedules.in_pm) as sched_inpm"))
         //$result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,CONCAT(lastname,', ',firstname) as empname,DATE_FORMAT(dtr_date,'%a') AS day_name,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) as work_sched,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,night_diff_ot,ifnull(schedule_id,0) schedule_id,CONCAT(work_schedules.time_in,'-',work_schedules.time_out) AS schedule_desc,case when holiday_type=1 then 'LH' when holiday_type=2 then 'SH' when holiday_type=3 then 'DLH' else '' end as holiday_type,ot_in,ot_out,restday_hrs,restday_ot,restday_nd,restday_ndot,reghol_pay,reghol_hrs,reghol_ot,reghol_rd,reghol_rdnd,reghol_nd,reghol_ndot,sphol_pay,sphol_hrs,sphol_ot,sphol_rd,sphol_rdnd,sphol_nd,sphol_ndot,dblhol_pay,dblhol_hrs,dblhol_ot,dblhol_rd,dblhol_rdnd,dblhol_nd,dblhol_ndot,dblhol_rdot,sphol_rdot,reghol_rdot,reghol_rdndot,sphol_rdndot,dblhol_rdndot"))
                             ->from('edtr')
         ->from('edtr')
@@ -839,11 +839,13 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                                 $quart +=  ($late<=15) ? 1 : floor($late/15) ;//round($late/15,0);
                             
                                 $nlate = $late - ($quart * 15);
+                                // $nlate = round($late/60,2);
                                 $quart += ($nlate%15 > 0) ? 1 : 0;
                             
                             }
                             $rec->late = $late;
-                            $rec->late_eq = $quart * 0.25;
+                            // $rec->late_eq = $quart * 0.25;
+                            $rec->late_eq  = round($late/60,2);
                         }else{
                             $rec->late = 0;
                             $rec->late_eq = 0;
@@ -858,11 +860,13 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                                     $quart +=  ($late<=15) ? 1 : floor($late/15) ;//round($late/15,0);
                                 
                                     $nlate = $late - ($quart * 15);
-                                    $quart += ($nlate%15 > 0) ? 1 : 0;
+                                    $nlate = round($late/60,2);
+                                    // $quart += ($nlate%15 > 0) ? 1 : 0;
                                 
                                 }
                                 $rec->late = $late;
-                                $rec->late_eq = $quart * 0.25;
+                                // $rec->late_eq = $quart * 0.25;
+                                $rec->late_eq  = round($late/60,2);
                             }else{
                                 $rec->late = 0;
                                 $rec->late_eq = 0;
@@ -893,8 +897,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                 $this->updateValid($rec->toArray());
             }   
         }else {
-            
-            //echo "im here";
+         
             foreach($dtr as $rec)
             {
                
@@ -902,6 +905,54 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                 if($rec->ndays==0 || $rec->ndays==''){
                     $rec->ndays = ($rec->time_in!='' && $rec->time_out!='' && $rec->time_in!='00:00' && $rec->time_out!='00:00') ? 1 : 0;
                 }
+
+                /* */
+                if($rec->schedule_id!=0){
+                    // if((int)$rec->actual_in > (int) $rec->sched_in)
+                    // {
+                    //     dd($rec);
+                    // }
+                    if($rec->actual_in > $rec->sched_in && $rec->actual_in < $rec->sched_outam ){
+                       
+                        if($rec->actual_in > $rec->sched_in){
+                            $late = (int)($rec->actual_in - $rec->sched_in)/60;
+                            $quart = 0;
+                            if($late>0){
+                                  
+                                $quart = 0;
+                                $rec->late = $late;
+                                // $rec->late_eq = $quart * 0.25;
+                                $rec->late_eq  = round($late/60,2);
+                            }
+                        }else{
+                            $rec->late = 0;
+                            $rec->late_eq = 0;
+                        }
+                    }else {
+                        
+                        if($rec->actual_in > $rec->sched_inpm && $rec->actual_in < $rec->sched_out ){
+                            // dd($rec);
+                            if($rec->actual_in > $rec->sched_inpm){
+                                $late = (int)($rec->actual_in - $rec->sched_inpm)/60;
+                                $quart = 0;
+                                if($late>0){
+                                    $rec->late = $late;
+                                }
+                                $rec->late = $late;
+                                // $rec->late_eq = $quart * 0.25;
+                                $rec->late_eq  = round($late/60,2);
+                            }else{
+                                $rec->late = 0;
+                                $rec->late_eq = 0;
+                            }
+                        }else {
+                            $rec->late = 0;
+                            $rec->late_eq = 0;
+                        }
+                    }
+
+                }
+                /* */                
                 
                 if($rec->ot_in_s > 0 && $rec->ot_out_s > 0){
                     if($rec->ot_out_s >= $rec->ot_in_s){
@@ -1774,11 +1825,47 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
     }
 
+    public function downloadDTRSemi($period_id)
+    {
+        $employees = DB::table('employees')
+                    ->select(DB::raw("employees.id,CONCAT(lastname,', ', firstname) AS emp_name,emp_pay_types.pay_description,biometric_id,time_in,time_out"))
+                    ->leftJoin('emp_pay_types','emp_pay_types.id','=','pay_type')
+                    ->leftJoin('work_schedules','sched_mtwtf','=','work_schedules.id')
+                    ->where('exit_status',1)
+                    ->where('pay_type','!=',3)
+                    ->get();
+        //work_schedules ON sched_mtwtf = work_schedules.id
+        foreach($employees as $employee){
+
+            $dtr = DB::select(DB::raw("SELECT edtr.*,date_format(dtr_date,'%a') as day_name FROM edtr LEFT JOIN payroll_period ON dtr_date BETWEEN date_from AND date_to 
+                WHERE biometric_id = $employee->biometric_id AND payroll_period.id = $period_id
+                ORDER BY dtr_date ASC"));
+
+            foreach($dtr as $row)
+            {
+                $punch = DB::table('edtr_raw')->select(DB::raw("GROUP_CONCAT(punch_time ORDER BY punch_time ASC SEPARATOR ' ') AS cincout"))
+                    ->where('biometric_id', $employee->biometric_id)
+                    ->where('punch_date',$row->dtr_date)
+                    ->first();
+                $row->punch = $punch;
+            }
+
+            $employee->dtr = $dtr;
+        }
+
+       
+
+        return $employees;
+    }
+
    
 
 }
 
 /*
+SELECT GROUP_CONCAT(punch_time ORDER BY punch_time ASC SEPARATOR ' ') AS cincout FROM edtr_raw WHERE biometric_id = 847 AND punch_date = '2022-12-01'; 
+
+left join emp_pay_types on emp_pay_types.id = pay_type;
 
 SELECT biometric_id,COUNT(awol) AS awol FROM edtr WHERE dtr_date BETWEEN '2023-01-01' AND '2023-12-31' GROUP BY biometric_id;
 
