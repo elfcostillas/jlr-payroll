@@ -72,7 +72,6 @@ return [
             'database' => env('DB_DATABASE', 'jlr_hris'),
             'username' => env('DB_USERNAME', 'admin_prog'),
             'password' => env('DB_PASSWORD', 'cvvljllv557'),
-
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
