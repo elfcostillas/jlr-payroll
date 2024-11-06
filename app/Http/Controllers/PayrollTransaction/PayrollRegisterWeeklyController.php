@@ -73,7 +73,7 @@ class PayrollRegisterWeeklyController extends Controller
     {
         $period = $request->id;
         $payreg = [];
-      
+
     //     $result = $this->mapper->compute($period);
        
     //     $data = $this->mapper->showComputed($period);
@@ -92,6 +92,8 @@ class PayrollRegisterWeeklyController extends Controller
 
    
         $employees = $this->mapper->getEmployeeWithDTRW($period,'non-confi');
+
+        $phil_rate = $this->mapper->getPhilRate();
 
         foreach($employees as $employee){
             // $holidays = $this->mapper->getHolidayCounts($employee->biometric_id,$employee->period_id);
@@ -117,6 +119,8 @@ class PayrollRegisterWeeklyController extends Controller
             $person = new WeeklyEmployee($employee,new Daily);
             $person->compute($period);
             $deductions = $this->mapper->getDeductions($employee->biometric_id,$employee->period_id);
+            $person->setPhilRate($phil_rate->rate);
+            $person->computeGovContri();
             $person->computeGrossTotal($deductions);
             $person->computeNetPay();
           

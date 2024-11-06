@@ -571,6 +571,11 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         return $locations;
     }
 
+    public function getPhilRate(){
+        return $this->model->select('rate')->from('philhealth')->first();
+    }
+
+
     public function getEmployeesV1($period) /* Earnings and Deductions here */
     {   
 

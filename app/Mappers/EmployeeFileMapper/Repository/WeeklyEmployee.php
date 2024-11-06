@@ -386,14 +386,14 @@ class WeeklyEmployee
         $this->philrate = $rate;
     }
 
-    public function computeSSSPrem($period)
+    public function computeSSSPrem($monthly_credit)
     {
-
-        $gross = $this->getMonthGross($period);
-        //dd($gross);
         $prem = DB::table('hris_sss_table')->select('ee_share')
                 //->whereRaw($this->rates['monthly_credit']." between range1 and range2")->first();
-                ->whereRaw($gross." between range1 and range2")->first();
+                ->whereRaw($monthly_credit." between range1 and range2")
+                ->first();
+
+     
         return (float)$prem->ee_share;
     }
 
@@ -449,15 +449,50 @@ class WeeklyEmployee
                 $this->payreg['gross_total'] += $earn;
             }
         }else {
+
+            $this->payreg['total_deduction'] = $this->payreg['hdmf_contri'] + $this->payreg['sss_prem'] + $this->payreg['phil_prem'];
+           
             if($other_earn){
                 // $this->payreg['retro_pay'] = $other_earn['retro_pay'];
                 // $this->payreg['earnings'] = $other_earn['earnings'] ;
                
                 $this->payreg['gross_total'] += $other_earn['earnings'] + $other_earn['retro_pay'];
               
-                $this->payreg['total_deduction'] =  $other_earn['deductions'] + $other_earn['canteen']   + $other_earn['cash_advance']   + $other_earn['office_account'];
+                $this->payreg['total_deduction'] +=  $other_earn['deductions'] + $other_earn['canteen']   + $other_earn['cash_advance']   + $other_earn['office_account'];
             }
         }
+    }
+
+    public function computeGovContri()
+    {
+        /*
+            'sss_prem' => 0.00,
+            'phil_prem' => 0.00,
+            'hdmf_contri' => 0.00,
+        */
+        $monthly_credit = 26 * $this->rates['daily_rate'];
+
+        $this->payreg['hdmf_contri'] = round($this->data['hdmf_contri']/4,2);
+        // $this->payreg['sss_prem'] = ($this->data['sss_no'] != '' && $this->data['deduct_sss'] == 'Y') ? round($this->computeSSSPrem($monthly_credit)/4,2) : 0.00;
+        $this->payreg['sss_prem'] = ($this->data['deduct_sss'] == 'Y') ? round($this->computeSSSPrem($monthly_credit)/4,2) : 0.00;
+        $this->payreg['phil_prem'] = ($this->data['deduct_phic']=='Y') ?  round(($monthly_credit * ($this->philrate/100))/2/4,2) : 0.00;
+        
+        /*
+        if($period->period_type==1){
+            $this->payreg['hdmf_contri'] = $this->data['hdmf_contri'];
+            $this->payreg['sss_prem'] = 0.00;
+            $this->payreg['phil_prem'] = 0.00;
+
+        }else{
+            //dd($period->period_type);
+            $this->payreg['hdmf_contri'] = 0.00;
+            $this->payreg['sss_prem'] = ($this->data['deduct_sss']=='Y') ?  $this->computeSSSPrem($period) : 0.00;
+            $this->payreg['phil_prem'] = ($this->data['deduct_phic']=='Y') ?  round(($this->rates['monthly_credit'] * ($this->philrate/100))/2,2) : 0.00;
+            $this->payreg['sss_wisp'] = ($this->data['deduct_sss']=='Y') ?  $this->computeWISP() : 0.00;
+        }
+            */
+
+        
     }
 
     public function computeTotalDeduction($company,$govloan)

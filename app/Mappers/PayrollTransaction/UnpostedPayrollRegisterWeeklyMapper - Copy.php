@@ -122,6 +122,7 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
 
     }
 
+
     public function showComputed($period_id)
     {
         $division = $this->model->select('division_id','div_name')->from('employees')
