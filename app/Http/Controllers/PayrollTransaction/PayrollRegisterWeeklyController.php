@@ -198,6 +198,7 @@ class PayrollRegisterWeeklyController extends Controller
 
     public function downloadPdfUnposted(Request $request)
     {
+
         $period = $request->id;
         $headers = $this->mapper->getHeaders($period)->toArray();
 

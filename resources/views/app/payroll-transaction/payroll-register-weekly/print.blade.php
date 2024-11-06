@@ -12,7 +12,7 @@
         .pr4{
             text-align : right;
             padding-right : 4px;
-            width: 50px;
+            width: 48px;
         }
 
         .pr3 {
@@ -88,6 +88,10 @@
         $over_all_office_account = 0;
         $over_all_ppe = 0;
 
+        $over_all_sss = 0;
+        $over_all_hdmf = 0;
+        $over_all_phic = 0;
+
         foreach($headers as $key => $val)
         {
             $over_all_dynamicCol[$key] = 0;
@@ -145,6 +149,10 @@
                 $location_total_ded =0;
                 $location_office_account = 0;
 
+                $location_sss = 0;
+                $location_hdmf = 0;
+                $location_phic = 0;
+
                 foreach($headers as $key => $val)
                 {
                     $location_dynamicCol[$key] = 0;
@@ -156,7 +164,7 @@
 
             <table border=1  style="width:100%;border-collapse:collapse;margin-bottom:6px;" class="btable">
                 <tr>
-                    <td colspan={{ 18 + $additional }} > {{ $location->location_name }}</td>  
+                    <td colspan={{ 21 + $additional }} > {{ $location->location_name }}</td>  
                 </tr>
                 <thead>
                     <tr>
@@ -177,6 +185,12 @@
                         <th >Other Earnings</th>
                         <th >Retro Pay</th>
                         <th> Gross Pay</th>
+
+                        <th> HDMF </th>
+                        <th> SSS Prem</th>
+                        <th> PHIC</th>
+
+
                         <th>Cash Advance</th>
                         <th> Canteen </th>
                         <th> PPE </th>
@@ -294,11 +308,11 @@
                     
                     <tr style="{{ $stylee }};">
                         <td style="text-align:right;width:25px;padding-right:6px;" >{{ $ctr++ }}</td>
-                        <td style="width:64px; white-space: nowrap;" >  {{ $employee->dept_code }}</td>
+                        <td style="width:76px;" >  {{ $employee->dept_code }}</td>
                         <td style="width:86px; white-space: nowrap;background-color:{{$jtFill}};" > <div class="{{$jtCircle}}"> {{ $employee->job_title_name }} </div></td>
-                        <td style="text-align:left;"> {{ $employee->employee_name }} </td> 
+                        <td style="text-align:left;padding-left :4px;"> {{ $employee->employee_name }} </td> 
                         <td class="pr4" style="text-align:right;"> <div class="">{{ number_format($employee->daily_rate,2) }} </div> </td>
-                        <td class="pr4" style="text-align:right;{{$color}}"> <div class="{{ $circle}}">{{ number_format($employee->ndays,2) }}</div> </td>
+                        <td class="" style="text-align:right;{{$color}};padding:0px 2px;"> <div class="{{ $circle}}">{{ number_format($employee->ndays,2) }}</div> </td>
                         <td class="pr4"  style="text-align:right;"> {{ number_format($employee->basic_pay,2) }}</td>
                         <td class="pr3"  style="text-align:right;"> {{ ($employee->late_eq>0) ? number_format($employee->late_eq,2) : ''; }}</td>
                         <td class="pr3"  style="text-align:right;"> {{ ($employee->late_eq_amount>0) ? number_format($employee->late_eq_amount,2) : ''; }}</td> 
@@ -484,6 +498,11 @@
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['retro_pay']>0) ? number_format($employee->otherEarnings['retro_pay'],2) : ''; }}</td>
 
                         <td class="pr4"  style="text-align:right;font-weight:bold;background-color:{{$fourfive}};">{{ ($employee->gross_total > 0) ? number_format($employee->gross_total,2) : '' }}</td>
+                        
+                        <td class="pr3"  style="text-align:right;"> {{ ($employee->hdmf_contri>0) ? number_format($employee->hdmf_contri,2) : ''; }}</td> 
+                        <td class="pr3"  style="text-align:right;"> {{ ($employee->sss_prem>0) ? number_format($employee->sss_prem,2) : ''; }}</td> 
+                        <td class="pr3"  style="text-align:right;"> {{ ($employee->phil_prem>0) ? number_format($employee->phil_prem,2) : ''; }}</td> 
+
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['cash_advance']>0) ? number_format($employee->otherEarnings['cash_advance'],2) : ''; }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['canteen']>0) ? number_format($employee->otherEarnings['canteen'],2) : ''; }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['deductions']>0) ? number_format($employee->otherEarnings['deductions'],2) : ''; }}</td>
@@ -517,6 +536,10 @@
                         $location_ppe += $employee->otherEarnings['deductions'];
                         $location_office_account+= $employee->otherEarnings['office_account'];
                         $location_total_ded +=$employee->total_deduction;
+
+                        $location_hdmf += $employee->hdmf_contri;
+                        $location_sss += $employee->sss_prem;
+                        $location_phic += $employee->phil_prem;
                     ?>
 
                 @endforeach
@@ -537,9 +560,15 @@
                             $over_all_dynamicCol[$key] += $location_dynamicCol[$key];
                         ?>
                     @endforeach
+                    
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_other_earning > 0) ? number_format($location_other_earning,2) : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_retro_pay > 0) ? number_format($location_retro_pay,2) : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_total > 0) ? number_format($location_total,2) : '' }}</td>
+
+                    <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{($location_hdmf > 0) ? number_format($location_hdmf,2) : '' }}</td>
+                    <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{($location_sss > 0) ? number_format($location_sss,2) : '' }}</td>
+                    <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{($location_phic > 0) ? number_format($location_phic,2) : '' }}</td>
+
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_cash_advance > 0) ? number_format($location_cash_advance,2) : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_canteen_total > 0) ? number_format($location_canteen_total,2) : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_ppe > 0) ? number_format($location_ppe,2) : '' }}</td>
@@ -568,6 +597,10 @@
 
                 $over_all_late_hrs += $location_late_hrs;
                 $over_all_late_amount += $location_late_amount;
+
+                $over_all_sss += $location_sss;
+                $over_all_hdmf += $location_hdmf; 
+                $over_all_phic += $location_phic;
                 
             @endphp
 
@@ -593,6 +626,11 @@
             <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_other_earning,2) }}</td> <!-- OTHER EARN -->
             <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_retro_pay,2) }}</td></td> <!-- RETRO PAY -->
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_gross_total,2) }}</td>
+
+            <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_hdmf,2) }}</td> 
+            <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_sss,2) }}</td> 
+            <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_phic,2) }}</td> 
+             
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_ca_total,2) }}</td>
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_cantenn_total,2) }}</td>
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_ppe,2) }}</td>

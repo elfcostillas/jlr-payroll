@@ -356,7 +356,7 @@ class WeeklyEmployee
     public function computeContribution($period){
        
         if($period->period_type==1){
-            $this->payreg['hdmf_contri'] = $this->data['hdmf_contri'];
+            // $this->payreg['hdmf_contri'] = $this->data['hdmf_contri'];
             $this->payreg['sss_prem'] = 0.00;
             $this->payreg['phil_prem'] = 0.00;
 
@@ -470,13 +470,19 @@ class WeeklyEmployee
             'phil_prem' => 0.00,
             'hdmf_contri' => 0.00,
         */
-        $monthly_credit = 26 * $this->rates['daily_rate'];
 
-        $this->payreg['hdmf_contri'] = round($this->data['hdmf_contri']/4,2);
-        // $this->payreg['sss_prem'] = ($this->data['sss_no'] != '' && $this->data['deduct_sss'] == 'Y') ? round($this->computeSSSPrem($monthly_credit)/4,2) : 0.00;
-        $this->payreg['sss_prem'] = ($this->data['deduct_sss'] == 'Y') ? round($this->computeSSSPrem($monthly_credit)/4,2) : 0.00;
-        $this->payreg['phil_prem'] = ($this->data['deduct_phic']=='Y') ?  round(($monthly_credit * ($this->philrate/100))/2/4,2) : 0.00;
+        if($this->data['retired'] == 'N'){
+
         
+            $monthly_credit = 26 * $this->rates['daily_rate'];
+
+            $this->payreg['hdmf_contri'] = round($this->data['hdmf_contri']/4,2);
+            // $this->payreg['sss_prem'] = ($this->data['sss_no'] != '' && $this->data['deduct_sss'] == 'Y') ? round($this->computeSSSPrem($monthly_credit)/4,2) : 0.00;
+            $this->payreg['sss_prem'] = ($this->data['deduct_sss'] == 'Y') ? round($this->computeSSSPrem($monthly_credit)/4,2) : 0.00;
+            $this->payreg['phil_prem'] = ($this->data['deduct_phic']=='Y') ?  round(($monthly_credit * ($this->philrate/100))/2/4,2) : 0.00;
+        }else{
+            $this->payreg['hdmf_contri'] = 0;
+        }
         /*
         if($period->period_type==1){
             $this->payreg['hdmf_contri'] = $this->data['hdmf_contri'];
