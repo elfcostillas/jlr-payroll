@@ -117,10 +117,11 @@ class PayrollRegisterWeeklyController extends Controller
             // }
             
             $person = new WeeklyEmployee($employee,new Daily);
+            
             $person->compute($period);
             $deductions = $this->mapper->getDeductions($employee->biometric_id,$employee->period_id);
             $person->setPhilRate($phil_rate->rate);
-            $person->computeGovContri();
+            $person->computeGovContri($employee->period_id);
             $person->computeGrossTotal($deductions);
             $person->computeNetPay();
           
@@ -175,7 +176,7 @@ class PayrollRegisterWeeklyController extends Controller
                 unset($headers[$key]);
             }
         }
-
+        $period_label = $this->period->makeRange($period);
         foreach($colHeaders  as  $value ){
             //dd($value->var_name,$vaue->col_label);
             $label[$value->var_name] = $value->col_label;
@@ -190,8 +191,8 @@ class PayrollRegisterWeeklyController extends Controller
         //     'labels' => $label,
         //     ]);
 
-        // $this->excel->setValues($collections,$label,$headers);
-        // return Excel::download($this->excel,'PayrollRegisterWeekly'.$period.'.xlsx');
+        $this->excel->setValues($collections,$label,$headers,$period_label);
+        return Excel::download($this->excel,'PayrollRegisterWeekly'.$period.'.xlsx');
 
         
     }

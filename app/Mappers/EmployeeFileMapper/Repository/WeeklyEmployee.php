@@ -254,7 +254,7 @@ class WeeklyEmployee
         $this->payreg['gross_pay'] = $this->repo->getGrossPay($this->payreg);
 
         if($this->payreg['pay_type']!='3'){
-            dd($this->payreg);
+            // dd($this->payreg);
             $this->computeContribution($period);
         }
         
@@ -463,7 +463,7 @@ class WeeklyEmployee
         }
     }
 
-    public function computeGovContri()
+    public function computeGovContri($period_id)
     {
         /*
             'sss_prem' => 0.00,
@@ -471,8 +471,9 @@ class WeeklyEmployee
             'hdmf_contri' => 0.00,
         */
 
-        if($this->data['retired'] == 'N'){
+        $period = (int) $period_id;
 
+        if($this->data['retired'] == 'N' && $period > 48){
         
             $monthly_credit = 26 * $this->rates['daily_rate'];
 

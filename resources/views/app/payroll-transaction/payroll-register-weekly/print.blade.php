@@ -12,7 +12,7 @@
         .pr4{
             text-align : right;
             padding-right : 4px;
-            width: 48px;
+            width: 44px;
         }
 
         .pr3 {
@@ -190,7 +190,6 @@
                         <th> SSS Prem</th>
                         <th> PHIC</th>
 
-
                         <th>Cash Advance</th>
                         <th> Canteen </th>
                         <th> PPE </th>
@@ -309,7 +308,7 @@
                     <tr style="{{ $stylee }};">
                         <td style="text-align:right;width:25px;padding-right:6px;" >{{ $ctr++ }}</td>
                         <td style="width:76px;" >  {{ $employee->dept_code }}</td>
-                        <td style="width:86px; white-space: nowrap;background-color:{{$jtFill}};" > <div class="{{$jtCircle}}"> {{ $employee->job_title_name }} </div></td>
+                        <td style="width:86px; background-color:{{$jtFill}};" > <div class="{{$jtCircle}}"> {{ $employee->job_title_name }} </div></td>
                         <td style="text-align:left;padding-left :4px;"> {{ $employee->employee_name }} </td> 
                         <td class="pr4" style="text-align:right;"> <div class="">{{ number_format($employee->daily_rate,2) }} </div> </td>
                         <td class="" style="text-align:right;{{$color}};padding:0px 2px;"> <div class="{{ $circle}}">{{ number_format($employee->ndays,2) }}</div> </td>
