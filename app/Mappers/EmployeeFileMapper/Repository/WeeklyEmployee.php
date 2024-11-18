@@ -463,17 +463,31 @@ class WeeklyEmployee
         }
     }
 
-    public function computeGovContri($period_id)
+    public function computeGovContri($period)
     {
         /*
             'sss_prem' => 0.00,
             'phil_prem' => 0.00,
             'hdmf_contri' => 0.00,
         */
+        $monthly_credit = 26 * $this->rates['daily_rate'];
 
-        $period = (int) $period_id;
+        if($period->cut_off == 1){
+            $this->payreg['hdmf_contri'] = $this->data['hdmf_contri'];
+            $this->payreg['sss_prem'] = 0.00;
+            $this->payreg['phil_prem'] = 0.00;
 
-        if($this->data['retired'] == 'N' && $period > 48){
+        }else{
+            //dd($period->period_type);
+            $this->payreg['hdmf_contri'] = 0.00;
+            $this->payreg['sss_prem'] = ($this->data['deduct_sss']=='Y') ?  $this->computeSSSPrem($monthly_credit) : 0.00;
+            $this->payreg['phil_prem'] = ($this->data['deduct_phic']=='Y') ?  round(($monthly_credit * ($this->philrate/100))/2,2) : 0.00;
+        }
+
+        // $period = (int) $period_id;
+
+        /*
+        if($this->data['retired'] == 'N' && $period->id > 48){
         
             $monthly_credit = 26 * $this->rates['daily_rate'];
 
@@ -484,6 +498,7 @@ class WeeklyEmployee
         }else{
             $this->payreg['hdmf_contri'] = 0;
         }
+            */
         /*
         if($period->period_type==1){
             $this->payreg['hdmf_contri'] = $this->data['hdmf_contri'];

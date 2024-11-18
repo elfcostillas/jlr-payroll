@@ -21,6 +21,7 @@ use  App\Excel\BankTransmittal;
 use App\Excel\PayrollRegisterWeekly;
 
 use App\Mappers\TimeKeepingMapper\DailyTimeRecordMapper;
+use Illuminate\Support\Facades\DB;
 
 class PayrollRegisterWeeklyController extends Controller
 {
@@ -90,7 +91,8 @@ class PayrollRegisterWeeklyController extends Controller
          
         }
 
-   
+        $pperiod = DB::table('payroll_period_weekly')->select()->where('id',$period)->first();
+
         $employees = $this->mapper->getEmployeeWithDTRW($period,'non-confi');
 
         $phil_rate = $this->mapper->getPhilRate();
@@ -121,7 +123,7 @@ class PayrollRegisterWeeklyController extends Controller
             $person->compute($period);
             $deductions = $this->mapper->getDeductions($employee->biometric_id,$employee->period_id);
             $person->setPhilRate($phil_rate->rate);
-            $person->computeGovContri($employee->period_id);
+            $person->computeGovContri($pperiod);
             $person->computeGrossTotal($deductions);
             $person->computeNetPay();
           
