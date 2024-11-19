@@ -265,10 +265,10 @@
 
                         }
      
-                        $color = ($employee->ndays>=7) ? 'background-color:yellow ': '' ;
-                        $circle = ($employee->ndays>=7) ? 'circle': '' ;
+                        $color = ($employee->ndays>=15) ? 'background-color:yellow ': '' ;
+                        $circle = ($employee->ndays>=15) ? 'circle': '' ;
 
-                        $entitled = ($employee->ndays>=7) ? true : false;
+                        $entitled = ($employee->ndays>=15) ? true : false;
 
                         $entitled2 = ($employee->reg_ot >= 30) ? true : false;
 
@@ -280,7 +280,7 @@
                             $jtFill = 'white';
                         }
 
-                        if($employee->gross_total >= 4500 && ( $employee->retired !='Y' &&  $employee->job_title_name != 'Transit Mixer Driver' ) )
+                        if($employee->gross_total >= 9000 && ( $employee->retired !='Y' &&  $employee->job_title_name != 'Transit Mixer Driver' ) )
                         {
                             $fourfive = 'yellow';
                             $fourfive_count++;
