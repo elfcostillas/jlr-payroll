@@ -722,7 +722,7 @@
 
             <table border=1 style="border-collapse: collapse;float:left;margin-left :8px;">
                 <tr>
-                    <td style="padding:2px;"> Gross Pay more than 9,500 </td>
+                    <td style="padding:2px;"> Gross Pay more than 9,000 </td>
                 </tr>
                 <tr>
                     <td style="padding:2px;text-align:center"> {{ $fourfive_count }} </td>
