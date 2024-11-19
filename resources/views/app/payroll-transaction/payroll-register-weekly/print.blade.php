@@ -722,7 +722,7 @@
 
             <table border=1 style="border-collapse: collapse;float:left;margin-left :8px;">
                 <tr>
-                    <td style="padding:2px;"> Gross Pay more than 4,500 </td>
+                    <td style="padding:2px;"> Gross Pay more than 9,500 </td>
                 </tr>
                 <tr>
                     <td style="padding:2px;text-align:center"> {{ $fourfive_count }} </td>
@@ -743,27 +743,29 @@
                 @endforeach 
                
             </table>
-
-            @foreach($otReport2 as $table)
+            <div style="display:block;position:relative;clear:both;">
             
-                <table border=1 style="border-collapse:collapse;float:left;margin-left:14px;;width:300px;">
-                    <tr>
-                        <td colspan=3  style="padding:2px;text-align:center;"> {{ $ot_summ_label[$table] }}</td>
-                    </tr>
-                   
-                    @foreach($otByJobtitleValue[$table] as $key => $row) 
-
-                        @foreach($row as $key2 => $value)
+                @foreach($otReport2 as $table)
+                
+                    <table border=1 style="border-collapse:collapse;float:left;margin-right:14px;width:240px;margin-top:8px;">
                         <tr>
-                            <td style="padding:2px;"> {{ $key }}</td>
-                            <td style="padding:2px;"> {{ $key2 }} </td>
-                            <td style="padding:2px;text-align:center;"> {{ $value }} </td>
+                            <td colspan=3  style="padding:2px;text-align:center;"> {{ $ot_summ_label[$table] }}</td>
                         </tr>
-                        @endforeach
+                    
+                        @foreach($otByJobtitleValue[$table] as $key => $row) 
 
-                    @endforeach
-                </table>
-            @endforeach
+                            @foreach($row as $key2 => $value)
+                            <tr>
+                                <td style="padding:2px;"> {{ $key }}</td>
+                                <td style="padding:2px;"> {{ $key2 }} </td>
+                                <td style="padding:2px;text-align:center;"> {{ $value }} </td>
+                            </tr>
+                            @endforeach
+
+                        @endforeach
+                    </table>
+                @endforeach
+            </div>
 
             <!-- departmentalTotalNet
 departmentalTotalGross -->
