@@ -552,7 +552,7 @@
                         @if(str_contains($key,'amount'))
                         <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;"> {{ number_format($location_dynamicCol[$key],2)  }}</td>
                         @else
-                            <td></td>
+                        <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;"> {{ number_format($location_dynamicCol[$key],2)  }}</td>
                         @endif
 
                         <?php
@@ -618,7 +618,7 @@
                 @if(str_contains($key,'amount'))
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;"> {{ number_format($over_all_dynamicCol[$key],2)  }}</td>
                 @else
-                    <td class="pr4"></td>
+                    <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_dynamicCol[$key],2)  }}</td>
                 @endif
             
             @endforeach
@@ -715,11 +715,7 @@
                 @endforeach
             </table>
                         
-            <?php
-            
-                
-            ?>
-
+          
             <table border=1 style="border-collapse: collapse;float:left;margin-left :8px;">
                 <tr>
                     <td style="padding:2px;"> Gross Pay more than 9,000 </td>
