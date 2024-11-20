@@ -54,6 +54,7 @@
                                         <td style="font-size : 8pt;">Canteen</td>
                                         <td style="font-size : 8pt;">Cash Advance</td>
                                         <td style="font-size : 8pt;">Office Acct</td>
+                                       
                                     </tr>
                                     <tr>
                                         <td style="font-size : 9pt;text-align:right;border-bottom: 1px solid black;padding: 0px 6px;"> {{ number_format($e->otherEearnings['earnings'],2) }}</td>
@@ -66,7 +67,22 @@
                                 </table>
                             </td>
                         </tr>
-                        
+                        <tr>
+                            <td colspan=6>
+                                <table style="width:100%" border=0>
+                                    <tr>
+                                        <td style="font-size : 8pt;">SSS Prem</td>
+                                        <td style="font-size : 8pt;">PHIL Prem</td>
+                                        <td style="font-size : 8pt;">HDMF Contri</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size : 9pt;text-align:right;border-bottom: 1px solid black;padding: 0px 6px;"> {{ number_format($e->sss_prem,2) }}</td>
+                                        <td style="font-size : 9pt;text-align:right;border-bottom: 1px solid black;padding: 0px 6px;"> {{ number_format($e->phil_prem,2) }}</td>
+                                        <td style="font-size : 9pt;text-align:right;border-bottom: 1px solid black;padding: 0px 6px;"> {{ number_format($e->hdmf_contri,2) }}</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
                         <tr>
                             <td colspan=6>&nbsp;</td>
                         </tr>

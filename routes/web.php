@@ -520,6 +520,11 @@ Route::middleware('auth')->prefix('deductions')->group(function(){
 
 Route::middleware('auth')->prefix('reports')->group(function(){
     //Route::get('locations',[LocationController::class,'index']);
+
+    Route::prefix('leave-reports')->group(function(){
+
+    });
+    
     Route::prefix('employee-report')->group(function(){
         Route::get('/',[EmployeeReportController::class,'index']);
         Route::get('generate',[EmployeeReportController::class,'generate']);
