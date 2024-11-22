@@ -530,7 +530,7 @@
                         // $location_ot_pay  += ($employee->late_eq_amount>0) ? $employee->late_eq_amount : 0; 
                         // $location_leg_hol_pay = 0;
                         $location_other_earning += ($employee->otherEarnings['earnings']>0) ?$employee->otherEarnings['earnings']: 0; 
-                        $location_retro_pay =($employee->otherEarnings['retro_pay']>0) ? $employee->otherEarnings['retro_pay']: 0;  
+                        $location_retro_pay +=($employee->otherEarnings['retro_pay']>0) ? $employee->otherEarnings['retro_pay']: 0;  
 
                         $location_ppe += $employee->otherEarnings['deductions'];
                         $location_office_account+= $employee->otherEarnings['office_account'];
