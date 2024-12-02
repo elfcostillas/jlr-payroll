@@ -59,4 +59,5 @@ class ThirteenthMonthEmployee {
     {
         return round($this->getGrossPay()/12,2);
     }
+
 }

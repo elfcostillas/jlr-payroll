@@ -4,6 +4,7 @@ namespace App\Mappers\PayrollTransaction;
 
 use App\Mappers\Mapper as AbstractMapper;
 use App\Models\PayrollTransaction\ThirteenthMonthEmployee;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 // use App\Models\PayrollTransaction\ThirteenthMonth;
@@ -29,11 +30,15 @@ class ThirteenthMonthMapper extends AbstractMapper
 
     function buildData($year)
     {
+        
+        // dd(Auth::user()->id);
         $locations = $this->baseQuery()->select(DB::raw("employees.location_id,location_name"))
                 ->distinct()
                 ->where('payroll_period_weekly.pyear',$year)
                 ->orderBy('location_id','ASC')
                 ->get();
+        
+        DB::table('thirteenth_month_sg')->where('pyear' ,$year)->where('user_id',Auth::user()->id)->delete();
         
         foreach($locations as $location)
         {
@@ -52,6 +57,19 @@ class ThirteenthMonthMapper extends AbstractMapper
                 // array_push($employee_array,)
                 
                 $e = $this->employeeFactory($employee,$year);
+
+                if($e){
+                    // DB::table('thirteenth_month_sg')->updateOrInsert([
+                    //         'pyear' => $year,
+                    //         'biometric_id' => $e->getBiometricID() 
+                    //     ],[
+                    //         'net_pay' => $e->getNetPay()
+                    //     ]);
+
+                    DB::table('thirteenth_month_sg')->insert(['user_id' => Auth::user()->id,'pyear' => $year, 'biometric_id' => $e->getBiometricID(),'net_pay' => $e->getNetPay() ]);
+                }
+
+                
 
                 array_push($employee_array,$e);
             }
