@@ -28,9 +28,9 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <div class="card card-default">
-                    <div class="card-header"> <h5>Weekly</h5> </div>
+                    <div class="card-header"> <h5>Support Group</h5> </div>
                     <div class="card-body"> 
                         <div id="viewModel" >
                             <div id="maingrid"></div>

@@ -56,6 +56,7 @@
                                     date_to: { type : 'date' },
                                     date_release: { type : 'date' },
                                     man_hours: { type : 'number' },
+                                    pyear: { type : 'string' },
                                 }
                             }
                         }
@@ -100,6 +101,12 @@
                     {
                         title : "Man Hours",
                         field : "man_hours",
+                        //template : "#=  : ''  #",
+                        width : 120,    
+                    },
+                    {
+                        title : "Year",
+                        field : "pyear",
                         //template : "#=  : ''  #",
                         width : 120,    
                     },
