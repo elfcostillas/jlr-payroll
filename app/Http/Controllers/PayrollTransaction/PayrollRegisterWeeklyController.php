@@ -226,7 +226,8 @@ class PayrollRegisterWeeklyController extends Controller
                 'data' => $collections,
                 'headers' => $headers,
                 'label' => $label,
-                'period_label' => $period_label->drange 
+                'period_label' => $period_label->drange,
+                'perf' => $period_label->perf,
             ])->setPaper('Folio','landscape');
        
         $pdf->output();

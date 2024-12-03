@@ -62,7 +62,7 @@ class PayrollPeriodWeeklyMapper extends AbstractMapper {
 
 	public function makeRange($period)
 	{
-		$result = $this->model->select(DB::raw("id,CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) AS drange"))->where('id',$period);
+		$result = $this->model->select(DB::raw("id,CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) AS drange,datediff(date_to,date_from)+1 as perf"))->where('id',$period);
 		return $result->first();
 	}
 

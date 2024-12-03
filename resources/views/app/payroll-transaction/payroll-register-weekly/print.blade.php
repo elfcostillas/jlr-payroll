@@ -214,7 +214,7 @@
                     $empCountPerDeptVal[$employee->dept_code][$location->id] += 1;
 
                         // QAD SSDiv RMC RMD  // otherOTTotal
-                    if($employee->reg_ot >= 30)
+                    if($employee->reg_ot >= 50) // from 30
                     {
                         switch($employee->div_code)
                         {
@@ -265,12 +265,12 @@
 
                         }
      
-                        $color = ($employee->ndays>=15) ? 'background-color:yellow ': '' ;
-                        $circle = ($employee->ndays>=15) ? 'circle': '' ;
+                        $color = ($employee->ndays>=$perf) ? 'background-color:yellow ': '' ;
+                        $circle = ($employee->ndays>=$perf) ? 'circle': '' ;
 
-                        $entitled = ($employee->ndays>=15) ? true : false;
+                        $entitled = ($employee->ndays>=$perf) ? true : false;
 
-                        $entitled2 = ($employee->reg_ot >= 30) ? true : false;
+                        $entitled2 = ($employee->reg_ot >= 50) ? true : false;
 
                         if($entitled || $entitled2){
                             $jtCircle = 'circle';
@@ -318,8 +318,11 @@
                        
                         @foreach($headers as $key => $val)
                             <?php
-                                $over30 = ($employee->$key >= 30 && $key == 'reg_ot' ) ? 'background-color:yellow ': '' ;
-                                $over30circ = ($employee->$key >= 30 && $key == 'reg_ot' ) ? 'circle ': '' ;
+                                $over30 = ($employee->$key >= 50 && $key == 'reg_ot' ) ? 'background-color:yellow ': '' ;
+                                $over30circ = ($employee->$key >= 50 && $key == 'reg_ot' ) ? 'circle ': '' ;
+
+                                // $over30 = ($employee->$key >= 30 && $key == 'reg_ot' ) ? '': '' ;
+                                // $over30circ = ($employee->$key >= 30 && $key == 'reg_ot' ) ? '': '' ;
                             ?> 
                             <td class="pr4"  style="text-align:right;{{ $over30 }}"> <div class="{{ $over30circ}}"> {{ ($employee->$key > 0) ? number_format($employee->$key,2) : '' }} </div></td>
                     
@@ -328,6 +331,7 @@
                             ?>
 
                             <?php
+                            /*
                             if(($employee->$key >= 30 && $employee->$key <40) && $key == 'reg_ot'){
                                 $ot_summ_value[3] +=1;
 
@@ -382,6 +386,8 @@
 
                               
                             }
+
+                            */
 
                             if(($employee->$key >= 50 && $employee->$key <60) && $key == 'reg_ot'){
                                 $ot_summ_value[5] +=1;
