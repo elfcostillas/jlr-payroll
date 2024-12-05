@@ -44,8 +44,8 @@
         
         $arr = [];
 
-        $ot_summ_label[3]='30 Hours';
-        $ot_summ_label[4]='40 Hours';
+        // $ot_summ_label[3]='30 Hours';
+        // $ot_summ_label[4]='40 Hours';
         $ot_summ_label[5]='50 Hours';
         $ot_summ_label[6]='60 Hours';
         $ot_summ_label[7]='70 Hours';
@@ -60,8 +60,8 @@
 
 
         $ot_summ_value = [
-            '3' => 0,
-            '4' => 0,
+            // '3' => 0,
+            // '4' => 0,
             '5' => 0,
             '6' => 0,
             '7' => 0,
