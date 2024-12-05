@@ -25,6 +25,10 @@
                         let year = $("#pyear").data("kendoDropDownList").value();
 
                         console.log(year);
+                    },
+                    download : function()
+                    {
+                        
                     }
                     
                 }
@@ -42,6 +46,15 @@
 
                     {
                         type : "button",text : "Show", icon : 'table',click : viewModel.handler.show
+                    },
+                    {
+                        type : "button",text : "Download Excel", icon : 'download',click : viewModel.handler.download
+                    },
+                    {
+                        type : "button",text : "Post", icon : 'save',click : viewModel.handler.download
+                    },
+                    {
+                        type : "button",text : "Bank Transmittal", icon : 'print',click : viewModel.handler.download
                     }
                   
                 ]

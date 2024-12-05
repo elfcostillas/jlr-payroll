@@ -50,7 +50,7 @@
                            
                            
                         },
-                        pageSize :11,
+                        pageSize :15,
                         serverPaging : true,
                         serverFiltering : true,
                         schema : {
@@ -150,7 +150,7 @@
                         },
                         batch: true,
                         //autoSync: true,
-                        pageSize :14,
+                        pageSize :17,
                         schema : {
                             // data : "data",
                             // total : "total",
