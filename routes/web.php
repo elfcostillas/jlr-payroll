@@ -707,6 +707,7 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::get('print-payslip/{year}',[ThirteenthMonthController::class,'print']);
         Route::post('post',[ThirteenthMonthController::class,'post']);
         Route::post('insert-or-update',[ThirteenthMonthController::class,'insertOrUpdate']);
+        Route::get('download-excel/{year}',[ThirteenthMonthController::class,'download']);
     });
 });
 

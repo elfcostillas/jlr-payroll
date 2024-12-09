@@ -28,7 +28,9 @@
                     },
                     download : function()
                     {
-                        
+                        let selected = $("#pyear").data("kendoDropDownList");
+                        let url = `thirteenth-month-weekly/download-excel/${selected.value()}`;
+                        window.open(url);
                     }
                     
                 }

@@ -2,18 +2,23 @@
 
 namespace App\Http\Controllers\PayrollTransaction;
 
+use App\Excel\ThirteenthMonthSG;
 use App\Http\Controllers\Controller;
 use App\Mappers\PayrollTransaction\ThirteenthMonthMapper;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class ThirteenthMonthController extends Controller
 {
     //
     private $mapper;
+    private $excel;
 
-    public function __construct(ThirteenthMonthMapper $mapper)
+    public function __construct(ThirteenthMonthMapper $mapper,ThirteenthMonthSG $excel)
     {
         $this->mapper = $mapper;
+        $this->excel = $excel;
     }
 
     public function index()
@@ -38,5 +43,17 @@ class ThirteenthMonthController extends Controller
 
         return response()->json($keys);
         // return response()->json($request->id,$request->val);
+    }
+
+    public function download(Request $request)
+    {
+        $result = $this->mapper->buildData($request->year);
+
+        
+
+        $this->excel->setValues($result);
+        return Excel::download($this->excel,"ThirteenthMonthSG{$request->year}.xlsx");
+
+        // dd($request->year);
     }
 }
