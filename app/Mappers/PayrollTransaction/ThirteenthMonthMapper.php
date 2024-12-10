@@ -38,7 +38,7 @@ class ThirteenthMonthMapper extends AbstractMapper
                 ->orderBy('location_id','ASC')
                 ->get();
         
-        DB::table('thirteenth_month_sg')->where('pyear' ,$year)->where('user_id',Auth::user()->id)->delete();
+        DB::table('thirteenth_month_sg')->where('pyear' ,$year)->where('user_id',Auth::user()->id)->where('stat','=','DRAFT')->delete();
         
         foreach($locations as $location)
         {
@@ -66,7 +66,7 @@ class ThirteenthMonthMapper extends AbstractMapper
                     //         'net_pay' => $e->getNetPay()
                     //     ]);
 
-                    DB::table('thirteenth_month_sg')->insert(['user_id' => Auth::user()->id,'pyear' => $year, 'biometric_id' => $e->getBiometricID(),'net_pay' => $e->getNetPay() ]);
+                    DB::table('thirteenth_month_sg')->insert(['user_id' => Auth::user()->id,'pyear' => $year, 'biometric_id' => $e->getBiometricID(),'net_pay' => $e->getNetPay(),'created_on' => now() ]);
                 }
 
                 
@@ -135,5 +135,66 @@ class ThirteenthMonthMapper extends AbstractMapper
             ['biometric_id' => $key[0], 'period_id' => $key[1]],
             ['basic_pay' => $value]
         );
+    }
+
+
+    public function post13thMonth($year)
+    {
+        $locations = $this->baseQuery()->select(DB::raw("employees.location_id,location_name"))
+        ->distinct()
+        ->where('payroll_period_weekly.pyear',$year)
+        ->orderBy('location_id','ASC')
+        ->get();
+
+        // DB::table('thirteenth_month_sg')->where('pyear' ,$year)->where('user_id',Auth::user()->id)->delete();
+
+        foreach($locations as $location)
+        {
+            $employee_array = [];
+
+            $employees = $this->baseQuery()
+                ->select(DB::raw("employees.biometric_id,employees.lastname,employees.firstname,employees.middlename"))
+                ->distinct()
+                ->where('payroll_period_weekly.pyear',$year)
+                ->where('employees.location_id','=',$location->location_id)
+                ->orderBy('employees.lastname','asc')->orderBy('employees.firstname','asc')->orderBy('employees.middlename','asc')
+                ->get();
+
+            foreach($employees as $employee)
+            {
+                // array_push($employee_array,)
+                
+                $e = $this->employeeFactory($employee,$year);
+
+                if($e){
+                    // DB::table('thirteenth_month_sg')->updateOrInsert([
+                    //         'pyear' => $year,
+                    //         'biometric_id' => $e->getBiometricID() 
+                    //     ],[
+                    //         'net_pay' => $e->getNetPay()
+                    //     ]);
+
+                    DB::table('thirteenth_month_sg')->insert(['user_id' => Auth::user()->id,'pyear' => $year, 'biometric_id' => $e->getBiometricID(),'net_pay' => $e->getNetPay(),'stat' => 'POSTED','created_on' => now() ]);
+                }
+
+                
+
+                array_push($employee_array,$e);
+            }
+
+            $location->employees = $employee_array;
+        
+        }
+    }
+
+    public function isPosted($year)
+    {
+  
+        $result = DB::table("thirteenth_month_sg")
+                ->where('stat','=','POSTED')
+                ->where('pyear','=',$year)
+                ->get();
+
+        return (count($result)>0) ? true : false;
     }
 }

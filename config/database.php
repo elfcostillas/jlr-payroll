@@ -42,7 +42,7 @@ return [
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
-        
+        /*
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
@@ -65,7 +65,7 @@ return [
                 PDO::ATTR_EMULATE_PREPARES => true,
             ]) : [],
         ],
-        /*
+         */
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
@@ -73,7 +73,7 @@ return [
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'jlr_hris'),
             'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', 'password'),
+            'password' => env('DB_PASSWORD', ''),
           
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
@@ -87,7 +87,7 @@ return [
                 PDO::ATTR_EMULATE_PREPARES => true,
             ]) : [],
         ],
-        */
+       
 		/*
 			'att' => [
 				'driver' => 'mysql',

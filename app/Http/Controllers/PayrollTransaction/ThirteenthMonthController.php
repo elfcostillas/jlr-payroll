@@ -56,4 +56,19 @@ class ThirteenthMonthController extends Controller
 
         // dd($request->year);
     }
+
+    public function post(Request $request)
+    {
+        $year = $request->cyear;
+
+        if(!$this->mapper->isPosted($year)){
+            $result = $this->mapper->post13thMonth($year);
+        }else{
+            return response()->json(['error'=>"Year $year is already posted."])->setStatusCode(500);
+        }
+
+        return response()->json(['success'=>"13th Month of year $year was successfully posted."]);
+
+       
+    }
 }

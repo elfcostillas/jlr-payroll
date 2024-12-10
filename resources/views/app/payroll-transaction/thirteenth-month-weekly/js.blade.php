@@ -31,6 +31,45 @@
                         let selected = $("#pyear").data("kendoDropDownList");
                         let url = `thirteenth-month-weekly/download-excel/${selected.value()}`;
                         window.open(url);
+                    },
+                    post : function()
+                    {
+                        let selected = $("#pyear").data("kendoDropDownList");
+                
+                        Swal.fire({
+                                title: 'Finalize and Post 13th Month (Support Group)',
+                                text: "You won't be able to revert this!",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Finalize'
+                            }).then((result) => {
+                                if (result.value) {                       
+                                    $.post('thirteenth-month-weekly/post',{
+                                        cyear : selected.value()
+                                    },function(data,staus){
+                                        if(data.success){
+                                            Swal.fire({
+                                            //position: 'top-end',
+                                            icon: 'success',
+                                            title: data.success,
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                            });	
+
+                                           
+                                        }
+                                    })
+                                    .fail(function(data){
+                                    swal_error(data);
+                                    }).always(function() {
+                                        //viewModel.maingrid.ds.read();
+                                    });
+                                }
+                            });
+
+                      
                     }
                     
                 }
@@ -53,10 +92,13 @@
                         type : "button",text : "Download Excel", icon : 'download',click : viewModel.handler.download
                     },
                     {
-                        type : "button",text : "Post", icon : 'save',click : viewModel.handler.download
+                        type : "button",text : "Post", icon : 'save',click : viewModel.handler.post
                     },
                     {
-                        type : "button",text : "Bank Transmittal", icon : 'print',click : viewModel.handler.download
+                        type : "button",text : "Bank Transmittal", icon : 'print',click : viewModel.handler.banktransmittal
+                    },
+                    {
+                        type : "button",text : "Payslip", icon : 'print',click : viewModel.handler.print
                     }
                   
                 ]
