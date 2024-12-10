@@ -66,7 +66,12 @@ class ThirteenthMonthMapper extends AbstractMapper
                     //         'net_pay' => $e->getNetPay()
                     //     ]);
 
-                    DB::table('thirteenth_month_sg')->insert(['user_id' => Auth::user()->id,'pyear' => $year, 'biometric_id' => $e->getBiometricID(),'net_pay' => $e->getNetPay(),'created_on' => now() ]);
+                    DB::table('thirteenth_month_sg')->insert(['user_id' => Auth::user()->id,
+                        'pyear' => $year,
+                        'biometric_id' => $e->getBiometricID(),
+                        'net_pay' => $e->getNetPay(),
+                        'gross_pay' => $e->getGrossPay(),
+                        'created_on' => now() ]);
                 }
 
                 
@@ -174,7 +179,13 @@ class ThirteenthMonthMapper extends AbstractMapper
                     //         'net_pay' => $e->getNetPay()
                     //     ]);
 
-                    DB::table('thirteenth_month_sg')->insert(['user_id' => Auth::user()->id,'pyear' => $year, 'biometric_id' => $e->getBiometricID(),'net_pay' => $e->getNetPay(),'stat' => 'POSTED','created_on' => now() ]);
+                    DB::table('thirteenth_month_sg')->insert(['user_id' => Auth::user()->id,
+                    'pyear' => $year, 
+                    'biometric_id' => $e->getBiometricID(),
+                    'net_pay' => $e->getNetPay(),
+                    'stat' => 'POSTED',
+                    'gross_pay' => $e->getGrossPay(),
+                    'created_on' => now() ]);
                 }
 
                 
@@ -185,6 +196,20 @@ class ThirteenthMonthMapper extends AbstractMapper
             $location->employees = $employee_array;
         
         }
+    }
+
+    public function getPosted($cyear)
+    {
+       
+        $result = DB::table('thirteenth_month_sg')->select(DB::raw('employee_names_vw.employee_name,employees.bank_acct,thirteenth_month_sg.net_pay,thirteenth_month_sg.net_pay'))
+        ->leftJoin('employees','thirteenth_month_sg.biometric_id','=','employees.biometric_id')
+        ->leftJoin('employee_names_vw','thirteenth_month_sg.biometric_id','=','employee_names_vw.biometric_id')
+        ->where('pyear','=',$cyear)
+        ->where('stat','POSTED')
+        ->orderBy('lastname','ASC')
+        ->orderBy('firstname','ASC');
+
+        return $result->get();
     }
 
     public function isPosted($year)

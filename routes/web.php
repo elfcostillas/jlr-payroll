@@ -710,6 +710,7 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::get('download-excel/{year}',[ThirteenthMonthController::class,'download']);
 
         Route::get('post',[ThirteenthMonthController::class,'post']);
+        Route::get('download-banktransmittal/{year}',[ThirteenthMonthController::class,'bank_transmittal']);
     });
 });
 

@@ -7,18 +7,20 @@ use App\Http\Controllers\Controller;
 use App\Mappers\PayrollTransaction\ThirteenthMonthMapper;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-
+use  App\Excel\BankTransmittal;
 
 class ThirteenthMonthController extends Controller
 {
     //
     private $mapper;
     private $excel;
+    private $rcbc;
 
-    public function __construct(ThirteenthMonthMapper $mapper,ThirteenthMonthSG $excel)
+    public function __construct(ThirteenthMonthMapper $mapper,ThirteenthMonthSG $excel,BankTransmittal $rcbc)
     {
         $this->mapper = $mapper;
         $this->excel = $excel;
+        $this->rcbc = $rcbc;
     }
 
     public function index()
@@ -70,5 +72,19 @@ class ThirteenthMonthController extends Controller
         return response()->json(['success'=>"13th Month of year $year was successfully posted."]);
 
        
+    }
+
+    public function bank_transmittal(Request $request)
+    {
+        // $result = $this->posted->getPostedDataforRCBC($request->period_id);
+        $year = $request->year;
+
+        $result = $this->mapper->getPosted($year);
+      
+
+        // // dd($result);
+
+        $this->rcbc->setValues($result);
+        return Excel::download($this->rcbc,"ThirteenthMonthBankTransmittal_SG_$year.xlsx");
     }
 }

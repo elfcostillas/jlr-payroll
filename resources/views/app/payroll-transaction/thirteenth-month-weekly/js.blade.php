@@ -29,7 +29,15 @@
                     download : function()
                     {
                         let selected = $("#pyear").data("kendoDropDownList");
-                        let url = `thirteenth-month-weekly/download-excel/${selected.value()}`;
+                        let url = `thirteenth-month-weekly/download-banktransmittal/${selected.value()}`;
+                        window.open(url);
+                    },
+
+                    banktransmittal : function()
+                    {
+                        let selected = $("#pyear").data("kendoDropDownList");
+
+                        let url = `thirteenth-month-weekly/download-banktransmittal/${selected.value()}`;
                         window.open(url);
                     },
                     post : function()
