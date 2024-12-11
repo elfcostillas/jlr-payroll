@@ -6,6 +6,29 @@
            
             var viewModel = kendo.observable({ 
                 selectedYear : null,
+                ds : {
+                    location : new kendo.data.DataSource({
+                        transport : {
+                            read : {
+                                url : '../settings/locations/get-locations',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },
+                        },
+                        schema : {
+                            model : {
+                                id : 'id',
+                                fields : {
+                                    location_name : { type : 'string' },
+                                  
+                                }
+                            }
+                        }
+                    }),
+                },
                 handler : {
                     show : function(data){
                         let selected = $("#pyear").data("kendoDropDownList");
@@ -78,10 +101,39 @@
                             });
 
                       
+                    },
+                    showPop : function(data)
+                    {
+                        var myWindow = $("#pop");
+                        
+                        myWindow.kendoWindow({
+                            width: "464px", //1124 - 1152
+                            height: "280",
+                            title: "13th Month Payslip",
+                            visible: false,
+                            animation: false,
+                            actions: [
+                                "Pin",
+                                "Minimize",
+                                "Maximize",
+                                "Close"
+                            ],
+                            close : viewModel.handler.closePop,
+                            position : {
+                                top : 0
+                            }
+                        }).data("kendoWindow").center().open().title() ;
+                    },
+                    closePop : function(){},
+                    print : function(){
+                        alert();
                     }
+
                     
                 }
             });
+
+            kendo.bind($("#viewModel"),viewModel);
 
             $("#toolbar").kendoToolBar({
                 items : [
@@ -106,7 +158,7 @@
                         type : "button",text : "Bank Transmittal", icon : 'print',click : viewModel.handler.banktransmittal
                     },
                     {
-                        type : "button",text : "Payslip", icon : 'print',click : viewModel.handler.print
+                        type : "button",text : "Payslip", icon : 'print',click : viewModel.handler.showPop
                     }
                   
                 ]
@@ -126,6 +178,35 @@
 
                 }
             });
+
+            $("#popyear").kendoDropDownList({
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: years,
+                index: 0,
+                // change: viewModel.handler.setSelectedYear()
+                change: function(e){
+                    //e.sender.dataItem()
+                    // console.log(e.sender.dataItem().value);
+                    //let dataItem = e.sender.dataItem();
+
+
+                }
+            });
+
+            $("#ddLocation").kendoDropDownList({
+                dataTextField: "location_name",
+                dataValueField: "id",
+                dataSource: viewModel.ds.location,
+                index: 1,
+                optionLabel: {
+                    id: 0,
+                    location_name: "ALL"
+                }
+                //change: onChange
+            });
+
+           
         });
     </script>
 @endsection

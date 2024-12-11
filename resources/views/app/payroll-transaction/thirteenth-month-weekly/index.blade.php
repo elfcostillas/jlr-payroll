@@ -92,8 +92,32 @@
                     <div id="resultTable" ></div>
                 </div>
             </div>
+            <div id="pop" style="display:none;">
+                <table class="formTable" style="width:100%" border=1>
+                    <tr>
+                        <td>Year</td>
+                    </tr>
+                    <tr>
+                        <td><input id="popyear" type="text"></td>
+                    </tr>
+                    <tr>
+                        <td>Location</td>
+                    </tr>
+                    <tr>
+                        <td><input id="ddLocation" type="text"></td>
+                    </tr>
+                    <tr>
+                        <td> <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base fixwidth" data-bind="click : handler.print"> Print</button> </td>
+                                        
+                    </tr>
+                </table>
+            </div>
         </div>
+
+        
     </div>
+
 @endsection
 
 @include('app.payroll-transaction.thirteenth-month-weekly.js')
+
