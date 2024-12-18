@@ -711,6 +711,7 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
 
         Route::get('post',[ThirteenthMonthController::class,'post']);
         Route::get('download-banktransmittal/{year}',[ThirteenthMonthController::class,'bank_transmittal']);
+        Route::get('print/{year}/{location}',[ThirteenthMonthController::class,'print']);
     });
 });
 

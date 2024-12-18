@@ -222,4 +222,48 @@ class ThirteenthMonthMapper extends AbstractMapper
 
         return (count($result)>0) ? true : false;
     }
+
+    public function getNetpay($year,$location)
+    {
+        $result = DB::table('thirteenth_month_sg')
+        ->leftJoin('employees','employees.biometric_id','=','thirteenth_month_sg.biometric_id')
+        ->leftJoin('employee_names_vw','employee_names_vw.biometric_id','=','thirteenth_month_sg.biometric_id')
+        ->select(DB::raw('thirteenth_month_sg.net_pay,thirteenth_month_sg.biometric_id,employee_names_vw.employee_name'))
+        ->where('stat','POSTED')->where('pyear',$year);
+
+        if($location!=0)
+        {
+            $result->where('location_id','=',$location);
+        }
+
+        return $result->get();
+    }
+
+    public function getLocation($id)
+    {
+        if($id == 0)
+        {
+            return "All locations";
+        }else {
+            $location = DB::table('locations')->where('id',$id)->first();
+            return $location->location_name;
+        }
+    }
+
+    public function getRange($year)
+    {
+        $start = DB::table('payroll_period_weekly')->select(DB::raw("date_format(date_from,'%M %Y') as label"))
+                ->where('pyear',$year)
+                ->orderBy('id','ASC')
+                ->first();
+
+        $end = DB::table('payroll_period_weekly')->select(DB::raw("date_format(date_from,'%M %Y') as label"))
+                ->where('pyear',$year)
+                ->orderBy('id','DESC')
+                ->first();
+
+        return $start->label . ' - ' . $end->label;
+    }
+
+    
 }

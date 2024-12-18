@@ -52,7 +52,7 @@
                     download : function()
                     {
                         let selected = $("#pyear").data("kendoDropDownList");
-                        let url = `thirteenth-month-weekly/download-banktransmittal/${selected.value()}`;
+                        let url = `thirteenth-month-weekly/download-excel/${selected.value()}`;
                         window.open(url);
                     },
 
@@ -126,7 +126,12 @@
                     },
                     closePop : function(){},
                     print : function(){
-                        alert();
+
+                        let year = $("#popyear").data("kendoDropDownList");
+                        let location = $("#ddLocation").data("kendoDropDownList");
+                        
+                        let url = `thirteenth-month-weekly/print/${year.value()}/${location.value()}`;
+                        window.open(url);
                     }
 
                     
