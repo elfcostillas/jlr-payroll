@@ -132,6 +132,20 @@
                         
                         let url = `thirteenth-month-weekly/print/${year.value()}/${location.value()}`;
                         window.open(url);
+                    },
+                    conso : function ()
+                    {
+                        let selected = $("#pyear").data("kendoDropDownList");
+
+                        let url = `thirteenth-month-weekly/download-conso/${selected.value()}`;
+                        window.open(url);
+                    },
+                    banktransmittalconso : function()
+                    {
+                        let selected = $("#pyear").data("kendoDropDownList");
+
+                        let url = `thirteenth-month-weekly/download-banktransmittal-conso/${selected.value()}`;
+                        window.open(url);
                     }
 
                     
@@ -164,7 +178,13 @@
                     },
                     {
                         type : "button",text : "Payslip", icon : 'print',click : viewModel.handler.showPop
-                    }
+                    },
+                    {
+                        type : "button",text : "Consolidated", icon : 'table',click : viewModel.handler.conso
+                    },
+                    {
+                        type : "button",text : "Consolidated Bank Transmittal", icon : 'print',click : viewModel.handler.banktransmittalconso
+                    },
                   
                 ]
             });

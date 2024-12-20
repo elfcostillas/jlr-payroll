@@ -8,6 +8,7 @@ use App\Mappers\PayrollTransaction\ThirteenthMonthMapper;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use  App\Excel\BankTransmittal;
+use  App\Excel\ThirteenthMonthConso;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class ThirteenthMonthController extends Controller
@@ -16,12 +17,14 @@ class ThirteenthMonthController extends Controller
     private $mapper;
     private $excel;
     private $rcbc;
+    private $conso;
 
-    public function __construct(ThirteenthMonthMapper $mapper,ThirteenthMonthSG $excel,BankTransmittal $rcbc)
+    public function __construct(ThirteenthMonthMapper $mapper,ThirteenthMonthSG $excel,BankTransmittal $rcbc,ThirteenthMonthConso $conso)
     {
         $this->mapper = $mapper;
         $this->excel = $excel;
         $this->rcbc = $rcbc;
+        $this->conso = $conso;
     }
 
     public function index()
@@ -89,6 +92,20 @@ class ThirteenthMonthController extends Controller
         return Excel::download($this->rcbc,"ThirteenthMonthBankTransmittal_SG_$year.xlsx");
     }
 
+    public function conso_bank_transmittal(Request $request)
+    {
+        // $result = $this->posted->getPostedDataforRCBC($request->period_id);
+        $year = $request->year;
+
+        $result = $this->mapper->getConsoPosted($year);
+      
+
+        // // dd($result);
+
+        $this->rcbc->setValues($result);
+        return Excel::download($this->rcbc,"ThirteenthMonthBankTransmittalConso_SG_$year.xlsx");
+    }
+
     public function print(Request $request)
     {
         $year = $request->year;
@@ -112,6 +129,36 @@ class ThirteenthMonthController extends Controller
         return $pdf->stream('DTR.pdf'); 
 
         // return view('app.payroll-transaction.thirteenth-month-weekly.print',['data'=> $result]);
+    }
+
+    public function conso(Request $request)
+    {
+        $year = $request->year;
+
+        $months = [
+            12 => 'DECEMBER',
+            1 => 'JANUARY',
+            2 => 'FEBRUARY',
+            3 => 'MARCH',
+            4 => 'APRIL',
+            5 => 'MAY',
+            6 => 'JUNE',
+            7 => 'JULY',
+            8 => 'AUGUST',
+            9 => 'SEPTEMBER',
+            10 => 'OCTOBER',
+            11 => 'NOVEMBER',
+        ];
+
+        $semi = $this->mapper->buildSemiMonthly($months,$year);
+        $weekly = $this->mapper->buildWeekly($months,$year);
+
+        $this->conso->setValues($semi,$weekly,$months);
+        return Excel::download($this->conso,"ThirteenthMonthConso_$year.xlsx");
+        
+        // dd($weekly);
+
+        // return view('app.payroll-transaction.thirteenth-month-weekly.conso',['semi' => $semi,'weekly' => $weekly,'months' => $months ]);
     }
 
 
