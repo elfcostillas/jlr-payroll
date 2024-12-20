@@ -230,6 +230,7 @@ class ThirteenthMonthMapper extends AbstractMapper
         ->leftJoin('employees','thirteenth_month_sg.biometric_id','=','employees.biometric_id')
         ->leftJoin('employee_names_vw','thirteenth_month_sg.biometric_id','=','employee_names_vw.biometric_id')
         ->where('pyear','=',$cyear)
+        ->where('employees.exit_status',1)
         ->where('stat','POSTED')->get();
         // ->orderBy('lastname','ASC')
         // ->orderBy('firstname','ASC');
@@ -239,7 +240,7 @@ class ThirteenthMonthMapper extends AbstractMapper
         ->leftJoin('employee_names_vw','thirteenth_month_sg.biometric_id','=','employee_names_vw.biometric_id')
         ->where('pyear','=',$cyear)
         ->where('stat','POSTED')
-        
+        ->where('employees.exit_status',1)
         ->orderBy('employee_name','ASC')
         
         ->get();
