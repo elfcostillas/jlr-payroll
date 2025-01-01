@@ -806,7 +806,7 @@ departmentalTotalGross -->
         <div style="display:block;position:relative;clear:both;">
             <table border=1 style="border-collapse:collapse;float:left;margin-top:8px;width:180px;">
                 <tr>
-                    <td colspan=2  style="padding:2px;text-align:center;"> Total Per Dept. (Gross Pay) </td>
+                    <td colspan=2  style="padding:2px;text-align:center;">  Payroll / (Gross Pay) </td>
                 </tr>
                 <?php $totalPerDeptGross = 0;?>
                 @foreach($departmentalTotalGross as $dept => $amount)
@@ -826,7 +826,7 @@ departmentalTotalGross -->
 
             <table border=1 style="border-collapse: collapse;float:left;margin-left :8px;margin-top:8px;">
                 <tr>
-                    <td style="padding:2px;"> Gross Pay more than 9,000 </td>
+                    <td style="padding:2px;"> Gross Pay more than 9,000 except TM Drivers </td>
                 </tr>
                 <tr>
                     <td style="padding:2px;text-align:center"> {{ $fourfive_count }} </td>
