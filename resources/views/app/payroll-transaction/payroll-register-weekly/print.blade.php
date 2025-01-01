@@ -166,7 +166,7 @@
 
             <table border=1  style="width:100%;border-collapse:collapse;margin-bottom:6px;" class="btable">
                 <tr>
-                    <td colspan={{ 19 + $additional }} > {{ $location->location_name }}</td>  
+                    <td colspan={{ 19 + $additional }} > {{ $location->location_altername2 }}</td>  
                 </tr>
                 <thead>
                     <tr>
@@ -650,29 +650,63 @@
     </table>
 
     </div>
-
-    <?php  $total = 0; ?>
-    
-        <table border=1 style="page-break-inside:avoid;border-collapse:collapse; width:200;  float:left;margin-right:12px;">
+        <table border=0 style="width:100%;margin-bottom:2px;">
             <tr>
-                <td colspan=2> No of Employees</td> 
-
-                @foreach($data as $loc)
-			@if($loc->employees->count()>0)
-					 <tr>
-						<td style="padding:2px;width:180px" >{{ $loc->location_name }}</td>
-						<td style="padding-right:5px;text-align:right;" >{{ $loc->employees->count() }} </td>
-					    </tr>
-					    {{$total += $loc->employees->count(); }}
-			@endif
-   
-                @endforeach
-                <tr>
-                    <td>TOTAL</td>
-                    <td style="padding-right:5px;text-align:right;" >{{ $total }}</td>
-                </tr>
+                <td><span style="font-size:10;" >PAYROLL REGISTER <br> SUPPORT GROUP</span></td>
+                <td></td>
+                <td style="width:200px" >Date / Time  Printed: {{ date_format(now(),'m/d/Y H:i:s') }}</td>
+            </tr>
+            <tr>
+                <td>Payroll Period : {{ $period_label}}</td>
+                <td></td>
             </tr>
         </table>
+
+        <table border=1 style="border-collapse:collapse;float:left;width:180px;margin-right:12px;">
+            <tr>
+                <td  style="padding:2px;text-align:center; min-width:120px;"> Employee Count Per Dept. </td>
+
+                <td  style="padding:2px;text-align:center;min-width:32px;"> BPN </td>
+                <td  style="padding:2px;text-align:center;min-width:32px;"> BPS </td>
+                <td  style="padding:2px;text-align:center;min-width:32px;"> AGG </td>
+                <td  style="padding:2px;text-align:center;min-width:32px;"> TOTAL </td>
+
+
+            </tr>
+            <?php 
+                $bpn_total = 0;
+                $bps_total = 0;
+                $agg_total = 0;
+
+                $deptTotal[] = 0;
+            ?>
+
+            @foreach($empCountPerDept as $key => $val)
+                <tr>
+                    <td>{{ $val }}</td>
+                    <td style="text-align:center;"> {{ ($empCountPerDeptVal[$val][1] > 0) ? $empCountPerDeptVal[$val][1] : '' }}</td>
+                    <td style="text-align:center;"> {{ ($empCountPerDeptVal[$val][2] > 0) ? $empCountPerDeptVal[$val][2] : ''  }}</td>
+                    <td style="text-align:center;"> {{ ($empCountPerDeptVal[$val][3] > 0) ? $empCountPerDeptVal[$val][3] : ''  }}</td>
+
+                    <td style="text-align:center;"> {{ $empCountPerDeptVal[$val][1] + $empCountPerDeptVal[$val][2] + $empCountPerDeptVal[$val][3] }}</td>
+                </tr>
+                <?php 
+                    $bpn_total +=  $empCountPerDeptVal[$val][1];
+                    $bps_total +=  $empCountPerDeptVal[$val][2];
+                    $agg_total +=  $empCountPerDeptVal[$val][3];
+                ?>
+            @endforeach
+                <tr>
+                    <td> TOTAL </td>
+                    <td style="text-align:center;">{{  ($bpn_total > 0) ? $bpn_total : '' }}</td>
+                    <td style="text-align:center;">{{  ($bps_total > 0) ? $bps_total  : '' }}</td>
+                    <td style="text-align:center;">{{  ($agg_total > 0) ? $agg_total : '' }}</td>
+                    <td style="text-align:center;"> {{ $bpn_total + $bps_total + $agg_total }}</td>
+                </tr>
+        </table>
+
+    <?php  $total = 0; ?>
+
 
         @foreach($data as $loc)
             <?php
@@ -683,7 +717,7 @@
             @if($loc->employees->count()>0)
                 <table border=1 style="page-break-inside:avoid;border-collapse:collapse; width:200px; float:left;margin-right:12px;">
                 <tr>
-                    <td colspan=3 style="padding:2px;width:180px" >{{ $loc->location_name }}</td>
+                    <td colspan=3 style="padding:2px;width:180px" >{{ $loc->location_altername2 }}</td>
                 </tr>
                     @if($loc->employees->count()>0)
                         @foreach($loc->summary as $dept => $count)
@@ -708,7 +742,7 @@
                 </table>
             @endif
         @endforeach
-
+        <!-- B -->
         <div style="display:block;position:relative;clear:both;margin-top:8px;">
             <table border=1 style="border-collapse: collapse;float:left">
                 <tr>
@@ -721,18 +755,6 @@
                             <td style="padding:2px;text-align:right;width:24px;"> {{ $ot_summ_value[$key] }} </td>
                         </tr>
                 @endforeach
-            </table>
-                        
-          
-            <table border=1 style="border-collapse: collapse;float:left;margin-left :8px;">
-                <tr>
-                    <td style="padding:2px;"> Gross Pay more than 9,000 </td>
-                </tr>
-                <tr>
-                    <td style="padding:2px;text-align:center"> {{ $fourfive_count }} </td>
-      
-                </tr>
-               
             </table>
 
             <table border=1 style="border-collapse: collapse;float:left;margin-left :8px;">
@@ -747,28 +769,34 @@
                 @endforeach 
                
             </table>
+
+            @foreach($otReport2 as $table)
+                
+                <table border=1 style="border-collapse:collapse;float:left;margin-left:12px;width:240px;">
+                    <tr>
+                        <td colspan=3  style="padding:2px;text-align:center;"> {{ $ot_summ_label[$table] }}</td>
+                    </tr>
+                
+                    @foreach($otByJobtitleValue[$table] as $key => $row) 
+
+                        @foreach($row as $key2 => $value)
+                        <tr>
+                            <td style="padding:2px;"> {{ $key }}</td>
+                            <td style="padding:2px;"> {{ $key2 }} </td>
+                            <td style="padding:2px;text-align:center;"> {{ $value }} </td>
+                        </tr>
+                        @endforeach
+
+                    @endforeach
+                </table>
+            @endforeach
+                        
+          
+          
+
             <div style="display:block;position:relative;clear:both;">
             
-                @foreach($otReport2 as $table)
-                
-                    <table border=1 style="border-collapse:collapse;float:left;margin-right:14px;width:240px;margin-top:8px;">
-                        <tr>
-                            <td colspan=3  style="padding:2px;text-align:center;"> {{ $ot_summ_label[$table] }}</td>
-                        </tr>
-                    
-                        @foreach($otByJobtitleValue[$table] as $key => $row) 
-
-                            @foreach($row as $key2 => $value)
-                            <tr>
-                                <td style="padding:2px;"> {{ $key }}</td>
-                                <td style="padding:2px;"> {{ $key2 }} </td>
-                                <td style="padding:2px;text-align:center;"> {{ $value }} </td>
-                            </tr>
-                            @endforeach
-
-                        @endforeach
-                    </table>
-                @endforeach
+              
             </div>
 
             <!-- departmentalTotalNet
@@ -796,48 +824,17 @@ departmentalTotalGross -->
 
             </table>
 
-            <table border=1 style="border-collapse:collapse;margin-left:14px;margin-top:8px;float:left;width:180px;">
+            <table border=1 style="border-collapse: collapse;float:left;margin-left :8px;margin-top:8px;">
                 <tr>
-                    <td  style="padding:2px;text-align:center; min-width:120px;"> Employee Count Per Dept. </td>
-
-                    <td  style="padding:2px;text-align:center;min-width:32px;"> BPN </td>
-                    <td  style="padding:2px;text-align:center;min-width:32px;"> BPS </td>
-                    <td  style="padding:2px;text-align:center;min-width:32px;"> AGG </td>
-                    <td  style="padding:2px;text-align:center;min-width:32px;"> TOTAL </td>
-
-
+                    <td style="padding:2px;"> Gross Pay more than 9,000 </td>
                 </tr>
-                <?php 
-                    $bpn_total = 0;
-                    $bps_total = 0;
-                    $agg_total = 0;
-
-                    $deptTotal[] = 0;
-                ?>
-
-                @foreach($empCountPerDept as $key => $val)
-                    <tr>
-                        <td>{{ $val }}</td>
-                        <td style="text-align:center;"> {{ ($empCountPerDeptVal[$val][1] > 0) ? $empCountPerDeptVal[$val][1] : '' }}</td>
-                        <td style="text-align:center;"> {{ ($empCountPerDeptVal[$val][2] > 0) ? $empCountPerDeptVal[$val][2] : ''  }}</td>
-                        <td style="text-align:center;"> {{ ($empCountPerDeptVal[$val][3] > 0) ? $empCountPerDeptVal[$val][3] : ''  }}</td>
-
-                        <td style="text-align:center;"> {{ $empCountPerDeptVal[$val][1] + $empCountPerDeptVal[$val][2] + $empCountPerDeptVal[$val][3] }}</td>
-                    </tr>
-                    <?php 
-                        $bpn_total +=  $empCountPerDeptVal[$val][1];
-                        $bps_total +=  $empCountPerDeptVal[$val][2];
-                        $agg_total +=  $empCountPerDeptVal[$val][3];
-                    ?>
-                @endforeach
-                    <tr>
-                        <td> TOTAL </td>
-                        <td style="text-align:center;">{{  ($bpn_total > 0) ? $bpn_total : '' }}</td>
-                        <td style="text-align:center;">{{  ($bps_total > 0) ? $bps_total  : '' }}</td>
-                        <td style="text-align:center;">{{  ($agg_total > 0) ? $agg_total : '' }}</td>
-                        <td style="text-align:center;"> {{ $bpn_total + $bps_total + $agg_total }}</td>
-                    </tr>
+                <tr>
+                    <td style="padding:2px;text-align:center"> {{ $fourfive_count }} </td>
+      
+                </tr>
+               
             </table>
+
 
         </div>
         <div style="display:block;position:relative;clear:both;">
