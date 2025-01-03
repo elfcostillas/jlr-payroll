@@ -110,12 +110,12 @@
 
     <table border=0 style="width:100%;margin-bottom:2px;">
         <tr>
-            <td><span style="font-size:10;" >PAYROLL REGISTER <br> SUPPORT GROUP</span></td>
+            <td><span style="font-size:16;" >HRD <br> Support Group Semi Monthly Payroll </span></td>
             <td></td>
-            <td style="width:200px" >Date / Time  Printed: {{ date_format(now(),'m/d/Y H:i:s') }}</td>
+            <td style="width:230px;font-size:10pt;" >Date / Time  Printed: {{ date_format(now(),'m/d/Y H:i:s') }}</td>
         </tr>
         <tr>
-            <td>Payroll Period : {{ $period_label}}</td>
+            <td style="font-size:12pt;" >Payroll Period : {{ $period_label}}</td>
             <td></td>
         </tr>
     </table>
@@ -652,12 +652,12 @@
     </div>
         <table border=0 style="width:100%;margin-bottom:2px;">
             <tr>
-                <td><span style="font-size:10;" >PAYROLL REGISTER <br> SUPPORT GROUP</span></td>
+                <td><span style="font-size:16;" >HRD <br> Support Group Semi Monthly Payroll </span></td>
                 <td></td>
-                <td style="width:200px" >Date / Time  Printed: {{ date_format(now(),'m/d/Y H:i:s') }}</td>
+                <td style="width:230px;font-size:10pt;" >Date / Time  Printed: {{ date_format(now(),'m/d/Y H:i:s') }}</td>
             </tr>
             <tr>
-                <td>Payroll Period : {{ $period_label}}</td>
+                <td style="font-size:12pt;" >Payroll Period : {{ $period_label}}</td>
                 <td></td>
             </tr>
         </table>
@@ -666,9 +666,9 @@
             <tr>
                 <td  style="padding:2px;text-align:center; min-width:120px;"> Employee Count Per Dept. </td>
 
-                <td  style="padding:2px;text-align:center;min-width:32px;"> BPN </td>
-                <td  style="padding:2px;text-align:center;min-width:32px;"> BPS </td>
-                <td  style="padding:2px;text-align:center;min-width:32px;"> AGG </td>
+                <td  style="padding:2px;text-align:center;min-width:32px;"> North </td>
+                <td  style="padding:2px;text-align:center;min-width:32px;"> South </td>
+                <td  style="padding:2px;text-align:center;min-width:32px;"> Agg </td>
                 <td  style="padding:2px;text-align:center;min-width:32px;"> TOTAL </td>
 
 
