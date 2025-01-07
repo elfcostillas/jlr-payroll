@@ -38,6 +38,10 @@ use App\Http\Controllers\EmployeeFile\JobTitleController;
 use App\Http\Controllers\Reports\EmployeeReportController;
 use App\Http\Controllers\Reports\LeaveReportsController;
 use App\Http\Controllers\Reports\ManHoursController;
+use App\Http\Controllers\Reports\SGContributionsController;
+
+
+
 use Carbon\CarbonPeriod;
 
 use App\Http\Controllers\PayrollTransaction\PayrollRegisterController;
@@ -590,6 +594,12 @@ Route::middleware('auth')->prefix('reports')->group(function(){
         Route::get('period-list',[PayrollSupportGroupController::class,'periodList']);
         Route::get('payroll-report/{id}',[PayrollSupportGroupController::class,'downloadPayrollReport']);
         
+    });
+
+    Route::prefix('sg-contributions')->group(function(){
+        Route::get('/',[SGContributionsController::class,'index']);
+        Route::get('year',[SGContributionsController::class,'fy']);
+        Route::get('generate/{year}/{month}',[SGContributionsController::class,'generate']);
     });
     
 
