@@ -599,10 +599,14 @@ Route::middleware('auth')->prefix('reports')->group(function(){
     Route::prefix('sg-contributions')->group(function(){
         Route::get('/',[SGContributionsController::class,'index']);
         Route::get('year',[SGContributionsController::class,'fy']);
-        Route::get('generate/{year}/{month}',[SGContributionsController::class,'generate']);
-    });
-    
 
+        Route::get('generate-web/{year}/{month}',[SGContributionsController::class,'generate']);
+        Route::get('generate-excel/{year}/{month}',[SGContributionsController::class,'export']);
+
+        Route::get('generate-web-type/{year}/{month}/{type}',[SGContributionsController::class,'webByType']);
+        Route::get('generate-excel-type/{year}/{month}/{type}',[SGContributionsController::class,'excelByType']);
+
+    });
 
 });
 

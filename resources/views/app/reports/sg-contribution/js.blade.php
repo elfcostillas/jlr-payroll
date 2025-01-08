@@ -23,6 +23,13 @@
                 { text: "December", value: "12" },
             ];
 
+            let type = [
+                { text: "SSS", value: "1" },
+                { text: "HDMF", value: "2" },
+                { text: "PHIC", value: "3" },
+              
+            ];
+
             var viewModel = kendo.observable({ 
                 form : {
                     model : {
@@ -107,34 +114,66 @@
                         let m = $("#scripts_months").data("kendoDropDownList").value();
                         let y = $("#scripts_year").data("kendoDropDownList").value();
 
-                        let url = `sg-contributions/generate/${y}/${m}`;
+                        let url = `sg-contributions/generate-excel/${y}/${m}`;
+
+                        window.open(url);
+                    },
+
+                    web : function()
+                    {
+                        let m = $("#scripts_months").data("kendoDropDownList").value();
+                        let y = $("#scripts_year").data("kendoDropDownList").value();
+
+                        let url = `sg-contributions/generate-web/${y}/${m}`;
+
+                        window.open(url);
+                    },
+
+                    download_2 : function()
+                    {   
+                        let m = $("#scripts_months2").data("kendoDropDownList").value();
+                        let y = $("#scripts_year2").data("kendoDropDownList").value();
+                        let t = $("#scripts_type2").data("kendoDropDownList").value();
+
+                        let url = `sg-contributions/generate-excel-type/${y}/${m}/${t}`;
+
+                        window.open(url);
+                    },
+
+                    web_2 : function()
+                    {
+                        let m = $("#scripts_months2").data("kendoDropDownList").value();
+                        let y = $("#scripts_year2").data("kendoDropDownList").value();
+                        let t = $("#scripts_type2").data("kendoDropDownList").value();
+
+                        let url = `sg-contributions/generate-web-type/${y}/${m}/${t}`;
 
                         window.open(url);
                     },
                    
-                    viewYearly : function(e){
-                        let year = $("#tardy_year").data("kendoDropDownList").value();
-                        let url = `tardiness-reports/yearly-tardiness/${year}`;
+                    // viewYearly : function(e){
+                    //     let year = $("#tardy_year").data("kendoDropDownList").value();
+                    //     let url = `tardiness-reports/yearly-tardiness/${year}`;
 
-                        window.open(url);
-                    },
-                    runTardy : function(e){
+                    //     window.open(url);
+                    // },
+                    // runTardy : function(e){
                        
-                        let m = $("#scripts_months").data("kendoDropDownList").value();
-                        let y = $("#scripts_year").data("kendoDropDownList").value();
+                    //     let m = $("#scripts_months").data("kendoDropDownList").value();
+                    //     let y = $("#scripts_year").data("kendoDropDownList").value();
 
-                        let url = `attendance/tardy-setter/${y}/${m}`;
+                    //     let url = `attendance/tardy-setter/${y}/${m}`;
 
-                        window.open(url);
-                    },
-                    runAWOL : function(e){
-                        let m = $("#scripts_months").data("kendoDropDownList").value();
-                        let y = $("#scripts_year").data("kendoDropDownList").value();
+                    //     window.open(url);
+                    // },
+                    // runAWOL : function(e){
+                    //     let m = $("#scripts_months").data("kendoDropDownList").value();
+                    //     let y = $("#scripts_year").data("kendoDropDownList").value();
 
-                        let url = `attendance/awol-setter/${y}/${m}`;
+                    //     let url = `attendance/awol-setter/${y}/${m}`;
 
-                        window.open(url);
-                    },
+                    //     window.open(url);
+                    // },
 
                     // leaveByEmployee : function()
                     // {
@@ -174,6 +213,16 @@
                 }
             });
 
+            $("#scripts_year2").kendoDropDownList({
+                dataSource: viewModel.ds.fy,
+                dataTextField: "fy",
+                dataValueField: "fy",
+                index : -1,
+                change : function(e){
+                    //console.log(e.sender.value())
+                }
+            });
+
             $("#scripts_months").kendoDropDownList({
                 dataSource: months,
                 dataTextField: "text",
@@ -183,6 +232,28 @@
                     //console.log(e.sender.value())
                 }
             });
+
+            $("#scripts_months2").kendoDropDownList({
+                dataSource: months,
+                dataTextField: "text",
+                dataValueField: "value",
+                index : -1,
+                change : function(e){
+                    //console.log(e.sender.value())
+                }
+            });
+
+            $("#scripts_type2").kendoDropDownList({
+                dataSource: type,
+                dataTextField: "text",
+                dataValueField: "value",
+                index : -1,
+                change : function(e){
+                    //console.log(e.sender.value())
+                }
+            });
+
+            
 
             function process()
             {

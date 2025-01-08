@@ -112,9 +112,9 @@
                 <td>{{ $per_loc['sss_er'] }}</td>
                 <td>{{ $per_loc['sss_ec'] }}</td>
             </tr>
-     
+        </table>
     @endforeach
-    
+    <table>
         <tr>
             <td colspan=4 >OVER ALL TOTAL</td>
             <td>{{ $over_all['hdmf_ee'] }}</td>

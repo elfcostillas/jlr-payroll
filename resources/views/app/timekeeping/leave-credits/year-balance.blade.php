@@ -31,7 +31,8 @@
         <td>SL Credit</td>
         <td>VL Consumed</td>
         <td>SL consumed</td>
-        <td>Remaining Credit</td>
+        <td>Remaining VL Credit</td>
+        <td>Remaining SL Credit</td>
     </tr>
     @foreach($data as $emp) 
         <tr>
@@ -43,7 +44,8 @@
             <td> {{ numformat($emp->sick_leave) }}</td>
             <td> {{ numformat($emp->VL_PAY) }}</td>
             <td> {{ numformat($emp->SL_PAY) }}</td>
-            <td> {{ numformat(( $emp->vacation_leave + $emp->sick_leave) - ($emp->VL_PAY + $emp->SL_PAY)) }}</td>
+            <td> {{ numformat(( $emp->vacation_leave - $emp->VL_PAY)) }}</td>
+            <td> {{ numformat(( $emp->sick_leave - $emp->SL_PAY)) }}</td>
         </tr>
     @endforeach
 </table>

@@ -35,22 +35,50 @@
                 <td></td>
                 <td></td>
                 <td></td>
+               
+                @if ($type==2)
+                <td>PAG IBIG No</td>
                 <td colspan="2" style="text-align:center;" >HDMF</td>
+                @endif
+                @if ($type==3)
+                <td>PHIL Health No</td>
                 <td colspan="2" style="text-align:center;" >PHIC</td>
+                @endif
+
+                @if ($type==1)
+                <td>SSS No</td>
                 <td colspan="3" style="text-align:center;" >SSS</td>
+                @endif
+                
+                
+               
             </tr>
             <tr>
                 <td style="width:60px" >No</td>
                 <td style="width:120px" >Dept</td>
                 <td style="width:160px" >Job Title</td>
                 <td style="width:260px" >Name</td>
+                @if ($type==2)
+                <td></td>
                 <td style="width:120px;text-align:center;" >EE</td>
                 <td style="width:120px;text-align:center;" >ER</td>
+                @endif
+                @if ($type==3)
+                <td></td>
                 <td style="width:120px;text-align:center;" >EE</td>
                 <td style="width:120px;text-align:center;" >ER</td>
+                @endif
+
+                @if ($type==1)
+                <td></td>
                 <td style="width:120px;text-align:center;" >EE</td>
                 <td style="width:120px;text-align:center;" >ER</td>
                 <td style="width:120px;text-align:center;" >EC</td>
+                @endif
+                
+
+
+              
             </tr>
             <?php
                  $per_loc = [
@@ -97,37 +125,79 @@
                     <td>{{ $employee->dept_code }}</td>
                     <td>{{ $employee->job_title_name }}</td>
                     <td>{{ $employee->employee_name }} </td>
-                    <td>{{ number_format($employee->hdmf_contri,2) }}</td>
-                    <td>{{ number_format($employee->hdmf_contri,2) }}</td>
-                    <td>{{ number_format($employee->phil_prem,2) }}</td>   
-                    <td>{{ number_format($employee->phil_prem,2) }}</td>   
-                    <td>{{ number_format($employee->sss_prem,2) }}</td>   
-                    <td>{{ number_format($employee->er_share,2) }} </td>   
-                    <td>{{ number_format($employee->ec,2) }}</td>   
+                    @if ($type==2)
+                        <td> {{ $employee->tin_no }} </td>
+                        <td>{{ number_format($employee->hdmf_contri,2) }}</td>
+                        <td>{{ number_format($employee->hdmf_contri,2) }}</td>
+                    @endif
+                    @if ($type==3)
+                        <td> {{ $employee->phic_no }} </td>
+                        <td>{{ number_format($employee->phil_prem,2) }}</td>   
+                        <td>{{ number_format($employee->phil_prem,2) }}</td>   
+                    @endif
+
+                    @if ($type==1)
+                        <td> {{ $employee->sss_no }} </td>
+                        <td>{{ number_format($employee->sss_prem,2) }}</td>   
+                        <td>{{ number_format($employee->er_share,2) }} </td>   
+                        <td>{{ number_format($employee->ec,2) }}</td>   
+                    @endif
+
+                
+                  
+                  
                 </tr>
             @endforeach
             <tr>
                 <td colspan=4 >TOTAL</td>
+              
+              
+             
+                @if ($type==2)
+                <td></td>
                 <td>{{ number_format($per_loc['hdmf_ee'],2) }}</td>
                 <td>{{ number_format($per_loc['hdmf_er'],2) }}</td>
+                @endif
+                @if ($type==3)
+                <td></td>
                 <td>{{ number_format($per_loc['phic_ee'],2) }}</td>
                 <td>{{ number_format($per_loc['phic_er'],2) }}</td>
+                @endif
+
+                @if ($type==1)
+                <td></td>
                 <td>{{ number_format($per_loc['sss_ee'],2) }}</td>
                 <td>{{ number_format($per_loc['sss_er'],2) }}</td>
                 <td>{{ number_format($per_loc['sss_ec'],2) }}</td>
+
+                @endif
             </tr>
      
     @endforeach
     
         <tr>
             <td colspan=4 >OVER ALL TOTAL</td>
-            <td>{{ number_format($over_all['hdmf_ee'],2) }}</td>
-            <td>{{ number_format($over_all['hdmf_er'],2) }}</td>
-            <td>{{ number_format($over_all['phic_ee'],2) }}</td>
-            <td>{{ number_format($over_all['phic_er'],2) }}</td>
-            <td>{{ number_format($over_all['sss_ee'],2) }}</td>
-            <td>{{ number_format($over_all['sss_er'],2) }}</td>
-            <td>{{ number_format($over_all['sss_ec'],2) }}</td>
+
+                @if ($type==2)
+                <td></td>
+                <td>{{ number_format($over_all['hdmf_ee'],2) }}</td>
+                <td>{{ number_format($over_all['hdmf_er'],2) }}</td>
+                @endif
+                @if ($type==3)
+                <td></td>
+                <td>{{ number_format($over_all['phic_ee'],2) }}</td>
+                <td>{{ number_format($over_all['phic_er'],2) }}</td>
+                @endif
+
+                @if ($type==1)
+                <td></td>
+                <td>{{ number_format($over_all['sss_ee'],2) }}</td>
+                <td>{{ number_format($over_all['sss_er'],2) }}</td>
+                <td>{{ number_format($over_all['sss_ec'],2) }}</td>
+                @endif
+        
+            
+         
         </tr>   
     </table>
 </body>

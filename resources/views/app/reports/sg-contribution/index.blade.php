@@ -66,7 +66,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card card-secondary">
-                        <div class="card-header"> Scripts </div>
+                        <div class="card-header"> Cumulative </div>
                         <div class="card-body"> 
                             <table class="formTable" border=0 style="width:100%">
                                 <tr>
@@ -82,8 +82,34 @@
                                     <td><input type="text" id= "scripts_year" /></td>
                                     <td></td>
                                     <td></td>
-                                    <td></td>
+                                    <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.web'><i class="fas fa-table"></i> Generate (Web)</button></td>
                                     <td><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download'><i class="fas fa-table"></i> Download</button></td>
+                                  
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="card card-secondary">
+                        <div class="card-header"> Contribution By Type </div>
+                        <div class="card-body"> 
+                            <table class="formTable" border=0 style="width:100%">
+                                <tr>
+                                    <td>Month</td>
+                                    <td>Year</td>
+                                    <td>Type</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td> <input type="text" id= "scripts_months2" /></td>
+                                    <td> <input type="text" id= "scripts_year2" /></td>
+                                    <td> <input type="text" id= "scripts_type2" /></td>
+                                    <td></td>
+                                    <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.web_2'><i class="fas fa-table"></i> Generate (Web)</button></td>
+                                    <td><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download_2'><i class="fas fa-table"></i> Download</button></td>
                                   
                                 </tr>
                             </table>
