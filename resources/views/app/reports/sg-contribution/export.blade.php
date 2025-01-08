@@ -22,6 +22,11 @@
 
     
     ?>
+     <table>
+        <tr>
+            <td>{{ $label }}</td>
+        </tr>
+    </table>
     @foreach($locations as $location)
         <?php $ctr = 0;  ?>
         <table border=1 style="border-collapse:collapse;">
