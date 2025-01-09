@@ -23,7 +23,21 @@
 
     <table>
         <tr>
-            <td>{{ $label }}</td>
+            <td>
+                Support Group <br>
+                @if ($type==2)
+                    PAGIBIG Contribution  
+                @endif
+                @if ($type==3)
+                    PHIL Health Contribution
+                @endif
+
+                @if ($type==1)
+                    SSS Contribution
+                @endif
+                <br>
+            {{ $label }}
+            </td>
         </tr>
     </table>
 
