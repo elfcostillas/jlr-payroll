@@ -59,7 +59,7 @@ class Contribution implements ShouldAutoSize,WithColumnFormatting,FromView,WithE
     public function columnFormats(): array
     {
         $cols = [
-            'E'=> NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
+           
             'F'=> NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
             'G'=> NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,
             'H'=> NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2,

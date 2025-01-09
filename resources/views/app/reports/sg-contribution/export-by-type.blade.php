@@ -38,7 +38,7 @@
                 @if ($type==1)
                     SSS Contribution
                 @endif
-            
+
             </td>
         </tr>
         <tr>
@@ -145,18 +145,19 @@
                     <td>{{ $employee->job_title_name }}</td>
                     <td>{{ $employee->employee_name }} </td>
                     @if ($type==2)
-                        <td> {{ $employee->hdmf_no }} </td>
+                        <td> {{ str_replace(['-',' '],"",$employee->hdmf_no) }} </td>
                         <td>{{ $employee->hdmf_contri }}</td>
                         <td>{{ $employee->hdmf_contri }}</td>
                     @endif
                     @if ($type==3)
-                        <td> {{ $employee->phic_no }} </td>
+                        <td> {{ str_replace(['-',' '],"",$employee->phic_no) }} </td>
                         <td>{{ $employee->phil_prem }}</td>   
                         <td>{{ $employee->phil_prem }}</td>   
                     @endif
 
                     @if ($type==1)
-                        <td> {{ $employee->sss_no }} </td>
+                        <td> {{ str_replace(['-',' '],"",$employee->sss_no) }} </td>
+                       
                         <td>{{ $employee->sss_prem }}</td>   
                         <td>{{ $employee->er_share }} </td>   
                         <td>{{ $employee->ec }}</td>   
