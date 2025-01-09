@@ -126,7 +126,7 @@
                     <td>{{ $employee->job_title_name }}</td>
                     <td>{{ $employee->employee_name }} </td>
                     @if ($type==2)
-                        <td> {{ $employee->tin_no }} </td>
+                        <td> {{ $employee->hdmf_no }} </td>
                         <td>{{ $employee->hdmf_contri }}</td>
                         <td>{{ $employee->hdmf_contri }}</td>
                     @endif

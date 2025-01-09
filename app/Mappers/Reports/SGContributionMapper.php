@@ -50,7 +50,7 @@ class SGContributionMapper extends AbstractMapper
                     ' ',
                     ifnull(`employees`.`middlename`, '')
                 ) AS `employee_name`,
-                employees.lastname,employees.firstname,employees.middlename,contri.sss_prem,contri.phil_prem,contri.hdmf_contri,er_share,ec,tin_no,phic_no,sss_no"))
+                employees.lastname,employees.firstname,employees.middlename,contri.sss_prem,contri.phil_prem,contri.hdmf_contri,er_share,ec,tin_no,phic_no,sss_no,hdmf_no"))
             ->join('employees','payrollregister_posted_weekly.biometric_id','=','employees.biometric_id')
             ->joinSub($contri,'contri','contri.biometric_id','=','employees.biometric_id')
             
