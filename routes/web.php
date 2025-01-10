@@ -298,6 +298,7 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::get('/',[DTRSummaryController::class,'index']);
         Route::get('period-list',[DTRSummaryController::class,'periodList']);
         Route::get('download/{period_id}',[DTRSummaryController::class,'download']);
+        Route::get('compute/{period_id}',[DTRSummaryController::class,'compute']);
     });
 
     Route::prefix('dtr-summary-uploader')->group(function(){

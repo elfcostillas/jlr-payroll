@@ -56,6 +56,8 @@ class DTRSummaryMapper extends AbstractMapper {
 
         DB::table('edtr_totals')->insertOrIgnore($tmp_array);
 
+        return $tmp_array;
+
     }
 
     public function listEmployees($period_id)
