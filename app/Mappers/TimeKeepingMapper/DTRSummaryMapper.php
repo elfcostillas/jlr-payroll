@@ -2,6 +2,7 @@
 
 namespace App\Mappers\TimeKeepingMapper;
 
+use App\CustomClass\EmployeeDTR;
 use App\Mappers\Mapper as AbstractMapper;
 use App\Libraries\Filters;
 use Carbon\Carbon;
@@ -52,8 +53,6 @@ class DTRSummaryMapper extends AbstractMapper {
             array_push($tmp_array,['period_id'=> $id,'biometric_id' => $emp->biometric_id]);
         }
 
-       
-
         DB::table('edtr_totals')->insertOrIgnore($tmp_array);
 
         return $tmp_array;
@@ -102,6 +101,34 @@ class DTRSummaryMapper extends AbstractMapper {
         }
 
         return $divisions;
+    }
+
+    public function employeesToProcess($period_id)
+    {
+        $query = "select DISTINCT employees.biometric_id from edtr 
+                    inner join payroll_period on edtr.dtr_date between payroll_period.date_from and payroll_period.date_to
+                    inner join employees on employees.biometric_id = edtr.biometric_id
+                    where payroll_period.id = $period_id and pay_type in (1,2)
+                    and ((time_in is not null and time_in != '' and time_in != '00:00') or  (time_out is not null and time_out != '' and time_out != '00:00'))";
+    
+        $ids = DB::select(DB::raw($query));
+
+        return $ids;
+    }
+
+    public function processIDS($ids,$period_id)
+    {
+        $ctr = 0; 
+
+        foreach($ids as $id)
+        {
+            //dd($id->biometric_id);
+            $edtr = new EmployeeDTR($id,$period_id);
+            $ctr++;
+
+        }
+
+        return $ctr;
     }
 
   

@@ -50,7 +50,9 @@ class DTRSummaryController extends Controller
     {   
         $period_id = $request->period_id;
 
-        $ctr = 0;
+        $ids = $this->mapper->employeesToProcess($period_id);
+
+        $ctr = $this->mapper->processIDS($ids,$period_id);
 
         echo "Processed record : ". $ctr;
     }

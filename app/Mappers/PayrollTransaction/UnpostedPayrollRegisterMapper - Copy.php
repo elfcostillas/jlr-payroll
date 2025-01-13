@@ -114,7 +114,7 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                         sum(dblhol_ndot) as dblhol_ndot,
                         sum(dblhol_rdndot) as dblhol_rdndot
                         "))
-                    ->from('edtr')
+                    ->from('edtr_totals')
                     ->join('payroll_period',function($join){
                         $join->whereRaw('edtr.dtr_date between payroll_period.date_from and payroll_period.date_to');
                     })
