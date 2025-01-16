@@ -40,7 +40,7 @@ class LeaveCreditsMaker {
                         'fy_year' => $c_year,
                         'biometric_id' => $emp->biometric_id,
                         'vacation_leave' => 10,
-                        'sick_leave' => 2,
+                        'sick_leave' => 5,
                     )
                 );
             }
@@ -58,7 +58,7 @@ class LeaveCreditsMaker {
                 $multiplier = 13 - $emp->m;
 
                 $vl = $multiplier * 0.83;
-                $sl = $multiplier * 0.16;
+                $sl = $multiplier * 0.42;
                
                 array_push($tmp_credits,
                     array(
