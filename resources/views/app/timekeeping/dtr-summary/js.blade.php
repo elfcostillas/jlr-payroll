@@ -129,6 +129,12 @@
 
                         // alert();
                     },
+                    compute : function(e){
+                        let tr = $(e.target).closest("tr");
+                        let data = this.dataItem(tr);
+                        let url = `dtr-summary/compute/${data.id}`;
+                        window.open(url);
+                    },
                     prepareBlank : function(e){
                         alert();
                     }
@@ -176,6 +182,13 @@
                             // { text : 'Prepare Blank',click : viewModel.toolbarHandler.prepareBlank , },
                             { text : 'Download',click : viewModel.toolbarHandler.download , icon : 'download' },
                             //{ text : 'Download',click : viewModel.buttonHandler.download , }
+                        ],
+                        attributes : { style : 'font-size:10pt !important;'},
+                        width : 110
+                    },
+                    {
+                        command: [
+                            { text : 'Compute',click : viewModel.toolbarHandler.compute , icon : '' },
                         ],
                         attributes : { style : 'font-size:10pt !important;'},
                         width : 110

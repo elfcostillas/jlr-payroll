@@ -2,6 +2,7 @@
 
 namespace App\CustomClass;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class EmployeeDTR
@@ -27,7 +28,17 @@ class EmployeeDTR
 
         $this->compute_leaves();
 
-        $this->compute_ndays();
+        $holidays = $this->getLegalHolidays();
+        $sp_holidays = $this->getSpecialHolidays();
+
+        $this->compute_ndays($holidays,$sp_holidays);
+        //$this->computeHolidays($holidays,$sp_holidays);
+
+        if($this->details->biometric_id ==847 )
+        {
+            $this->computeHolidays($holidays,$sp_holidays);
+        }
+        
         
 
         $this->save();
@@ -39,12 +50,9 @@ class EmployeeDTR
         $this->details = $e;
     }
 
-    public function compute_ndays()
+    public function compute_ndays($holidays,$sp_holidays)
     {   
         // 1 = Monthly | 2 = Daily
-
-        $holidays = $this->getLegalHolidays();
-        $sp_holidays = $this->getSpecialHolidays();
     
         $result = DB::table('edtr')->join('payroll_period',function($join){
             $join->whereRaw("edtr.dtr_date between date_from and date_to");
@@ -72,13 +80,13 @@ class EmployeeDTR
 
         $vl_qry = "select ifnull(sum(ifnull(with_pay,0)),0) as wp,ifnull(sum(ifnull(without_pay,0)),0) as wop from filed_leaves_vw 
                     inner join payroll_period on leave_date between payroll_period.date_from and payroll_period.date_to 
-                    where payroll_period.id = $this->biometric_id and filed_leaves_vw.biometric_id = $this->biometric_id and leave_type = 'VL';";
+                    where payroll_period.id = $this->period_id and filed_leaves_vw.biometric_id = $this->biometric_id and leave_type = 'VL';";
 
         $vl = DB::select($vl_qry)[0];
 
         $sl_qry = "select ifnull(sum(ifnull(with_pay,0)),0) as wp,ifnull(sum(ifnull(without_pay,0)),0) as wop from filed_leaves_vw 
                     inner join payroll_period on leave_date between payroll_period.date_from and payroll_period.date_to 
-                    where payroll_period.id = $this->biometric_id and filed_leaves_vw.biometric_id = $this->biometric_id and leave_type = 'SL';";
+                    where payroll_period.id = $this->period_id and filed_leaves_vw.biometric_id = $this->biometric_id and leave_type = 'SL';";
 
         $sl = DB::select($sl_qry)[0];
 
@@ -98,8 +106,9 @@ class EmployeeDTR
         $query = "select holiday_date from holidays inner join holiday_location on holidays.id = holiday_location.holiday_id
                 inner join payroll_period on holidays.holiday_date between payroll_period.date_from and payroll_period.date_to
                 left join employees on employees.location_id = holiday_location.location_id
-                where payroll_period.id = 50 and employees.biometric_id = 847 and holidays.holiday_type = 1";
-    
+                where payroll_period.id = {$this->period_id} and employees.biometric_id = {$this->biometric_id} and holidays.holiday_type = 1";
+        
+        
         $result = DB::select(DB::raw($query));
 
         $arr = [];
@@ -117,7 +126,7 @@ class EmployeeDTR
         $query = "select holiday_date from holidays inner join holiday_location on holidays.id = holiday_location.holiday_id
                 inner join payroll_period on holidays.holiday_date between payroll_period.date_from and payroll_period.date_to
                 left join employees on employees.location_id = holiday_location.location_id
-                where payroll_period.id = 50 and employees.biometric_id = 847 and holidays.holiday_type = 2";
+                where payroll_period.id = {$this->period_id} and employees.biometric_id = {$this->biometric_id} and holidays.holiday_type = 2";
     
         // return DB::select(DB::raw($query));
         $result = DB::select(DB::raw($query));
@@ -130,6 +139,174 @@ class EmployeeDTR
         }
 
         return $arr;
+    }
+
+    function checkLastWorkingDay($holiday_date)
+    {
+        $flag = true;
+        $ctr = 1;
+
+        $isEntitled = false;
+
+        $holiday = Carbon::createFromFormat("Y-m-d",$holiday_date);
+        
+        do {
+            $holiday->subDay();
+            if($holiday_date == "2024-12-30" && $this->biometric_id == 847)
+            {
+                echo '['.$holiday->format("Y-m-d").']';
+                if(($holiday->format('D')!='Sun') || (!in_array($holiday->format('D'), ['Sun','Sat'])) ){ // wala na count kay ni look up sa sabado dec 28
+                    echo '+'.$holiday->format("Y-m-d").'+';
+                    $date = DB::table('holidays')
+                                ->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
+                                ->select()
+                                ->where('holidays.holiday_date','=',$holiday->format('Y-m-d'))
+                                ->where('holiday_location.location_id','=',$this->details->location_id);
+        
+                    $worked = DB::table('edtr')->select('ndays')
+                        ->where('biometric_id','=',$this->biometric_id)
+                        ->where('dtr_date','=',$holiday->format('Y-m-d'))
+                        ->first();
+                    
+                    if($date->count()<1){ // means it is not a holiday
+                        $flag = false;
+                        if($worked->ndays>0){
+                            $isEntitled = true;
+                        }
+                    } else {
+            
+                            if($worked->ndays>0){
+                                $isEntitled = true;
+        
+                            }
+                    }
+                    //echo $holiday->format('M-d-Y').' - '.$ctr.'<br>';
+    
+                }
+            }
+
+            
+            if($flag){
+                $ctr++;
+                if($ctr>=15){
+                    $flag = false;
+                }
+                // echo $ctr . '<br>';
+            }
+
+            // if($this->details->biometric_id == 847 )
+            // {
+            //    echo "imhere";
+            // }
+           
+        }while($flag);
+
+        
+
+        return $isEntitled;
+    }
+
+    public function grantHoliday($logs)
+    {
+        foreach($logs as $log)
+        {
+            $entitled = false;
+
+            if($log->ndays > 0)
+            {
+                $entitled = true;
+            }else{
+                    $entitled = $this->checkLastWorkingDay($log->dtr_date);
+            }
+
+            if($entitled){ echo $log->dtr_date.'=grant'; }else{ echo $log->dtr_date.'=dont grant'; }
+            echo "<br>";
+
+            if($entitled){
+                switch($log->holiday_type) {
+                    case 1 :
+                            $log->reghol_pay = 1;
+                        break;
+                    
+                    case 2 :
+                            $log->sphol_pay = 1;
+                        break;
+                }
+
+                $data = (array) $log;
+
+                unset($data['holiday_type']);
+
+                DB::table('edtr')->where('id', $log->id)->update($data);
+                    
+            }
+          
+        }
+       
+    }
+
+    public function computeHolidays($holidays,$sp_holidays)
+    {   
+    
+        if($holidays)
+        {
+            $reg_hol_logs = DB::table('edtr')
+                    ->join('payroll_period',function($join){
+                        $join->whereRaw('dtr_date between payroll_period.date_from and payroll_period.date_to');
+                    })
+                    ->join('holidays','holidays.holiday_date','=','edtr.dtr_date')
+                    ->select(DB::raw("edtr.*,holidays.holiday_type"))
+                    ->where('payroll_period.id','=',$this->period_id)
+                    ->where('biometric_id','=',$this->biometric_id)
+                    ->whereIn('dtr_date',$holidays)
+                    ->orderBy('dtr_date')
+                    ->get();
+
+            $this->grantHoliday($reg_hol_logs);
+        }
+
+        if($sp_holidays)
+        {
+            $sp_hol_logs = DB::table('edtr')
+            ->join('payroll_period',function($join){
+                $join->whereRaw('dtr_date between payroll_period.date_from and payroll_period.date_to');
+            })
+            ->join('holidays','holidays.holiday_date','=','edtr.dtr_date')
+            ->select(DB::raw("edtr.*,holidays.holiday_type"))
+            ->where('payroll_period.id','=',$this->period_id)
+            ->where('biometric_id','=',$this->biometric_id)
+            ->whereIn('dtr_date',$sp_holidays)
+            ->orderBy('dtr_date')
+            ->get();
+
+            $this->grantHoliday($sp_hol_logs);
+        }
+
+        /*  
+            Set no of Legal and Special Holiday
+        */
+
+        $legal = DB::table('edtr')->join('payroll_period',function($join){
+            $join->whereRaw("edtr.dtr_date between date_from and date_to");
+        })
+        ->select(DB::raw("sum(ifnull(reghol_pay,0)) as reghol_pay"))
+        ->where('biometric_id',$this->biometric_id)
+        ->where('payroll_period.id',$this->period_id)
+        ->whereIn('dtr_date',$holidays)
+        ->first();
+
+        $this->row['reghol_pay'] = (int) $legal->reghol_pay;
+
+        $sp = DB::table('edtr')->join('payroll_period',function($join){
+            $join->whereRaw("edtr.dtr_date between date_from and date_to");
+        })
+        ->select(DB::raw("sum(ifnull(sphol_pay,0)) as sphol_pay"))
+        ->where('biometric_id',$this->biometric_id)
+        ->where('payroll_period.id',$this->period_id)
+        ->whereIn('dtr_date',$sp_holidays)
+        ->first();
+
+        $this->row['sphol_pay'] = (int) $sp->sphol_pay;
     }
 
     public function save()
