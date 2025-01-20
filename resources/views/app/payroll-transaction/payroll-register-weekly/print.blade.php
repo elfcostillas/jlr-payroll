@@ -28,7 +28,7 @@
         }
 
         @page {
-            margin : 72px 18px 24px 18px;
+            margin : 72px 24px 24px 18px;
            
         }
     </style>
