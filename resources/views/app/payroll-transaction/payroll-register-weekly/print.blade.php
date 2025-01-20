@@ -108,20 +108,20 @@
         $hide = "none";
     ?>
 
-    <table border=0 style="width:100%;margin-bottom:2px;">
-    <tr>
+        <table border=0 style="width:100%;margin-bottom:2px;">
+            <tr>
                 <td><span style="font-size:16;" >HRD <br>  Support Group Semi Monthly Payroll  </span></td>
                 <td style="font-size:12pt;vertical-align:bottom" >Payroll Period :<u style="font-size:12pt;vertical-align:bottom"> {{ $period_label}} </u></td>
-                <td></td>
+                <td style="width:24px" ></td>
                 <td style="width:25%;font-size:12pt;padding-left:24px;vertical-align:bottom" >Date / Time  Printed: {{ date_format(now(),'m/d/Y H:i:s') }}</td>
             </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-    </table>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
     
     @foreach($data as $location)
         
@@ -657,7 +657,7 @@
             <tr>
                 <td><span style="font-size:16;" >HRD <br>  Support Group Semi Monthly Payroll  </span></td>
                 <td style="font-size:12pt;vertical-align:bottom" >Payroll Period :<u style="font-size:12pt;vertical-align:bottom"> {{ $period_label}} </u></td>
-                <td></td>
+                <td style="width:24px" ></td>
                 <td style="width:25%;font-size:12pt;padding-left:24px;vertical-align:bottom" >Date / Time  Printed: {{ date_format(now(),'m/d/Y H:i:s') }}</td>
             </tr>
             <tr>
