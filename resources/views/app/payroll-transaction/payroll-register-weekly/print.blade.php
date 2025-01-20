@@ -329,8 +329,13 @@
                                 // $over30 = ($employee->$key >= 30 && $key == 'reg_ot' ) ? '': '' ;
                                 // $over30circ = ($employee->$key >= 30 && $key == 'reg_ot' ) ? '': '' ;
                             ?> 
-                            <td class="pr4"  style="text-align:right;{{ $over30 }}"> <div class="{{ $over30circ}}"> {{ ($employee->$key > 0) ? round($employee->$key,2) : '' }} </div></td>
-                    
+
+                            @if(str_contains($key,'amount'))
+                                                        <td class="pr4"  style="text-align:right;{{ $over30 }}"> <div class="{{ $over30circ}}"> {{ ($employee->$key > 0) ? number_format($employee->$key,2) : '' }} </div></td>
+                            @else
+                                                        <td class="pr4"  style="text-align:center;{{ $over30 }}"> <div class="{{ $over30circ}}"> {{ ($employee->$key > 0) ? round($employee->$key,2) : '' }} </div></td>
+                            @endif
+
                             <?php
                                   $location_dynamicCol[$key] += $employee->$key;
                             ?>
