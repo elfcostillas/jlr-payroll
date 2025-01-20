@@ -66,6 +66,29 @@ class PostedPayrollRegisterMapper extends AbstractMapper {
         }
     }
 
+    public function getPostedPeriod()
+    {
+      
+        $result = $this->model->select(DB::raw("period_id as id,CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) AS period_range"))
+                                ->from('posting_info')->join('payroll_period','payroll_period.id','=','posting_info.period_id')
+                                ->where('trans_type','non-confi')
+                                ->orderBy('period_id','DESC');
+
+        return $result->get();
+    }
+
+    public function getPostedDataforRCBC($period_id)
+    {
+        $result = DB::table('payrollregister_posted_s')->select(DB::raw('employee_names_vw.employee_name,employees.bank_acct,payrollregister_posted_s.net_pay'))
+        ->leftJoin('employees','payrollregister_posted_s.biometric_id','=','employees.biometric_id')
+        ->leftJoin('employee_names_vw','payrollregister_posted_s.biometric_id','=','employee_names_vw.biometric_id')
+        ->where('period_id','=',$period_id);
+
+
+        return $result->get();
+
+    }
+
 }
 
 

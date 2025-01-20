@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Excel\UnpostedPayrollRegister;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Excel\BankTransmittal;
 
 class PayrollRegisterController extends Controller
 {
@@ -22,13 +23,15 @@ class PayrollRegisterController extends Controller
     private $posted;
     private $employee;
     private $excel;
+    private $rcbc;
 
-    public function __construct(UnpostedPayrollRegister $excel,UnpostedPayrollRegisterMapper $unposted,PostedPayrollRegisterMapper $posted,EmployeeMapper $employee)
+    public function __construct(UnpostedPayrollRegister $excel,UnpostedPayrollRegisterMapper $unposted,PostedPayrollRegisterMapper $posted,EmployeeMapper $employee,BankTransmittal $rcbc)
     {
         $this->unposted = $unposted;
         $this->posted = $posted;
         $this->employee = $employee;
         $this->excel = $excel;
+        $this->rcbc = $rcbc;
     }
 
     public function index()
@@ -295,6 +298,23 @@ class PayrollRegisterController extends Controller
         return response()->json($result);
         
         //$position = $this->employee->getPosition();
+    }
+
+    public function getPostedPeriod()
+    {
+        $result = $this->posted->getPostedPeriod();
+
+        return response()->json($result);
+    }
+
+    public function downloadRCBCTemplate(Request $request)
+    {
+        $result = $this->posted->getPostedDataforRCBC($request->period_id);
+
+        // dd($result);
+
+        $this->rcbc->setValues($result);
+        return Excel::download($this->rcbc,'BankTransmittal.xlsx');
     }
 
 

@@ -645,7 +645,8 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::get('compute/{id}',[PayrollRegisterController::class,'compute']);
         Route::get('download-unposted/{id}',[PayrollRegisterController::class,'downloadExcelUnposted']);
         Route::post('post',[PayrollRegisterController::class,'postPayroll']);
-     
+        Route::get('posted-payroll',[PayrollRegisterController::class,'getPostedPeriod']);
+        Route::get('download-rcbc-template/{period_id}',[PayrollRegisterController::class,'downloadRCBCTemplate']);
 
         
         

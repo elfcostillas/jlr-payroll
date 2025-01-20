@@ -51,9 +51,9 @@
                         pageSize :99,
                         schema : {
                             model : {
-                                id : 'period_id',
+                                id : 'id',
                                 fields : {
-                                    period_id : { type : 'number' },
+                                    id : { type : 'number',editable : false },
                                     period_range : {type:'string'}
                                 }
                             }
@@ -117,6 +117,13 @@
                                 }
                             });
                     },
+                    downloadRCBC : function(e){
+                        // alert();
+                        let period = $("#posted_period").data("kendoDropDownList");
+
+                        let url = `payroll-register/download-rcbc-template/${period.value()}`;
+                        window.open(url);
+                    },
 
                 },
                 functions : {
@@ -150,6 +157,19 @@
                 dataTextField: "period_range",
                 dataValueField: "id",
                 dataSource: viewModel.ds.unposted,
+                //index: 0,
+                autoWidth : true,
+                dataBound : function(e){
+                  
+                }
+                //change: onChange
+            });
+
+            
+            $("#posted_period").kendoDropDownList({
+                dataTextField: "period_range",
+                dataValueField: "id",
+                dataSource: viewModel.ds.posted,
                 //index: 0,
                 autoWidth : true,
                 dataBound : function(e){

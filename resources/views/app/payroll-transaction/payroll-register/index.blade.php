@@ -115,7 +115,27 @@
                     <div class="card card-secondary">
                         <div class="card-header"> Posted Payroll </div>
                         <div class="card-body"> 
+                        <table class="formTable" border=0 style="width:100%">
+                            <tr>
+                                <td colspan=4>Posted Payroll Period</td>
+                            </tr>
+                            <tr>
+                                <td colspan=2 > <input style ="width:220px" type="text" id="posted_period"></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan=4>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:center;" > <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base fixwidth" data-bind="click : buttonHandler.unpost"> Unpost</button> </td>
+                               
+                                <td style="text-align:center;" > <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base fixwidth" data-bind="click : buttonHandler.downloadPosted"> Download Excel</button> </td>
+                                <td style="text-align:center;" > <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base fixwidth" data-bind="click : buttonHandler.downloadRCBC"> RCBC Template</button> </td>
+                                <td style="text-align:center;" > <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base fixwidth" data-bind="click : buttonHandler.showOTBreakdown"> OT Breakdown</button> </td>
+                             </tr>
                             
+                        </table>
                         </div>
                     </div>
                 </div>
