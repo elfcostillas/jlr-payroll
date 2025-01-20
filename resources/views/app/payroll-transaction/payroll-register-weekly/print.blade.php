@@ -109,13 +109,16 @@
     ?>
 
     <table border=0 style="width:100%;margin-bottom:2px;">
+    <tr>
+                <td><span style="font-size:16;" >HRD <br>  Support Group Semi Monthly Payroll  </span></td>
+                <td style="font-size:12pt;vertical-align:bottom" >Payroll Period :<u style="font-size:12pt;vertical-align:bottom"> {{ $period_label}} </u></td>
+                <td></td>
+                <td style="width:25%;font-size:12pt;padding-left:24px;vertical-align:bottom" >Date / Time  Printed: {{ date_format(now(),'m/d/Y H:i:s') }}</td>
+            </tr>
         <tr>
-            <td><span style="font-size:16;" >HRD <br> Support Group Semi Monthly Payroll </span></td>
             <td></td>
-            <td style="width:230px;font-size:10pt;" >Date / Time  Printed: {{ date_format(now(),'m/d/Y H:i:s') }}</td>
-        </tr>
-        <tr>
-            <td style="font-size:12pt;" >Payroll Period : {{ $period_label}}</td>
+            <td></td>
+            <td></td>
             <td></td>
         </tr>
     </table>
@@ -652,12 +655,15 @@
     </div>
         <table border=0 style="width:100%;margin-bottom:2px;">
             <tr>
-                <td><span style="font-size:16;" >HRD <br> Support Group Semi Monthly Payroll </span></td>
+                <td><span style="font-size:16;" >HRD <br>  Support Group Semi Monthly Payroll  </span></td>
+                <td style="font-size:12pt;vertical-align:bottom" >Payroll Period :<u style="font-size:12pt;vertical-align:bottom"> {{ $period_label}} </u></td>
                 <td></td>
-                <td style="width:230px;font-size:10pt;" >Date / Time  Printed: {{ date_format(now(),'m/d/Y H:i:s') }}</td>
+                <td style="width:25%;font-size:12pt;padding-left:24px;vertical-align:bottom" >Date / Time  Printed: {{ date_format(now(),'m/d/Y H:i:s') }}</td>
             </tr>
             <tr>
-                <td style="font-size:12pt;" >Payroll Period : {{ $period_label}}</td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td></td>
             </tr>
         </table>
@@ -682,8 +688,12 @@
             ?>
 
             @foreach($empCountPerDept as $key => $val)
+            <?php
+                $mask_val = (in_array($val,['Plant','Quarry'])) ? 'AGG '. $val : $val;
+            ?>
+
                 <tr>
-                    <td>{{ $val }}</td>
+                    <td>{{ $mask_val }}</td>
                     <td style="text-align:center;"> {{ ($empCountPerDeptVal[$val][1] > 0) ? $empCountPerDeptVal[$val][1] : '' }}</td>
                     <td style="text-align:center;"> {{ ($empCountPerDeptVal[$val][2] > 0) ? $empCountPerDeptVal[$val][2] : ''  }}</td>
                     <td style="text-align:center;"> {{ ($empCountPerDeptVal[$val][3] > 0) ? $empCountPerDeptVal[$val][3] : ''  }}</td>
@@ -724,7 +734,7 @@
                             @if(is_array($count))
                                 @foreach($count as $key => $value)
                                     <tr>
-                                        <td style="width:80px" >{{ $dept }}</td>
+                                    <td style="width:80px" >{{ ($loc->location_altername2 =='AGG') ? $loc->location_altername2.' '.$dept : $dept }}</td>
                                         <td style="width:80px"> {{ $key }}</td>
                                         <td style="width:40px;padding-right:5px;text-align:right;" >{{ $value }}</td>
                                         @php $locTotal += $value; @endphp
@@ -746,7 +756,7 @@
         <div style="display:block;position:relative;clear:both;margin-top:8px;">
             <table border=1 style="border-collapse: collapse;float:left">
                 <tr>
-                    <td style="padding:2px;"> OVERTIME SUMMARY </td>
+                    <td style="padding:2px;"> Overtime Summary </td>
                     <td></td>
                 </tr>
                 @foreach($ot_summ_label as $key => $value)
@@ -756,20 +766,20 @@
                         </tr>
                 @endforeach
             </table>
-
-            <table border=1 style="border-collapse: collapse;float:left;margin-left :8px;">
-                <tr >
-                    <td colspan=2 style="padding:0px 4px;"> Over Time >= 50++ </td>
-                </tr>
-                @foreach($otherOTTotal as $key => $val)
-                <tr>
-                    <td style="padding-left:4px;"> {{ $key }} </td>
-                    <td style="text-align:center"> {{ $val }} </td>
-                </tr>
-                @endforeach 
-               
-            </table>
-
+            @if($otherOTTotal)
+                <table border=1 style="border-collapse: collapse;float:left;margin-left :8px;">
+                    <tr >
+                        <td colspan=2 style="padding:0px 4px;"> Over Time >= 50++ </td>
+                    </tr>
+                    @foreach($otherOTTotal as $key => $val)
+                    <tr>
+                        <td style="padding-left:4px;"> {{ $key }} </td>
+                        <td style="text-align:center"> {{ $val }} </td>
+                    </tr>
+                    @endforeach 
+                
+                </table>
+            @endif
             @foreach($otReport2 as $table)
                 
                 <table border=1 style="border-collapse:collapse;float:left;margin-left:12px;width:240px;">
@@ -806,7 +816,7 @@ departmentalTotalGross -->
         <div style="display:block;position:relative;clear:both;">
             <table border=1 style="border-collapse:collapse;float:left;margin-top:8px;width:180px;">
                 <tr>
-                    <td colspan=2  style="padding:2px;text-align:center;">  Payroll / (Gross Pay) </td>
+                    <td colspan=2  style="padding:2px;text-align:center;">  Payroll / Gross Pay </td>
                 </tr>
                 <?php $totalPerDeptGross = 0;?>
                 @foreach($departmentalTotalGross as $dept => $amount)
@@ -826,7 +836,7 @@ departmentalTotalGross -->
 
             <table border=1 style="border-collapse: collapse;float:left;margin-left :8px;margin-top:8px;">
                 <tr>
-                    <td style="padding:2px;"> Gross Pay more than 9,000 except TM Drivers </td>
+                    <td style="padding:2px;"> Gross Pay more than P9,000 except TM Drivers </td>
                 </tr>
                 <tr>
                     <td style="padding:2px;text-align:center"> {{ $fourfive_count }} </td>
