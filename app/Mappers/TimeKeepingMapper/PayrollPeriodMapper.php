@@ -23,7 +23,7 @@ class PayrollPeriodMapper extends AbstractMapper {
 
     public function list($filter)
     {
-        $result = $this->model->select('id','date_from','date_to','date_release','man_hours','inProgress');
+        $result = $this->model->select('id','date_from','date_to','date_release','man_hours','inProgress','pyear','cut_off');
 
         if($filter['filter']!=null){
 			foreach($filter['filter']['filters'] as $f)

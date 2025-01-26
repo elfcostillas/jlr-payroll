@@ -70,6 +70,8 @@
                                     date_release: { type : 'date' },
                                     man_hours: { type : 'number' },
                                     inProgress: { type : 'string' },
+                                    pyear: { type : 'number' },
+                                    cut_off: { type : 'number' },
                                 }
                             }
                         }
@@ -123,6 +125,20 @@
                         //template : "#=  : ''  #",
                         width : 120,    
                         editor : stopEditor
+                    },
+                    {
+                        title : "Year",
+                        field : "pyear",
+                      
+                        width : 120,    
+                     
+                    },
+                    {
+                        title : "Cutoff",
+                        field : "cut_off",
+                      
+                        width : 120,    
+                       
                     },
                     {
                         command : ['edit'],

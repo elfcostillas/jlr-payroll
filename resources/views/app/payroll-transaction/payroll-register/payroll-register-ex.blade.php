@@ -86,7 +86,7 @@
                         @endforeach
                         <td >Gross Total</td>
                         <td >SSS Premium</td>
-                        <td >SSS WISP</td>
+                        <td >SSS MPF</td>
                         <td >PhilHealt <br> Premium</td>
                         <td >PAG IBIG <br> Contri</td> 
                         <td >Withholding Tax</td> 

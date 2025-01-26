@@ -5,12 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-
+    <script src="{{ asset('theme/plugins/jquery/jquery.min.js') }}"></script>
+    <script>
+        $(document).ready(function(){
+            $("table#rowClick tr").click(function(){
+                $(this).toggleClass("active");
+                console.log("clicked");
+            });
+        });
+    </script>
     <style>
             * {
                 font-family: 'Consolas';
                 font-size : 9pt;
             }
+
+            .active {
+                background-color: #90e0ef;
+            }
+
+            table tr.active {background: #90e0ef;}
 
             div#container2 {
                 max-width:  1320px;
@@ -101,48 +115,14 @@
     </style>
 </head>
 <body>
-    {{-- <table>
-        <tr>
-            <td>Last name</td>
-            <td>First Name</td>
-        </tr>
-        @foreach($employees as $employee)
-            <tr>
-                <td> {{ $employee->lastname }} </td>
-                <td> {{ $employee->firstname }} </td>
-            </tr>
-        @endforeach
-    </table> --}}
-    {{-- <div id="container2" >
-        <table style="width:4240px;white-space:nowrap;border-collapse:collapse;" border=1>
-            <thead>
-                <tr>
-                    @for($x=1;$x<=50;$x++)
-                        <th style="width:140px"> {{ $x }} </th>
-
-                    @endfor
-                </tr>
-            </thead>
-            <tbody>
-                @for($y=1;$y<=100;$y++)
-                <tr>
-                    <th> Costillas, Elmer </th>
-                    @for($x=1;$x<=49;$x++)
-                        <td style="width:140px"> {{ $x }} </td>
-
-                    @endfor
-                </tr>
-                @endfor
-            </tbody>
-        </table>
-    </div> --}}
+    
     <?php
         $colspan=28;
         $rcount = 1;
        //ndays,basic_pay,late_eq,late_eq_amount,under_time,under_time_amount
     ?>
     <div id="" >
-        <table style="border-collapse:collapse;white-space:nowrap;" border=1 >
+        <table id="rowClick" style="border-collapse:collapse;white-space:nowrap;" border=1 >
             <thead>
                 <tr>
                         <th style="padding : 0px 4px;min-width: 30px">No.</th>
@@ -191,7 +171,7 @@
                         @endforeach
                         <th style="padding : 0px 4px;min-width:110px;" >Gross Total</th>
                         <th style="padding : 0px 4px;" >SSS Premium</th>
-                        <th style="padding : 0px 4px;" >SSS WISP</th>
+                        <th style="padding : 0px 4px;" >SSS MPF</th>
                         <th style="padding : 0px 4px;" >PhilHealt Premium</th>
                         <th style="padding : 0px 4px;" >PAG IBIG Contri</th>
                         <th style="padding : 0px 4px;" >Withholduing Tax</th>

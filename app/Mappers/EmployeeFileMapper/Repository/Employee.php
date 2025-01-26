@@ -383,6 +383,19 @@ class Employee
     public function getMonthGross($period)
     {
         //SELECT gross_pay FROM payrollregister_posted_s WHERE period_id = '' AND biometric_id = '';
+
+        
+        /* not sure because may be first half is not proccessed */
+      
+        if($this->data->is_daily == 'N')
+        {
+            return $this->data->basic_salary * 1;
+        }else{
+            return $this->data->basic_salary * 26;
+        }
+
+        /*
+
         if($period['period_type']==2){
             $prev_period = $period['id'] -1;
             $prev = DB::table('payrollregister_posted_s')->select('gross_pay')
@@ -398,6 +411,7 @@ class Employee
         }
 
         return $this->payreg['gross_pay'] + $prev_gross;
+        */
 
         
     }
