@@ -84,7 +84,7 @@
                                 </tr>
                                 <tr>
                                     <td colspan="2"><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download'><i class="fas fa-download"></i> Download Employee List</button></td>
-                                    <td colspan="2"><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download_weekly'><i class="fas fa-download"></i> Download Weekly Employee List</button></td>
+                                    <td colspan="2"><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download_weekly'><i class="fas fa-download"></i> Download Support Group List</button></td>
                                     <td colspan="4"></td>
                                 </tr>
                             </table>
@@ -133,8 +133,8 @@
                             </div>
                             <table class="formTable" border=0 style="width:100%">
                               
-                                    <td colspan="2"><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download_custom'><i class="fas fa-download"></i> Download Excel</button></td>
-                                    <td colspan="2"></td>
+                                    <td colspan="2"><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download_custom'><i class="fas fa-download"></i> JLR Download Excel</button></td>
+                                    <td colspan="2"><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download_custom_sg'><i class="fas fa-download"></i> Support Group Download Excel</button></td>
                                     <td colspan="4"></td>
                                 </tr>
                             </table>

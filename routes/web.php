@@ -541,6 +541,8 @@ Route::middleware('auth')->prefix('reports')->group(function(){
         Route::post('remove-header',[EmployeeReportController::class,'removeHeader']);
         Route::get('get-header',[EmployeeReportController::class,'getHeader']);
         Route::get('custom-report',[EmployeeReportController::class,'customReport']);
+        Route::get('custom-report-sg',[EmployeeReportController::class,'customReportSG']);
+        
     });
 
     Route::prefix('leave-reports')->group(function(){

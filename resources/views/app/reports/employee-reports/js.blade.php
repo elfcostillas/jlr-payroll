@@ -227,8 +227,12 @@
                     {
                         let url = 'employee-report/custom-report';
                         window.open(url);
-                    }
-
+                    },
+                    download_custom_sg : function()
+                    {
+                        let url = 'employee-report/custom-report-sg';
+                        window.open(url);
+                    },
             
                 },
                 functions : {

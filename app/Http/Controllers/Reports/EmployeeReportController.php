@@ -125,7 +125,23 @@ class EmployeeReportController extends Controller
         
     }
 
+    public function customReportSG()
+    {
+        $header = $this->emp_mapper->getHeader();
 
+        $filter = [
+            'division' =>  null,
+            'department'=> null
+        ];
 
+        $result = $this->emp_mapper->customReportSG();
+
+        $this->custom_excel->setValues($header,$result);
+
+        return Excel::download($this->custom_excel,'EmployeeData.xlsx');
+   
+        // return view('app.reports.employee-reports.custom-report',['headers' => $header, 'data' => $result]);
+        
+    }
     
 }
