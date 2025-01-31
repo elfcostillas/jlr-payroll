@@ -181,6 +181,47 @@
                             }
                         }
                     }),
+                    ratesgrid : new kendo.data.DataSource({
+                        transport : {
+                            read : {
+                                url : 'employee-master-data/get-emp-rates/0',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },
+                            create : {
+                                url : 'employee-master-data/create-emp-rates',
+                                type : 'post',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },parameterMap: function (data, type) {
+                                if(type=='create'){
+                                    data.emp_id = viewModel.form.model.id;
+                                }
+
+                                return data;
+                            }
+                            
+                        },
+                        // pageSize :11,
+                        // serverPaging : true,
+                        // serverFiltering : true,
+                        schema : {
+                            data : "data",
+                            model : {
+                                id : 'id',
+                                fields : {
+                                    emp_id : { type : 'number' },
+                                    rates : { type : 'number', },
+                                    date_added  : { type : 'datetime' },
+                                }
+                            }
+                        }
+                    }),
                     division : new kendo.data.DataSource({
                         transport : {
                             read : {
@@ -377,6 +418,30 @@
                         }).always(function() {
                             
                         });
+                    },
+                    rates : function(e)
+                    {
+                        if(viewModel.form.model.id){
+                            var myWindow2 = $("#ratePop");
+                            
+                            myWindow2.kendoWindow({
+                                width: "520", //1124 - 1152
+                                height: "560",
+                                title: "Rates",
+                                visible: false,
+                                animation: false,
+                                actions: [
+                                    "Pin",
+                                    "Minimize",
+                                    "Maximize",
+                                    "Close"
+                                ],
+                                close: viewModel.buttonHandler.closePop,
+                                position : {
+                                    top : 0
+                                }
+                            }).data("kendoWindow").center().open();
+                        }
                     }
                 },
                 functions : {
@@ -440,6 +505,9 @@
                         let jobtitleUrl = `employee-master-data/job-titles/${data.dept_id}`;
                         viewModel.ds.job_titles.transport.options.read.url = jobtitleUrl;
                         viewModel.ds.job_titles.read();
+
+                        viewModel.ds.ratesgrid.transport.options.read.url = `employee-master-data/get-emp-rates/${data.id}`;
+                        viewModel.ds.ratesgrid.read();
                     }
                    
 
@@ -539,6 +607,44 @@
                         width : 85
                     },
                   
+                ]
+            });
+
+            $("#ratesTable").kendoGrid({
+                dataSource : viewModel.ds.ratesgrid,
+                pageable : {
+                    refresh : true,
+                    buttonCount : 5
+                },
+                height : 480,
+                noRecords: true,
+                editable: true,
+                toolbar : ['create','save'],
+                columns : [
+                    {
+                        title : "Rates",
+                        field : "rates",
+                        width : 100,
+                         attributes: {
+                            style: "font-size: 9pt"
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt"
+                        },
+                        template : "#=kendo.toString(rates,'n2')#",
+                    },
+                    {
+                        title : "Added On",
+                        field : "date_added",
+                        width : 80,
+                         attributes: {
+                            style: "font-size: 9pt"
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt"
+                        },
+                    },
+                    
                 ]
             });
 
@@ -752,6 +858,7 @@
                     { id : 'saveBtn', type: "button", text: "Save", icon: 'save', click : viewModel.buttonHandler.save },
                     { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
                     { id : 'copy', type: "button", text: "Copy to Online Request", icon: 'copy', click : viewModel.buttonHandler.copy },
+                    { id : 'copy', type: "button", text: "Manage Rates", icon: 'dollar', click : viewModel.buttonHandler.rates },
                 ]
             });
 

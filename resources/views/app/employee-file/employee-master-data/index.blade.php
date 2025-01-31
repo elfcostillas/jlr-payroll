@@ -74,6 +74,10 @@
                     </div>
                 </div>
             </div>
+            <div id="ratePop" style="display:none ;background-color:#212529;">
+                <div id="ratesTable"></div>
+            </div>
+
             <div id="pop" style="display:none;background-color:#212529;"><!--f8f9fa  #343a40 #212529 2d3035-->
                 <div id="toolbar"></div>
                 <div class="card card-secondary mt-1">

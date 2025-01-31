@@ -63,6 +63,7 @@ use  App\Http\Controllers\Deductions\WeeklyDeductionController;
 use App\Http\Controllers\Compentsations\OtherCompensationController;
 use App\Http\Controllers\Compentsations\FixCompensationController;
 use App\Http\Controllers\Compentsations\OtherIncomeWeeklyAppController;
+use App\Http\Controllers\EmployeeFile\RatesController;
 use App\Http\Controllers\Memo\AWOLMemoController;
 use App\Http\Controllers\Reports\TardinessReportsController;
 use App\Http\Controllers\Memo\TardinessMemoController;
@@ -330,6 +331,9 @@ Route::middleware('auth')->prefix('employee-files')->group(function(){
 
         Route::get('biometric-assignment',[EmployeeController::class,'bioAssignment']);
         Route::post('copy-onlinerequest',[EmployeeController::class,'copyToOR']);
+
+        Route::get('get-emp-rates/{id}',[RatesController::class,'getRates']);
+        Route::post('create-emp-rates',[RatesController::class,'createRates']);
         
     });
 
