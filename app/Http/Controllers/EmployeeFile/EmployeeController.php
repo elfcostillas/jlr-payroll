@@ -10,6 +10,7 @@ use App\Mappers\Admin\ActivityLogMapper;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Mappers\EmployeeFileMapper\OnlineRequestUserMapper;
+use App\Mappers\EmployeeFileMapper\RatesMapper;
 
 class EmployeeController extends Controller
 {
@@ -18,13 +19,15 @@ class EmployeeController extends Controller
     private $log;
     private $weekly;
     private $online;
+    private $rmapper;
 
-    public function __construct(EmployeeMapper $mapper,ActivityLogMapper $log,EmployeeWeeklyMapper $weekly,OnlineRequestUserMapper $online)
+    public function __construct(EmployeeMapper $mapper,ActivityLogMapper $log,EmployeeWeeklyMapper $weekly,OnlineRequestUserMapper $online,RatesMapper $rmapper)
     {
         $this->mapper = $mapper;
         $this->log = $log;
         $this->weekly = $weekly;
         $this->online = $online;
+        $this->rmapper = $rmapper;
     }
 
     public function index()
