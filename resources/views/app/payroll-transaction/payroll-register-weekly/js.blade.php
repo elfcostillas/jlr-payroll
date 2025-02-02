@@ -143,7 +143,7 @@
                                 showCancelButton: true,
                                 confirmButtonColor: '#3085d6',
                                 cancelButtonColor: '#d33',
-                                confirmButtonText: 'Finalize'
+                                confirmButtonText: 'Unpost'
                             }).then((result) => {
                                 if (result.value) {                       
                                     $.post('payroll-register-weekly/unpost',{

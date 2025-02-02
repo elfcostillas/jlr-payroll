@@ -66,27 +66,52 @@ class PostedPayrollRegisterMapper extends AbstractMapper {
         }
     }
 
-    public function getPostedPeriod()
+    public function getPostedPeriod($type)
     {
       
         $result = $this->model->select(DB::raw("period_id as id,CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) AS period_range"))
                                 ->from('posting_info')->join('payroll_period','payroll_period.id','=','posting_info.period_id')
-                                ->where('trans_type','non-confi')
+                                ->where('trans_type',$type)
                                 ->orderBy('period_id','DESC');
 
         return $result->get();
     }
 
-    public function getPostedDataforRCBC($period_id)
+    public function getPostedDataforRCBC($period_id,$emp_level)
     {
         $result = DB::table('payrollregister_posted_s')->select(DB::raw('employee_names_vw.employee_name,employees.bank_acct,payrollregister_posted_s.net_pay'))
         ->leftJoin('employees','payrollregister_posted_s.biometric_id','=','employees.biometric_id')
         ->leftJoin('employee_names_vw','payrollregister_posted_s.biometric_id','=','employee_names_vw.biometric_id')
-        ->where('period_id','=',$period_id);
+        ->where('period_id','=',$period_id)
+        ->where('payrollregister_posted_s.emp_level','=',$emp_level);
 
 
         return $result->get();
 
+    }
+
+    public function unpost($period_id,$emp_level)
+    {
+        DB::beginTransaction();
+
+        $posted_fixed_compensations = DB::table('posted_fixed_compensations')->where('period_id',$period_id)->where('emp_level',$emp_level)->delete();
+        $posted_fixed_deductions = DB::table('posted_fixed_deductions')->where('period_id',$period_id)->where('emp_level',$emp_level)->delete();
+        $posted_installments = DB::table('posted_installments')->where('period_id',$period_id)->where('emp_level',$emp_level)->delete();
+        $posted_loans = DB::table('posted_loans')->where('period_id',$period_id)->where('emp_level',$emp_level)->delete();
+        $posted_onetime_deductions = DB::table('posted_onetime_deductions')->where('period_id',$period_id)->where('emp_level',$emp_level)->delete();
+        $posted_other_compensations = DB::table('posted_other_compensations')->where('period_id',$period_id)->where('emp_level',$emp_level)->delete();
+        $payrollregister_posted_s = DB::table('payrollregister_posted_s')->where('period_id',$period_id)->where('emp_level',$emp_level)->delete();
+        $posting_info = DB::table('posting_info')->where('period_id',$period_id)->where('trans_type',$emp_level)->delete();
+
+        //if($posted_fixed_compensations && $posted_fixed_deductions && $posted_installments && $posted_loans && $posted_onetime_deductions && $posted_other_compensations && $payrollregister_posted_s && $posting_info){
+            DB::commit();
+            $flag = true;
+        // }else{
+        //     DB::rollBack();
+        //     $flag = false;
+        // }
+
+        return array('success'=>'Payroll Period was unposted successfully.');
     }
 
 }

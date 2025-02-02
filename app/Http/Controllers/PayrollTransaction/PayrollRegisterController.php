@@ -45,7 +45,7 @@ class PayrollRegisterController extends Controller
         if($user->biometric_id!="" && $user->biometric_id!=0 && $user->biometric_id != null){
             $position = $this->employee->getPosition($user->biometric_id);
 
-            $result = $this->unposted->unpostedPeriodList('semi',$position);
+            $result = $this->unposted->unpostedPeriodList('semi',$position,'non-confi');
 
             return response()->json($result);
         }
@@ -302,19 +302,27 @@ class PayrollRegisterController extends Controller
 
     public function getPostedPeriod()
     {
-        $result = $this->posted->getPostedPeriod();
+        $result = $this->posted->getPostedPeriod('non-confi');
 
         return response()->json($result);
     }
 
     public function downloadRCBCTemplate(Request $request)
     {
-        $result = $this->posted->getPostedDataforRCBC($request->period_id);
+        $result = $this->posted->getPostedDataforRCBC($request->period_id,'non-confi');
 
         // dd($result);
 
         $this->rcbc->setValues($result);
         return Excel::download($this->rcbc,'BankTransmittal.xlsx');
+    }
+
+    public function unpost(Request $request)
+    {
+        
+        $result = $this->posted->unpost($request->period_id,'non-confi');
+        
+        return response()->json($result);
     }
 
 

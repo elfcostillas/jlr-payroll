@@ -51,9 +51,9 @@
                         pageSize :12,
                         schema : {
                             model : {
-                                id : 'period_id',
+                                id : 'id',
                                 fields : {
-                                    period_id : { type : 'number' },
+                                    id : { type : 'number',editable : false },
                                     period_range : {type:'string'}
                                 }
                             }
@@ -109,6 +109,7 @@
                                             });	
 
                                             viewModel.ds.unposted.read();
+                                            viewModel.ds.posted.read();
                                         }
                                         else {
                                             custom_error(data.error);
@@ -116,6 +117,55 @@
                                     },'json');
                                 }
                             });
+                    },
+
+                    unpost : function () {
+                        let period = $("#posted_period").data("kendoDropDownList");
+
+                        console.log(period.value());
+
+                        Swal.fire({
+                                title: 'Unpost Payroll',
+                                text: "You won't be able to revert this!",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Unpost'
+                            }).then((result) => {
+                                if (result.value) {                       
+                                    $.post('payroll-register-confi/unpost',{
+                                        period_id : period.value()
+                                    },function(data,status,){
+                                        //console.log(status,data);
+                                        //console.log(data.error)
+
+                                        if(data.success){
+                                            Swal.fire({
+                                            //position: 'top-end',
+                                            icon: 'success',
+                                            title: data.success,
+                                            showConfirmButton: false,
+                                            timer: 1000
+                                            });	
+
+                                            viewModel.ds.unposted.read();
+                                            viewModel.ds.posted.read();
+                                        }
+                                        else {
+                                            custom_error(data.error);
+                                        }
+                                    },'json');
+                                }
+                            });
+                    },
+
+                    downloadRCBC : function(e){
+                        // alert();
+                        let period = $("#posted_period").data("kendoDropDownList");
+
+                        let url = `payroll-register-confi/download-rcbc-template/${period.value()}`;
+                        window.open(url);
                     },
 
                 },
@@ -150,7 +200,7 @@
                 dataTextField: "period_range",
                 dataValueField: "id",
                 dataSource: viewModel.ds.unposted,
-                //index: 0,
+                index: 0,
                 autoWidth : true,
                 dataBound : function(e){
                   
@@ -158,9 +208,17 @@
                 //change: onChange
             });
 
-           
-
-    
+            $("#posted_period").kendoDropDownList({
+                dataTextField: "period_range",
+                dataValueField: "id",
+                dataSource: viewModel.ds.posted,
+                index: 0,
+                autoWidth : true,
+                dataBound : function(e){
+                  
+                }
+                //change: onChange
+            });
 
             kendo.bind($("#viewModel"),viewModel);
            

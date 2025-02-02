@@ -653,7 +653,7 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::post('post',[PayrollRegisterController::class,'postPayroll']);
         Route::get('posted-payroll',[PayrollRegisterController::class,'getPostedPeriod']);
         Route::get('download-rcbc-template/{period_id}',[PayrollRegisterController::class,'downloadRCBCTemplate']);
-
+        Route::post('unpost',[PayrollRegisterController::class,'unpost']);
         
         
     }); 
@@ -711,6 +711,10 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::get('compute/{id}',[PayrollRegisterConfiController::class,'compute']);
         Route::get('download-unposted/{id}',[PayrollRegisterConfiController::class,'downloadExcelUnposted']);
         Route::post('post',[PayrollRegisterConfiController::class,'postPayroll']);
+
+        Route::get('posted-payroll',[PayrollRegisterConfiController::class,'getPostedPeriod']);
+        Route::post('unpost',[PayrollRegisterConfiController::class,'unpost']);
+        Route::get('download-rcbc-template/{period_id}',[PayrollRegisterConfiController::class,'downloadRCBCTemplate']);
         // Route::get('/',[PayrollRegisterController::class,'index']);
         // Route::get('unposted-payroll',[PayrollRegisterController::class,'getUnpostedPeriod']);
         // Route::get('compute/{id}',[PayrollRegisterController::class,'compute']);
