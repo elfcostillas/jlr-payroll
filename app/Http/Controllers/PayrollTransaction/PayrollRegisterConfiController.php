@@ -57,9 +57,9 @@ class PayrollRegisterConfiController extends Controller
         $phil_rate = $this->unposted->getPhilRate();
         //dd($phil_rate->rate);
         $payreg = [];
-       
+
         $employees = $this->unposted->getEmployeeWithDTR($period->id,'confi');
-        
+      
         if($period->period_type==1){
             /* loans for 15 */
         }else{
@@ -77,6 +77,7 @@ class PayrollRegisterConfiController extends Controller
         foreach($employees as $employee)
         {
            
+            $holidays = $this->unposted->getHolidayCounts($employee->biometric_id,$employee->period_id);
             //dd($employee);
             $employee->under_time_amount = 0;
             $employee->vl_wpay = 0;
@@ -92,8 +93,30 @@ class PayrollRegisterConfiController extends Controller
             $employee->bl_wopay = 0;
             $employee->bl_wopay_amount = 0;
 
-            $leaves = $this->unposted->getFiledLeaves($employee->biometric_id,$period->id);
+            $employee->svl = 0;
+            $employee->svl_amount = 0;
 
+            $employee->actual_reghol = 0;
+            $employee->actual_sphol = 0;
+            $employee->actual_dblhol = 0;
+
+            foreach($holidays as $holiday){
+                //dd();
+                switch($holiday->holiday_type){
+                    case 1 : case '1' :
+                        $employee->actual_reghol += 1;
+                        break;
+                    case 2 : case '2' :
+                        $employee->actual_sphol += 1;
+                        break;
+                    case 3 : case '3' :
+                        $employee->actual_dblhol += 1;
+                        break;
+                }
+            }
+
+            $leaves = $this->unposted->getFiledLeaves($employee->biometric_id,$period->id);
+            
             if($leaves->count()>0){
                 foreach($leaves as $leave){
                     switch($leave->leave_type){
@@ -129,6 +152,10 @@ class PayrollRegisterConfiController extends Controller
                             //$employee->bl_wpay += $leave->with_pay;
                             //$employee->bl_wopay += $leave->without_pay;
                             break;
+
+                        case 'SVL' :
+                                $employee->svl += $leave->with_pay;
+                            break;
                         
                         default : 
                             $employee->vl_wpay += $leave->with_pay;
@@ -161,7 +188,6 @@ class PayrollRegisterConfiController extends Controller
        
         $flag = $this->unposted->reInsert($period->id,$payreg,'confi');
 
-       
         if($flag){
             $noPay = $this->unposted->semiEmployeeNoPayroll($period->id);
         }else{
@@ -188,14 +214,22 @@ class PayrollRegisterConfiController extends Controller
             //dd($value->var_name,$vaue->col_label);
             $label[$value->var_name] = $value->col_label;
         }
-     
-        //dd($label);
 
         //dd($colHeaders);
         //dd($headers);
         
-        return view('app.payroll-transaction.payroll-register-confi.payroll-register',['data' => $collections,'no_pay' => $noPay,'headers' => $headers , 'labels' => $label,'deductionLabel' => $deductions,'govLoan' => $gov,'compensation' => $compensation]);
+        return view('app.payroll-transaction.payroll-register.payroll-register',[
+            'data' => $collections,
+            'no_pay' => $noPay,
+            'headers' => $headers , 
+            'labels' => $label,
+            'deductionLabel' => $deductions,
+            'govLoan' => $gov,
+            'compensation' => $compensation]);
     }
+        
+    //     return view('app.payroll-transaction.payroll-register-confi.payroll-register',['data' => $collections,'no_pay' => $noPay,'headers' => $headers , 'labels' => $label,'deductionLabel' => $deductions,'govLoan' => $gov,'compensation' => $compensation]);
+    // }
 
     public function downloadExcelUnposted(Request $request)
     {

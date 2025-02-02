@@ -49,7 +49,7 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
 
        
        
-        return $result->get();
+        return $result->orderBy('id','DESC')->get();
     }
 
     public function getEmployeeWithDTR($period_id,$emp_level)

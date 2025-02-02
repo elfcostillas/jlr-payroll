@@ -34,10 +34,8 @@ class EmployeeDTR
         $this->compute_ndays($holidays,$sp_holidays);
         //$this->computeHolidays($holidays,$sp_holidays);
 
-        if($this->details->biometric_id ==847 )
-        {
-            $this->computeHolidays($holidays,$sp_holidays);
-        }
+       $this->computeHolidays($holidays,$sp_holidays);
+        
         
         
 
@@ -149,60 +147,87 @@ class EmployeeDTR
         $isEntitled = false;
 
         $holiday = Carbon::createFromFormat("Y-m-d",$holiday_date);
-        
+       
         do {
             $holiday->subDay();
-            if($holiday_date == "2024-12-30" && $this->biometric_id == 847)
-            {
-                echo '['.$holiday->format("Y-m-d").']';
-                if(($holiday->format('D')!='Sun') || (!in_array($holiday->format('D'), ['Sun','Sat'])) ){ // wala na count kay ni look up sa sabado dec 28
-                    echo '+'.$holiday->format("Y-m-d").'+';
-                    $date = DB::table('holidays')
-                                ->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
-                                ->select()
-                                ->where('holidays.holiday_date','=',$holiday->format('Y-m-d'))
-                                ->where('holiday_location.location_id','=',$this->details->location_id);
-        
-                    $worked = DB::table('edtr')->select('ndays')
-                        ->where('biometric_id','=',$this->biometric_id)
-                        ->where('dtr_date','=',$holiday->format('Y-m-d'))
-                        ->first();
-                    
-                    if($date->count()<1){ // means it is not a holiday
-                        $flag = false;
-                        if($worked->ndays>0){
-                            $isEntitled = true;
-                        }
-                    } else {
-            
-                            if($worked->ndays>0){
-                                $isEntitled = true;
-        
-                            }
-                    }
-                    //echo $holiday->format('M-d-Y').' - '.$ctr.'<br>';
-    
-                }
-            }
+                
 
+                // echo '['.$holiday->format('m/d/Y').']';
+                //  if(($holiday->format('D')!='Sun') || (!in_array($holiday->format('D'), ['Sun','Sat'])) ){
+                if(($holiday->format('D')!='Sun')){ 
+                   
+                    if($holiday->format('D')=='Sat'){
+                        if($this->details->sched_sat && $this->details->alternate_sat=='N'){
+                            $date = DB::table('holidays')
+                            ->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
+                            ->select()
+                            ->where('holidays.holiday_date','=',$holiday->format('Y-m-d'))
+                            ->where('holiday_location.location_id','=',$this->details->location_id);
+    
+                            $worked = DB::table('edtr')->select('ndays')
+                                ->where('biometric_id','=',$this->biometric_id)
+                                ->where('dtr_date','=',$holiday->format('Y-m-d'))
+                                ->first();
+
+                            if($date->count()<1){ // means it is not a holiday
+                                $flag = false;
+                                if($worked->ndays>0){
+                                    $isEntitled = true;
+                                }
+                            } else {
+                                if($worked->ndays>0){
+                                    $isEntitled = true;
+                                }
+                            }
+                            
+                        }
+
+                    }else{
+                        $date = DB::table('holidays')
+                        ->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
+                        ->select()
+                        ->where('holidays.holiday_date','=',$holiday->format('Y-m-d'))
+                        ->where('holiday_location.location_id','=',$this->details->location_id);
+
+                        $worked = DB::table('edtr')->select('ndays')
+                            ->where('biometric_id','=',$this->biometric_id)
+                            ->where('dtr_date','=',$holiday->format('Y-m-d'))
+                            ->first();
+                            
+                        if($worked){
+                            if($date->count()<1){ // means it is not a holiday
+                                $flag = false;
+                                if($worked->ndays>0){
+                                    $isEntitled = true;
+                                }
+                            } else {
+                                if($worked->ndays>0){
+                                    $isEntitled = true;
+                                }
+                            }
+                        }    
+                        
+                       
+                       
+                    }
+            
+                }else{
+                    /* its sunday */
+                   
+                }
             
             if($flag){
                 $ctr++;
                 if($ctr>=15){
                     $flag = false;
                 }
-                // echo $ctr . '<br>';
-            }
 
-            // if($this->details->biometric_id == 847 )
-            // {
-            //    echo "imhere";
-            // }
+            }
            
         }while($flag);
 
         
-
+      
         return $isEntitled;
     }
 
@@ -216,11 +241,11 @@ class EmployeeDTR
             {
                 $entitled = true;
             }else{
-                    $entitled = $this->checkLastWorkingDay($log->dtr_date);
+                $entitled = $this->checkLastWorkingDay($log->dtr_date);
             }
 
-            if($entitled){ echo $log->dtr_date.'=grant'; }else{ echo $log->dtr_date.'=dont grant'; }
-            echo "<br>";
+            // if($entitled){ echo $log->dtr_date.'=grant'; }else{ echo $log->dtr_date.'=dont grant'; }
+            // echo "<br>";
 
             if($entitled){
                 switch($log->holiday_type) {

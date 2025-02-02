@@ -226,10 +226,7 @@ class WeeklyEmployee
         // $this->payreg['dblhol_rdot_amount'] = round($this->rates['hourly_rate'] * 3.9 * 1.3 * $this->payreg['dblhol_rdot'],2);
         // $this->payreg['dblhol_ndot_amount'] = round($this->rates['hourly_rate'] * 3 * 1.1 * 1.3 * $this->payreg['dblhol_ndot'],2);
         // $this->payreg['dblhol_rdndot_amount'] = round($this->rates['hourly_rate'] * 3.9 * 1.1 * 1.3 * $this->payreg['dblhol_rdndot'],2);
-        // if($this->payreg['biometric_id']==847)
-        // {
-        //     dd($this->payreg);
-        // }
+
         $this->payreg['basic_pay'] = $this->repo->getBasicPay($this->payreg);
 
         
