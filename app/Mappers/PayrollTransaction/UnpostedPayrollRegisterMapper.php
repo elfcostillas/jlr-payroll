@@ -54,6 +54,7 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
 
     public function getEmployeeWithDTR($period_id,$emp_level)
     {
+       
         $user = Auth::user();
         $result = $this->model->select(DB::raw("
                         IF(emp_level>=5 || ISNULL(emp_level),'non-confi','confi') AS emp_level,
@@ -113,7 +114,8 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                         dblhol_rdnd as dblhol_rdnd,
                         dblhol_nd as dblhol_nd,
                         dblhol_ndot as dblhol_ndot,
-                        dblhol_rdndot as dblhol_rdndot
+                        dblhol_rdndot as dblhol_rdndot,
+                        employees.manual_wtax
                         "))
                     ->from('edtr_totals')
                     ->join('payroll_period',function($join){
@@ -215,7 +217,8 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                         sum(dblhol_rdnd) as dblhol_rdnd,
                         sum(dblhol_nd) as dblhol_nd,
                         sum(dblhol_ndot) as dblhol_ndot,
-                        sum(dblhol_rdndot) as dblhol_rdndot
+                        sum(dblhol_rdndot) as dblhol_rdndot,
+                        manual_wtax
                         "))
                     ->from('edtr')
                     ->join('payroll_period_weekly',function($join){

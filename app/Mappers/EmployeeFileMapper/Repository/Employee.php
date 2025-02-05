@@ -484,8 +484,10 @@ class Employee
         // dd($this->data['deduct_wtax']);
 
         if($this->data['deduct_wtax']=='Y'){
+            
             if($this->data['manual_wtax'])
             {
+                
                 $this->payreg['wtax'] = $this->data['manual_wtax'];
             }else{
                 $annual = $this->rates['monthly_credit'] * 12;
