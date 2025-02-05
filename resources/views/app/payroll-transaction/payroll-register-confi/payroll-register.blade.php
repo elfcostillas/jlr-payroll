@@ -170,7 +170,7 @@
                         <th style="padding : 0px 4px;min-width:110px;" >SL</th>
                         <th style="padding : 0px 4px;min-width:110px;" >SL Amount</th>
 
-                        <th style="padding : 0px 4px;min-width:110px;" >BL</th>
+                        <th style="padding : 0px 4px;min-width:110px;" >BL (Hrs)</th>
                         <th style="padding : 0px 4px;min-width:110px;" >BL Amount</th>
 
                         <th style="padding : 0px 4px;min-width:110px;" >Absent</th>
