@@ -484,13 +484,18 @@ class Employee
         // dd($this->data['deduct_wtax']);
 
         if($this->data['deduct_wtax']=='Y'){
-            $annual = $this->rates['monthly_credit'] * 12;
-            $range = DB::table('wtax')->whereRaw(" $annual between range1 and range2 ")->where('pay_type','=',2)->first();
-           
-            // $annual_tax = $range->fix + round( ($annual - $range->range1 <= 0) ? 0 : $annual  - $range->range1) * $range->percentage,2);
-    
-            $annual_tax = $range->fix + round( ($annual - $range->range1 <= 0) ? 0 : $annual - $range->range1,2) * $range->percentage;
-            $this->payreg['wtax'] = round($annual_tax/24,2);
+            if($this->data['manual_wtax'])
+            {
+                $this->payreg['wtax'] = $this->data['manual_wtax'];
+            }else{
+                $annual = $this->rates['monthly_credit'] * 12;
+                $range = DB::table('wtax')->whereRaw(" $annual between range1 and range2 ")->where('pay_type','=',2)->first();
+            
+                // $annual_tax = $range->fix + round( ($annual - $range->range1 <= 0) ? 0 : $annual  - $range->range1) * $range->percentage,2);
+        
+                $annual_tax = $range->fix + round( ($annual - $range->range1 <= 0) ? 0 : $annual - $range->range1,2) * $range->percentage;
+                $this->payreg['wtax'] = round($annual_tax/24,2);
+            }
         }else{
             $this->payreg['wtax'] = 0.00;
         }

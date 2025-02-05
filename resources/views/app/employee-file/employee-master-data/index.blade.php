@@ -175,7 +175,7 @@
                                 <td>Deduct WTax</td>
                                 <td colspan="2">HDMF</td>
                                 <td>HDMF Contri</td>
-                                <td colspan="2"></td>
+                                <td colspan="2">Manual WTax</td>
                             </tr>
                             <tr>
                                 <td colspan="2"><input type="text" id="tin_no" data-bind="value:form.model.tin_no"></td>
@@ -183,7 +183,7 @@
                                 
                                 <td colspan="2"><input type="text" id="hdmf_no" data-bind="value:form.model.hdmf_no"></td>
                                 <td><input type="text" id="hdmf_contri" data-bind="value:form.model.hdmf_contri"></td>
-                                <td colspan="2"></td>
+                                <td><input type="text" id="manual_wtax" data-bind="value:form.model.manual_wtax"></td>
                             </tr>
                         </table>
                     </div>

@@ -83,6 +83,7 @@
                     sched_sat: null,
                     deduct_wtax : null,
                     retired : null,
+                    manual_wtax : null
 
             };
 
@@ -136,6 +137,7 @@
                         sched_sat: null,
                         deduct_wtax : null,
                         retired : null,
+                        manual_wtax : null,
                     },
                     mirror : {
                         is_daily : false,
@@ -343,6 +345,8 @@
                         await viewModel.functions.reAssignValues();
                         
                         var json_data = JSON.stringify(viewModel.form.model);
+
+                        console.log(json_data);
                         
                         $.post('employee-master-data/save',{
                             data : json_data
@@ -841,6 +845,7 @@
             $("#biometric_id").kendoTextBox({ });
             $("#blood_type").kendoTextBox({ });
             $("#email").kendoTextBox({ });
+            $("#manual_wtax").kendoTextBox({ });
 
             $("#emergency_person").kendoTextBox({ });
             $("#emergency_relation").kendoTextBox({ });
