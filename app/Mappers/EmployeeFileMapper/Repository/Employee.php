@@ -415,7 +415,7 @@ class Employee
 
     public function computeWISP()
     {
-        $prem = DB::table('hris_sss_table')->select('mpf_ee')
+        $prem = DB::table('hris_sss_table_2025')->select('mpf_ee')
                 ->whereRaw($this->rates['monthly_credit']." between range1 and range2")->first();
         return (float)$prem->mpf_ee;
     }

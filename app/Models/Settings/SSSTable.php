@@ -9,7 +9,7 @@ class SSSTable extends Model
 {
     use HasFactory;
 
-    protected $table = 'hris_sss_table';
+    protected $table = 'hris_sss_table_2025';
     protected $primaryKey = 'line_id';
     public $timestamps = false;
 

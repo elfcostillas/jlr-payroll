@@ -34,7 +34,7 @@ class SGContributionMapper extends AbstractMapper
         $contri = DB::table("payrollregister_posted_weekly")
         ->select(DB::raw("biometric_id,sum(ifnull(sss_prem,0)) as sss_prem,sum(ifnull(phil_prem,0)) as phil_prem,sum(ifnull(payrollregister_posted_weekly.hdmf_contri,0)) as hdmf_contri,er_share,ec"))
         ->join('payroll_period_weekly','payrollregister_posted_weekly.period_id','=','payroll_period_weekly.id')
-        ->leftJoin('hris_sss_table','ee_share','=','payrollregister_posted_weekly.sss_prem')
+        ->leftJoin('hris_sss_table_2025','ee_share','=','payrollregister_posted_weekly.sss_prem')
         ->whereRaw("month(date_from) = $month and year(date_from) = $year")
         ->groupBy('biometric_id');
 
