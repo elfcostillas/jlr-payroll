@@ -793,10 +793,14 @@
                     </tr>
                 
                     @foreach($otByJobtitleValue[$table] as $key => $row) 
+                   
 
                         @foreach($row as $key2 => $value)
+                        <?php
+                            $mask_val2 = (in_array($key,['Plant','Quarry'])) ? 'AGG '. $key : $key;
+                        ?>
                         <tr>
-                            <td style="padding:2px;"> {{ $key }}</td>
+                            <td style="padding:2px;"> {{ $mask_val2 }}</td>
                             <td style="padding:2px;"> {{ $key2 }} </td>
                             <td style="padding:2px;text-align:center;"> {{ $value }} </td>
                         </tr>
@@ -825,8 +829,11 @@ departmentalTotalGross -->
                 </tr>
                 <?php $totalPerDeptGross = 0;?>
                 @foreach($departmentalTotalGross as $dept => $amount)
+                    <?php
+                        $mask_val = (in_array($dept,['Plant','Quarry'])) ? 'AGG '. $dept : $dept;
+                    ?>
                     <tr>
-                        <td>{{ $dept }}</td>
+                        <td>{{ $mask_val }}</td>
                         <td style="text-align:right;padding-right:4px;"> {{ number_format($amount,2) }}</td>
                     </tr>
                     <?php $totalPerDeptGross += $amount;?>
@@ -841,7 +848,7 @@ departmentalTotalGross -->
 
             <table border=1 style="border-collapse: collapse;float:left;margin-left :8px;margin-top:8px;">
                 <tr>
-                    <td style="padding:2px;"> Gross Pay more than P9,000 except TM Drivers </td>
+                    <td style="padding:2px;"> Gross Pay P9,000 ++ except TM Drivers </td>
                 </tr>
                 <tr>
                     <td style="padding:2px;text-align:center"> {{ $fourfive_count }} </td>
