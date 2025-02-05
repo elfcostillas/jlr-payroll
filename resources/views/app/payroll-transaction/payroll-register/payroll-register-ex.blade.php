@@ -65,7 +65,7 @@
                         <td >SL</td>
                         <td >SL Amount</td>
 
-                        <td >BL</td>
+                        <td >BL (Hrs)</td>
                         <td >BL Amount</td>
 
                         <td >SVL</td>
