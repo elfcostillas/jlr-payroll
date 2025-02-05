@@ -256,12 +256,20 @@
                             <td class="pad4" width="30%"  style="text-align:right;padding-right:4px;">{{  ($e->sss_prem > 0) ? number_format($e->sss_prem,2) : '-' }}</td>
                         </tr>
                         <tr>
+                            <td class="pad4" width="70%%" >SSS Contribution (MPF)</td>
+                            <td class="pad4" width="30%"  style="text-align:right;padding-right:4px;">{{  ($e->sss_wisp > 0) ? number_format($e->sss_wisp,2) : '-' }}</td>
+                        </tr>
+                        <tr>
                             <td class="pad4" width="70%%" >Phil Health Contribution</td>
                             <td class="pad4" width="30%"  style="text-align:right;padding-right:4px;">{{ ($e->phil_prem > 0) ? number_format($e->phil_prem,2) : '-' }}</td>
                         </tr>
                         <tr>
                             <td class="pad4" width="70%%" >PAG IBIG</td>
                             <td class="pad4" width="30%"  style="text-align:right;padding-right:4px;">{{  ($e->hdmf_contri > 0) ? number_format($e->hdmf_contri,2) : '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="pad4" width="70%%" >Withholing Tax</td>
+                            <td class="pad4" width="30%"  style="text-align:right;padding-right:4px;">{{  ($e->wtax > 0) ? number_format($e->wtax,2) : '-' }}</td>
                         </tr>
                     </table>
                     @if($e->gov_loan['total']>0)
