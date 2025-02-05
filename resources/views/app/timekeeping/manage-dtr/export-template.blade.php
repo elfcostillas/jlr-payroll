@@ -37,7 +37,7 @@
                     <td> {{ $logs->time_out }}</td>
                     <td> {{ $logs->late }}</td>
                     <td> {{ $logs->punch->cincout }} </td>
-                    <td></td>
+                    <td> {{ $logs->ndays }}</td>
                     <td></td>
                 </tr>
             @endforeach

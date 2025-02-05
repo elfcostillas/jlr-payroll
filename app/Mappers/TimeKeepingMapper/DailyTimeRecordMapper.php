@@ -1839,6 +1839,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                     ->leftJoin('work_schedules','sched_mtwtf','=','work_schedules.id')
                     ->where('exit_status',1)
                     ->where('pay_type','!=',3)
+                    ->where('job_title_id','!=',130)
                     ->get();
         //work_schedules ON sched_mtwtf = work_schedules.id
         foreach($employees as $employee){
