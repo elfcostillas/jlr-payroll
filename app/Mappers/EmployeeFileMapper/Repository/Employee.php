@@ -371,7 +371,7 @@ class Employee
 
         $gross = $this->getMonthGross($period);
         //dd($gross);
-        $prem = DB::table('hris_sss_table')->select('ee_share')
+        $prem = DB::table('hris_sss_table_2025')->select('ee_share')
                 //->whereRaw($this->rates['monthly_credit']." between range1 and range2")->first();
                 ->whereRaw($gross." between range1 and range2")->first();
         return (float)$prem->ee_share;
