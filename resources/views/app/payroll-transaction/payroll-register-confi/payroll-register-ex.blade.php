@@ -73,7 +73,7 @@
                         <td >Gross Total</td>
                         <td >SSS Premium</td>
                         <td >SSS WISP</td>
-                        <td >PhilHealt <br> Premium</td>
+                        <td >PhilHealth <br> Premium</td>
                         <td >PAG IBIG <br> Contri</td>  @php $colspan+=3; @endphp
                         @foreach($govLoan as $glabel)
                             <td width ="90px" style="white-space:normal"><p>{{ $glabel->description }}</p></td>
