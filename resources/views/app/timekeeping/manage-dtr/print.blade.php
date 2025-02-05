@@ -24,13 +24,13 @@
 
 <style>
     @font-face {
-        font-family: Helvetica;
-        src: url({{storage_path('/fonts/Helvetica.ttf')}}) format('truetype');
+        /* font-family: Helvetica;
+        src: url({{storage_path('/fonts/Helvetica.ttf')}}) format('truetype'); */
 
     }
 
     * {
-        font-family : "Helvetica"
+        /* font-family : "Helvetica" */
     }
 
     table {

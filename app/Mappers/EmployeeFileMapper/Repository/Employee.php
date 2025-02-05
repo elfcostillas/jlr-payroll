@@ -158,7 +158,7 @@ class Employee
 
         $this->setDaysWorked();
 
-        $this->payreg['late_eq_amount'] = round($this->rates['minute_rate'] * $this->payreg['late_eq'],2);
+        $this->payreg['late_eq_amount'] = round($this->rates['minute_rate'] * $this->payreg['late'],2);
         $this->payreg['under_time_amount'] = round($this->rates['hourly_rate'] * $this->payreg['under_time'],2);
         $this->payreg['absences_amount'] = round($this->rates['hourly_rate'] * $this->payreg['absences'],2);
 
@@ -425,7 +425,7 @@ class Employee
         if($this->data['is_daily']=='Y'){
             //$this->payreg['ndays'] = 0;
         }else{
-            $this->payreg['ndays'] = 13 - round((($this->payreg['late_eq']/60)+ $this->payreg['under_time'] + $this->payreg['vl_wpay'] + $this->payreg['sl_wpay'] + $this->payreg['absences'] + $this->payreg['svl'] )/8,2)  - $this->payreg['leghol_count'] - $this->payreg['sphol_count'] - $this->payreg['dblhol_count'] ;
+            $this->payreg['ndays'] = 13 - round((($this->payreg['late_eq']/60)+ $this->payreg['under_time'] + $this->payreg['vl_wpay'] + $this->payreg['sl_wpay'] + $this->payreg['absences'] + $this->payreg['svl'] )/8,2)  - $this->payreg['leghol_count'] - $this->payreg['sphol_count'] - $this->payreg['dblhol_count'] - $this->payreg['bl'] ;
         }
     }
 
