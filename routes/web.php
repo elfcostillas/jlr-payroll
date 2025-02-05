@@ -299,6 +299,7 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::get('/',[DTRSummaryController::class,'index']);
         Route::get('period-list',[DTRSummaryController::class,'periodList']);
         Route::get('download/{period_id}',[DTRSummaryController::class,'download']);
+        Route::get('download-confi/{period_id}',[DTRSummaryController::class,'download_confi']);
         Route::get('compute/{period_id}',[DTRSummaryController::class,'compute']);
     });
 

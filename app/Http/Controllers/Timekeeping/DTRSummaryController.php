@@ -37,14 +37,29 @@ class DTRSummaryController extends Controller
     {
         // dd($request->period_id);
         $period_id = $request->period_id;
-        $list = $this->mapper->deleteAndInsert($request->period_id);
+        $list = $this->mapper->deleteAndInsert($request->period_id,'non-confi');
 
-        $employees = $this->mapper->listEmployees($request->period_id);
+        $employees = $this->mapper->listEmployees($request->period_id,'non-confi');
 
         $this->excel->setValues($employees);
         return Excel::download($this->excel,'DTR-Sumamry'.$period_id.'.xlsx');
         // return view('app.timekeeping.dtr-summary.web',['employees' => $employees]);
     }
+
+    public function download_confi(Request $request)
+    {
+        // dd($request->period_id);
+        $period_id = $request->period_id;
+
+        $list = $this->mapper->deleteAndInsert($request->period_id,'confi');
+
+        $employees = $this->mapper->listEmployees($request->period_id,'confi');
+
+        $this->excel->setValues($employees);
+        return Excel::download($this->excel,'DTR-Sumamry'.$period_id.'.xlsx');
+        
+    }
+    
 
     public function compute(Request $request)
     {   

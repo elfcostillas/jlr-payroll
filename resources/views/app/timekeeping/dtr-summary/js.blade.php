@@ -129,6 +129,21 @@
 
                         // alert();
                     },
+
+                    download_confi : function(e){
+                        let tr = $(e.target).closest("tr");
+                        let data = this.dataItem(tr);
+
+                        // let year = ($("#fy").data("kendoDropDownList").value()=='') ? 2022 : $("#fy").data("kendoDropDownList").value();
+                       
+
+                        let url = `dtr-summary/download-confi/${data.id}`;
+
+                        window.open(url);
+
+                        // alert();
+                    },
+
                     compute : function(e){
                         let tr = $(e.target).closest("tr");
                         let data = this.dataItem(tr);
@@ -184,7 +199,16 @@
                             //{ text : 'Download',click : viewModel.buttonHandler.download , }
                         ],
                         attributes : { style : 'font-size:10pt !important;'},
-                        width : 110
+                        width : 120
+                    },
+                    {
+                        command: [
+                            // { text : 'Prepare Blank',click : viewModel.toolbarHandler.prepareBlank , },
+                            { text : "Download - Confi",click : viewModel.toolbarHandler.download_confi , icon : 'download' },
+                            //{ text : 'Download',click : viewModel.buttonHandler.download , }
+                        ],
+                        attributes : { style : 'font-size:10pt !important;'},
+                        width : 160
                     },
                     {
                         command: [

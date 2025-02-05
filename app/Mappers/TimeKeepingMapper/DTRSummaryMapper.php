@@ -24,14 +24,23 @@ class DTRSummaryMapper extends AbstractMapper {
         return $result->get();
     }
 
-    public function deleteAndInsert($id)
+    public function deleteAndInsert($id,$emp_level)
     {
         $tmp_array = [];
+
+        
 
         $result = DB::table('employees')
                     ->select('biometric_id')
                     ->where('exit_status',1)
                     ->whereIn('pay_type',[1,2]);
+
+        if($emp_level=='non-confi'){
+            $result = $result->where('emp_level','>=',5);
+        }
+        else{
+            $result = $result->where('emp_level','<',5);
+        }
 
         $flag = DB::table('edtr_totals')
                     ->where('period_id',$id)
@@ -59,7 +68,7 @@ class DTRSummaryMapper extends AbstractMapper {
 
     }
 
-    public function listEmployees($period_id)
+    public function listEmployees($period_id,$emp_level)
     {   
 
         //select id,div_name from divisions;
@@ -91,8 +100,14 @@ class DTRSummaryMapper extends AbstractMapper {
                     ->where('dept_id','=',$dept->id)
                     ->where('period_id',$period_id)
                     ->orderBy('lastname','ASC')
-                    ->orderBy('firstname','ASC')
-                    ->get();
+                    ->orderBy('firstname','ASC');
+
+                    if($emp_level=='non-confi'){
+                        $employees = $employees->where('emp_level','>=',5)->get();
+                    }
+                    else{
+                        $employees = $employees->where('emp_level','<',5)->get();
+                    }
                 
                 $dept->employees = $employees;
             }
