@@ -456,7 +456,7 @@ class Employee
 
     public function computeTotalDeduction($company,$govloan)
     {
-        $this->payreg['total_deduction'] = $this->payreg['hdmf_contri'] + $this->payreg['sss_prem'] + $this->payreg['phil_prem'] + $this->payreg['wtax'] ;
+        $this->payreg['total_deduction'] = $this->payreg['hdmf_contri'] + $this->payreg['sss_prem'] + $this->payreg['phil_prem'] + $this->payreg['wtax']  + $this->payreg['sss_wisp'] ;
 
         foreach($company as $loan){
             $this->payreg['total_deduction'] += $loan;
