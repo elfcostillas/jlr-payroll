@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Mappers\EmployeeFileMapper\OnlineRequestUserMapper;
 use App\Mappers\EmployeeFileMapper\RatesMapper;
+use Carbon\Carbon;
 
 class EmployeeController extends Controller
 {
@@ -241,20 +242,43 @@ class EmployeeController extends Controller
 
     public function copyToOR(Request $request)
     {
-       
+    
         $result = $this->mapper->header($request->id);
         $key = [
             'email' => trim($result->biometric_id)
         ];
 
-        $data = [
-           
-            'password' => Hash::make(trim($result->lastname)),
-            'name' => trim($result->lastname).', '.trim($result->firstname) 
-        ];
-       // dd($key,$data);
-       $result = $this->online->updateOrCreate($key,$data);
+        if($result){
+            $msg = '';
 
+            $msg .= ($result->emp_level) ? '' : 'Employee level not set.';
+            $msg .= ($result->email) ? '' : 'Employee email not set.';
+            $msg .= ($result->birthdate) ? '' : 'Employee birthdate not set.';
+            $msg .= ($result->biometric_id) ? '' : 'Employee biometric id not set.';
+
+            
+           
+            if($msg == ''){
+                $bday = Carbon::createFromFormat("Y-m-d",$result->birthdate);
+
+                // return response()->json((object) array('error'=>$bday->format('mdY')))->setStatusCode(500);
+                 
+                $data = [
+                    'user_group_id' => trim($result->emp_level),
+                    'biometric_id' => trim($result->biometric_id),
+                    'password' => Hash::make(trim($bday->format('mdY'))),
+                    'email' => trim($result->email),
+                    'name' => trim($result->lastname).', '.trim($result->firstname) 
+                ];
+            
+                $result = $this->online->updateOrCreate($data);
+            }else{
+                return response()->json((object) array('error'=>$msg))->setStatusCode(500); 
+            }
+
+        }else{
+            $result = (object) array('error'=>"Record not found.");
+        }
        return response()->json($result);
 
     }

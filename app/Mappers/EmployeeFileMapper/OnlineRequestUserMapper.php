@@ -23,9 +23,10 @@ class OnlineRequestUserMapper extends AbstractMapper {
 	];
 
 
-	public function updateOrCreate($key,$data)
+	public function updateOrCreate($data)
     {
-        $result = DB::table('onlineform_users')->updateOrInsert($key,$data);
+        // $result = DB::table('onlineform_users')->updateOrInsert($key,$data);
+        $result = DB::connection('online_request')->table('users')->insert($data);
        
         return $result;
     }

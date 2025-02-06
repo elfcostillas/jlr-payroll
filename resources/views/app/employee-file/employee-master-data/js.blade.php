@@ -852,6 +852,7 @@
             $("#emergency_phone").kendoTextBox({ });
 
             $("#basic_salary").kendoNumericTextBox({  decimals: 2});
+            // $("#basic_salary").kendoTextBox({  decimals: 2});
 
             $("#daily_allowance").kendoNumericTextBox({  decimals: 2});
             $("#monthly_allowance").kendoNumericTextBox({  decimals: 2});
@@ -863,7 +864,7 @@
                     { id : 'saveBtn', type: "button", text: "Save", icon: 'save', click : viewModel.buttonHandler.save },
                     { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
                     { id : 'copy', type: "button", text: "Copy to Online Request", icon: 'copy', click : viewModel.buttonHandler.copy },
-                    { id : 'copy', type: "button", text: "Manage Rates", icon: 'dollar', click : viewModel.buttonHandler.rates },
+                    { id : 'copy2', type: "button", text: "Manage Rates", icon: 'dollar', click : viewModel.buttonHandler.rates },
                 ]
             });
 
