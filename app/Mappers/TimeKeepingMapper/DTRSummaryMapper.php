@@ -125,6 +125,7 @@ class DTRSummaryMapper extends AbstractMapper {
                     inner join employees on employees.biometric_id = edtr.biometric_id
                     where payroll_period.id = $period_id and pay_type in (1,2)
                     and ((time_in is not null and time_in != '' and time_in != '00:00') or  (time_out is not null and time_out != '' and time_out != '00:00'))
+                   
                     and employees.biometric_id != 0";
     
         $ids = DB::select(DB::raw($query));

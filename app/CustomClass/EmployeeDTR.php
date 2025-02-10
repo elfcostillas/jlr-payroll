@@ -60,8 +60,11 @@ class EmployeeDTR
         ->whereNotIn('dtr_date',$holidays)
         ->whereNotIn('dtr_date',$sp_holidays);
 
+        // dd($result->toSql(),$result->getBindings());
+
         if($this->details->pay_type == 1){
             $ndays = 13 - $this->row['vl_wp'] - $this->row['vl_wop'] - $this->row['sl_wp'] - $this->row['sl_wop'];
+            // dd($this->row['vl_wp'] , $this->row['vl_wop'] , $this->row['sl_wp'] , $this->row['sl_wop']);
         }else{
             $ndays_result = $result->select(DB::raw('sum(ndays) as ndays'))->first();
             $ndays = (int) $ndays_result->ndays;

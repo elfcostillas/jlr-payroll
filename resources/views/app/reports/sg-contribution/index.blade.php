@@ -58,7 +58,7 @@
     
 </style>
 @section('title')
-    <h4>Attendance Reports<h4>
+    <h4>Contribution Reports<h4>
 @endsection
 @section('content')
     <div class="container">
@@ -107,7 +107,7 @@
                                     <td> <input type="text" id= "scripts_months2" /></td>
                                     <td> <input type="text" id= "scripts_year2" /></td>
                                     <td> <input type="text" id= "scripts_type2" /></td>
-                                    <td></td>
+                                    <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.download_sorted'><i class="fas fa-table"></i> Download (Sorted)</button></td>
                                     <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.web_2'><i class="fas fa-table"></i> Generate (Web)</button></td>
                                     <td><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download_2'><i class="fas fa-table"></i> Download</button></td>
                                   

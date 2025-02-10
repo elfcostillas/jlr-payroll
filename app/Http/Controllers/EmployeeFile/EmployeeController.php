@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Mappers\EmployeeFileMapper\OnlineRequestUserMapper;
 use App\Mappers\EmployeeFileMapper\RatesMapper;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class EmployeeController extends Controller
 {
@@ -281,6 +282,32 @@ class EmployeeController extends Controller
         }
        return response()->json($result);
 
+    }
+
+    public function sendToEportal()
+    {
+
+        $employees = DB::connection('mysql')->table('employees')
+        ->where('exit_status','=',1)
+        ->whereNotNull('birthdate')
+        ->whereNotNull('email')
+        ->get();
+
+        foreach($employees as $employee)
+        {
+            $bday = Carbon::createFromFormat("Y-m-d",$employee->birthdate);
+
+               
+            $data = [
+                'user_group_id' => trim($employee->emp_level),
+                'biometric_id' => trim($employee->biometric_id),
+                'password' => Hash::make(trim($bday->format('mdY'))),
+                'email' => trim($employee->email),
+                'name' => trim($employee->lastname).', '.trim($employee->firstname) 
+            ];
+        
+            $result = $this->online->updateOrCreate($data);
+        }
     }
 
     // public function getEmploymentStat()

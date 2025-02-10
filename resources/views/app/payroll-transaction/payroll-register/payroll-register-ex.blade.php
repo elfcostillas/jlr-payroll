@@ -87,7 +87,7 @@
                         <td >Gross Total</td>
                         <td >SSS Premium</td>
                         <td >SSS MPF</td>
-                        <td >PhilHealt <br> Premium</td>
+                        <td >PhilHealth <br> Premium</td>
                         <td >PAG IBIG <br> Contri</td> 
                         <td >Withholding Tax</td> 
                          @php $colspan+=3; @endphp

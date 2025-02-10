@@ -150,6 +150,18 @@
 
                         window.open(url);
                     },
+                    
+                    download_sorted : function()
+                    {   
+                        let m = $("#scripts_months2").data("kendoDropDownList").value();
+                        let y = $("#scripts_year2").data("kendoDropDownList").value();
+                        let t = $("#scripts_type2").data("kendoDropDownList").value();
+
+                        let url = `sg-contributions/generate-excel-type-sorted/${y}/${m}/${t}`;
+
+                        // console.log(url);
+                        window.open(url);
+                    },
                    
                     // viewYearly : function(e){
                     //     let year = $("#tardy_year").data("kendoDropDownList").value();

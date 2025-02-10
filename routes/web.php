@@ -613,6 +613,7 @@ Route::middleware('auth')->prefix('reports')->group(function(){
 
         Route::get('generate-web-type/{year}/{month}/{type}',[SGContributionsController::class,'webByType']);
         Route::get('generate-excel-type/{year}/{month}/{type}',[SGContributionsController::class,'excelByType']);
+        Route::get('generate-excel-type-sorted/{year}/{month}/{type}',[SGContributionsController::class,'excelByTypeS']);
 
     });
 
@@ -834,6 +835,7 @@ Route::get('now',function(){
 });
 
 use App\Libraries\LeaveCreditsMaker;
+use Illuminate\Support\Facades\DB;
 
 Route::get('leave-credits-maker',function(){
     $maker = new LeaveCreditsMaker();
@@ -851,6 +853,9 @@ Route::get('leave-credits-maker',function(){
   
     // $leavecreditsmaker();
 });
+
+Route::get('send-to-eportal',[EmployeeController::class,'sendToEportal']);
+
 
 // Route::get('process-sheet4',function(){
 //     $employees = DB::table('sheet4')

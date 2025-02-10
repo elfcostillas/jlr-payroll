@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Reports;
 
 use App\Excel\Contribution;
+use App\Excel\ContributionSorted;
 use App\Excel\CumulativeContribution;
 use App\Http\Controllers\Controller;
 use App\Mappers\Reports\SGContributionMapper;
@@ -15,6 +16,7 @@ class SGContributionsController extends Controller
     private $mapper;
     private $cumulative;
     private $single;
+    private $sorted;
 
     public $months = array(
         1 => 'January',
@@ -31,11 +33,12 @@ class SGContributionsController extends Controller
         12 => 'December',
     );
 
-    public function __construct(SGContributionMapper $mapper,CumulativeContribution $cumulative,Contribution $single )
+    public function __construct(SGContributionMapper $mapper,CumulativeContribution $cumulative,Contribution $single,ContributionSorted $sorted )
     {
         $this->mapper = $mapper;
         $this->cumulative = $cumulative;
         $this->single = $single;
+        $this->sorted = $sorted;
     }   
 
     public function index()
@@ -106,4 +109,19 @@ class SGContributionsController extends Controller
         return Excel::download($this->single,'Contribution'.$label.'.xlsx');
 
     }
+
+    public function excelByTypeS(Request $request)
+    {
+
+        // dd(123);
+        $label = $this->months[$request->month] .' '. $request->year;
+        $result = $this->mapper->generateS($request->year,$request->month);
+        $type = $request->type;
+
+        $this->sorted->setValues($result,$label,$type);
+        return Excel::download($this->sorted,'Contribution'.$label.'.xlsx');
+
+    }
+
+    
 }
