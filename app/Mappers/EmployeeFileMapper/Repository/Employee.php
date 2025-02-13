@@ -158,6 +158,11 @@ class Employee
 
         $this->setDaysWorked();
 
+        // if($this->data->new_hire == 'Y' && $this->data->fixed_rate == 'N')
+        // {
+            
+        // }
+
         $this->payreg['late_eq_amount'] = round($this->rates['hourly_rate'] * $this->payreg['late_eq'],2);
         $this->payreg['under_time_amount'] = round($this->rates['hourly_rate'] * $this->payreg['under_time'],2);
         $this->payreg['absences_amount'] = round($this->rates['hourly_rate'] * $this->payreg['absences'],2);

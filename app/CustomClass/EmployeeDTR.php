@@ -251,13 +251,22 @@ class EmployeeDTR
             // echo "<br>";
 
             if($entitled){
+            
                 switch($log->holiday_type) {
                     case 1 :
                             $log->reghol_pay = 1;
                         break;
                     
                     case 2 :
+                        if($this->details->pay_type == 1){
                             $log->sphol_pay = 1;
+                        }else{
+                            if($logs->ndays == 1){
+                                $log->sphol_pay = 1;
+                            }else{
+                                $log->sphol_pay = 0;
+                            }
+                        }
                         break;
                 }
 

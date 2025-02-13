@@ -262,28 +262,28 @@
                             <tr>
                                 <td colspan=2>Basic Salary </td>
                                 <td>Daily Rate</td>
+                                <td>Fixed Rate</td>
                                 <td colspan=2>Monthly Allowance</td>
                                 <td colspan=2>Daily Allowance</td>
-                                <td>Retired</td>
                             </tr>
                             <tr>
                                 <td colspan=2><input type="text" id="basic_salary" data-bind="value:form.model.basic_salary"></td>
                                 <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" data-bind="checked:form.mirror.is_daily" id="is_daily"></div></div></td>
+                                <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" data-bind="checked:form.mirror.fixed_rate" id="fixed_rate"></div></div></td>
                                 <td colspan=2><input type="text" id="monthly_allowance" data-bind="value:form.model.monthly_allowance"></td>
                                 <td colspan=2><input type="text" id="daily_allowance" data-bind="value:form.model.daily_allowance"></td>
-                                <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" data-bind="checked:form.mirror.retired" id="retired"></div></div></td>
-                              
                             </tr>
                             <tr>
                                 <td colspan=2>Bank Acct </td>
-                                <td></td>
+                                <td>Retired</td>
                                 <td colspan=2></td>
                                 <td colspan=2></td>
                                 <td></td>
                             </tr>
                             <tr>
                                 <td colspan=2><input type="text" id="bank_acct" data-bind="value:form.model.bank_acct"></td>
-                                <td></td>
+                                <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" data-bind="checked:form.mirror.retired" id="retired"></div></div></td>
+                                
                             </tr>
                         </table>
                     </div>

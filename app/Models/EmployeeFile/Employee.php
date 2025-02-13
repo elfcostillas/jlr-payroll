@@ -53,7 +53,8 @@ class Employee extends Model
         'sched_sat',
         'retired',
         'dept_category',
-        'manual_wtax'
+        'manual_wtax',
+        'fixed_rate'
     ];
 
 }

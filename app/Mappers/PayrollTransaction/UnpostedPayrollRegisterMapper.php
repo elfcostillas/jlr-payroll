@@ -115,7 +115,12 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                         dblhol_nd as dblhol_nd,
                         dblhol_ndot as dblhol_ndot,
                         dblhol_rdndot as dblhol_rdndot,
-                        employees.manual_wtax
+                        employees.manual_wtax,
+                        employees.fixed_rate,
+                        employees.sched_sat,
+                        employees.pay_type,
+                        employees.date_hired,
+                        if(employees.date_hired between payroll_period.date_from and payroll_period.date_to,'Y','N') as new_hire
                         "))
                     ->from('edtr_totals')
                     ->join('payroll_period',function($join){
@@ -126,6 +131,7 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                     ->whereIn('pay_type',[1,2])
                     ->where('exit_status',1)
                     ->where('edtr_totals.ndays','>',0)
+                    ->where('employees.biometric_id',161) // for testing
                   
                     ->groupBy(DB::raw('
                                 payroll_period.id,
@@ -1224,7 +1230,7 @@ WHERE period_id = 1 AND total_amount > 0;*/
 
     public function getHolidayCounts($biometric_id,$period_id)
     {
-        $qry = "SELECT holiday_type FROM holidays INNER JOIN holiday_location ON holidays.id = holiday_id
+        $qry = "SELECT holiday_date,holiday_type FROM holidays INNER JOIN holiday_location ON holidays.id = holiday_id
         INNER JOIN payroll_period ON holiday_date BETWEEN date_from AND date_to
         INNER JOIN employees ON employees.location_id = holiday_location.location_id
         INNER JOIN holiday_types ON holiday_types.id = holiday_type

@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use App\Excel\UnpostedPayrollRegister;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Excel\BankTransmittal;
+use Carbon\CarbonPeriod;
 
 class PayrollRegisterController extends Controller
 {
@@ -79,6 +80,10 @@ class PayrollRegisterController extends Controller
 
         foreach($employees as $employee)
         {
+            
+            if($employee->new_hire == 'Y' && $employee->fixed_rate == 'N' && $employee->pay_type == 1){
+                $employee->absences = $this->count_absent($employee,$period);
+            }
            
             $holidays = $this->unposted->getHolidayCounts($employee->biometric_id,$employee->period_id);
             //dd($employee);
@@ -104,18 +109,21 @@ class PayrollRegisterController extends Controller
             $employee->actual_dblhol = 0;
 
             foreach($holidays as $holiday){
-                //dd();
-                switch($holiday->holiday_type){
-                    case 1 : case '1' :
-                        $employee->actual_reghol += 1;
-                        break;
-                    case 2 : case '2' :
-                        $employee->actual_sphol += 1;
-                        break;
-                    case 3 : case '3' :
-                        $employee->actual_dblhol += 1;
-                        break;
+                if($employee->date_hired < $holiday->holiday_date){
+                    switch($holiday->holiday_type){
+                        case 1 : case '1' :
+                            $employee->actual_reghol += 1;
+                            break;
+                        case 2 : case '2' :
+                            $employee->actual_sphol += 1;
+                            break;
+                        case 3 : case '3' :
+                            $employee->actual_dblhol += 1;
+                            break;
+                    }
                 }
+                // dd($holiday->holiday_date < );
+               
             }
 
             $leaves = $this->unposted->getFiledLeaves($employee->biometric_id,$period->id);
@@ -298,6 +306,35 @@ class PayrollRegisterController extends Controller
         return response()->json($result);
         
         //$position = $this->employee->getPosition();
+    }
+
+    public function count_absent($employee,$period)
+    {
+      
+        $absence = 0;
+        $dayBefore = Carbon::createFromFormat('Y-m-d',$employee->date_hired)->subDay();
+       
+        $period = new CarbonPeriod($period->date_from,$dayBefore->format('Y-m-d'));
+
+        foreach($period as $date)
+        {
+
+            if($date->format('D') != 'Sun'){
+                $absence++;
+            }
+            /*
+            if($employee->sched_sat){
+                if($date->format('D') != 'Sun'){
+                    $absence++;
+                }
+            }else{
+                if(!in_array($date->format('D'),['Sun','Sat'])){
+                    $absence++;
+                }
+            }*/
+        }
+
+        return $absence * 8.0;
     }
 
     public function getPostedPeriod()

@@ -83,7 +83,8 @@
                     sched_sat: null,
                     deduct_wtax : null,
                     retired : null,
-                    manual_wtax : null
+                    manual_wtax : null,
+                    fixed_rate : null
 
             };
 
@@ -138,6 +139,7 @@
                         deduct_wtax : null,
                         retired : null,
                         manual_wtax : null,
+                        fixed_rate : null
                     },
                     mirror : {
                         is_daily : false,
@@ -487,6 +489,7 @@
                         viewModel.form.model.set('deduct_sss',(viewModel.form.mirror.deduct_sss) ? 'Y':'N');
                         viewModel.form.model.set('deduct_phic',(viewModel.form.mirror.deduct_phic) ? 'Y':'N');
                         viewModel.form.model.set('is_daily',(viewModel.form.mirror.is_daily) ? 'Y':'N');
+                        viewModel.form.model.set('fixed_rate',(viewModel.form.mirror.fixed_rate) ? 'Y':'N');
                         viewModel.form.model.set('deduct_wtax',(viewModel.form.mirror.deduct_wtax) ? 'Y':'N');
                         viewModel.form.model.set('retired',(viewModel.form.mirror.retired) ? 'Y':'N');
                         viewModel.form.model.set('date_hired',kendo.toString($('#date_hired').data('kendoDatePicker').value(),'yyyy-MM-dd'));
@@ -522,6 +525,7 @@
                     viewModel.form.mirror.set('deduct_sss',(viewModel.form.model.deduct_sss=='Y') ? true:false);
                     viewModel.form.mirror.set('deduct_phic',(viewModel.form.model.deduct_phic=='Y') ? true:false);
                     viewModel.form.mirror.set('is_daily',(viewModel.form.model.is_daily=='Y') ? true:false);
+                    viewModel.form.mirror.set('fixed_rate',(viewModel.form.model.fixed_rate=='Y') ? true:false);
                     viewModel.form.mirror.set('deduct_wtax',(viewModel.form.model.deduct_wtax=='Y') ? true:false);
                     viewModel.form.mirror.set('retired',(viewModel.form.model.retired=='Y') ? true:false);
                 }
