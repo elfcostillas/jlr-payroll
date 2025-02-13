@@ -261,7 +261,8 @@ class EmployeeDTR
                         if($this->details->pay_type == 1){
                             $log->sphol_pay = 1;
                         }else{
-                            if($logs->ndays == 1){
+                            
+                            if($log->ndays == 1){
                                 $log->sphol_pay = 1;
                             }else{
                                 $log->sphol_pay = 0;
