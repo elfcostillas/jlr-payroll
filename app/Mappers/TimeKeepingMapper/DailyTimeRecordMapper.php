@@ -2,6 +2,7 @@
 
 namespace App\Mappers\TimeKeepingMapper;
 
+use App\CustomClass\EmployeeAWOL;
 use App\Mappers\Mapper as AbstractMapper;
 use App\Libraries\Filters;
 use Carbon\Carbon;
@@ -1653,42 +1654,67 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
     public function awol_setter($year,$month)
     {
         $start = $year.'-'.$month.'-01';
-        // $end = $year.'-'.$month.'-31';
-
         $end = Carbon::createFromFormat('Y-m-d',$start)->format('Y-m-t');
 
-        // dd($year,$month,$end);
+        $employees = DB::table('employees')
+        ->where('exit_status',1)
+        ->where('pay_type','!=',3)
+        ->where('emp_level','!=',6)
+        // ->where('biometric_id',664)
+        ->get();
 
-        $ctr = 0;
-
-        DB::table('edtr')->whereBetween('dtr_date',[$start,$end])->update(['awol' => 'N']);
-
-        $holidays_arr = [];
-
-        $holidays = DB::table('holidays')->select('holiday_date')->whereBetween('holiday_date',[$start,$end])->get();
-
-        foreach($holidays as $holiday)
+        $logs = [];
+        
+        foreach($employees as $employee)
         {
-            array_push($holidays_arr,$holiday->holiday_date);
+            $e = new EmployeeAWOL($employee,$start,$end);
+
+            array_push($logs,$e->getLogs());
         }
 
-        $result = DB::table('edtr')
-            ->select(DB::raw("edtr.*,weekday(dtr_date) as day_num,division_id,dept_id"))
-            ->join('employees','employees.biometric_id','=','edtr.biometric_id')
-            ->where('employees.exit_status','=',1)
-            ->where('employees.pay_type','<>',3)
-            ->where('employees.date_hired','<',$end)
-            ->whereRaw('WEEKDAY(dtr_date) not in (6)')
-            ->whereBetween('dtr_date',[$start,$end])
-            ->orderBy('id','ASC')
-            ->chunk(1000,function(Collection $logs) use ($holidays_arr){
-                foreach($logs as $log)
-                {
-                    $this->checkLog($log,$holidays_arr);
-                }
-            });
+        return $logs;
 
     }
+
+    // public function awol_setter($year,$month)
+    // {
+    //     $start = $year.'-'.$month.'-01';
+    //     // $end = $year.'-'.$month.'-31';
+
+    //     $end = Carbon::createFromFormat('Y-m-d',$start)->format('Y-m-t');
+
+    //     // dd($year,$month,$end);
+
+    //     $ctr = 0;
+
+    //     DB::table('edtr')->whereBetween('dtr_date',[$start,$end])->update(['awol' => 'N']);
+
+    //     $holidays_arr = [];
+
+    //     $holidays = DB::table('holidays')->select('holiday_date')->whereBetween('holiday_date',[$start,$end])->get();
+
+    //     foreach($holidays as $holiday)
+    //     {
+    //         array_push($holidays_arr,$holiday->holiday_date);
+    //     }
+
+    //     $result = DB::table('edtr')
+    //         ->select(DB::raw("edtr.*,weekday(dtr_date) as day_num,division_id,dept_id"))
+    //         ->join('employees','employees.biometric_id','=','edtr.biometric_id')
+    //         ->where('employees.exit_status','=',1)
+    //         ->where('employees.pay_type','<>',3)
+    //         ->where('employees.date_hired','<',$end)
+    //         ->whereRaw('WEEKDAY(dtr_date) not in (6)')
+    //         ->whereBetween('dtr_date',[$start,$end])
+    //         ->orderBy('id','ASC')
+    //         ->chunk(1000,function(Collection $logs) use ($holidays_arr){
+    //             foreach($logs as $log)
+    //             {
+    //                 $this->checkLog($log,$holidays_arr);
+    //             }
+    //         });
+
+    // }
 
     public function checkLog($log,$holidays){
 

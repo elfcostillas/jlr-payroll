@@ -1242,6 +1242,25 @@ WHERE period_id = 1 AND total_amount > 0;*/
         return $result;
     }
 
+    public function getAwolCount($biometric_id,$period)
+    {
+        // dd($period);
+        /*select count(id) as awol_count from edtr 
+        where biometric_id = 664 and awol = 'Y' and dtr_date between '2024-12-16' and '2024-12-31'
+        */
+
+        $result = DB::table('edtr')
+            ->where('biometric_id',$biometric_id)
+            ->where('awol','=','Y')
+            ->whereBetween('dtr_date',[$period->date_from,$period->date_to])
+            ->select(DB::raw("count(id) as awol_count"))
+            ->first();
+
+        $awol_count = (is_null($result)) ? 0 : $result->awol_count;
+
+        return $awol_count * 8.0;
+    }
+
 
 
 }

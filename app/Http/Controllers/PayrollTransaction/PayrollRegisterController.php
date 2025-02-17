@@ -178,6 +178,14 @@ class PayrollRegisterController extends Controller
                 }
             }
 
+            // dd($employee);
+
+            $awol = $this->unposted->getAwolCount($employee->biometric_id,$period);
+            
+            if($awol > 0){
+                $employee->absences += $awol;
+            }
+
             $person = ($employee->pay_type==1) ? new Employee($employee,new SemiMonthly) : new Employee($employee,new Daily);
             
             $person->setPhilRate($phil_rate->rate);

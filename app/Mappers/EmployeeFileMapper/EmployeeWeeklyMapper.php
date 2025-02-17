@@ -73,7 +73,8 @@ class EmployeeWeeklyMapper extends AbstractMapper {
 		->leftJoin('emp_exit_status','exit_status','=','emp_exit_status.id')
 		->leftJoin('emp_emp_stat','employee_stat','=','emp_emp_stat.id')
 		->leftJoin('emp_pay_types','pay_type','=','emp_pay_types.id')
-		->where('pay_type','=',3);
+		// ->where('pay_type','=',3);
+		->where('emp_level','=',6);
 
 		// if($user->super_user=='N')
 		// {
