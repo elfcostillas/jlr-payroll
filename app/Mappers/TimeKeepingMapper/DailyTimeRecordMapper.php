@@ -492,6 +492,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
                 'sl_wp' => $sl_wp,
                 'sl_wop' => $sl_wop,
                 'bl' => $bl,
+                //'ndays' => 1 - round($ut/8,2) - round($vl_wop/8,2) - round($vl_wp/8,2) - round($sl_wp/8,2) - round($sl_wop/8,2) - round($bl/8,2),
             ];
 
             DB::table('edtr')
@@ -520,7 +521,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                             })
                             ->where('payroll_period.id',$period_id);
                             
-        $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,time_to_sec(work_schedules.time_in) as sched_in,time_to_sec(work_schedules.time_out) as sched_out,time_to_sec(work_schedules.out_am) as sched_outam,time_to_sec(work_schedules.in_pm) as sched_inpm,holidays.holiday_type,time_to_sec(edtr.time_in) as actual_in"))
+        $result = $this->model->select(DB::raw("edtr.id,edtr.biometric_id,DATE_FORMAT(dtr_date,'%a') AS day_name,dtr_date,edtr.time_in,edtr.time_out,late,late_eq,ndays,under_time,over_time,night_diff,schedule_id,time_to_sec(work_schedules.time_in) as sched_in,time_to_sec(work_schedules.time_out) as sched_out,time_to_sec(work_schedules.out_am) as sched_outam,time_to_sec(work_schedules.in_pm) as sched_inpm,holidays.holiday_type,time_to_sec(edtr.time_in) as actual_in,under_time,vl_wp,vl_wop,sl_wp,sl_wop,bl"))
         ->from('edtr')
         ->where('edtr.biometric_id',$biometric_id)
         ->join('payroll_period',function($join){
@@ -897,8 +898,17 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                     // $this->updateValid($rec->toArray());
                 }
 
-                if($rec->day_name!='Sun'){
-                    $rec->ndays = ($rec->time_in!='' && $rec->time_out!='' && $rec->holiday_type==NULL && $rec->time_in!='00:00' && $rec->time_out!='00:00') ? 1 : 0;
+                // if($rec->day_name!='Sun'){
+                //     $rec->ndays = ($rec->time_in!='' && $rec->time_out!='' && $rec->holiday_type==NULL && $rec->time_in!='00:00' && $rec->time_out!='00:00') ? 1 : 0;
+
+                //     'ndays' => 1 - round($ut/8,2) - round($vl_wop/8,2) - round($vl_wp/8,2) - round($sl_wp/8,2) - round($sl_wop/8,2) - round($bl/8,2),
+                // }
+                
+                if($rec->time_in!='' && $rec->time_out!='' && $rec->holiday_type==NULL && $rec->time_in!='00:00' && $rec->time_out!='00:00')
+                {
+                    $rec->ndays = 1 - round($rec->under_time/8,2) - round($rec->vl_wp/8,2) - round($rec->vl_wop/8,2) - round($rec->sl_wp/8,2) - round($rec->sl_wop/8,2) - round($rec->bl/8,2);
+                }else{  
+                    $rec->ndays = 0;
                 }
 
                 $this->updateValid($rec->toArray());
@@ -999,8 +1009,8 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
                             if(($rec->time_in != "" && $rec->time_in != "00:00") && ($rec->time_out !="" && $rec->time_out !="00:00") || $rec->ndays ==1)
                             {
-                                $rec->reghol_pay = 0;
-                                $rec->ndays = 1;
+                                $rec->ndays = 1 - round($rec->under_time/8,2) - round($rec->vl_wp/8,2) - round($rec->vl_wop/8,2) - round($rec->sl_wp/8,2) - round($rec->sl_wop/8,2) - round($rec->bl/8,2);
+                               
                             }else{
 
 

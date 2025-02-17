@@ -34,11 +34,8 @@ class EmployeeDTR
         $this->compute_ndays($holidays,$sp_holidays);
         //$this->computeHolidays($holidays,$sp_holidays);
 
-       $this->computeHolidays($holidays,$sp_holidays);
-        
-        
-        
-
+        $this->computeHolidays($holidays,$sp_holidays);
+    
         $this->save();
     }
 
@@ -71,7 +68,7 @@ class EmployeeDTR
             // dd($this->row['vl_wp'] , $this->row['vl_wop'] , $this->row['sl_wp'] , $this->row['sl_wop']);
         }else{
             $ndays_result = $result->select(DB::raw('sum(ndays) as ndays'))->first();
-            $ndays = (int) $ndays_result->ndays;
+            $ndays = $ndays_result->ndays;
         }
         
         // set ndays
