@@ -131,7 +131,7 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                     ->whereIn('pay_type',[1,2])
                     ->where('exit_status',1)
                     ->where('edtr_totals.ndays','>',0)
-                    // ->where('employees.biometric_id',161) // for testing
+                    // ->where('employees.biometric_id',1807) // for testing
                   
                     ->groupBy(DB::raw('
                                 payroll_period.id,

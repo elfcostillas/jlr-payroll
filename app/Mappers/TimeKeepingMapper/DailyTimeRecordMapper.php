@@ -1660,7 +1660,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
         ->where('exit_status',1)
         ->where('pay_type','!=',3)
         ->where('emp_level','!=',6)
-        // ->where('biometric_id',664)
+        // ->where('biometric_id',1807)
         ->get();
 
         $logs = [];

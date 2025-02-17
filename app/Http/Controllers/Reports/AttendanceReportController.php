@@ -33,11 +33,13 @@ class AttendanceReportController extends Controller
 
     public function setAWOL($year,$month)
     {
-        echo "START => ".now()."<br>";
+        //echo "START => ".now()."<br>";
             $result = $this->dtr_mapper->awol_setter($year,$month);
-        echo "END => ".now()."<br>";
+        //echo "END => ".now()."<br>";
 
-        return view('app.reports.attendance.logs',['data' => $result]);
+        // return view('app.reports.attendance.logs',['data' => $result]);
+
+        return response()->json($result);
     }
 
     public function fillBlank()

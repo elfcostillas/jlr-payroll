@@ -87,6 +87,7 @@ class PayrollRegisterController extends Controller
            
             $holidays = $this->unposted->getHolidayCounts($employee->biometric_id,$employee->period_id);
             //dd($employee);
+            
             $employee->under_time_amount = 0;
             $employee->vl_wpay = 0;
             $employee->vl_wpay_amount = 0;
@@ -181,7 +182,7 @@ class PayrollRegisterController extends Controller
             // dd($employee);
 
             $awol = $this->unposted->getAwolCount($employee->biometric_id,$period);
-            
+
             if($awol > 0){
                 $employee->absences += $awol;
             }

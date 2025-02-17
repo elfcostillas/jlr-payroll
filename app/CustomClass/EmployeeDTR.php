@@ -50,6 +50,9 @@ class EmployeeDTR
 
     public function compute_ndays($holidays,$sp_holidays)
     {   
+        //dd($holidays->count(),$sp_holidays);
+        $hol_count = ($holidays) ? count($holidays) : 0;
+        $sp_count = ($sp_holidays) ? count($sp_holidays) : 0;
         // 1 = Monthly | 2 = Daily
     
         $result = DB::table('edtr')->join('payroll_period',function($join){
@@ -63,7 +66,8 @@ class EmployeeDTR
         // dd($result->toSql(),$result->getBindings());
 
         if($this->details->pay_type == 1){
-            $ndays = 13 - $this->row['vl_wp'] - $this->row['vl_wop'] - $this->row['sl_wp'] - $this->row['sl_wop'];
+            // $ndays = 13 - $this->row['vl_wp'] - $this->row['vl_wop'] - $this->row['sl_wp'] - $this->row['sl_wop'];
+            $ndays = 13 - $this->row['vl_wp'] - $this->row['vl_wop'] - $this->row['sl_wp'] - $this->row['sl_wop'] - $hol_count - $sp_count;
             // dd($this->row['vl_wp'] , $this->row['vl_wop'] , $this->row['sl_wp'] , $this->row['sl_wop']);
         }else{
             $ndays_result = $result->select(DB::raw('sum(ndays) as ndays'))->first();

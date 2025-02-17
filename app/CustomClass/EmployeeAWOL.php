@@ -67,8 +67,27 @@ class EmployeeAWOL
                 if($this->isEmpty($log->time_in) && $this->isEmpty($log->time_out) && $this->isZero($log->ndays) && is_null($log->holiday_type) && is_null($log->leave_type))
                 {
                     $this->setVerdict($log->dtr_id,'Y');
+                    array_push($this->logs,[
+                        'day_name' => $log->day_name,
+                        'time_in' => $log->time_in,
+                        'time_out' => $log->time_out,
+                        'ndays' => $log->ndays,
+                        'holiday_type' => $log->holiday_type,
+                        'leave_type' => $log->leave_type,
+                        'awol' => 'Y'
+                    ]);
+
                 }else{
                     $this->setVerdict($log->dtr_id,'N');
+                    array_push($this->logs,[
+                        'day_name' => $log->day_name,
+                        'time_in' => $log->time_in,
+                        'time_out' => $log->time_out,
+                        'ndays' => $log->ndays,
+                        'holiday_type' => $log->holiday_type,
+                        'leave_type' => $log->leave_type,
+                        'awol' => 'N'
+                    ]);
                 }
             }
         }
