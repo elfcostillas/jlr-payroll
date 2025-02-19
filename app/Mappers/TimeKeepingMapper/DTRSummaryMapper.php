@@ -148,8 +148,6 @@ class DTRSummaryMapper extends AbstractMapper {
         return $ctr;
     }
 
-  
-
 }
 
 /*

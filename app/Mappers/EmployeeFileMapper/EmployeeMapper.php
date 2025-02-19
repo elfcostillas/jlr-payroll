@@ -25,7 +25,7 @@ class EmployeeMapper extends AbstractMapper {
 		//'employee_stat' => 'required|sometimes|gt:0',
 		'exit_status' => 'required|sometimes|gt:0',
 		// 'pay_type' => 'required|sometimes|gt:0',
-
+		'job_title_id' => 'required|sometimes',
 		// primary_addr
 		// secondary_addr
 		// remarks

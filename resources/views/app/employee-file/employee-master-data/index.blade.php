@@ -266,13 +266,23 @@
                                 <td colspan=2>Monthly Allowance</td>
                                 <td colspan=2>Daily Allowance</td>
                             </tr>
-                            <tr>
-                                <td colspan=2><input type="text" id="basic_salary" data-bind="value:form.model.basic_salary"></td>
-                                <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" data-bind="checked:form.mirror.is_daily" id="is_daily"></div></div></td>
-                                <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" data-bind="checked:form.mirror.fixed_rate" id="fixed_rate"></div></div></td>
-                                <td colspan=2><input type="text" id="monthly_allowance" data-bind="value:form.model.monthly_allowance"></td>
-                                <td colspan=2><input type="text" id="daily_allowance" data-bind="value:form.model.daily_allowance"></td>
-                            </tr>
+                                @if($canSeeRates)
+                                    <tr>
+                                        <td colspan=2><input type="text" id="basic_salary" data-bind="value:form.model.basic_salary"></td>
+                                        <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" data-bind="checked:form.mirror.is_daily" id="is_daily"></div></div></td>
+                                        <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" data-bind="checked:form.mirror.fixed_rate" id="fixed_rate"></div></div></td>
+                                        <td colspan=2><input type="text" id="monthly_allowance" data-bind="value:form.model.monthly_allowance"></td>
+                                        <td colspan=2><input type="text" id="daily_allowance" data-bind="value:form.model.daily_allowance"></td>
+                                    </tr>
+                                @else
+                                    <tr>
+                                        <td colspan=2></td>
+                                        <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" data-bind="checked:form.mirror.is_daily" id="is_daily"></div></div></td>
+                                        <td><div class="form-group"><div class="form-check"><input class="form-check-input" type="checkbox" data-bind="checked:form.mirror.fixed_rate" id="fixed_rate"></div></div></td>
+                                        <td colspan=2><input type="text" id="monthly_allowance" data-bind="value:form.model.monthly_allowance"></td>
+                                        <td colspan=2><input type="text" id="daily_allowance" data-bind="value:form.model.daily_allowance"></td>
+                                    </tr>
+                                @endif
                             <tr>
                                 <td colspan=2>Bank Acct </td>
                                 <td>Retired</td>
