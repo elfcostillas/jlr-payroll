@@ -58,10 +58,12 @@ class EmployeeMapper extends AbstractMapper {
 		return $this->model->find($id);
     }
 
-    public function list($filter)
+    public function list($filter,$emp_level)
     {
 
 		$user = Auth::user();
+
+		
 		
 		
         $result = $this->model->select(DB::raw('employees.*,dept_code,div_code,emp_exit_status.status_desc,emp_emp_stat.estatus_desc,pay_description'))
@@ -70,7 +72,13 @@ class EmployeeMapper extends AbstractMapper {
 		->leftJoin('emp_exit_status','exit_status','=','emp_exit_status.id')
 		->leftJoin('emp_emp_stat','employee_stat','=','emp_emp_stat.id')
 		->leftJoin('emp_pay_types','pay_type','=','emp_pay_types.id')
-		->where('pay_type','!=',3);
+		->where('emp_level','<',6);
+
+		if($emp_level == 'non-confi'){
+			$result = $result->where('emp_level','=',5);
+		}else{
+			$result = $result->where('emp_level','<',5);
+		}
 
 		// if($user->super_user=='N')
 		// {
@@ -336,6 +344,13 @@ class EmployeeMapper extends AbstractMapper {
 	public function getUserDept($bio_id)
 	{
 		$result = $this->model->select('dept_id')->where('biometric_id',$bio_id)->first();
+
+		return $result;
+	}
+
+	public function getUserlevel($bio_id)
+	{
+		$result = $this->model->select('emp_level')->where('biometric_id',$bio_id)->first();
 
 		return $result;
 	}
