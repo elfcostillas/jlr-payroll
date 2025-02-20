@@ -177,7 +177,7 @@ class EmployeeMapper extends AbstractMapper {
 					//echo $div_departments->dept_name .'<br>';
 
 					
-					$employees = $this->model->select(DB::raw('employees.*,level_desc as emp_level,estatus_desc as employee_stat,dept_code,div_code,emp_exit_status.status_desc,emp_emp_stat.estatus_desc,pay_description,job_title_name,location_altername AS location_id'))
+					$employees = $this->model->select(DB::raw('employees.*,level_desc as emp_level,status_desc as exit_status,estatus_desc as employee_stat,dept_code,div_code,emp_exit_status.status_desc,emp_emp_stat.estatus_desc,pay_description,job_title_name,location_altername AS location_id'))
 						->leftJoin('departments','departments.id','=','dept_id')
 						->leftJoin('divisions','divisions.id','=','division_id')
 						->leftJoin('civil_status','employees.civil_status','=','civil_status.id')
@@ -188,7 +188,7 @@ class EmployeeMapper extends AbstractMapper {
 						->leftJoin('locations','locations.id','=','employees.location_id')
 						->leftJoin('emp_level','emp_level.id','=','employees.emp_level')
 						->where('pay_type','<>',3)
-						->where('exit_status','=',1)
+						// ->where('exit_status','=',1)
 						->where('employees.dept_id','=',$div_departments->id)
 						->where('location_id','=',$location->id)
 						->where('division_id','=',$divs->id)
@@ -238,7 +238,7 @@ LEFT JOIN emp_exit_status ON employees.exit_status = emp_exit_status.id
 				{
 					//echo $div_departments->dept_name .'<br>';
 
-					$employees = $this->model->select(DB::raw('employees.*,level_desc as emp_level,estatus_desc as employee_stat,dept_code,div_code,emp_exit_status.status_desc,emp_emp_stat.estatus_desc,pay_description,job_title_name,location_altername AS location_id'))
+					$employees = $this->model->select(DB::raw('employees.*,level_desc as emp_level,status_desc as exit_status,estatus_desc as employee_stat,dept_code,div_code,emp_exit_status.status_desc,emp_emp_stat.estatus_desc,pay_description,job_title_name,location_altername AS location_id'))
 						->leftJoin('departments','departments.id','=','dept_id')
 						->leftJoin('divisions','divisions.id','=','division_id')
 						->leftJoin('civil_status','employees.civil_status','=','civil_status.id')
@@ -249,7 +249,7 @@ LEFT JOIN emp_exit_status ON employees.exit_status = emp_exit_status.id
 						->leftJoin('locations','locations.id','=','employees.location_id')
 						->leftJoin('emp_level','emp_level.id','=','employees.emp_level')
 						->where('pay_type','=',3)
-						->where('exit_status','=',1)
+						// ->where('exit_status','=',1)
 						->where('employees.dept_id','=',$div_departments->id)
 						->where('location_id','=',$location->id)
 						->where('division_id','=',$divs->id)
