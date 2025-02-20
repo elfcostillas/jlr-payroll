@@ -131,7 +131,8 @@ class EmployeeMapper extends AbstractMapper {
 		->leftJoin('emp_exit_status','exit_status','=','emp_exit_status.id')
 		->leftJoin('emp_emp_stat','employee_stat','=','emp_emp_stat.id')
 		->leftJoin('job_titles','job_titles.id','=','job_title_id')
-		->leftJoin('emp_pay_types','pay_type','=','emp_pay_types.id');
+		->leftJoin('emp_pay_types','pay_type','=','emp_pay_types.id')
+		->leftJoin('emp_level','emp_level.id','=','employees.emp_level');
 
 		if($filter['division']!=0){
 			$result = $result->where('division_id',$filter['division']);
@@ -176,7 +177,7 @@ class EmployeeMapper extends AbstractMapper {
 					//echo $div_departments->dept_name .'<br>';
 
 					
-					$employees = $this->model->select(DB::raw('employees.*,dept_code,div_code,emp_exit_status.status_desc,emp_emp_stat.estatus_desc,pay_description,job_title_name,location_altername AS location_id'))
+					$employees = $this->model->select(DB::raw('employees.*,level_desc as emp_level,estatus_desc as employee_stat,dept_code,div_code,emp_exit_status.status_desc,emp_emp_stat.estatus_desc,pay_description,job_title_name,location_altername AS location_id'))
 						->leftJoin('departments','departments.id','=','dept_id')
 						->leftJoin('divisions','divisions.id','=','division_id')
 						->leftJoin('civil_status','employees.civil_status','=','civil_status.id')
@@ -185,6 +186,7 @@ class EmployeeMapper extends AbstractMapper {
 						->leftJoin('emp_pay_types','pay_type','=','emp_pay_types.id')
 						->leftJoin('job_titles','job_titles.id','=','job_title_id')
 						->leftJoin('locations','locations.id','=','employees.location_id')
+						->leftJoin('emp_level','emp_level.id','=','employees.emp_level')
 						->where('pay_type','<>',3)
 						->where('exit_status','=',1)
 						->where('employees.dept_id','=',$div_departments->id)
@@ -193,6 +195,12 @@ class EmployeeMapper extends AbstractMapper {
 						->orderBy('lastname','asc')
 						->orderBy('firstname','asc')
 						->get();
+
+						/*
+						SELECT level_desc,status_desc FROM employees LEFT JOIN emp_level ON employees.emp_level = emp_level.id
+LEFT JOIN emp_exit_status ON employees.exit_status = emp_exit_status.id
+
+*/
 
 					$div_departments->employees = $employees;
 						
@@ -205,10 +213,8 @@ class EmployeeMapper extends AbstractMapper {
 			}
 			
 		}
-
-			// dd($locations);
 			
-			return $locations;
+		return $locations;
 
 	}
 
@@ -232,8 +238,7 @@ class EmployeeMapper extends AbstractMapper {
 				{
 					//echo $div_departments->dept_name .'<br>';
 
-					
-					$employees = $this->model->select(DB::raw('employees.*,dept_code,div_code,emp_exit_status.status_desc,emp_emp_stat.estatus_desc,pay_description,job_title_name,location_altername AS location_id'))
+					$employees = $this->model->select(DB::raw('employees.*,level_desc as emp_level,estatus_desc as employee_stat,dept_code,div_code,emp_exit_status.status_desc,emp_emp_stat.estatus_desc,pay_description,job_title_name,location_altername AS location_id'))
 						->leftJoin('departments','departments.id','=','dept_id')
 						->leftJoin('divisions','divisions.id','=','division_id')
 						->leftJoin('civil_status','employees.civil_status','=','civil_status.id')
@@ -242,6 +247,7 @@ class EmployeeMapper extends AbstractMapper {
 						->leftJoin('emp_pay_types','pay_type','=','emp_pay_types.id')
 						->leftJoin('job_titles','job_titles.id','=','job_title_id')
 						->leftJoin('locations','locations.id','=','employees.location_id')
+						->leftJoin('emp_level','emp_level.id','=','employees.emp_level')
 						->where('pay_type','=',3)
 						->where('exit_status','=',1)
 						->where('employees.dept_id','=',$div_departments->id)
