@@ -150,6 +150,13 @@
                         let url = `dtr-summary/compute/${data.id}`;
                         window.open(url);
                     },
+
+                    compute_confi : function(e){
+                        let tr = $(e.target).closest("tr");
+                        let data = this.dataItem(tr);
+                        let url = `dtr-summary/compute-confi/${data.id}`;
+                        window.open(url);
+                    },
                     prepareBlank : function(e){
                         alert();
                     }
@@ -216,6 +223,13 @@
                         ],
                         attributes : { style : 'font-size:10pt !important;'},
                         width : 110
+                    },
+                    {
+                        command: [
+                            { text : 'Compute - Confi',click : viewModel.toolbarHandler.compute_confi , icon : '' },
+                        ],
+                        attributes : { style : 'font-size:10pt !important;'},
+                        width : 130
                     },
                   
                 ]

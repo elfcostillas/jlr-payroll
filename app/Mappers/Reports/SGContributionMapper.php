@@ -57,7 +57,8 @@ class SGContributionMapper extends AbstractMapper
             ->join('departments','departments.id','=','employees.dept_id')
             ->join('job_titles','job_titles.id','=','employees.job_title_id')
             ->where('employees.location_id',$location->id)
-            
+            ->orderBy('lastname','asc')
+            ->orderBy('firstname','asc')
             ->groupBy('biometric_id')
             ->get();
 
@@ -103,7 +104,8 @@ class SGContributionMapper extends AbstractMapper
             ->join('departments','departments.id','=','employees.dept_id')
             ->join('job_titles','job_titles.id','=','employees.job_title_id')
             // ->where('employees.location_id',$location->id)
-            
+            ->orderBy('lastname','asc')
+            ->orderBy('firstname','asc')
             ->groupBy('biometric_id')
             ->get();
 

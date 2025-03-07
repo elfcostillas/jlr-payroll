@@ -28,6 +28,8 @@ class EmployeeDTR
 
         $this->compute_leaves();
 
+        $this->compute_ot();
+
         $holidays = $this->getLegalHolidays();
         $sp_holidays = $this->getSpecialHolidays();
 
@@ -43,6 +45,81 @@ class EmployeeDTR
     {
         $e = DB::table('employees')->where('biometric_id',(int) $this->biometric_id)->first();
         $this->details = $e;
+    }
+
+    public function compute_ot()
+    {
+        //over_time
+
+        $result = DB::table('edtr')->join('payroll_period',function($join){
+            $join->whereRaw("edtr.dtr_date between date_from and date_to");
+        })
+        ->where('biometric_id',$this->biometric_id)
+        ->where('payroll_period.id',$this->period_id)
+        ->select(DB::raw("
+            sum(over_time) as over_time,
+            sum(night_diff) as night_diff,
+            sum(night_diff_ot) as night_diff_ot,
+            sum(restday_ot) as restday_ot,
+            sum(restday_hrs) as restday_hrs,
+            sum(restday_nd) as restday_nd,
+            sum(restday_ndot) as restday_ndot,
+            sum(reghol_ot) as reghol_ot,
+            sum(reghol_rd) as reghol_rd,
+            sum(reghol_rdnd) as reghol_rdnd,
+            sum(reghol_rdot) as reghol_rdot,
+            sum(reghol_nd) as reghol_nd,
+            sum(reghol_ndot) as reghol_ndot,
+            sum(sphol_pay) as sphol_pay,
+            sum(sphol_hrs) as sphol_hrs,
+            sum(sphol_ot) as sphol_ot,
+            sum(sphol_rd) as sphol_rd,
+            sum(sphol_rdnd) as sphol_rdnd,
+            sum(sphol_rdot) as sphol_rdot,
+            sum(sphol_nd) as sphol_nd,
+            sum(sphol_ndot) as sphol_ndot,
+            sum(dblhol_pay) as dblhol_pay,
+            sum(dblhol_ot) as dblhol_ot,
+            sum(dblhol_rd) as dblhol_rd,
+            sum(sphol_rdndot) as sphol_rdndot,
+            sum(reghol_rdndot) as reghol_rdndot"))
+        ->first();
+
+        // $this->row['over_time'] = $result->over_time;
+        foreach($result  as $key => $value)
+        {
+            // dd($key,$value);
+            $this->row[$key] = $value;
+        }
+
+
+        /*
+        sum(night_diff) as night_diff,
+        sum(night_diff_ot) as night_diff_ot,
+        sum(restday_ot) as restday_ot,
+        sum(restday_hrs) as restday_hrs,
+        sum(restday_nd) as restday_nd,
+        sum(restday_ndot) as restday_ndot,
+        sum(reghol_ot) as reghol_ot,
+        sum(reghol_rd) as reghol_rd,
+        sum(reghol_rdnd) as reghol_rdnd,
+        sum(reghol_rdot) as reghol_rdot,
+        sum(reghol_nd) as reghol_nd,
+        sum(reghol_ndot) as reghol_ndot,
+        sum(sphol_pay) as sphol_pay,
+        sum(sphol_hrs) as sphol_hrs,
+        sum(sphol_ot) as sphol_ot,
+        sum(sphol_rd) as sphol_rd,
+        sum(sphol_rdnd) as sphol_rdnd,
+        sum(sphol_rdot) as sphol_rdot,
+        sum(sphol_nd) as sphol_nd,
+        sum(sphol_ndot) as sphol_ndot,
+        sum(dblhol_pay) as dblhol_pay,
+        sum(dblhol_ot) as dblhol_ot,
+        sum(dblhol_hrsd) as dblhol_hrsd,
+        sum(sphol_rdndot) as sphol_rdndot,
+        sum(reghol_rdndot) as reghol_rdndot
+        */
     }
 
     public function compute_ndays($holidays,$sp_holidays)

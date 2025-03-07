@@ -39,8 +39,9 @@ class UploadLogMapper extends AbstractMapper {
 
     public function updateSummary($key,$data)
     {
-        $result = DB::table('edtr_totals')->where($key)->update($data);
-        //return $result->first();
+        // $result = DB::table('edtr_totals')->where($key)->updateOrInsert($data);
+        $result = DB::table('edtr_totals')->updateOrInsert($key,$data);
+        return $result;
     }
 
     public function updateOrCreate($key,$data)

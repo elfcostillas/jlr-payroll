@@ -187,6 +187,8 @@ class UploadLogController extends Controller
 
 		$inProgress = $this->mapper->getPeriodInProgress();
 
+		$whatHappened = '';
+
         foreach($content as $line)
         {
 			$data = str_getcsv($line,",");
@@ -194,6 +196,7 @@ class UploadLogController extends Controller
 			if($data && $data[0]==$inProgress->id)
 			{
 
+				
 				$key = array('biometric_id' => $data[1],'period_id' => $data[0]);
 
 				$formatted = array(
@@ -239,10 +242,15 @@ class UploadLogController extends Controller
 				);
 
 				$result = $this->mapper->updateSummary($key,$formatted);
+				// $whatHappened .= 'it came here '.json_encode($key);
+			}else{
+				//$whatHappened = 'it didnt came here';
 			}
 
 			
 		}
+
+		return $whatHappened;
 	}	
 
 	public function upload_weekly(Request $request)
