@@ -80,8 +80,11 @@
                         let url = `payroll-register-weekly/pdf-unposted/${period.value()}`;
                         window.open(url)
                     },
-
-
+                    posted_pdf :  function(){
+                        let period = $("#posted_period").data("kendoDropDownList");
+                        let url = `payroll-register-weekly/pdf-posted/${period.value()}`;
+                        window.open(url)
+                    },
                     download : function(){
                         let period = $("#unposted_period").data("kendoDropDownList");
                         let url = `payroll-register-weekly/download-unposted/${period.value()}`;
