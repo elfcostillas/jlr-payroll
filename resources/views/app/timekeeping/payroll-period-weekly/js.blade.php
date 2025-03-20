@@ -57,6 +57,7 @@
                                     date_release: { type : 'date' },
                                     man_hours: { type : 'number' },
                                     pyear: { type : 'string' },
+                                    cut_off : { type : 'number' }
                                 }
                             }
                         }
@@ -110,6 +111,14 @@
                         //template : "#=  : ''  #",
                         width : 120,    
                     },
+                    {
+                        title : "Cut Off",
+                        field : "cut_off",
+                        //template : "#=  : ''  #",
+                        width : 120,    
+                    },
+
+                    
                     {
                         command : ['edit'],
                         width : 190,    

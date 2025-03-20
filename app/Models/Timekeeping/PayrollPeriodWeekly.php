@@ -18,7 +18,8 @@ class PayrollPeriodWeekly extends Model
         'date_to',
         'date_release',
         'man_hours',
-        'pyear'
+        'pyear',
+        'cut_off'
     ];
 
 }
