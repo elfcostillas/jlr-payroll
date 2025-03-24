@@ -74,11 +74,11 @@ class EmployeeMapper extends AbstractMapper {
 		->leftJoin('emp_pay_types','pay_type','=','emp_pay_types.id')
 		->where('emp_level','<',6);
 
-		if($emp_level == 'non-confi'){
-			$result = $result->where('emp_level','=',5);
-		}else{
-			$result = $result->where('emp_level','<',5);
-		}
+		// if($emp_level == 'non-confi'){
+		// 	$result = $result->where('emp_level','=',5);
+		// }else{
+		// 	$result = $result->where('emp_level','<',5);
+		// }
 
 		// if($user->super_user=='N')
 		// {
