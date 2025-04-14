@@ -32,7 +32,7 @@ class ContributionSorted implements ShouldAutoSize,WithColumnFormatting,FromView
     public function registerEvents(): array
     {   
         return [
-            AfterSheet::class    => function(AfterSheet $event) {
+            AfterSheet::class => function(AfterSheet $event) {
            
             }
         ];    

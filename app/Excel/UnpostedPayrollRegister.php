@@ -34,6 +34,7 @@ class UnpostedPayrollRegister implements ShouldAutoSize,WithColumnFormatting,Fro
     private $compensation;
     private $label;
     private $payperiod_label;
+    private $colHeaders;
 
     public function registerEvents(): array
     {   
@@ -55,11 +56,12 @@ class UnpostedPayrollRegister implements ShouldAutoSize,WithColumnFormatting,Fro
             'deductionLabel' => $this->deductions,
             'govLoan' => $this->gov,
             'compensation' => $this->compensation,
-            'payperiod_label' => $this->payperiod_label
+            'payperiod_label' => $this->payperiod_label,
+            'colHeaders' => $this->colHeaders
         ]);
     }
 
-    public function setValues($collections,$noPay,$headers,$deductions,$gov,$compensation,$label,$payperiod_label){
+    public function setValues($collections,$noPay,$headers,$deductions,$gov,$compensation,$label,$payperiod_label,$colHeaders){
     	$this->collections = $collections;
         $this->noPay = $noPay;
         $this->headers = $headers;
@@ -68,6 +70,7 @@ class UnpostedPayrollRegister implements ShouldAutoSize,WithColumnFormatting,Fro
         $this->compensation = $compensation;
         $this->label = $label;
         $this->payperiod_label = $payperiod_label;
+        $this->colHeaders = $colHeaders;
     }   
 
     public function columnFormats(): array
@@ -75,7 +78,7 @@ class UnpostedPayrollRegister implements ShouldAutoSize,WithColumnFormatting,Fro
         $cols = [];
 
         $col = 'D';
-        for($x=4;$x<100;$x++){
+        for($x=4;$x<150;$x++){
             
          
             $cols[$col]=NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2;

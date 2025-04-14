@@ -74,11 +74,13 @@
                         <td >Absent</td>
                         <td >Absent <br> Amount</td>
 
+                        @foreach($colHeaders as $colHeader)
+                           @if (array_key_exists($colHeader->var_name,$labels))
+                           <td  width ="90px" ><p>{{ $labels[$colHeader->var_name] }} </td>
+                           @endif
+                           @php $colspan++; @endphp
+                       @endforeach
 
-                        @foreach($headers as $key => $val)
-                            <td  width ="90px" ><p>{{ $labels[$key] }}</p></td>
-                            @php $colspan++; @endphp
-                        @endforeach
                         <td >Gross Pay</td>
                         @foreach($compensation as $comp)
                             <td  width ="90px" style="white-space:normal"><p>{{ $comp->description }}</p></td>
@@ -138,9 +140,24 @@
                 $overALL['gross_pay'] = 0;
                 $overALL['gross_total'] = 0;
 
-                foreach($headers as $key => $val)
+    
+                foreach($colHeaders as $colHeader)
                 {
-                    $deptDIVALL[$key] = 0;
+                   
+
+                    if(array_key_exists($colHeader->var_name,$labels))
+                    {
+                        
+                        $deptDIVALL[$colHeader->var_name] = 0;
+                    }
+                }
+
+                foreach($colHeaders as $colHeader)
+                {
+                    if(array_key_exists($colHeader->var_name,$labels))
+                    {
+                        $deptDIVALL[$colHeader->var_name] = 0;
+                    }
                 }
 
                 foreach($compensation as $comp)
@@ -206,9 +223,20 @@
                                 $divTotal['gross_pay'] = 0;
                                 $divTotal['gross_total'] = 0;
 
-                                foreach($headers as $key => $val)
+                                // foreach($headers as $key => $val)
+                                // {
+                                //     $deptDIV[$key] = 0;
+
+                                    
+                                // }
+
+                                foreach($colHeaders as $colHeader)
                                 {
-                                    $deptDIV[$key] = 0;
+                                   if (array_key_exists($colHeader->var_name,$labels))
+                                    {
+                                     
+                                        $deptDIV[$colHeader->var_name] = 0;
+                                    }
                                 }
 
                                 foreach($compensation as $comp)
@@ -276,9 +304,17 @@
                                 $dept['gross_pay'] = 0; 
                                 $dept['gross_total'] = 0;
 
-                                foreach($headers as $key => $val)
+                                // foreach($headers as $key => $val)
+                                // {
+                                //     $dept[$key] = 0;
+                                // }
+
+                                foreach($colHeaders as $colHeader)
                                 {
-                                    $dept[$key] = 0;
+                                    if(array_key_exists($colHeader->var_name,$labels))
+                                    {
+                                        $dept[$colHeader->var_name] = 0;
+                                    }
                                 }
 
                                 foreach($compensation as $comp)
@@ -336,9 +372,17 @@
                                     $dept['gross_pay'] += $employee->gross_pay;
                                     $dept['gross_total'] += $employee->gross_total;
 
-                                    foreach($headers as $key => $val)
+                                    // foreach($headers as $key => $val)
+                                    // {
+                                    //     $dept[$key] += $employee->{$key};
+                                    // }
+
+                                    foreach($colHeaders as $colHeader)
                                     {
-                                        $dept[$key] += $employee->{$key};
+                                        if(array_key_exists($colHeader->var_name,$labels))
+                                        {
+                                            $dept[$colHeader->var_name] = 0;
+                                        }
                                     }
 
                                     foreach($compensation as $comp)
@@ -393,9 +437,17 @@
                                     $divTotal['svl'] += $employee->svl;
                                     $divTotal['svl_amount'] += $employee->svl_amount;
 
-                                    foreach($headers as $key => $val)
+                                    // foreach($headers as $key => $val)
+                                    // {
+                                    //     $deptDIV[$key] += $employee->{$key};
+                                    // }
+
+                                    foreach($colHeaders as $colHeader)
                                     {
-                                        $deptDIV[$key] += $employee->{$key};
+                                        if(array_key_exists($colHeader->var_name,$labels))
+                                        {
+                                            $deptDIV[$colHeader->var_name] = 0;
+                                        }
                                     }
 
                                     foreach($compensation as $comp)
@@ -447,10 +499,21 @@
                                     $overALL['gross_pay'] += $employee->gross_pay;
                                     $overALL['gross_total'] += $employee->gross_total;
 
-                                    foreach($headers as $key => $val)
+                                    foreach($colHeaders as $colHeader)
                                     {
-                                        $deptDIVALL[$key] += $employee->{$key};
+                                        if(array_key_exists($colHeader->var_name,$labels))
+                                        {
+                                          
+                                            $deptDIVALL[$colHeader->var_name] += $employee->{$colHeader->var_name};
+                                        }
+                                       
                                     }
+
+                                //     @foreach($colHeaders as $colHeader)
+                                //     @if (array_key_exists($colHeader->var_name,$labels))
+                                //         <td style="font-weight:bold;"  > {{ $dept[$colHeader->var_name] }} </td>
+                                //     @endif
+                                // @endforeach
 
                                     foreach($compensation as $comp)
                                     {
@@ -514,9 +577,12 @@
                                     <td > {{ ($employee->absences_amount>0) ? $employee->absences : ''; }}</td>
                                     <td > {{ ($employee->absences_amount>0) ? $employee->absences_amount : ''; }}</td>
                                     
-                                    @foreach($headers as $key => $val)
-                                        <td >{{ ($employee->$key > 0) ? $employee->$key : '' }}</td>
+                                    @foreach($colHeaders as $colHeader)
+                                        @if (array_key_exists($colHeader->var_name,$labels))
+                                            <td style="text-align:right;">{{ ($employee->{$colHeader->var_name} > 0) ? number_format($employee->{$colHeader->var_name},2) : '' }}</td>
+                                        @endif
                                     @endforeach
+
                                         <td>{{ ($employee->gross_pay > 0) ? $employee->gross_pay : '' }}</td>
                                     @foreach($compensation as $comp)
                                        
@@ -571,8 +637,11 @@
                                 <td style="font-weight:bold;" >{{ $dept['svl_amount'] }}</td>
                                 <td style="font-weight:bold;" >{{ $dept['absences_amount'] }}</td>
                                 <td style="font-weight:bold;" >{{ $dept['absences_amount'] }}</td>
-                                @foreach($headers as $key => $val)
-                                    <td style="font-weight:bold;" > {{ $dept[$key] }} </td>
+                            
+                                @foreach($colHeaders as $colHeader)
+                                    @if (array_key_exists($colHeader->var_name,$labels))
+                                        <td style="font-weight:bold;"  > {{ $dept[$colHeader->var_name] }} </td>
+                                    @endif
                                 @endforeach
                                     <td style="font-weight:bold;" >{{ $dept['gross_pay'] }}</td>
                                 @foreach($compensation as $comp)
@@ -622,8 +691,11 @@
                             <td style="font-weight:bold;"  >{{ $divTotal['svl_amount'] }}</td>
                             <td style="font-weight:bold;"  >{{ $divTotal['absences_amount'] }}</td>
                             <td style="font-weight:bold;"  >{{ $divTotal['absences_amount'] }}</td>
-                            @foreach($headers as $key => $val)
-                                <td style="font-weight:bold;"  > {{ $deptDIV[$key] }} </td>
+                           
+                            @foreach($colHeaders as $colHeader)
+                                @if (array_key_exists($colHeader->var_name,$labels))
+                                    <td style="font-weight:bold;"  > {{ $deptDIV[$colHeader->var_name] }} </td>
+                                @endif
                             @endforeach
                             <td style="font-weight:bold;" >{{ $divTotal['gross_pay'] }}</td>
                             @foreach($compensation as $comp)
@@ -676,9 +748,13 @@
                         <td  style="font-weight:bold;" >{{ $overALL['svl_amount'] }}</td>
                         <td  style="font-weight:bold;" >{{ $overALL['absences_amount'] }}</td>
                         <td  style="font-weight:bold;" >{{ $overALL['absences_amount'] }}</td>
-                        @foreach($headers as $key => $val)
-                           <td style="font-weight:bold;"  > {{ $deptDIVALL[$key] }} </td>
+
+                        @foreach($colHeaders as $colHeader)
+                            @if (array_key_exists($colHeader->var_name,$labels))
+                                <td style="font-weight:bold;"  > {{ $deptDIVALL[$colHeader->var_name] }} </td>
+                            @endif
                         @endforeach
+
                             <td style="font-weight:bold;"  >{{ $overALL['gross_pay'] }}</td>
                         @foreach($compensation as $comp)
                             <td style="font-weight:bold;"  > {{ $deptCompDIVALL[$comp->id] }} </td>   

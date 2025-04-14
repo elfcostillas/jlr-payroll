@@ -11,18 +11,22 @@ class SemiMonthly
 
     function getBasicPay($data)
     {
-      
-        // if($data['biometric_id']==886){
-        //     dd($data['actual_sphol']);
-        // }
-
-
-      
-        return (float) round($data['basic_salary']/2,2) - $data['late_eq_amount'] - $data['under_time_amount'] - $data['vl_wpay_amount'] - $data['sl_wpay_amount']
-        - $data['absences_amount'] - (round($data['daily_rate'],2) * $data['actual_reghol']) - (round($data['daily_rate'],2) * $data['actual_sphol']) - $data['bl_wpay_amount']
-        - $data['svl_amount'];
+    
+        return (float) round($data['basic_salary']/2,2) 
+            - $data['late_eq_amount'] 
+            - $data['under_time_amount'] 
+            - $data['vl_wpay_amount'] 
+            - $data['sl_wpay_amount']
+            - $data['absences_amount'] 
+            - (round($data['daily_rate'],2) * $data['actual_reghol']) 
+            - (round($data['daily_rate'],2) * $data['actual_sphol'])
+            - (round($data['daily_rate'],2) * $data['actual_dblhol']) 
+            - (round($data['daily_rate'],2) * $data['actual_dblsphol']) 
+            - $data['bl_wpay_amount']
+            - $data['svl_amount'];
     }
-
+    
+    
     function getGrossPay($payreg){
         return $this->getBasicPay($payreg) + $payreg['vl_wpay_amount'] + $payreg['sl_wpay_amount'] + $payreg['bl_wpay_amount']
                         + $payreg['reg_ot_amount'] +  $payreg['reg_nd_amount'] + $payreg['reg_ndot_amount'] 
@@ -33,7 +37,10 @@ class SemiMonthly
                         + $payreg['sphol_rd_amount'] + $payreg['sphol_rdot_amount'] + $payreg['sphol_ndot_amount'] + $payreg['sphol_rdndot_amount']
                         + $payreg['dblhol_count_amount'] + $payreg['dblhol_hrs_amount'] + $payreg['dblhol_ot_amount'] + $payreg['dblhol_nd_amount']
                         + $payreg['dblhol_rd_amount'] + $payreg['dblhol_rdot_amount'] + $payreg['dblhol_ndot_amount'] + $payreg['dblhol_rdndot_amount'] 
-                        + $payreg['semi_monthly_allowance'] + $payreg['daily_allowance'] + $payreg['svl_amount'] ;
+                        + $payreg['semi_monthly_allowance'] + $payreg['daily_allowance'] + $payreg['svl_amount'] 
+                        + $payreg['dblsphol_count_amount'] + $payreg['dblsphol_hrs_amount'] + $payreg['dblsphol_ot_amount'] + $payreg['dblsphol_nd_amount'] 
+                        + $payreg['dblsphol_rd_amount'] + $payreg['dblsphol_rdot_amount'] + $payreg['dblsphol_ndot_amount'] 
+                        + $payreg['dblsphol_rdnd_amount'] + $payreg['dblsphol_rdndot_amount'];
     }
 
     function getMonthlyCredit($data){

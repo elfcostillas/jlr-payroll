@@ -115,6 +115,17 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                         dblhol_nd as dblhol_nd,
                         dblhol_ndot as dblhol_ndot,
                         dblhol_rdndot as dblhol_rdndot,
+
+                        dblsphol_pay as dblsphol_count,
+                        dblsphol_hrs,
+                        dblsphol_ot,
+                        dblsphol_nd,
+                        dblsphol_rd,
+                        dblsphol_rdot,
+                        dblsphol_ndot,
+                        dblsphol_rdnd,
+                        dblsphol_rdndot,
+
                         employees.manual_wtax,
                         employees.fixed_rate,
                         employees.sched_sat,
@@ -545,7 +556,29 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
         SUM(dblhol_rdnd) AS dblhol_rdnd,
         SUM(dblhol_rdnd_amount) AS dblhol_rdnd_amount,
         SUM(dblhol_rdndot) AS dblhol_rdndot,
-        SUM(dblhol_rdndot_amount) AS dblhol_rdndot_amount"))
+        SUM(dblhol_rdndot_amount) AS dblhol_rdndot_amount,
+        sum(dblsphol_count) as dblsphol_count,
+        sum(dblsphol_hrs) as dblsphol_hrs,
+
+        sum(dblsphol_ot) as dblsphol_ot,
+        sum(dblsphol_nd) as dblsphol_nd,
+        sum(dblsphol_rd) as dblsphol_rd,
+        sum(dblsphol_rdot) as dblsphol_rdot,
+        sum(dblsphol_ndot) as dblsphol_ndot,
+        sum(dblsphol_rdnd) as dblsphol_rdnd,
+        sum(dblsphol_rdndot) as dblsphol_rdndot,
+
+        sum(dblsphol_count_amount) dblsphol_count_amount,
+        sum(dblsphol_hrs_amount) dblsphol_hrs_amount,
+        sum(dblsphol_ot_amount) dblsphol_ot_amount,
+        sum(dblsphol_nd_amount) dblsphol_nd_amount,
+        sum(dblsphol_rd_amount) dblsphol_rd_amount,
+        sum(dblsphol_rdot_amount) dblsphol_rdot_amount,
+        sum(dblsphol_ndot_amount) dblsphol_ndot_amount,
+        sum(dblsphol_rdnd_amount) dblsphol_rdnd_amount,
+        sum(dblsphol_rdndot_amount) dblsphol_rdndot_amount
+
+        "))
         ->where('period_id',$period);
 
 
@@ -926,7 +959,7 @@ WHERE period_id = 1 AND total_amount > 0;*/
     public function getColHeaders()
     {   
         //SELECT var_name,col_label FROM payreg_header;
-        $result = $this->model->select('var_name','col_label')->from('payreg_header');
+        $result = $this->model->select('var_name','col_label')->from('payreg_header')->orderBy('sort_no','ASC');
         return $result->get();
 
     }

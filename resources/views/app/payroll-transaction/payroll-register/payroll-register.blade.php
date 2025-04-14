@@ -119,6 +119,8 @@
     <?php
         $colspan=28;
         $rcount = 1;
+
+        
        //ndays,basic_pay,late_eq,late_eq_amount,under_time,under_time_amount
     ?>
     <div id="" >
@@ -159,11 +161,14 @@
                         <th style="padding : 0px 4px;min-width:110px;" >Absent</th>
                         <th style="padding : 0px 4px;min-width:110px;" >Absent Amount</th>
 
-
-                        @foreach($headers as $key => $val)
-                            <th style="padding : 0px 4px;min-width:100px;" >{{ $labels[$key] }}</th>
+                        @foreach($colHeaders as $colHeader)
+                           
+                            @if (array_key_exists($colHeader->var_name,$labels))
+                                <th style="padding : 0px 4px;min-width:110px;" >{{ $labels[$colHeader->var_name] }} </th>
+                            @endif
                             @php $colspan++; @endphp
                         @endforeach
+
                         <th style="padding : 0px 4px;min-width:110px;" >Gross Pay</th>
                         @foreach($compensation as $comp)
                             <th style="padding : 0px 4px;min-width:100px;" >{{ $comp->description }}</th>
@@ -239,9 +244,13 @@
                                     <td style="text-align:right;"> {{ ($employee->absences_amount>0) ? number_format($employee->absences_amount,2) : ''; }}</td>
                                     
 
-                                    @foreach($headers as $key => $val)
-                                        <td style="text-align:right;">{{ ($employee->$key > 0) ? number_format($employee->$key,2) : '' }}</td>
+                                    @foreach($colHeaders as $colHeader)
+                                        @if (array_key_exists($colHeader->var_name,$labels))
+                                            <td style="text-align:right;">{{ ($employee->{$colHeader->var_name} > 0) ? number_format($employee->{$colHeader->var_name},2) : '' }}</td>
+                                        @endif
+                                       
                                     @endforeach
+                                    
                                         <td style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($employee->gross_pay > 0) ? number_format($employee->gross_pay,2) : '' }}</td>
                                     @foreach($compensation as $comp)
                                         <td style="text-align:right;" > {{ (array_key_exists($comp->id,$employee->otherEarnings)) ? number_format($employee->otherEarnings[$comp->id],2) : ''; }}</td>

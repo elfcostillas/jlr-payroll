@@ -58,6 +58,15 @@
             <td> DBL Hol ND	</td>
             <td> DBL Hol ND OT	</td>
             <td> DBL Hol RD ND OT</td>
+            <td> DBL Sp Hol Pay	</td>
+            <td> DBL Sp Hol Hrs	</td>
+            <td> DBL Sp Hol OT	</td>
+            <td> DBL Sp Hol RD	</td>
+            <td> DBL Sp Hol RD ND	</td>
+            <td> DBL Sp Hol RD OT	</td>
+            <td> DBL Sp Hol ND	</td>
+            <td> DBL Sp Hol ND OT	</td>
+            <td> DBL Sp Hol RD ND OT</td>
         </tr>
        @foreach($employees as $div)
            <tr>
@@ -103,6 +112,7 @@
                         <td> {{ nformat($employee->sphol_nd) }}</td>
                         <td> {{ nformat($employee->sphol_ndot) }}</td>
                         <td> {{ nformat($employee->sphol_rdndot) }}</td>
+
                         <td> {{ nformat($employee->dblhol_pay) }}</td>
                         <td> {{ nformat($employee->dblhol_hrs) }}</td>
                         <td> {{ nformat($employee->dblhol_ot) }}</td>
@@ -113,6 +123,15 @@
                         <td> {{ nformat($employee->dblhol_ndot) }}</td>
                         <td> {{ nformat($employee->dblhol_rdndot) }}</td>
 
+                        <td> {{ nformat($employee->dblsphol_pay) }}</td>
+                        <td> {{ nformat($employee->dblsphol_hrs) }}</td>
+                        <td> {{ nformat($employee->dblsphol_ot) }}</td>
+                        <td> {{ nformat($employee->dblsphol_rd) }}</td>
+                        <td> {{ nformat($employee->dblsphol_rdnd) }}</td>
+                        <td> {{ nformat($employee->dblsphol_rdot) }}</td>
+                        <td> {{ nformat($employee->dblsphol_nd) }}</td>
+                        <td> {{ nformat($employee->dblsphol_ndot) }}</td>
+                        <td> {{ nformat($employee->dblsphol_rdndot) }}</td>
                     </tr>
                 @endforeach
            @endforeach

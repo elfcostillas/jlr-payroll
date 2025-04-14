@@ -238,7 +238,17 @@ class UploadLogController extends Controller
 						'dblhol_rdot' => ($data[36]=='') ? 0 : $data[36],
 						'dblhol_nd' => ($data[37]=='') ? 0 : $data[37],
 						'dblhol_ndot' => ($data[38]=='') ? 0 : $data[38],
-						'dblhol_rdndot' => ($data[39]=='') ? 0 : $data[39]
+						'dblhol_rdndot' => ($data[39]=='') ? 0 : $data[39],
+
+						'dblsphol_pay' => ($data[40]=='') ? 0 : $data[40],
+						'dblsphol_hrs' => ($data[41]=='') ? 0 : $data[41],
+						'dblsphol_ot' => ($data[42]=='') ? 0 : $data[42],
+						'dblsphol_rd' => ($data[43]=='') ? 0 : $data[43],
+						'dblsphol_rdnd' => ($data[44]=='') ? 0 : $data[44],
+						'dblsphol_rdot' => ($data[45]=='') ? 0 : $data[45],
+						'dblsphol_nd' => ($data[46]=='') ? 0 : $data[46],
+						'dblsphol_ndot' => ($data[47]=='') ? 0 : $data[47],
+						'dblsphol_rdndot' => ($data[48]=='') ? 0 : $data[48]
 				);
 
 				$result = $this->mapper->updateSummary($key,$formatted);
