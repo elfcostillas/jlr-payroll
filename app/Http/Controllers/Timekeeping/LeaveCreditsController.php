@@ -107,5 +107,9 @@ class LeaveCreditsController extends Controller
         $result = $this->lc_maker->process();
     }
 
+    public function makeSVLCredits(Request $request)
+    {
+        $result = $this->lc_maker->makeSVL($request->year);
+    }
     
 }

@@ -21,5 +21,6 @@ class LeaveCredits extends Model
         'sick_leave',
         'summer_vacation_leave',
         'paternity_leave',
+        'bereavement'
     ];
 }

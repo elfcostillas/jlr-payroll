@@ -96,6 +96,7 @@
                                     sick_leave: { type : 'number' },
                                     summer_vacation_leave: { type : 'number' },
                                     paternity_leave: { type : 'number' },
+                                    bereavement: { type : 'number' },
                                     //fy : { type : 'number',editable :false },   
                                     // id : {ype : 'number',editable :false },
                                     // date_from : { type : 'date' },
@@ -188,6 +189,13 @@
                         width : 130,
                         template : "# if(paternity_leave==0){#  #} else{# #= paternity_leave #  #}#",
                     },
+                    {
+                        title : 'Bereavement Leave',
+                        field : 'bereavement',
+                        width : 130,
+                        template : "# if(bereavement==0){#  #} else{# #= bereavement #  #}#",
+                    },
+                    
                     {
                         command: [
                             { text : 'Show Leaves',click : viewModel.toolbarHandler.showLeaves , },

@@ -261,9 +261,6 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::get('read/{id}',[FTPController::class,'readByID']);
 
         Route::post('update',[FTPController::class,'update']);
-
-
-        
     });
 
     Route::prefix('leaves-absences')->group(function(){
@@ -290,6 +287,7 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
 
         Route::get('show-leaves/{biometric_id}/{year}',[LeaveCreditsController::class,'showLeaves']);
         Route::get('make-leave-credits',[LeaveCreditsController::class,'makeLeaveCredits']);
+        Route::get('make-svl-credits/{year}',[LeaveCreditsController::class,'makeSVLCredits']);
 
     });
 
