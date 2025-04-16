@@ -15,6 +15,7 @@
                 { text: "Birthday Leave", value: "BL" },
                 { text: "Others", value: "O" },
                 { text: "SVL", value: "SVL" },
+                { text: "Bereavement Leave", value: "BRV" },
             ];
 
             let stopOption = [
