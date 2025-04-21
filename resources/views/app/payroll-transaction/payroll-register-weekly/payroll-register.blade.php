@@ -152,8 +152,8 @@
                         <th style="padding : 0px 4px;min-width:110px;" >Retro Pay</th>
                         <th style="padding : 0px 4px;min-width:110px;" >Gross Pay</th>
                         <th style="padding : 0px 4px;min-width:110px;" >HDMF Contri</th>
-                        <th style="padding : 0px 4px;min-width:110px;" >SSS Prem</th>
-                        <th style="padding : 0px 4px;min-width:110px;" >PHIC Contri</th>
+                        <!-- <th style="padding : 0px 4px;min-width:110px;" >SSS Prem</th>
+                        <th style="padding : 0px 4px;min-width:110px;" >PHIC Contri</th> -->
                         <th style="padding : 0px 4px;min-width:110px;" >Cash Advance</th>
                         <th style="padding : 0px 4px;min-width:110px;" >Canteen</th>
                         <th style="padding : 0px 4px;min-width:110px;" >PPE</th>
@@ -199,8 +199,8 @@
                                         <td style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($employee->hdmf_contri > 0) ? number_format($employee->hdmf_contri,2) : '' }}</td>
                                         
 
-                                        <td style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($employee->sss_prem > 0) ? number_format($employee->sss_prem,2) : '' }}</td>
-                                        <td style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($employee->phil_prem > 0) ? number_format($employee->phil_prem,2) : '' }}</td>
+                                        <!-- <td style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($employee->sss_prem > 0) ? number_format($employee->sss_prem,2) : '' }}</td>
+                                        <td style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($employee->phil_prem > 0) ? number_format($employee->phil_prem,2) : '' }}</td> -->
                                         
                                         <td style="text-align:right;"> {{ ($employee->otherEarnings['cash_advance']>0) ? number_format($employee->otherEarnings['cash_advance'],2) : ''; }}</td>
                                         <td style="text-align:right;"> {{ ($employee->otherEarnings['canteen']>0) ? number_format($employee->otherEarnings['canteen'],2) : ''; }}</td>
