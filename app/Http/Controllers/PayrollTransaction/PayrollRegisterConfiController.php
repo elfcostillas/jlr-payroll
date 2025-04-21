@@ -228,7 +228,9 @@ class PayrollRegisterConfiController extends Controller
             'labels' => $label,
             'deductionLabel' => $deductions,
             'govLoan' => $gov,
-            'compensation' => $compensation]);
+            'compensation' => $compensation,
+            'colHeaders' => $colHeaders
+        ]);
     }
         
     //     return view('app.payroll-transaction.payroll-register-confi.payroll-register',['data' => $collections,'no_pay' => $noPay,'headers' => $headers , 'labels' => $label,'deductionLabel' => $deductions,'govLoan' => $gov,'compensation' => $compensation]);
