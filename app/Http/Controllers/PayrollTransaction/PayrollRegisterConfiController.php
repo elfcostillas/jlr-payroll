@@ -270,7 +270,7 @@ class PayrollRegisterConfiController extends Controller
                 $label[$value->var_name] = $value->col_label;
             }
 
-            $this->excel->setValues($collections,$noPay,$headers,$deductions,$gov,$compensation,$label, $payperiod_label);
+            $this->excel->setValues($collections,$noPay,$headers,$deductions,$gov,$compensation,$label, $payperiod_label,$colHeaders);
             return Excel::download($this->excel,'PayrollRegister'.$period->id.'.xlsx');
         }
     }
