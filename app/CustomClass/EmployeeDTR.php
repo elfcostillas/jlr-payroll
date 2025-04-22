@@ -149,9 +149,18 @@ class EmployeeDTR
             $ndays_result = $result->select(DB::raw('sum(ndays) as ndays'))->first();
             $ndays = $ndays_result->ndays;
         }
-        
+
+        $awol = DB::table('edtr')->join('payroll_period',function($join){
+            $join->whereRaw("edtr.dtr_date between date_from and date_to");
+        })
+        ->select(DB::raw("count(edtr.id) as awol_count"))
+        ->where('biometric_id',$this->biometric_id)
+        ->where('payroll_period.id',$this->period_id)
+        ->where('awol','=','Y')
+        ->first();
+
         // set ndays
-        $this->row['ndays'] = $ndays;
+        $this->row['ndays'] = $ndays - $awol->awol_count;
 
     }
 
@@ -429,6 +438,7 @@ class EmployeeDTR
 
     public function save()
     {
+        
         // return DB::table('edtr_totals')->insert($this->row);
         return DB::table('edtr_totals')->updateOrInsert(['biometric_id' => $this->biometric_id , 'period_id' => $this->period_id],$this->row);
     }
