@@ -25,9 +25,9 @@
         </span>&nbsp; Print
     </button>
 
-    <button class="k-grid-save-changes k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="events: { click: buttonHandler.computeAll }">
+    <!-- <button class="k-grid-save-changes k-button k-button-md k-rounded-md k-button-solid k-button-solid-base" data-bind="events: { click: buttonHandler.computeAll }">
         </span>&nbsp; Compute All
-    </button>
+    </button> -->
 </script>	
 
     <script>
@@ -467,7 +467,7 @@
                         command: [
                             { text : 'Prepare',click : viewModel.buttonHandler.prepare , },
                             { text : 'Download',click : viewModel.buttonHandler.download , },
-                            { text : 'Compute All',click : viewModel.buttonHandler.computeAll , }
+                            // { text : 'Compute All',click : viewModel.buttonHandler.computeAll , }
                         ],
                         attributes : { style : 'font-size:10pt !important;'},
                         width : 280

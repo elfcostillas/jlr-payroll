@@ -427,11 +427,11 @@
                         attributes : { style : 'font-size:10pt !important;'},
                         width : 100
                     },
-                    {
-                        command: { text : 'Compute All',click : viewModel.buttonHandler.computeAll , },
-                        // attributes : { style : 'font-size:10pt !important;'},
-                        width : 105
-                    },
+                    // {
+                    //     command: { text : 'Compute All',click : viewModel.buttonHandler.computeAll , },
+                    //     // attributes : { style : 'font-size:10pt !important;'},
+                    //     width : 105
+                    // },
                   
                 ],
                 change : function(e){
