@@ -76,8 +76,8 @@ class TardinessReportMapper extends AbstractMapper {
                 // ->whereNull('leave_type')
                 ->whereNull('holiday_type')
                 ->whereRaw('(
-                    (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
-                    (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out) )
+                    (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)-900) OR
+                    (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out)))
                     )')
                 ->where('division_id',$d->id);
             } else {
@@ -104,8 +104,8 @@ class TardinessReportMapper extends AbstractMapper {
                 ->whereNull('holiday_type')
                 // ->whereNull('leave_type')
                 ->whereRaw('(
-                    (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
-                    (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out) )
+                    (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)-900) OR
+                    (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out))
                 )')
                 ->where('division_id',2);
             }
@@ -207,7 +207,7 @@ class TardinessReportMapper extends AbstractMapper {
         
         // ->whereNull('leave_type')
         ->whereRaw('(
-            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
+            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)-900) OR
             (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out) )
             )')
         ->groupBy(DB::raw("employees.biometric_id,lastname,firstname"));
@@ -234,7 +234,7 @@ class TardinessReportMapper extends AbstractMapper {
                     ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
                     ///->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)')
                     ->whereRaw('(
-                        (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)) OR
+                        (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)-900) OR
                         (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out) )
                         )')
                         ->leftJoinSub($holidays,'holidays',function($join){
@@ -285,7 +285,7 @@ class TardinessReportMapper extends AbstractMapper {
         SELECT biometric_id,leave_date,leave_type FROM leave_request_header INNER JOIN leave_request_detail ON header_id = header_id 
         WHERE document_status = 'POSTED' AND acknowledge_status ='Approved' AND is_canceled = 'N' AND YEAR(leave_date) = $year ) AS l ON edtr.biometric_id = l.biometric_id AND edtr.dtr_date = l.leave_date
         WHERE (
-            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) AND TIME_TO_SEC(edtr.time_in) <= TIME_TO_SEC(work_schedules.out_am))
+            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) AND TIME_TO_SEC(edtr.time_in) <= TIME_TO_SEC(work_schedules.out_am)-900)
         OR 
             (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) AND TIME_TO_SEC(edtr.time_in) <= TIME_TO_SEC(work_schedules.time_out))
             )
