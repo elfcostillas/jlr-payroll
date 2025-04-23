@@ -833,7 +833,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                 if($rec->schedule_id!=0){
                     
                     if($rec->actual_in > $rec->sched_in && $rec->actual_in < $rec->sched_outam ){
-                        if($rec->actual_in > $rec->sched_in){
+                        if($rec->actual_in > $rec->sched_in && $rec->actual_in < $rec->sched_outam - 900){
                             $late = (int)($rec->actual_in - $rec->sched_in)/60;
                             $quart = 0;
                             if($late>0){
