@@ -17,7 +17,7 @@
             <tr>
                 <td>{{ date_format(date_create($row->dtr_date),'m/d/Y') }}</td>
                 <td>{{ ($row->time_in != '00:00') ? $row->time_in : ''  }}</td>
-                <td>{{ ($row->time_out != '00:00') ? $row->time_in : ''  }}</td>
+                <td>{{ ($row->time_out != '00:00') ? $row->time_out : ''  }}</td>
                 <td>{{ ($row->ndays != 0) ? $row->ndays : '' }}</td>
             </tr>
         @endforeach
