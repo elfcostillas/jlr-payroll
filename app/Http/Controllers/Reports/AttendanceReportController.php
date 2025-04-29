@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Reports;
 
 use App\Http\Controllers\Controller;
+use App\Mappers\EmployeeFileMapper\EmployeeMapper;
 use App\Mappers\TimeKeepingMapper\DailyTimeRecordMapper;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
@@ -12,12 +13,12 @@ class AttendanceReportController extends Controller
 {
     //
     private $dtr_mapper;
+    private $emp_mapper;
 
-    public function __construct(DailyTimeRecordMapper $dtr_mapper) {
+    public function __construct(DailyTimeRecordMapper $dtr_mapper,EmployeeMapper $emp_mapper) {
         $this->dtr_mapper  = $dtr_mapper;
+        $this->emp_mapper  = $emp_mapper;
     }
-
-
 
     public function index()
     {
@@ -184,9 +185,11 @@ class AttendanceReportController extends Controller
         $date_from = $request->date_from;
         $date_to = $request->date_to;
 
+        $employee = $this->emp_mapper->getEmployeeDetails($biometric_id);
+       
         $result = $this->dtr_mapper->dtr($biometric_id,$date_from,$date_to);
 
-        return view('app.reports.attendance.emp_dtr',['data' => $result]);
+        return view('app.reports.attendance.emp_dtr',['data' => $result,'employee' => $employee]);
 
     }
 

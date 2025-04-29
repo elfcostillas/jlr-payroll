@@ -496,6 +496,17 @@ LEFT JOIN emp_exit_status ON employees.exit_status = emp_exit_status.id
 		return $result->get();
 	}
 
+	function getEmployeeDetails($biometric_id)
+	{
+		
+		$result = DB::table('employees')
+			->leftJoin('departments','departments.id','=','dept_id')
+			->select()
+			->where('biometric_id',$biometric_id)->first();
+
+		return $result;
+	}
+
 
 	
 
