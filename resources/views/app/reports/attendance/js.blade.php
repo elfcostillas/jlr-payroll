@@ -6,8 +6,6 @@
     <script>
         $(document).ready(function(){
 
-            
-
             let months = [
                 { text: "January", value: "1" },
                 { text: "February", value: "2" },
@@ -57,32 +55,7 @@
             var viewModel = kendo.observable({ 
                 form : {
                     model : {
-                        // id : null,
-                        // firstname: null,
-                        // lastname: null,
-                        // middlename: null,
-                        // suffixname: null,
-                        // biometric_id: null,
-                        // primary_addr: null,
-                        // secondary_addr: null,
-                        // remarks: null,
-                        // sss_no: null,
-                        // deduct_sss: null,
-                        // tin_no: null,
-                        // phic_no: null,
-                        // deduct_phic: null,
-                        // hdmf_no: null,
-                        // deduct_hdmf: null,
-                        // hdmf_contri: null,
-                        // civil_status: null,
-                        // gender: null,
-                        // birthdate: null,
-                        // employee_stat: null,
-                        // bank_acct: null,
-                        // basic_salary: null,
-                        // is_daily: null,
-                        // exit_status: null,
-                        // contact_no : null,
+                        biometric_id : null,
                         division_id: null,
                         dept_id: null,
                     },
@@ -154,6 +127,31 @@
                             }
                         }
                     }),
+                    employeecombobox : new kendo.data.DataSource({ 
+                        transport : {
+                            read : {
+                                url : 'attendance/employee-list',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            }
+                        },
+                        // serverPaging : true,
+                        // serverFiltering : true,
+                        // pageSize : 15,
+                        schema : {
+                            data : "data",
+                            total : "total",
+                            model : {
+                                id : "biometric_id",
+                                fields : {
+                                    employee_name : { type : 'string' },
+                                }
+                            }
+                        }
+                    }),
                     
                 },
                 buttonHandler : {  
@@ -214,6 +212,18 @@
                         let url = `attendance/awol-setter/${y}/${m}`;
 
                         window.open(url);
+                    },
+                    downloadDTR : function(e){
+                        // let date_from = $("#date_from_dtr").data("kendoDatePicker").value();
+                        // let date_to = $("#date_to_dtr").data("kendoDatePicker").value();
+                        let biometric_id =  $("#biometric_id").data("kendoComboBox").value();
+                        let date_from = kendo.toString($('#date_from_dtr').data('kendoDatePicker').value(),'yyyy-MM-dd');
+                        let date_to = kendo.toString($('#date_to_dtr').data('kendoDatePicker').value(),'yyyy-MM-dd');
+
+                        let url = `attendance/download-dtr/${biometric_id}/${date_from}/${date_to}`;
+
+                        window.open(url);
+
                     },
 
                     // leaveByEmployee : function()
@@ -277,6 +287,15 @@
                 format: "MM/dd/yyyy"
             });
 
+            $("#date_from_dtr").kendoDatePicker({
+                format: "MM/dd/yyyy"
+            });
+
+            $("#date_to_dtr").kendoDatePicker({
+                format: "MM/dd/yyyy"
+            });
+
+
             $("#scripts_year").kendoDropDownList({
                 dataSource: viewModel.ds.fy,
                 dataTextField: "fy",
@@ -296,6 +315,15 @@
                     //console.log(e.sender.value())
                 }
             });
+
+            $("#biometric_id").kendoComboBox({
+                dataSource : viewModel.ds.employeecombobox,
+                dataTextField: "employee_name",
+                dataValueField: "biometric_id",
+                filter : "contains",
+                autoWidth : true,
+            });
+
 
             function process()
             {

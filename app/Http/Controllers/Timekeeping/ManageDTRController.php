@@ -108,6 +108,8 @@ class ManageDTRController extends Controller
     {
         $logs = $request->models;
         foreach($logs as $log){
+
+            var_dump($log);
            
             $result = $this->mapper->updateValid($log);
             if(is_object($result)){
@@ -143,6 +145,20 @@ class ManageDTRController extends Controller
         $dtr = $this->mapper->getSemiDTRforComputation($biometric_id,$period_id);
 
         $this->mapper->computeLogs($dtr,'semi');
+
+        return response()->json(true);
+    }
+
+    public function computeEmpLogs(Request $request)
+    {
+        $biometric_id = $request->biometric_id;
+        $period_id = $request->period_id;
+
+        // $dtr = $this->mapper->putLeavesUT($biometric_id,$period_id);
+
+        $dtr = $this->mapper->getSemiDTRsTTS($biometric_id,$period_id);
+
+        $this->mapper->computeEmpLogs($dtr,'semi');
 
         return response()->json(true);
     }

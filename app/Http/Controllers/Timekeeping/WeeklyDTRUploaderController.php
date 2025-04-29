@@ -62,9 +62,6 @@ class WeeklyDTRUploaderController extends Controller
             
             if(strlen($data[0]) <= 5 && $data[0] !="" && $data[2]!=""){
 
-             
-                
-
                 $date = Carbon::createFromFormat('m/d/Y',$data[2])->format('Y-m-d');
 
                 $keys = [
@@ -73,6 +70,8 @@ class WeeklyDTRUploaderController extends Controller
                 ];
 
                 $body = [
+                    'time_in' => ($data[3] == '') ? null : $data[3],
+                    'time_out' => ($data[4] == '') ? null : $data[4],
                     'ndays' => $data[5],
                     'over_time' => $data[6],
                 ];

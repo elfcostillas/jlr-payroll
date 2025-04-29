@@ -22,6 +22,42 @@ class DailyTimeRecordMapper extends AbstractMapper {
         
     ];
 
+    public function dtr($biometric_id,$dtr_from,$date_to)
+    {   
+        //SELECT * FROM edtr WHERE biometric_id = 847 AND dtr_date BETWEEN '2025-01-01' AND '2025-04-01';
+        $result = DB::table('edtr')
+            ->select()
+            ->where('biometric_id',$biometric_id)
+            ->whereBetween('dtr_date',[$dtr_from,$date_to])
+            ->get();
+
+        return $result;
+    }
+
+    public function employeelist($filter)
+    {
+        $result = DB::table('employee_names_vw')->where('exit_status',1);
+
+        if($filter['filter']!=null){
+            if(array_key_exists('filters',$filter['filter'])){
+                foreach($filter['filter']['filters'] as $f)
+                {
+                    $result->where($f['field'],'like','%'.$f['value'].'%');
+                }
+            }
+		}
+
+        $total = $result->count();
+
+		//$result->limit($filter['pageSize'])->skip($filter['skip']);
+
+		return [
+			'total' => $total,
+			'data' => $result->get()
+		];
+
+    }
+
     public function prepDTRbyPeriod($period_id,$type)
     {
         $blank_dtr = [];
@@ -820,6 +856,18 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
         }       
     }
 
+    public function computeEmpLogs($dtr,$type)
+    {
+        if($type=='semi'){
+            foreach($dtr as $row)
+            {
+                $line  = $this->alignDataMontoSat($row);
+
+                dd($line);
+            }
+        }
+    }
+
     public function computeLogs($dtr,$type)
     {
         
@@ -1533,11 +1581,6 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
         // $result = DB::table('divisions')->select();
 
         return $result->get();
-    }
-
-    public function dtr($period_id,$type) // download dtr weekly
-    {
-
     }
 
     public function attendance_report($date_from,$date_to)

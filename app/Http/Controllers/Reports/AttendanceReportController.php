@@ -17,6 +17,8 @@ class AttendanceReportController extends Controller
         $this->dtr_mapper  = $dtr_mapper;
     }
 
+
+
     public function index()
     {
         return view('app.reports.attendance.index');
@@ -158,6 +160,34 @@ class AttendanceReportController extends Controller
 
         // return view();
         return view('app.reports.attendance.sub',['data' => $result]);
+    }
+
+    public function employees(Request $request)
+    {
+            $filter = [
+                'take' => $request->input('take'),
+                'skip' => $request->input('skip'),
+                'pageSize' => $request->input('pageSize'),
+                'filter' => $request->input('filter'),
+                'sort' => $request->input('sort'),
+            ];
+    
+            $result = $this->dtr_mapper->employeelist($filter);
+
+            return response()->json($result);
+    
+    }
+
+    public function downloadDTR(Request $request)
+    {
+        $biometric_id = $request->biometric_id;
+        $date_from = $request->date_from;
+        $date_to = $request->date_to;
+
+        $result = $this->dtr_mapper->dtr($biometric_id,$date_from,$date_to);
+
+        return view('app.reports.attendance.emp_dtr',['data' => $result]);
+
     }
 
     public function setTARDY($year)

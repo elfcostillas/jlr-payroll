@@ -154,7 +154,37 @@
                     </div> -->
                 </div>
             </div>
-            
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-secondary">
+                        <div class="card-header"> DTR By Employee </div>
+                        <div class="card-body"> 
+                            <table class="formTable" border=0 style="width:100%">
+                                <tr>
+                                    <td colspan=2 >Employee</td>
+                                    <td>Date From</td>
+                                    <td>Date To</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td colspan=2><input type="text" id="biometric_id" data-bind="value:form.model.biometric_id"></td>
+                                    <td> <input type="text" name="" id="date_from_dtr"> </td>
+                                    <td> <input type="text" name="" id="date_to_dtr"> </td>
+                                    <td></td>
+                                  
+                                    <td><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.downloadDTR'><i class="fas fa-download"></i> Download</button></td>
+                                    <td></td> 
+                                </tr>
+                              
+                            </table>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
             
 
         </div>

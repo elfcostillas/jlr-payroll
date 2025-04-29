@@ -213,6 +213,8 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
 
         Route::get('list-department',[ManageDTRController::class,'listDepartment']);
 
+        Route::get('compute-emp-logs/{biometric_id}/{period_id}',[ManageDTRController::class,'computeEmpLogs']);
+
         
     });
 
@@ -593,6 +595,9 @@ Route::middleware('auth')->prefix('reports')->group(function(){
         Route::get('sub/{from}/{to}/{biometric_id}/{type}',[AttendanceReportController::class,'sub']);
 
         Route::get('tardy-setter/{year}/{month}',[AttendanceReportController::class,'setTARDY']);
+
+        Route::get('employee-list',[AttendanceReportController::class,'employees']);
+        Route::get('download-dtr/{biometric_id}/{date_from}/{date_to}',[AttendanceReportController::class,'downloadDTR']);
        
        
     });
