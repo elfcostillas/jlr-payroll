@@ -191,6 +191,9 @@ class AttendanceReportController extends Controller
 
         return view('app.reports.attendance.emp_dtr',['data' => $result,'employee' => $employee]);
 
+        // $this->excel->setValues($result);
+        // return Excel::download($this->excel,'EmployeeLeaves.xlsx');
+
     }
 
     public function setTARDY($year)

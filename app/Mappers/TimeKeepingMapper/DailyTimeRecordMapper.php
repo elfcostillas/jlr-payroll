@@ -80,7 +80,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
             */
             $empWithPunch = $this->model->select('employees.biometric_id','sched_mtwtf','sched_sat')->from('employees')
             ->leftJoin('work_schedules_default','employees.dept_id','=','work_schedules_default.dept_id')
-            ->whereIn('pay_type',[1,2])
+            ->whereIn('emp_level',[2,3,4,5])
             ->where('exit_status',1)
             //->where('payroll_period.id',$period_id)
             ->distinct()
@@ -95,7 +95,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
             //     $join->whereRaw('punch_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
             // })
             ->leftJoin('work_schedules_default','employees.dept_id','=','work_schedules_default.dept_id')
-            ->where('pay_type',3)
+            ->where('emp_level',6)
             ->where('exit_status',1)
             //->where('payroll_period_weekly.id',$period_id)
             ->distinct()
