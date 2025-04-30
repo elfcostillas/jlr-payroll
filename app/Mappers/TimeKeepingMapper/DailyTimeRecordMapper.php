@@ -100,9 +100,9 @@ class DailyTimeRecordMapper extends AbstractMapper {
             //->where('payroll_period_weekly.id',$period_id)
             ->distinct()
             ->get();
+           
             $range = $this->model->select('date_from','date_to')->from('payroll_period_weekly')->where('payroll_period_weekly.id',$period_id)->first();
         }
-
     
         $period = CarbonPeriod::create($range['date_from'],$range['date_to']);
 
@@ -156,7 +156,8 @@ class DailyTimeRecordMapper extends AbstractMapper {
                             })
                             ->join('departments','employees.dept_id','=','departments.id')
                             ->join('divisions','employees.division_id','=','divisions.id')
-                            ->whereIn('pay_type',[1,2])
+                            // ->whereIn('emp_level',[1,2])
+                            ->where('emp_level','<',6)
                             ->where('exit_status',1)
                             ->where('payroll_period.id',$period_id)
                             ->distinct()
@@ -170,7 +171,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
                             ->join('payroll_period_weekly',function($join){
                                 $join->whereRaw('dtr_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
                             })
-                            ->where('pay_type',3)
+                            ->where('emp_level',6)
                             ->where('exit_status',1)
                             ->where('payroll_period_weekly.id',$period_id)
                             ->leftJoin('weekly_tmp_locations',function($join) use ($period_id){
