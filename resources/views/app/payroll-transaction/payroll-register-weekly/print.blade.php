@@ -169,7 +169,7 @@
 
             <table border=1  style="width:100%;border-collapse:collapse;margin-bottom:6px;" class="btable">
                 <tr>
-                    <td colspan={{ 18 + $additional }} > {{ $location->location_altername2 }}</td>  
+                    <td colspan={{ 16 + $additional }} > {{ $location->location_altername2 }}</td>  
                 </tr>
                 <thead>
                     <tr>
@@ -180,8 +180,8 @@
                         <th >Daily Rate</th>
                         <th >No Days</th>
                         <th >Basic Pay</th>
-                        <th >Late (Hrs)</th>
-                        <th >Late Amount</th>
+                        <!-- <th >Late (Hrs)</th>
+                        <th >Late Amount</th> -->
                     
                         @foreach($headers as $key => $val)
                             <th>{{ $label[$key] }}</th>
@@ -318,8 +318,8 @@
                         <td class="pr4" style="text-align:right;"> <div class="">{{ number_format($employee->daily_rate,2) }} </div> </td>
                         <td class="" style="text-align:right;{{$color}};padding:0px 2px;"> <div class="{{ $circle}}">{{ round($employee->ndays,2) }}</div> </td>
                         <td class="pr4"  style="text-align:right;"> {{ number_format($employee->basic_pay,2) }}</td>
-                        <td class="pr3"  style="text-align:right;"> {{ ($employee->late_eq>0) ? number_format($employee->late_eq,2) : ''; }}</td>
-                        <td class="pr3"  style="text-align:right;"> {{ ($employee->late_eq_amount>0) ? number_format($employee->late_eq_amount,2) : ''; }}</td> 
+                        <!-- <td class="pr3"  style="text-align:right;"> {{ ($employee->late_eq>0) ? number_format($employee->late_eq,2) : ''; }}</td>
+                        <td class="pr3"  style="text-align:right;"> {{ ($employee->late_eq_amount>0) ? number_format($employee->late_eq_amount,2) : ''; }}</td>  -->
                        
                         @foreach($headers as $key => $val)
                             <?php
@@ -561,8 +561,8 @@
                 <tr>
                     <td colspan = {{ $colspan }} style="text-align:right;padding-right:4px;" > <b>SUB TOTAL </b></td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;"> {{ ($location_basic > 0) ? number_format($location_basic,2) : ''  }}</td> <!-- BASIC -->
-                    <td class="pr3"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_late_hrs > 0) ? number_format($location_late_hrs,2) : '' }}</td>
-                    <td class="pr3"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_late_amount > 0) ? number_format($location_late_amount,2) : '' }}</td>
+                    <!-- <td class="pr3"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_late_hrs > 0) ? number_format($location_late_hrs,2) : '' }}</td>
+                    <td class="pr3"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_late_amount > 0) ? number_format($location_late_amount,2) : '' }}</td> -->
                     @foreach($headers as $key => $val)
 
                         @if(str_contains($key,'amount'))
