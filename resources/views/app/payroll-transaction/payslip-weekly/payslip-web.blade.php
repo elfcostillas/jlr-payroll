@@ -54,7 +54,7 @@
                     </tr>
                     <tr>
                         <td colspan = 3> </td>
-                        <td colspan = 2 style="font-weight:bold;font-size:11pt !important;text-align:right;"> {{ number_format($e->gross_pay,2) }}</td>
+                        <td colspan = 2 style="font-weight:bold;font-size:11pt !important;text-align:right;"> {{ number_format($e->gross_total,2) }}</td>
                     </tr>
                     <tr>
                         <td></td>
