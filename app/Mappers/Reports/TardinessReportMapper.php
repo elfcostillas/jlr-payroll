@@ -76,9 +76,15 @@ class TardinessReportMapper extends AbstractMapper {
                 // ->whereNull('leave_type')
                 ->whereNull('holiday_type')
                 ->whereRaw('(
-                    (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)-900) OR
-                    (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out)))
-                    )')
+                    (
+                    TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)
+                    AND TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am) - 900
+                    )
+                    OR (
+                    TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm)
+                    AND TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out)
+                    )
+                )')
                 ->where('division_id',$d->id);
             } else {
                 $result = $this->model->select(DB::raw("employees.biometric_id,employee_name,COUNT(dtr_date) late_count,SUM((TIME_TO_SEC(edtr.time_in)- TIME_TO_SEC(work_schedules.time_in))/60) AS in_minutes"))
@@ -104,8 +110,14 @@ class TardinessReportMapper extends AbstractMapper {
                 ->whereNull('holiday_type')
                 // ->whereNull('leave_type')
                 ->whereRaw('(
-                    (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)-900) OR
-                    (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out))
+                    (
+                    TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)
+                    AND TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am) - 900
+                    )
+                    OR (
+                    TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm)
+                    AND TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out)
+                    )
                 )')
                 ->where('division_id',2);
             }
@@ -207,8 +219,8 @@ class TardinessReportMapper extends AbstractMapper {
         
         // ->whereNull('leave_type')
         ->whereRaw('(
-            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)-900) OR
-            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out) )
+            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)AND TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)-900) OR
+            (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) AND TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out) )
             )')
         ->groupBy(DB::raw("employees.biometric_id,lastname,firstname"));
 
@@ -234,8 +246,8 @@ class TardinessReportMapper extends AbstractMapper {
                     ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
                     ///->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)')
                     ->whereRaw('(
-                        (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)-900) OR
-                        (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out) )
+                        (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) AND TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am)-900) OR
+                        (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) AND TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out) )
                         )')
                         ->leftJoinSub($holidays,'holidays',function($join){
                             $join->on('holidays.location_id','=','employees.location_id');
