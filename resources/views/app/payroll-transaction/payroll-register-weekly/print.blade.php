@@ -838,6 +838,29 @@ departmentalTotalGross -->
                         <td>TOTAL</td>
                         <td style="text-align:right;padding-right:4px;">{{ number_format($totalPerDeptGross,2) }}</td>
                     </tr>
+            </table>
+
+            <table border=1 style="border-collapse:collapse;float:left;margin-top:8px;width:180px;margin-left:8pt;">
+                <tr>
+                    <td colspan=2  style="padding:2px;text-align:left;">  Payroll / Net Pay </td>
+                </tr>
+                <?php $totalPerDeptNet = 0;?>
+                @foreach($departmentalTotalNet as $dept => $amount)
+                <?php
+                    $mask_val = (in_array($dept,['Plant','Quarry'])) ? 'AGG '. $dept : $dept;
+                ?>
+                    <tr>
+                        <td>{{ $mask_val }}</td>
+                        <td style="text-align:right;padding-right:4px;"> {{ number_format($amount,2) }}</td>
+                    </tr>
+                    <?php 
+                        $totalPerDeptNet += $amount;
+                    ?>
+                @endforeach
+                    <tr>
+                        <td>TOTAL</td>
+                        <td style="text-align:right;padding-right:4px;">{{ number_format($totalPerDeptNet,2) }}</td>
+                    </tr>
                 
 
             </table>
