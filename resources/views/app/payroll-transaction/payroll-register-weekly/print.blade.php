@@ -12,7 +12,7 @@
         .pr4{
             text-align : right;
             padding-right : 4px;
-            width: 44px;
+            width: 52px;
         }
 
         .pr3 {
