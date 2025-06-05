@@ -204,6 +204,9 @@ class PayrollRegisterWeeklyController extends Controller
 
         $period = $request->id;
         $headers = $this->mapper->getHeaders($period)->toArray();
+        $periodObject = $this->period->find($period);
+
+        // dd($periodObject);
 
         $colHeaders = $this->mapper->getColHeaders();
 
@@ -226,6 +229,7 @@ class PayrollRegisterWeeklyController extends Controller
                 'data' => $collections,
                 'headers' => $headers,
                 'label' => $label,
+                'period' => $periodObject,
                 'period_label' => $period_label->drange,
                 'perf' => $period_label->perf,
             ])->setPaper('Folio','landscape');
@@ -268,6 +272,7 @@ class PayrollRegisterWeeklyController extends Controller
                 'data' => $collections,
                 'headers' => $headers,
                 'label' => $label,
+                'period' => $period,
                 'period_label' => $period_label->drange,
                 'perf' => $period_label->perf,
             ])->setPaper('Folio','landscape');

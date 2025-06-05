@@ -16,7 +16,8 @@ class Daily implements EmployeeInterface
     }
 
     function getGrossPay($payreg){
-        return $this->getBasicPay($payreg) - $payreg['late_eq_amount'] - $payreg['under_time_amount'] + $payreg['vl_wpay_amount'] + $payreg['sl_wpay_amount'] + $payreg['bl_wpay_amount']
+        return $this->getBasicPay($payreg) - $payreg['late_eq_amount'] - $payreg['under_time_amount'] + $payreg['vl_wpay_amount'] 
+                        + $payreg['sl_wpay_amount'] + $payreg['bl_wpay_amount']
                         + $payreg['reg_ot_amount'] +  $payreg['reg_nd_amount'] + $payreg['reg_ndot_amount'] 
                         + $payreg['rd_hrs_amount'] + $payreg['rd_ot_amount'] + $payreg['rd_nd_amount'] + $payreg['rd_ndot_amount'] 
                         + $payreg['leghol_count_amount'] + $payreg['leghol_hrs_amount'] + $payreg['leghol_ot_amount'] + $payreg['leghol_nd_amount']
@@ -24,7 +25,8 @@ class Daily implements EmployeeInterface
                         + $payreg['sphol_count_amount'] + $payreg['sphol_hrs_amount'] + $payreg['sphol_ot_amount'] + $payreg['sphol_nd_amount']
                         + $payreg['sphol_rd_amount'] + $payreg['sphol_rdot_amount'] + $payreg['sphol_ndot_amount'] + $payreg['sphol_rdndot_amount']
                         + $payreg['dblhol_count_amount'] + $payreg['dblhol_hrs_amount'] + $payreg['dblhol_ot_amount'] + $payreg['dblhol_nd_amount']
-                        + $payreg['dblhol_rd_amount'] + $payreg['dblhol_rdot_amount'] + $payreg['dblhol_ndot_amount'] + $payreg['dblhol_rdndot_amount'] + $payreg['semi_monthly_allowance'] + $payreg['daily_allowance'];
+                        + $payreg['dblhol_rd_amount'] + $payreg['dblhol_rdot_amount'] + $payreg['dblhol_ndot_amount'] + $payreg['dblhol_rdndot_amount'] 
+                        + $payreg['semi_monthly_allowance'] + $payreg['daily_allowance'];
     }
 
     function getMonthlyCredit($data){

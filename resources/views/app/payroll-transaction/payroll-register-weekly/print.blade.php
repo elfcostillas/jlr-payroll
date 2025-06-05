@@ -40,6 +40,8 @@
 
         use Illuminate\Support\Facades\Auth;
 
+        // dd($period->cut_off);
+
         $fourfive_count = 0;
         
         $arr = [];
@@ -190,10 +192,14 @@
                         <!-- <th >Other Earnings</th> -->
                         <th >Retro Pay</th>
                         <th> Gross Pay</th>
-
-                        <!-- <th> HDMF </th> -->
-                        <th> SSS Prem</th>
-                        <th> PHIC</th>
+                        @if ($period->cut_off==1)
+                            <th> HDMF </th>
+                        @else
+                           <th> SSS Prem</th>
+                            <th> PHIC</th>
+                        @endif
+                     
+                     
 
                         <th>Cash Advance</th>
                         <th> Canteen </th>
@@ -513,11 +519,12 @@
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['retro_pay']>0) ? number_format($employee->otherEarnings['retro_pay'],2) : ''; }}</td>
 
                         <td class="pr4"  style="text-align:right;font-weight:bold;background-color:{{$fourfive}};">{{ ($employee->gross_total > 0) ? number_format($employee->gross_total,2) : '' }}</td>
-                        
-                        <!-- <td class="pr3"  style="text-align:right;"> {{ ($employee->hdmf_contri>0) ? number_format($employee->hdmf_contri,2) : ''; }}</td>  -->
+                        @if ($period->cut_off==1)
+                        <td class="pr3"  style="text-align:right;"> {{ ($employee->hdmf_contri>0) ? number_format($employee->hdmf_contri,2) : ''; }}</td> 
+                        @else
                         <td class="pr3"  style="text-align:right;"> {{ ($employee->sss_prem>0) ? number_format($employee->sss_prem,2) : ''; }}</td> 
                         <td class="pr3"  style="text-align:right;"> {{ ($employee->phil_prem>0) ? number_format($employee->phil_prem,2) : ''; }}</td> 
-
+                        @endif
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['cash_advance']>0) ? number_format($employee->otherEarnings['cash_advance'],2) : ''; }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['canteen']>0) ? number_format($employee->otherEarnings['canteen'],2) : ''; }}</td>
                         <!-- <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['deductions']>0) ? number_format($employee->otherEarnings['deductions'],2) : ''; }}</td>-->
@@ -579,11 +586,12 @@
                     <!-- <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_other_earning > 0) ? number_format($location_other_earning,2) : '' }}</td> -->
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_retro_pay > 0) ? number_format($location_retro_pay,2) : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_total > 0) ? number_format($location_total,2) : '' }}</td>
-
-                    <!-- <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{($location_hdmf > 0) ? number_format($location_hdmf,2) : '' }}</td> -->
+                    @if ($period->cut_off==1)
+                    <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{($location_hdmf > 0) ? number_format($location_hdmf,2) : '' }}</td>
+                    @else
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{($location_sss > 0) ? number_format($location_sss,2) : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{($location_phic > 0) ? number_format($location_phic,2) : '' }}</td>
-
+                    @endif
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_cash_advance > 0) ? number_format($location_cash_advance,2) : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_canteen_total > 0) ? number_format($location_canteen_total,2) : '' }}</td>
                     <!-- <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_ppe > 0) ? number_format($location_ppe,2) : '' }}</td>-->
@@ -641,10 +649,14 @@
             <!-- <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_other_earning,2) }}</td> OTHER EARN -->
             <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_retro_pay,2) }}</td></td> <!-- RETRO PAY -->
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_gross_total,2) }}</td>
-
-            <!-- <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_hdmf,2) }}</td>  -->
+            @if ($period->cut_off==1)
+            <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_hdmf,2) }}</td> 
+            @else
             <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_sss,2) }}</td> 
             <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_phic,2) }}</td> 
+            @endif
+           
+          
              
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_ca_total,2) }}</td>
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_cantenn_total,2) }}</td>
