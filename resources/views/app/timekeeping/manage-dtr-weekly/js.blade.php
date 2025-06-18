@@ -430,7 +430,7 @@
                     {
                         command: { text : 'Compute Tardy',click : viewModel.buttonHandler.computeAll , },
                         // attributes : { style : 'font-size:10pt !important;'},
-                        width : 105
+                        width : 120
                     },
                   
                 ],

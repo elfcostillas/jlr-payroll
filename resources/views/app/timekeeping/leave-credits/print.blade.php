@@ -5,7 +5,7 @@
     {
         if($n!=0)
         {
-            return $n;
+            return round($n,2);
         } else {
             return '';
         }
@@ -17,6 +17,8 @@
 
     $total_vlwpay= 0;
     $total_slwpay= 0;
+
+    $total_brv = 0;
 
     $vlc = ($leave_credits) ? $leave_credits->vacation_leave : 0;
     $slc = ($leave_credits) ? $leave_credits->sick_leave : 0;
@@ -70,37 +72,45 @@
             <td>VL W/ PAY</td>
             <td>SL W/ PAY</td>
             <td>WITHOUT PAY</td>
+            <td>Bereavement</td>
         </tr>
         <tr>
             <td></td>
             <td></td>
             <td></td>
-            <td><b> {{ ($leave_credits) ? $leave_credits->vacation_leave : 0 }} </b> </td>
-            <td><b> {{ ($leave_credits) ? $leave_credits->sick_leave : 0 }} </b> </td>
+            <td style="text-align:right;padding-right:8px;"><b> {{ ($leave_credits) ? $leave_credits->vacation_leave : 0 }} </b> </td>
+            <td style="text-align:right;padding-right:8px;"><b> {{ ($leave_credits) ? $leave_credits->sick_leave : 0 }} </b> </td>
+            <td></td>
             <td></td>
         </tr>
         @if($data!=null)
             @foreach($data as $row)
+
             @php
+               
                 $leave_date = Carbon::createFromFormat('Y-m-d',$row->leave_date);
                 $total_vlwpay += ($row->leave_type=='VL' || $row->leave_type=='EL') ? $row->with_pay : 0;
                 $total_slwpay += ($row->leave_type=='SL') ? $row->with_pay : 0;
                 $total_wopay +=  $row->without_pay;
+
+                $brv =  ($row->leave_type=='BRV') ? $row->with_pay + $row->without_pay : 0;
             @endphp
                 <tr>
                     <td>{{ $leave_date->format('m/d/Y') }}</td>
                     <td>{{ $row->leave_type }}</td>
                     <td>{{ $row->remarks }}</td>
-                    <td>{{ ($row->leave_type=='VL' || $row->leave_type=='EL') ? nformat($row->with_pay) : 0 }}</td>
-                    <td>{{ ($row->leave_type=='SL') ? nformat($row->with_pay) : 0 }}</td>
-                    <td>{{ nformat($row->without_pay) }}</td>
+                    <td style="text-align:right;padding-right:8px;">{{ ($row->leave_type=='VL' || $row->leave_type=='EL') ? nformat($row->with_pay) : nformat(0) }}</td>
+                    <td style="text-align:right;padding-right:8px;">{{ ($row->leave_type=='SL') ? nformat($row->with_pay) :  nformat(0) }}</td>
+                    <td style="text-align:right;padding-right:8px;">{{ nformat($row->without_pay) }}</td>
+                    <td style="text-align:right;padding-right:8px;">{{nformat($brv)  }}</td>
                 </tr>
             @endforeach
             <tr>
                 <td colspan=3>Total Consumed</td>
-                <td>{{ number_format($total_vlwpay,2) }}</td>
-                <td>{{ number_format($total_slwpay,2) }}</td>
-                <td>{{ number_format($total_wopay,2) }}</td>
+                <td style="text-align:right;padding-right:8px;">{{ nformat($total_vlwpay) }}</td>
+                <td style="text-align:right;padding-right:8px;">{{ nformat($total_slwpay) }}</td>
+                <td style="text-align:right;padding-right:8px;">{{ nformat($total_wopay) }}</td>
+                <td></td>
             </tr>
             <?php
                 
@@ -111,8 +121,9 @@
             ?>
             <tr>
                 <td colspan=3>Balance</td>
-                <td><b>{{ number_format($bal_vlwpay,2) }}</b></td>
-                <td><b>{{ number_format($bal_slwpay,2) }}</b></td>
+                <td style="text-align:right;padding-right:8px;"><b>{{ nformat($bal_vlwpay) }}</b></td>
+                <td style="text-align:right;padding-right:8px;"><b>{{ nformat($bal_slwpay) }}</b></td>
+                <td></td>
                 <td></td>
             </tr>
 
