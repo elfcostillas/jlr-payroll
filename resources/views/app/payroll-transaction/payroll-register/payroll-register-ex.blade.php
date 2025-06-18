@@ -499,6 +499,10 @@
                                     $overALL['gross_pay'] += $employee->gross_pay;
                                     $overALL['gross_total'] += $employee->gross_total;
 
+                                    $overALL['svl'] += $employee->svl;
+                                    $overALL['svl_amount'] += $employee->svl_amount;
+
+
                                     foreach($colHeaders as $colHeader)
                                     {
                                         if(array_key_exists($colHeader->var_name,$labels))
