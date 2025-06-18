@@ -78,7 +78,7 @@
 
 </style>
 @section('title')
-    <h4> Manage DTR - Weekly <h4>
+    <h4> Manage DTR - Support Group <h4>
 @endsection
 @section('content')
     <div class="">
