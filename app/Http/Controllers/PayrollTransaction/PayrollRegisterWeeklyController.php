@@ -83,13 +83,13 @@ class PayrollRegisterWeeklyController extends Controller
 
         //getWeeklyHolidaysforComputation + computeWeeklyHoliday
      
-        $logs = $this->dtr->getWeeklyHolidaysforComputation($period);
+        // $logs = $this->dtr->getWeeklyHolidaysforComputation($period);
 
-        if($logs->count()>0)
-        {
-                $this->dtr->computeWeeklyHoliday($logs,'weekly');
+        // if($logs->count()>0)
+        // {
+        //         $this->dtr->computeWeeklyHoliday($logs,'weekly');
          
-        }
+        // }
 
         $pperiod = DB::table('payroll_period_weekly')->select()->where('id',$period)->first();
 

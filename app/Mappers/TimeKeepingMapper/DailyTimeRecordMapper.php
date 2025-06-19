@@ -871,6 +871,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
     public function computeLogs($dtr,$type)
     {
+       
         
         if($type=='semi'){
             foreach($dtr as $rec)
@@ -963,7 +964,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                 $this->updateValid($rec->toArray());
             }   
         }else {
-         
+          
             foreach($dtr as $rec)
             {
                
@@ -1053,7 +1054,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                         break;
                     
                     case 'LH': 
-                          
+                         
                             $flag = $this->checkLastWorkingDay($rec->dtr_date,$rec->location,$rec->biometric_id);
 
                             if(($rec->time_in != "" && $rec->time_in != "00:00") && ($rec->time_out !="" && $rec->time_out !="00:00") || $rec->ndays > 0)
@@ -1064,6 +1065,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
                             if($rec->reghol_hrs > 0){
                                 $rec->reghol_pay = 0;
+                              
                             }else{
                                 if($flag){
                                     $rec->reghol_pay = 1;
@@ -1139,7 +1141,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
             //echo "im here";
             foreach($dtr as $rec)
             {
-               
+             
                 
                 //$rec->ndays = ($rec->time_in!='' && $rec->time_out!='' && $rec->holiday_type==NULL && $rec->time_in!='00:00' && $rec->time_out!='00:00') ? 1 : 0;
                 if($rec->ndays==0 || $rec->ndays==''){
@@ -1191,7 +1193,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                           
                             $flag = $this->checkLastWorkingDay($rec->dtr_date,$rec->location,$rec->biometric_id);
 
-                        
+
 
                             if(($rec->time_in != "" && $rec->time_in != "00:00") && ($rec->time_out !="" && $rec->time_out !="00:00") || $rec->ndays >0)
                             {
@@ -1588,7 +1590,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
     {
         $qry = "SELECT DISTINCT edtr.biometric_id FROM edtr INNER JOIN payroll_period_weekly ON dtr_date BETWEEN date_from AND date_to 
         INNER JOIN employees ON edtr.biometric_id = employees.biometric_id 
-        WHERE payroll_period_weekly.id = $period_id AND employees.pay_type = 3";
+        WHERE payroll_period_weekly.id = $period_id AND employees.emp_level = 6";
 
         $result = DB::select($qry);
 
