@@ -69,31 +69,33 @@ return [
                 PDO::ATTR_EMULATE_PREPARES => true,
             ]) : [],
         ],
-       
-        // 'mysql' => [
-        //     'driver' => 'mysql',
-        //     'url' => env('DATABASE_URL'),
-        //     'host' => env('DB_HOST', '172.17.56.65'),
+       /*
+        'mysql' => [
+            'driver' => 'mysql',
+            'url' => env('DATABASE_URL'),
+            // 'host' => env('DB_HOST', '172.17.56.65'),
+            'host' => env('DB_HOST', '172.24.224.1'),
            
-        //     'port' => env('DB_PORT', '3307'),
-        //     'database' => env('DB_DATABASE', 'jlr_hris_live'),
+            'port' => env('DB_PORT', '3307'),
+            // 'database' => env('DB_DATABASE', 'jlr_hris_live'),
+            'database' => env('DB_DATABASE', 'jlr_hris'),
 
-        //     'username' => env('DB_USERNAME', 'elmer'),
-        //     'password' => env('DB_PASSWORD', 'password'),
+            'username' => env('DB_USERNAME', 'elmer'),
+            'password' => env('DB_PASSWORD', 'password'),
            
-        //     'unix_socket' => env('DB_SOCKET', ''),
-        //     'charset' => 'utf8mb4',
-        //     'collation' => 'utf8mb4_unicode_ci',
-        //     'prefix' => '',
-        //     'prefix_indexes' => true,
-        //     'strict' => false,
-        //     'engine' => null,
-        //     'options' => extension_loaded('pdo_mysql') ? array_filter([
-        //         PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-        //         PDO::ATTR_EMULATE_PREPARES => true,
-        //     ]) : [],
-        // ],
-  
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => false,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                PDO::ATTR_EMULATE_PREPARES => true,
+            ]) : [],
+        ],
+   */
         'weekly' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),

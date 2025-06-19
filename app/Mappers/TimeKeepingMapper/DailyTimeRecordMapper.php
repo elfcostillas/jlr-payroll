@@ -1060,8 +1060,23 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                             {
                                 // $rec->ndays = 1 - round($rec->under_time/8,2) - round($rec->vl_wp/8,2) - round($rec->vl_wop/8,2) - round($rec->sl_wp/8,2) - round($rec->sl_wop/8,2) - round($rec->bl/8,2);
                                $rec->reghol_hrs = $rec->ndays * 8;
-                            }else{
+                            }
 
+                            if($rec->reghol_hrs > 0){
+                                $rec->reghol_pay = 0;
+                            }else{
+                                if($flag){
+                                    $rec->reghol_pay = 1;
+                                }else{
+                                    $rec->reghol_pay = 0;
+                                }
+                            }
+
+                           
+
+
+                            /*
+                            else{
 
                                 if($flag){
                                     $rec->reghol_pay = 1;
@@ -1086,6 +1101,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                             $rec->reghol_ndot = $rec->night_diff_ot;
                             $rec->over_time =0;
                             $rec->night_diff_ot =0;
+                            */
 
                            
                         break; 
