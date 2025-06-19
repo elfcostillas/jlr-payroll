@@ -1033,9 +1033,9 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                         $cot = 0;
                     }
 
-                    $rec->over_time = $cot;
+                    // $rec->over_time = $cot;
                 } else {
-                    $rec->over_time = 0;
+                    // $rec->over_time = 0;
                 }
 
                 switch($rec->holiday_type)
@@ -1048,7 +1048,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
                             // $rec->sphol_pay = ($rec->ndays==0 || $rec->ndays =='') ? 1 : 0;
                             $rec->sphol_nd = $rec->night_diff;
-                            $rec->sphol_ot = $rec->overt_time;
+                            // $rec->sphol_ot = $rec->overt_time;
                             $rec->sphol_ndot = $rec->night_diff_ot;
                         break;
                     
@@ -1056,10 +1056,10 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                           
                             $flag = $this->checkLastWorkingDay($rec->dtr_date,$rec->location,$rec->biometric_id);
 
-                            if(($rec->time_in != "" && $rec->time_in != "00:00") && ($rec->time_out !="" && $rec->time_out !="00:00") || $rec->ndays ==1)
+                            if(($rec->time_in != "" && $rec->time_in != "00:00") && ($rec->time_out !="" && $rec->time_out !="00:00") || $rec->ndays > 0)
                             {
                                 // $rec->ndays = 1 - round($rec->under_time/8,2) - round($rec->vl_wp/8,2) - round($rec->vl_wop/8,2) - round($rec->sl_wp/8,2) - round($rec->sl_wop/8,2) - round($rec->bl/8,2);
-                               
+                               $rec->reghol_hrs = $rec->ndays * 8;
                             }else{
 
 
@@ -1082,7 +1082,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                           
                             // $rec->reghol_pay = ($rec->ndays==0 || $rec->ndays =='') ? 1 : 0;
                             $rec->reghol_nd = $rec->night_diff;
-                            $rec->reghol_ot = ($rec->cont=='Y') ? 0 :  $rec->over_time;
+                            // $rec->reghol_ot = ($rec->cont=='Y') ? 0 :  $rec->over_time;
                             $rec->reghol_ndot = $rec->night_diff_ot;
                             $rec->over_time =0;
                             $rec->night_diff_ot =0;
@@ -1195,6 +1195,11 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                                     $rec->reghol_pay = 0;
                                     
                                 }
+                            }
+
+                            if($rec->ndays > 0)
+                            {
+                                $rec->reghol_hrs = $rec->ndays * 8;
                             }
 
                             // if($rec->biometric_id == 58)
