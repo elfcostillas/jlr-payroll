@@ -165,13 +165,13 @@
                     $location_dynamicCol[$key] = 0;
                 }
 
-               
+            //    dd($additional);
 
             ?>
 
             <table border=1  style="width:100%;border-collapse:collapse;margin-bottom:6px;" class="btable">
                 <tr>
-                    <td colspan={{ 16 + $additional }} > {{ $location->location_altername2 }}</td>  
+                    <td colspan={{ 14 + $additional }} > {{ $location->location_altername2 }}</td>  
                 </tr>
                 <thead>
                     <tr>
@@ -190,7 +190,7 @@
                           
                         @endforeach
                         <!-- <th >Other Earnings</th> -->
-                        <th >Retro Pay</th>
+                        <!-- <th >Retro Pay</th> -->
                         <th> Gross Pay</th>
                         @if ($period->cut_off==1)
                             <th> HDMF </th>
@@ -516,7 +516,7 @@
                             ?>
                         @endforeach
                         <!-- <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['earnings']>0) ? number_format($employee->otherEarnings['earnings'],2) : ''; }}</td> -->
-                        <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['retro_pay']>0) ? number_format($employee->otherEarnings['retro_pay'],2) : ''; }}</td>
+                        <!-- <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['retro_pay']>0) ? number_format($employee->otherEarnings['retro_pay'],2) : ''; }}</td> -->
 
                         <td class="pr4"  style="text-align:right;font-weight:bold;background-color:{{$fourfive}};">{{ ($employee->gross_total > 0) ? number_format($employee->gross_total,2) : '' }}</td>
                         @if ($period->cut_off==1)
@@ -584,7 +584,7 @@
                     @endforeach
                     
                     <!-- <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_other_earning > 0) ? number_format($location_other_earning,2) : '' }}</td> -->
-                    <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_retro_pay > 0) ? number_format($location_retro_pay,2) : '' }}</td>
+                    <!-- <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_retro_pay > 0) ? number_format($location_retro_pay,2) : '' }}</td> -->
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_total > 0) ? number_format($location_total,2) : '' }}</td>
                     @if ($period->cut_off==1)
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{($location_hdmf > 0) ? number_format($location_hdmf,2) : '' }}</td>
@@ -636,7 +636,7 @@
             <td style="text-align:right;padding-right:4px;" > <b>GRAND TOTAL </b></td>
             <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_basic_pay,2) }}</td> <!-- BASIC -->
             <td class="pr3" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_late_hrs,2) }}</td>
-            <td class="pr3" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_late_amount,2) }}</td>
+            <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_late_amount,2) }}</td>
           
             @foreach($headers as $key => $val)
                 @if(str_contains($key,'amount'))
@@ -647,7 +647,7 @@
             
             @endforeach
             <!-- <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_other_earning,2) }}</td> OTHER EARN -->
-            <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_retro_pay,2) }}</td></td> <!-- RETRO PAY -->
+            <!-- <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_retro_pay,2) }}</td></td> RETRO PAY -->
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_gross_total,2) }}</td>
             @if ($period->cut_off==1)
             <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_hdmf,2) }}</td> 
