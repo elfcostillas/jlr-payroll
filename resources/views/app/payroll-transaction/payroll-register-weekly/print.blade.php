@@ -171,7 +171,7 @@
 
             <table border=1  style="width:100%;border-collapse:collapse;margin-bottom:6px;" class="btable">
                 <tr>
-                    <td colspan={{ 15 + $additional }} > {{ $location->location_altername2 }}</td>  
+                    <td colspan={{ 16 + $additional }} > {{ $location->location_altername2 }}</td>  
                 </tr>
                 <thead>
                     <tr>
