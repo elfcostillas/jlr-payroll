@@ -170,7 +170,7 @@ class TardinessMemoController extends Controller
 
                     if(count($marchResult) >0)
                     {
-                        $breakdown = "Last March you incurred a total of (".count($marchResult).") tardiness occurrence. ";
+                        $breakdown = "Last April you incurred a total of (".count($marchResult).") tardiness occurrence. ";
                     }
 
                     // $may = date('Y-m-d',strtotime($memo->memo_year.'-05-01'));
