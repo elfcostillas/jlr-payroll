@@ -187,17 +187,17 @@ class TardinessMemoController extends Controller
 
                     break;
                 case 6 :
-                    $march = date('Y-m-d',strtotime($memo->memo_year.'-04-01'));
+                    $april = date('Y-m-d',strtotime($memo->memo_year.'-04-01'));
                     $breakdown = '';
-                    $marchFilter = array(
-                        'from' => $march,
-                        'to' => date('Y-m-t',strtotime($march)),
+                    $aprilFilter = array(
+                        'from' => $april,
+                        'to' => date('Y-m-t',strtotime($april)),
                     );
 
-                    $marchResult =  $this->mapper->getLates($memo->biometric_id,$marchFilter);
+                    $aprilResult =  $this->mapper->getLates($memo->biometric_id,$aprilFilter);
                 
-                    if(count($marchResult)>0){
-                        $breakdown = "Last March you incurred a total of (".count($marchResult).") tardiness occurrence";
+                    if(count($aprilResult)>0){
+                        $breakdown = "Last April you incurred a total of (".count($aprilResult).") tardiness occurrence";
                     }
 
                     $may = date('Y-m-d',strtotime($memo->memo_year.'-05-01'));
@@ -210,19 +210,19 @@ class TardinessMemoController extends Controller
                     $mayResult =  $this->mapper->getLates($memo->biometric_id,$mayFilter);
 
                     if(count($mayResult)>0){
-                        if(count($marchResult)>0){
+                        if(count($aprilResult)>0){
                             $breakdown .= " and last May you incurred a total of (".count($mayResult).") tardiness occurrence.";
                     
                         }else {
                             $breakdown  .= "Last May you incurred a total of (".count($mayResult).") tardiness occurrence.";
                         }
                     }else {
-                        if(count($marchResult)>0){
+                        if(count($aprilResult)>0){
                             $breakdown .= ".";
                         }
                     }
 
-                    $total = count($marchResult) + count($mayResult) + count($details);
+                    $total = count($aprilResult) + count($mayResult) + count($details);
                     $months = "April, May, June";
                     
                     break;
