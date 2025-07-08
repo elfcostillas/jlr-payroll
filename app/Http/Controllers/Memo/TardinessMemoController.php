@@ -310,7 +310,7 @@ class TardinessMemoController extends Controller
 
                     $octFilter = array(
                         'from' => $oct,
-                        'to' => date('Y-m-t',strtotime($oct)),
+                        'to' => date('Y-m-t',strtotime($oct)),  
                     );
 
                     $octResult =  $this->mapper->getLates($memo->biometric_id,$octFilter);
