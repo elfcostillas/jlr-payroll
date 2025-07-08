@@ -46,7 +46,9 @@ class EmployeeController extends Controller
             return response()->json('Error : Biometric ID was not set. Please set your Biometric ID on Accounts >> Biometric ID to continue.');
         }
         //dd($userDept->dept_id);
-        if($userDept->dept_id==8){
+
+      
+        if($userDept->dept_id==8 || $userLevel->emp_level >= 2){
             $canSeeRates = true;
         }else{
             $canSeeRates = false;

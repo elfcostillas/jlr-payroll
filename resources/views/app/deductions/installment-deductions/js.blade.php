@@ -315,7 +315,7 @@
                        var myWindow = $("#pop");
                        
                        myWindow.kendoWindow({
-                           width: "810", //1124 - 1152
+                           width: "920", //1124 - 1152
                            height: "360",
                            title: "Deduction Details - Installment",
                            visible: false,

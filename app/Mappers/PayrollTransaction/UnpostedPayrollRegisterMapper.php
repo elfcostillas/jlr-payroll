@@ -39,7 +39,13 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                 break;
             
             case 6: case 60 :
-
+                    if($type=='semi'){
+                        $result = $this->model->select(DB::raw("id,CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) AS period_range"))
+                        ->from('payroll_period')
+                        ->whereNotIn('id',DB::table('posting_info')->where('trans_type',$trans_type)->distinct()->pluck('period_id'))
+                        //->join('payroll_period','payroll_period.id','=','payrollregister_unposted.period_id')
+                        ->distinct();
+                    }
                 break;
             
             default : 
