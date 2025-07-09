@@ -2,18 +2,25 @@
 
 namespace App\Http\Controllers\Timekeeping;
 
+use App\CustomClass\EmployeeAWOL;
 use App\Http\Controllers\Controller;
+use App\Mappers\EmployeeFileMapper\EmployeeMapper;
 use Illuminate\Http\Request;
 use App\Mappers\TimeKeepingMapper\DailyTimeRecordMapper;
+use App\Mappers\TimeKeepingMapper\PayrollPeriodMapper;
 
 class ManageDTRConfiController extends Controller
 {
     //
     private $mapper;
+    private $emp;
+    private $period;
 
-    public function __construct(DailyTimeRecordMapper $mapper)
+    public function __construct(DailyTimeRecordMapper $mapper,EmployeeMapper $emp,PayrollPeriodMapper $period)
     {
         $this->mapper = $mapper;
+        $this->emp = $emp;
+        $this->period = $period;
     }
 
     public function index()
@@ -71,8 +78,12 @@ class ManageDTRConfiController extends Controller
         $period_id = $request->period_id;
 
         $dtr = $this->mapper->putLeavesUT($biometric_id,$period_id);
+        $employee = $this->emp->getEmployeeDetails($biometric_id);
 
         $dtr = $this->mapper->getSemiDTRforComputation($biometric_id,$period_id);
+        $period = $this->period->find($period_id);
+    
+        $e = new EmployeeAWOL($employee,$period->date_from,$period->date_to);
 
         $this->mapper->computeLogs($dtr,'semi');
 
