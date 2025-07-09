@@ -68,6 +68,7 @@ use App\Http\Controllers\EmployeeFile\RatesController;
 use App\Http\Controllers\Memo\AWOLMemoController;
 use App\Http\Controllers\Reports\TardinessReportsController;
 use App\Http\Controllers\Memo\TardinessMemoController;
+use App\Http\Controllers\PayrollTransaction\PayslipConfiController;
 use App\Http\Controllers\PayrollTransaction\ThirteenthMonthController;
 use App\Http\Controllers\Reports\AttendanceReportController;
 use App\Http\Controllers\Reports\PayrollSupportGroupController;
@@ -722,6 +723,15 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::get('get-employees/{period}/{div}/{dept}',[PayslipController::class,'getEmployees']);
         Route::get('web-view/{period}/{div}/{dept}/{bio_id}',[PayslipController::class,'webView']);
         Route::get('print/{period}/{div}/{dept}/{bio_id}',[PayslipController::class,'print']);
+    });
+
+    Route::prefix('payslip-confi')->group(function(){
+        Route::get('/',[PayslipConfiController::class,'index']);
+
+        Route::get('posted-period',[PayslipConfiController::class,'getPostedPeriods']);
+        Route::get('get-employees/{period}/{div}/{dept}',[PayslipConfiController::class,'getEmployees']);
+        Route::get('web-view/{period}/{div}/{dept}/{bio_id}',[PayslipConfiController::class,'webView']);
+        Route::get('print/{period}/{div}/{dept}/{bio_id}',[PayslipConfiController::class,'print']);
     });
 
     Route::prefix('payslip-weekly')->group(function(){

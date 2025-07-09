@@ -25,7 +25,19 @@ class PayslipMapper extends AbstractMapper {
                                 ->orderBy('period_id','DESC');
 
         return $result->get();
-    }    
+    }
+    
+    public function getConfiPostedPeriods()
+    {
+        //SELECT period_id,CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) AS date_range FROM posting_info 
+        //INNER JOIN payroll_period ON payroll_period.id = posting_info.period_id ORDER BY period_id DESC ;
+        $result = $this->model->select(DB::raw("period_id,CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) AS date_range"))
+                                ->from('posting_info')->join('payroll_period','payroll_period.id','=','posting_info.period_id')
+                                ->where('trans_type','confi')
+                                ->orderBy('period_id','DESC');
+
+        return $result->get();
+    } 
 
     public function getPeriodLabel($period)
     {
@@ -85,6 +97,37 @@ class PayslipMapper extends AbstractMapper {
                 
     }
 
+    public function getConfiEmployees($period,$division,$department)
+    {
+        $user = Auth::user();
+
+        $result = $this->model->select(DB::raw("employees.biometric_id,concat(lastname,', ',firstname) as emp_name,suffixname"))
+                ->from('payrollregister_posted_s')
+                ->join('employees','employees.biometric_id','=','payrollregister_posted_s.biometric_id')
+                //->where('period_id',$period)
+                ->distinct();
+                
+        if($period!=0){
+            $result->where('period_id',$period);
+        }
+
+        if($division!=0){
+            $result->where('division_id',$division);
+        }
+
+        if($department!=0){
+            $result->where('dept_id',$department);
+        }
+
+        $result = $result->where('emp_level','<',5);
+
+        $result->orderBy('lastname','ASC')->orderBy('firstname','ASC');
+
+        // dd($result->toSql(),$result->getBindings());
+        return $result->get();
+                
+    }
+
     public function getData($period_id,$division,$department,$biometric_id)
     {
         //dd($period_id,$division,$department,$biometric_id);
@@ -92,7 +135,64 @@ class PayslipMapper extends AbstractMapper {
         $result = $this->model->select(DB::raw("payrollregister_posted_s.*,dept_id,division_id,concat(lastname,', ',firstname) as employee_name,suffixname,dept_name"))
                     ->from('payrollregister_posted_s')
                     ->join('employees','employees.biometric_id','=','payrollregister_posted_s.biometric_id')
-                    ->leftJoin('departments','departments.id','=','dept_id');
+                    ->leftJoin('departments','departments.id','=','dept_id')
+                     ->where('employees.emp_level','>=',5);
+
+        if($period_id != 0 && $period_id != "" && $period_id != null){
+            $result->where('period_id',$period_id);
+        }
+
+        if($division != 0 && $division != "" && $division != null){
+            $result->where('division_id',$division);
+        }
+
+        if($department != 0 && $department != "" && $department != null){
+            $result->where('dept_id',$department);
+        }
+
+        if($biometric_id != 0 && $biometric_id != "" && $biometric_id != null){
+            $result->where('employees.biometric_id',$biometric_id);
+        }
+
+        $result->orderBy('lastname','ASC');
+        $result->orderBy('firstname','ASC');
+
+        $data = $result->get();
+
+       
+        foreach($data as $epay)
+        {
+            if(is_object($epay)){
+                $epay->basic = $this->basic($epay);
+                $epay->gov_loan = $this->paySlipGovLoan($period_id,$epay->biometric_id);
+                $epay->reg_earnings = $this->regEarnings($epay);
+                $epay->restday = $this->restDay($epay);
+                $epay->legalHol = $this->legalHol($epay);
+                $epay->specialHol = $this->specialHol($epay);
+                $epay->dblLegHol = $this->dblLegHol($epay);
+                $epay->allowances = $this->allowances($epay);
+                $epay->otherEearnings = $this->otherEearnings($period_id,$epay->biometric_id);
+                $epay->slvl = $this->slvl($epay);
+                $epay->fixedDeduction = $this->fixedDeduction($period_id,$epay->biometric_id);
+                $epay->installments = $this->installments($period_id,$epay->biometric_id);
+            }
+            
+            
+        }
+
+        return $data;
+    }
+
+    public function getDataConfi($period_id,$division,$department,$biometric_id)
+    {
+        //dd($period_id,$division,$department,$biometric_id);
+
+        $result = $this->model->select(DB::raw("payrollregister_posted_s.*,dept_id,division_id,concat(lastname,', ',firstname) as employee_name,suffixname,dept_name"))
+                    ->from('payrollregister_posted_s')
+                    ->join('employees','employees.biometric_id','=','payrollregister_posted_s.biometric_id')
+                    ->leftJoin('departments','departments.id','=','dept_id')
+                    ->where('employees.emp_level','<',5);
+                    
 
         if($period_id != 0 && $period_id != "" && $period_id != null){
             $result->where('period_id',$period_id);

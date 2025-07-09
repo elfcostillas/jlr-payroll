@@ -315,6 +315,7 @@ class PayrollRegisterConfiController extends Controller
 
     public function getPostedPeriod(Request $request)
     {
+       
         $result = $this->posted->getPostedPeriod('confi');
 
         return response()->json($result);
