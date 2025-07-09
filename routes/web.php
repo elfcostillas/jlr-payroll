@@ -71,6 +71,7 @@ use App\Http\Controllers\Memo\TardinessMemoController;
 use App\Http\Controllers\PayrollTransaction\ThirteenthMonthController;
 use App\Http\Controllers\Reports\AttendanceReportController;
 use App\Http\Controllers\Reports\PayrollSupportGroupController;
+use App\Http\Controllers\Timekeeping\ManageDTRConfiController;
 use App\Http\Controllers\Timekeeping\WeeklyDTRUploaderController;
 
 
@@ -215,6 +216,39 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::get('list-department',[ManageDTRController::class,'listDepartment']);
 
         Route::get('compute-emp-logs/{biometric_id}/{period_id}',[ManageDTRController::class,'computeEmpLogs']);
+
+        
+    });
+
+    Route::prefix('manage-dtr-confi')->middleware('access:timekeeping/manage-dtr-confi')->group(function(){
+        Route::get('/',[ManageDTRConfiController::class,'index']);
+        
+        // Route::post('prepare',[ManageDTRController::class,'prepareDTR']);
+        Route::get('get-employee-list/{period_id}',[ManageDTRConfiController::class,'getEmployeeList']);
+        Route::get('get-employee-raw-logs/{period_id}/{biometric_id}',[ManageDTRConfiController::class,'getEmployeeRawLogs']);
+        Route::get('get-employee-dtr-logs/{period_id}/{biometric_id}',[ManageDTRConfiController::class,'getSemiDTR']);
+        
+        // Route::get('get-employee-schedules',[ManageDTRController::class,'getSchedules']);
+        
+        Route::post('update-dtr',[ManageDTRConfiController::class,'updateDTR']);
+        Route::post('draw-logs',[ManageDTRConfiController::class,'drawLogs']);
+        Route::post('compute-logs',[ManageDTRConfiController::class,'computeLogs']);
+        // Route::post('clear-logs',[ManageDTRController::class,'clearLogs']);
+        // Route::get('print/{period_id}',[ManageDTRController::class,'print']);
+        // Route::get('iprint/{period_id}/{biometric_id}',[ManageDTRController::class,'iprint']);
+
+        // Route::get('onetimebigtime/{period_id}',[ManageDTRController::class,'onetimebigtime']);
+
+        // Route::get('download/{period_id}',[ManageDTRController::class,'exportSemiDTR']);
+
+        // Route::post('compute-all',[ManageDTRController::class,'onetimebigtime']);
+        // Route::get('set-sched/{period_id}',[ManageDTRController::class,'scheduleSetter']);
+
+        Route::get('payroll-period',[PayrollPeriodController::class,'list']);
+
+        // Route::get('list-department',[ManageDTRController::class,'listDepartment']);
+
+        // Route::get('compute-emp-logs/{biometric_id}/{period_id}',[ManageDTRController::class,'computeEmpLogs']);
 
         
     });

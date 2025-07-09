@@ -144,6 +144,8 @@ class DailyTimeRecordMapper extends AbstractMapper {
       
     }
 
+
+
     public function empWithDTR($period_id,$filter,$type)
     {
 
@@ -184,6 +186,64 @@ class DailyTimeRecordMapper extends AbstractMapper {
         }
 
         
+
+        //return $empWithPunch->get();
+        if($filter['filter']!=null){
+			foreach($filter['filter']['filters'] as $f)
+			{
+             
+				if($f['field'] == 'location_name'){
+                    $result->where('location_name','like','%'.$f['value'].'%');
+                }
+                //$result->where($f['field'],'like','%'.$f['value'].'%');
+                // if($f['field']=='empname'){
+                //     $result->where('lastname','like','%'.$f['value'].'%')
+                //     ->orWhere('firstname','like','%'.$f['value'].'%');
+                // }
+
+                if($f['field']=='empname'){
+                    $result->where(function($query) use ($f) {
+                        $query->where('lastname','like','%'.$f['value'].'%')
+                            ->orWhere('firstname','like','%'.$f['value'].'%');
+                    });
+                }
+
+                if($f['field']=='dept_name'){
+                    $result->where(function($query) use ($f) {
+                        $query->where('dept_name','like','%'.$f['value'].'%');
+                    });
+                }
+			}
+		}
+
+		$total = $result->count(DB::raw('employees.id'));
+
+		$result->limit($filter['pageSize'])->skip($filter['skip']);
+
+		return [
+			'total' => $total,
+			'data' => $result->get()
+		];
+
+    }
+
+    public function empWithDTRConfi($period_id,$filter,$type)
+    {
+
+        $result = $this->model->select(DB::raw("employees.id,employees.biometric_id,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) as empname,concat(div_code,' - ',dept_name) as dept_name,div_name"))
+                        ->from('edtr')
+                        ->join('employees','edtr.biometric_id','=','employees.biometric_id')
+                        ->join('payroll_period',function($join){
+                            $join->whereRaw('dtr_date between payroll_period.date_from and payroll_period.date_to');
+                        })
+                        ->join('departments','employees.dept_id','=','departments.id')
+                        ->join('divisions','employees.division_id','=','divisions.id')
+                        // ->whereIn('emp_level',[1,2])
+                        ->where('emp_level','<',5)
+                        ->where('exit_status',1)
+                        ->where('payroll_period.id',$period_id)
+                        ->distinct()
+                        ->orderBy('empname','ASC');
 
         //return $empWithPunch->get();
         if($filter['filter']!=null){
