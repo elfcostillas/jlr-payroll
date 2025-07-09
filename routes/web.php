@@ -63,6 +63,7 @@ use  App\Http\Controllers\Deductions\WeeklyDeductionController;
 use App\Http\Controllers\Compentsations\OtherCompensationController;
 use App\Http\Controllers\Compentsations\FixCompensationController;
 use App\Http\Controllers\Compentsations\OtherIncomeWeeklyAppController;
+use App\Http\Controllers\EmployeeFile\EmployeeConfiController;
 use App\Http\Controllers\EmployeeFile\RatesController;
 use App\Http\Controllers\Memo\AWOLMemoController;
 use App\Http\Controllers\Reports\TardinessReportsController;
@@ -351,6 +352,21 @@ Route::middleware('auth')->prefix('employee-files')->group(function(){
 
         Route::get('biometric-assignment',[EmployeeWeeklyController::class,'bioAssignment']);
         
+    });
+
+    // employee-master-data-confi
+
+    Route::prefix('employee-master-data-confi')->group(function(){ 
+        
+        Route::get('/',[EmployeeConfiController::class,'index']);
+        
+        Route::get('read/{id}',[EmployeeConfiController::class,'readById']);
+        Route::get('list',[EmployeeConfiController::class,'list']);
+        Route::post('save',[EmployeeConfiController::class,'save']);
+        Route::get('job-titles/{id}',[EmployeeConfiController::class,'getJobTitles']);
+
+        Route::get('get-emp-rates/{id}',[RatesController::class,'getRates']);
+        Route::post('create-emp-rates',[RatesController::class,'createRates']);
     });
 
     Route::prefix('divisions-departments')->group(function(){ 

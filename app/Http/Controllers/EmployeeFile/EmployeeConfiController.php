@@ -6,30 +6,27 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mappers\EmployeeFileMapper\EmployeeMapper;
 use App\Mappers\EmployeeFileMapper\EmployeeWeeklyMapper;
-use App\Mappers\Admin\ActivityLogMapper;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Mappers\EmployeeFileMapper\OnlineRequestUserMapper;
-use App\Mappers\EmployeeFileMapper\RatesMapper;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Mappers\Admin\ActivityLogMapper;
+use App\Mappers\EmployeeFileMapper\OnlineRequestUserMapper;
 
-class EmployeeController extends Controller
+class EmployeeConfiController extends Controller
 {
     //
     private $mapper;
     private $log;
-    private $weekly;
     private $online;
-    private $rmapper;
+    private $weekly;
 
-    public function __construct(EmployeeMapper $mapper,ActivityLogMapper $log,EmployeeWeeklyMapper $weekly,OnlineRequestUserMapper $online,RatesMapper $rmapper)
+    public function __construct(EmployeeMapper $mapper,EmployeeWeeklyMapper $weekly,ActivityLogMapper $log,OnlineRequestUserMapper $online)
     {
         $this->mapper = $mapper;
         $this->log = $log;
-        $this->weekly = $weekly;
         $this->online = $online;
-        $this->rmapper = $rmapper;
+        $this->weekly = $weekly;
     }
 
     public function index()
@@ -45,16 +42,14 @@ class EmployeeController extends Controller
         {
             return response()->json('Error : Biometric ID was not set. Please set your Biometric ID on Accounts >> Biometric ID to continue.');
         }
-        //dd($userDept->dept_id);
-
-      
-        if($userDept->dept_id==8 || $userLevel->emp_level <= 2){
+        
+        if($userLevel->emp_level <= 2){
             $canSeeRates = true;
         }else{
             $canSeeRates = false;
         }
-        
-        return view('app.employee-file.employee-master-data.index',['emp_stat'=>$emp_stat, 'exit_stat'=>$exit_stat, 'pay_type'=>$pay_type, 'level_desc'=>$level_desc,'canSeeRates'=>$canSeeRates]);
+
+        return view('app.employee-file.employee-master-data-confi.index',['emp_stat'=>$emp_stat, 'exit_stat'=>$exit_stat, 'pay_type'=>$pay_type, 'level_desc'=>$level_desc,'canSeeRates'=>$canSeeRates]);
     }
 
     public function list(Request $request)
@@ -68,32 +63,10 @@ class EmployeeController extends Controller
             'search' => $request->input('search'),
         ];
 
-        $result = $this->mapper->list($filter,'non-confi');
+        $result = $this->mapper->list($filter,'confi');
 
         return response()->json($result);
     }
-
-    // public function create(Request $request)
-    // {
-    //     $result = $this->mapper->insertValid($request->all());
-
-    //     if(is_object($result)){
-	// 		return response()->json($result)->setStatusCode(500, 'Error');
-	// 	}
-
-    //     return response()->json($result);
-    // }
-
-    // public function update(Request $request)
-    // {
-    //     $result = $this->mapper->updateValid($request->all());
-
-    //     if(is_object($result)){
-	// 		return response()->json($result)->setStatusCode(500, 'Error');
-	// 	}
-
-    //     return response()->json($result);
-    // }
 
     public function save(Request $request)
     {
@@ -146,7 +119,6 @@ class EmployeeController extends Controller
         return response()->json($result);
     }
 
-
     public function readById(Request $request)
     {
         $result = $this->mapper->header($request->id);
@@ -192,8 +164,6 @@ class EmployeeController extends Controller
         if($log_string!=""){
             $result = $this->log->insertValid($log_data);
         }
-        
-       
 
     }
 
@@ -310,32 +280,4 @@ class EmployeeController extends Controller
             $result = $this->online->updateOrCreate($data);
         }
     }
-
-    // public function getEmploymentStat()
-    // {
-    //     $result = $this->mapper->getEmploymentStat();
-    //     return response()->json($result);
-    // }
-
-    // public function getExitStat()
-    // {
-    //     $result = $this->mapper->getExitStat();
-    //     return response()->json($result);
-    // }
-
-   
-
 }
-
-
-/*
-$data = json_decode($request->data);
-    $user = Auth::user();
-    //dd(date_format(Carbon::createFromFormat('m/d/Y',$data->po_date),'Y-m-d'));
-    $data->po_date = date_format(Carbon::createFromFormat('m/d/Y',$data->po_date),'Y-m-d');
-    $data = (array) $data;
-
-    if(is_object($data['po_supplier'])){
-        $data['po_supplier']=$data['po_supplier']->contact_id;
-    }
-    */
