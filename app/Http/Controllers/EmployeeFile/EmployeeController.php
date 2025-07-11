@@ -107,6 +107,10 @@ class EmployeeController extends Controller
             $data_arr['is_daily'] = 'Y';           
         }
 
+        if($data_arr['manual_wyax'] == ''){
+            $data_arr['manual_wyax'] = null;
+        }
+
         if($data_arr['id']==null){
 
             if($data_arr['biometric_id']==''){
