@@ -65,7 +65,7 @@
                 <td style="border:1px solid black;"> {{ nformat(($leave->leave_type=='VL') ? $leave->with_pay : 0  ) }} </td>  <!-- VL with pay  -->
                 <td style="border:1px solid black;"> {{ nformat(($leave->leave_type=='VL') ? $leave->without_pay : 0  ) }}</td>  <!-- VL with out pay  -->
                 <td style="border:1px solid black;"> {{ nformat(($leave->leave_type=='SL') ? $leave->with_pay : 0  ) }} </td>  <!-- VL with pay  -->
-                <td style="border:1px solid black;"> {{ nformat(($leave->leave_type=='SL') ? $leave->with_pay : 0  ) }} </td>  <!-- VL with pay  -->
+                <td style="border:1px solid black;"> {{ nformat(($leave->leave_type=='SL') ? $leave->without_pay : 0  ) }} </td>  <!-- VL with pay  -->
                 <td style="border:1px solid black;">{{ nformat(($leave->leave_type=='BL') ? $leave->without_pay + $leave->with_pay : 0 )  }}</td>
                 <td style="border:1px solid black;">{{ nformat(($leave->leave_type=='UT' && $leave->leave_type!='SVL' && $leave->leave_type!='BL') ? ($leave->without_pay + $leave->with_pay) : 0 )  }}</td>
                 <td style="border:1px solid black;">{{ nformat(($leave->leave_type=='SVL') ? ($leave->without_pay + $leave->with_pay) : 0 )  }}</td>

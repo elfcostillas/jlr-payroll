@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\PayrollTransaction;
 
+use App\CustomClass\PayrollRegisterConfi;
+use App\CustomClass\PayrollRegisterService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mappers\PayrollTransaction\UnpostedPayrollRegisterMapper;
@@ -15,6 +17,9 @@ use Carbon\Carbon;
 use App\Excel\UnpostedPayrollRegister;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Excel\BankTransmittal;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class PayrollRegisterConfiController extends Controller
 {
@@ -337,5 +342,71 @@ class PayrollRegisterConfiController extends Controller
         $result = $this->posted->unpost($request->period_id,'confi');
 
         return response()->json($result);
+    }
+
+    public function viewPDF(Request $request)
+    {
+        $label = '';
+
+        
+        // $this->getSchema();
+        
+
+        $payroll = new PayrollRegisterService(new PayrollRegisterConfi('payrollregister_unposted_s'));
+
+        $period = $payroll->getPeriod($request->period_id);
+        
+        // dd($this->buildSchema());
+        $payroll->getHeaders();
+
+        $data = $payroll->getPayrollData($period);
+
+        if($period){
+            $date_from = Carbon::createFromFormat('Y-m-d',$period->date_from);
+            $date_to = Carbon::createFromFormat('Y-m-d',$period->date_to);
+
+            $label = $date_from->format('m/d/Y').' - '.$date_to->format('m/d/Y');
+        }
+
+        $pdf = PDF::loadView('app.payroll-transaction.payroll-register-confi.print',[
+            'data' => $data,
+            // 'headers' => $headers,
+            'label' => $label,
+            // 'period' => $periodObject,
+            // 'period_label' => $period_label->drange,
+            // 'perf' => $period_label->perf,
+        ])->setPaper('Folio','landscape');
+       
+        $pdf->output();
+        $dom_pdf = $pdf->getDomPDF();
+    
+        $canvas = $dom_pdf ->get_canvas();
+        $canvas->page_text(850, 590, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+       
+        return $pdf->stream('JLR Semi Monthly Payreg.pdf'); 
+    }
+
+    public function getSchema()
+    {
+        $cols = Schema::getColumnListing('edtr_totals');
+
+        foreach($cols as $key => $value)
+        {
+            if($key>=4){
+                // dd($value);
+            }
+        }
+    }
+
+    public function buildSchema()
+    {
+        $cols = Schema::getColumnListing('payrollregister_unposted_s'); //payrollregister_unposted_s // edtr_totals
+
+        foreach($cols as $col)
+        {
+            // dd($cols);
+            DB::table('payroll_column_header')->insert(['var_name' => $col]);
+            // DB::table('payroll_column_header')->insert(['var_name' => $col.'_amount']);
+        }
     }
 }

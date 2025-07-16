@@ -70,7 +70,11 @@
                     },
 
                     view : function(){
-                        alert('view');
+                        // alert('view');
+                        let period = $("#unposted_period").data("kendoDropDownList");
+                       
+                        let url = `payroll-register-confi/view-pdf-unposted/${period.value()}`;
+                        window.open(url)
                     },
 
                     download : function(){
