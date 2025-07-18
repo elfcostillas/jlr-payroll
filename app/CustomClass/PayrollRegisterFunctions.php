@@ -539,6 +539,17 @@ class PayrollRegisterFunctions
             return $final->get();
         }
     }
+
+    public function getCounts()
+    {
+        $result = $this->mainQuery()
+         ->leftJoin('divisions','divisions.id','=','employees.division_id')
+        ->select(DB::raw("divisions.id,divisions.div_name,count(employees.biometric_id) as head_count"))
+        ->orderBy('divisions.id','ASC')
+        ->groupBy('divisions.id');
+
+        return $result->get();
+    }
 }
 
 /*

@@ -268,7 +268,22 @@
         </tr>
     </table>
 
-    <table style="width:100%;margin-top:88px;font-size:8pt;" border=0>
+    <?php $head_count = 0; ?>
+    <table style="font-size :8pt;border-collapse:collapse; margin-top : 12px;" border=1>
+        @foreach ($data->getCounts() as $division )
+        <tr>
+            <td class="l pad4">{{ $division->div_name }}</td>
+            <td class="r pad4">{{ $division->head_count }}</td>
+        </tr>
+        <?php $head_count += $division->head_count; ?>
+        @endforeach
+        <tr>
+            <td class="l b pad4">TOTAL</td>
+            <td class="r b pad4"> {{ $head_count }}</td>
+        </tr>
+    </table>
+
+    <table style="width:100%;margin-top:68px;font-size:8pt;" border=0>
         <tr>
             <td style="width:10%">
             <td style="width:26%">
