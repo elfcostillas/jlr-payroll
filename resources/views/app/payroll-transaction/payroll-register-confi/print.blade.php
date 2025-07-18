@@ -268,7 +268,7 @@
         </tr>
     </table>
 
-    <table style="width:100%;margin-top:88px;font-size:10pt;" border=0>
+    <table style="width:100%;margin-top:88px;font-size:8pt;" border=0>
         <tr>
             <td style="width:10%">
             <td style="width:26%">
@@ -284,17 +284,17 @@
         </tr>
         <tr>
             <td style="height:40px"></td>
-            <td style="text-align:center;vertical-align:bottom" >______________________</td>
-            <td style="text-align:center;vertical-align:bottom" >______________________</td>
-            <td style="text-align:center;vertical-align:bottom" >______________________</td>
+            <td style="text-align:left;vertical-align:bottom" ></td>
+            <td style="text-align:left;vertical-align:bottom" ></td>
+            <td style="text-align:left;vertical-align:bottom" ></td>
             <td></td>
             
         </tr>
         <tr>
             <td></td>
-            <td class="c"> {{ Auth::user()->name }}</td>
-            <td class="c">Camasura, Herbert</td>
-            <td class="c">Alvarez, Gershwin Ralph</td>
+            <td class="l"> {{ Auth::user()->name }}</td>
+            <td class="l">Herbert B. Camasura, </td>
+            <td class="l">Gershwin Ralph G. Alvarez </td>
             <td></td>
         </tr>
     </table>
