@@ -84,51 +84,51 @@
     <table id="main" border=1 style="width:100%;border-collapse:collapse;font-size :5pt;">
         @foreach ($data->data as $location)
             <tr>
-                <td class="pad4" colspan={{ $cols }}> {{ $location->location_altername2 }} </td>
+                <td class="pad4" class="b" colspan={{ $cols }}> {{ $location->location_altername2 }} </td>
             </tr>
             <tr>
-                <td class="vtop c">No.</td>
-                <td class="vtop c">Name</td>
-                <td class="vtop c">Job Title</td>
+                <td class="vtop c b">No.</td>
+                <td class="vtop c b">Name</td>
+                <td class="vtop c b">Job Title</td>
                 @foreach ($data->basic_cols as $bcols)
-                    <td class="vtop c">{{ $bcols->col_label }}</td>
+                    <td class="vtop c b">{{ $bcols->col_label }}</td>
                 @endforeach
                 @foreach ($data->gross_cols as $gcols)
-                    <td class="vtop c">{{ $gcols->col_label }}</td>
+                    <td class="vtop c b">{{ $gcols->col_label }}</td>
                 @endforeach
 
                 @foreach ($data->fixed_comp_hcols as $fxcols)
-                    <td class="vtop c">{{ $fxcols->description }}</td>
+                    <td class="vtop c b">{{ $fxcols->description }}</td>
                 @endforeach
 
                 @foreach ($data->other_comp_hcols as $othcols)
-                    <td class="vtop c">{{ $othcols->description }}</td>
+                    <td class="vtop c b">{{ $othcols->description }}</td>
                 @endforeach
-                <td class="vtop c"> Gross Total </td>
+                <td class="vtop c b"> Gross Total </td>
                 @foreach ($data->contri as $contricols)
-                    <td class="vtop c">{{ $contricols->col_label }}</td>
+                    <td class="vtop c b">{{ $contricols->col_label }}</td>
                 @endforeach
 
                 @foreach ($data->deduction_hcols as $deduction_cols)
-                    <td class="vtop c">{{ $deduction_cols->description }}</td>
+                    <td class="vtop c b">{{ $deduction_cols->description }}</td>
                 @endforeach
 
                 @foreach ($data->govloans_hcols as $govloans_hcols)
-                    <td class="vtop c">{{ $govloans_hcols->description }}</td>
+                    <td class="vtop c b">{{ $govloans_hcols->description }}</td>
                 @endforeach
 
-                    <td class="vtop c">Total Deduction</td>
-                    <td class="vtop c">Net Pay</td>
+                    <td class="vtop c b">Total Deduction</td>
+                    <td class="vtop c b">Net Pay</td>
 
                 
             </tr>
             @foreach($location->divisions as $division)
                 <tr>
-                    <td class="pad4" colspan={{ $cols }} style="padding-left:42px"> {{ $division->div_name }}</td>
+                    <td class="pad4 b" colspan={{ $cols }} style="padding-left:42px"> {{ $division->div_name }}</td>
                 </tr>
                 @foreach ($division->departments as $department)
                     <tr>
-                        <td class="pad4" colspan={{ $cols }} style="padding-left:84px"> {{ $department->dept_name }} </td>
+                        <td class="pad4 b" colspan={{ $cols }} style="padding-left:84px"> {{ $department->dept_name }} </td>
                     </tr>
                     @php
                         $ctr = 1;
