@@ -80,7 +80,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
             */
             $empWithPunch = $this->model->select('employees.biometric_id','sched_mtwtf','sched_sat')->from('employees')
             ->leftJoin('work_schedules_default','employees.dept_id','=','work_schedules_default.dept_id')
-            ->whereIn('emp_level',[2,3,4,5])
+            ->whereIn('emp_level',[1,2,3,4,5])
             ->where('exit_status',1)
             //->where('payroll_period.id',$period_id)
             ->distinct()
