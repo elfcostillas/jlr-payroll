@@ -37,7 +37,7 @@
             font-weight: bold;
         }
 
-        table#main tr > td {
+        table tr > td {
             padding : 0px 3px;
             /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
             font-family:Verdana, Geneva, Tahoma, sans-serif;
@@ -265,6 +265,37 @@
             @endforeach
             <td class="r b"  >  {{ custom_format($data->computeOverAll($data,'total_deduction')) }} </td>
             <td class="r b"  >  {{ custom_format($data->computeOverAll($data,'net_pay')) }} </td>
+        </tr>
+    </table>
+
+    <table style="width:100%;margin-top:88px;font-size:10pt;" border=0>
+        <tr>
+            <td style="width:10%">
+            <td style="width:26%">
+                Prepared By :
+            </td>
+            <td style="width:26%">
+                Noted by :
+            </td>
+            <td style="width:26%">
+                Checked by :
+            </td>
+            <td style="width:10%">
+        </tr>
+        <tr>
+            <td style="height:40px"></td>
+            <td style="text-align:center;vertical-align:bottom" >______________________</td>
+            <td style="text-align:center;vertical-align:bottom" >______________________</td>
+            <td style="text-align:center;vertical-align:bottom" >______________________</td>
+            <td></td>
+            
+        </tr>
+        <tr>
+            <td></td>
+            <td class="c"> {{ Auth::user()->name }}</td>
+            <td class="c">Camasura, Herbert</td>
+            <td class="c">Alvarez, Gershwin Ralph</td>
+            <td></td>
         </tr>
     </table>
 </body>
