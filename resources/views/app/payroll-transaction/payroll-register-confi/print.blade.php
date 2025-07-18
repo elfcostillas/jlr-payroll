@@ -47,7 +47,7 @@
 <body>
     <table border=0 style="width:100%;margin-bottom:2px;">
         <tr>
-            <td><span style="font-size:16;" >JLR Construction and Aggregates Inc. <br>Semi Monthly Payroll  </span></td>
+            <td><span style="font-size:16;" >JLR Construction and Aggregates Inc. <br>Confidential Payroll  </span></td>
             <td style="font-size:12pt;vertical-align:bottom" >Payroll Period :<u style="font-size:12pt;vertical-align:bottom"> {{ $label }} </u></td>
             <td style="width:24px" ></td>
             <td style="width:26%;font-size:12pt;padding-left:24px;vertical-align:bottom" >Date / Time  Printed : {{ now()->format('m/d/Y H:i:s') }} </td>
