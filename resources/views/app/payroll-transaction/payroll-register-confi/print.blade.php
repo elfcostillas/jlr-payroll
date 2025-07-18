@@ -8,8 +8,8 @@
     <style>
         @page {
             margin-top: 80px;
-            margin-left: 20px;
-            margin-right: 20px;
+            margin-left: 15px;
+            margin-right: 15px;
             margin-bottom: 30px;
         }
 
@@ -81,7 +81,7 @@
        
     ?>
 
-    <table id="main" border=1 style="width:100%;border-collapse:collapse;font-size :6pt;">
+    <table id="main" border=1 style="width:100%;border-collapse:collapse;font-size :5pt;">
         @foreach ($data->data as $location)
             <tr>
                 <td class="pad4" colspan={{ $cols }}> {{ $location->location_altername2 }} </td>
@@ -200,6 +200,9 @@
                             <!-- <td class="r"> {{ (array_key_exists($deduction_hcols->id,$employee->deductions) ? custom_format($employee->deductions[$deduction_hcols->id]) : '') }}  -->
                              <td class="r"> {{ custom_format($data->computeTotalDeductionsByDept($department,$deduction_hcols)) }} </td>
                         @endforeach
+                        @foreach ($data->govloans_hcols as $govloans_hcols)
+                            <td class="r"> {{ custom_format($data->computeTotalLoansByDept($department,$govloans_hcols)) }} </td>
+                        @endforeach
                         <td class="r">  {{ custom_format($data->computeTotalByDept($department,'total_deduction')) }} </td>
                         <td class="r">  {{ custom_format($data->computeTotalByDept($department,'net_pay')) }} </td>
                     </tr>
@@ -227,6 +230,9 @@
                     @foreach ($data->deduction_hcols as $deduction_hcols)
                         <!-- <td class="r"> {{ (array_key_exists($deduction_hcols->id,$employee->deductions) ? custom_format($employee->deductions[$deduction_hcols->id]) : '') }}  -->
                             <td class="r" class="b" > {{ custom_format($data->computeTotalDeductionsByDivision($division,$deduction_hcols)) }} </td>
+                    @endforeach
+                    @foreach ($data->govloans_hcols as $govloans_hcols)
+                            <td class="r"> {{ custom_format($data->computeTotalLoanByDivision($division,$govloans_hcols)) }} </td>
                     @endforeach
                     <td class="r" class="b" >  {{ custom_format($data->computeTotalByDivision($division,'total_deduction')) }} </td>
                     <td class="r" class="b" >  {{ custom_format($data->computeTotalByDivision($division,'net_pay')) }} </td>

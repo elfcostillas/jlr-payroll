@@ -174,8 +174,8 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
             {
                 $result = $result->where('emp_level','<',5);
             }
-           
-
+          
+       
         return $result->get();
     }
 

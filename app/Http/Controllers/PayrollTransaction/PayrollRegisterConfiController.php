@@ -67,7 +67,7 @@ class PayrollRegisterConfiController extends Controller
         $payreg = [];
 
         $employees = $this->unposted->getEmployeeWithDTR($period->id,'confi');
-      
+
         if($period->period_type==1){
             /* loans for 15 */
         }else{

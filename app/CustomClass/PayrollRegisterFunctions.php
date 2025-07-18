@@ -2,6 +2,7 @@
 
 namespace App\CustomClass;
 
+use App\Models\EmployeeFile\Department;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -334,6 +335,37 @@ class PayrollRegisterFunctions
             {
                 $total += $emp->deductions[$key->id];
             }
+        }
+
+        return $total;
+    }
+
+    public function computeTotalLoanByDivision($data,$key)
+    {
+        $total = 0;
+
+        // dd($data-.Department,$key);
+
+        foreach ($data->departments as $department)
+        {
+            $total += $this->computeTotalLoansByDept($department,$key);
+        }
+        return $total;
+    }
+
+
+    public function computeTotalLoansByDept($data,$key)
+    {
+        $total = 0;
+
+        foreach ($data->employees as $emp)
+        {
+        //   dd($emp->gov_loans,$key); 
+         if($emp->gov_loans && array_key_exists($key->id,$emp->gov_loans))
+        {
+            $total += $emp->gov_loans[$key->id];
+        }
+          
         }
 
         return $total;
