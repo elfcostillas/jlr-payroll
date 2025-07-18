@@ -178,64 +178,64 @@
                     <tr>
                         <td colspan="3" > Total Dept </td>
                         @foreach ($data->basic_cols as $bcols)
-                            <td class="r">{{ custom_format($data->computeTotalByDept($department,$bcols)) }}</td>
+                            <td class="r b">{{ custom_format($data->computeTotalByDept($department,$bcols)) }}</td>
                         @endforeach
                         @foreach ($data->gross_cols as $gcols)
-                            <td class="r">{{ custom_format($data->computeTotalByDept($department,$gcols) )}}</td>
+                            <td class="r b">{{ custom_format($data->computeTotalByDept($department,$gcols) )}}</td>
                         @endforeach
                         @foreach ($data->fixed_comp_hcols as $fxcols) <!-- Fixed Compensation -->
-                            <td class="r"> {{ custom_format($data->computeTotalOtherEarningByDept($department,$fxcols)) }} </td>
+                            <td class="r b"> {{ custom_format($data->computeTotalOtherEarningByDept($department,$fxcols)) }} </td>
                         @endforeach
                         @foreach ($data->other_comp_hcols as $othcols) <!-- Fixed Compensation -->
-                            <td class="r"> {{ custom_format($data->computeTotalOtherEarningByDept($department,$othcols)) }} </td>
+                            <td class="r b"> {{ custom_format($data->computeTotalOtherEarningByDept($department,$othcols)) }} </td>
                         @endforeach
                         
-                        <td class="r">  {{ custom_format($data->computeTotalByDept($department,'gross_total')) }} </td>
+                        <td class="r b">  {{ custom_format($data->computeTotalByDept($department,'gross_total')) }} </td>
                         
                         @foreach ($data->contri as $contri_cols)
-                            <td class="r">{{ custom_format($data->computeTotalByDept($department,$contri_cols)) }}</td>
+                            <td class="r b">{{ custom_format($data->computeTotalByDept($department,$contri_cols)) }}</td>
                         @endforeach
 
                         @foreach ($data->deduction_hcols as $deduction_hcols)
-                            <!-- <td class="r"> {{ (array_key_exists($deduction_hcols->id,$employee->deductions) ? custom_format($employee->deductions[$deduction_hcols->id]) : '') }}  -->
-                             <td class="r"> {{ custom_format($data->computeTotalDeductionsByDept($department,$deduction_hcols)) }} </td>
+                            <!-- <td class="r b"> {{ (array_key_exists($deduction_hcols->id,$employee->deductions) ? custom_format($employee->deductions[$deduction_hcols->id]) : '') }}  -->
+                             <td class="r b"> {{ custom_format($data->computeTotalDeductionsByDept($department,$deduction_hcols)) }} </td>
                         @endforeach
                         @foreach ($data->govloans_hcols as $govloans_hcols)
-                            <td class="r"> {{ custom_format($data->computeTotalLoansByDept($department,$govloans_hcols)) }} </td>
+                            <td class="r b"> {{ custom_format($data->computeTotalLoansByDept($department,$govloans_hcols)) }} </td>
                         @endforeach
-                        <td class="r">  {{ custom_format($data->computeTotalByDept($department,'total_deduction')) }} </td>
-                        <td class="r">  {{ custom_format($data->computeTotalByDept($department,'net_pay')) }} </td>
+                        <td class="r b">  {{ custom_format($data->computeTotalByDept($department,'total_deduction')) }} </td>
+                        <td class="r b">  {{ custom_format($data->computeTotalByDept($department,'net_pay')) }} </td>
                     </tr>
                 @endforeach
                 <tr>
                     <td colspan="3" class="b" > Total Division </td>
                     @foreach ($data->basic_cols as $bcols)
-                        <td class="r" class="b" >{{ custom_format($data->computeTotalByDivision($division,$bcols)) }}</td>
+                        <td class="r b"  >{{ custom_format($data->computeTotalByDivision($division,$bcols)) }}</td>
                     @endforeach
                     @foreach ($data->gross_cols as $gcols)
-                        <td class="r" class="b" >{{ custom_format($data->computeTotalByDivision($division,$gcols) )}}</td>
+                        <td class="r b"  >{{ custom_format($data->computeTotalByDivision($division,$gcols) )}}</td>
                     @endforeach
                     @foreach ($data->fixed_comp_hcols as $fxcols) <!-- Fixed Compensation -->
-                        <td class="r" class="b" > {{ custom_format($data->computeTotalOtherEarningByDivision($division,$fxcols)) }} </td>
+                        <td class="r b"  > {{ custom_format($data->computeTotalOtherEarningByDivision($division,$fxcols)) }} </td>
                     @endforeach
                     @foreach ($data->other_comp_hcols as $othcols) <!-- Fixed Compensation -->
-                        <td class="r" class="b" > {{ custom_format($data->computeTotalOtherEarningByDivision($division,$othcols)) }} </td>
+                        <td class="r b"  > {{ custom_format($data->computeTotalOtherEarningByDivision($division,$othcols)) }} </td>
                     @endforeach
-                    <td class="r" class="b" >  {{ custom_format($data->computeTotalByDivision($division,'gross_total')) }} </td>
+                    <td class="r b"  >  {{ custom_format($data->computeTotalByDivision($division,'gross_total')) }} </td>
 
                     @foreach ($data->contri as $contri_cols)
-                        <td class="r" class="b" >{{ custom_format($data->computeTotalByDivision($division,$contri_cols)) }}</td>
+                        <td class="r b"  >{{ custom_format($data->computeTotalByDivision($division,$contri_cols)) }}</td>
                     @endforeach
 
                     @foreach ($data->deduction_hcols as $deduction_hcols)
-                        <!-- <td class="r"> {{ (array_key_exists($deduction_hcols->id,$employee->deductions) ? custom_format($employee->deductions[$deduction_hcols->id]) : '') }}  -->
-                            <td class="r" class="b" > {{ custom_format($data->computeTotalDeductionsByDivision($division,$deduction_hcols)) }} </td>
+                        <!-- <td class="r b"> {{ (array_key_exists($deduction_hcols->id,$employee->deductions) ? custom_format($employee->deductions[$deduction_hcols->id]) : '') }}  -->
+                            <td class="r b"  > {{ custom_format($data->computeTotalDeductionsByDivision($division,$deduction_hcols)) }} </td>
                     @endforeach
                     @foreach ($data->govloans_hcols as $govloans_hcols)
-                            <td class="r"> {{ custom_format($data->computeTotalLoanByDivision($division,$govloans_hcols)) }} </td>
+                            <td class="r b"> {{ custom_format($data->computeTotalLoanByDivision($division,$govloans_hcols)) }} </td>
                     @endforeach
-                    <td class="r" class="b" >  {{ custom_format($data->computeTotalByDivision($division,'total_deduction')) }} </td>
-                    <td class="r" class="b" >  {{ custom_format($data->computeTotalByDivision($division,'net_pay')) }} </td>
+                    <td class="r b"  >  {{ custom_format($data->computeTotalByDivision($division,'total_deduction')) }} </td>
+                    <td class="r b"  >  {{ custom_format($data->computeTotalByDivision($division,'net_pay')) }} </td>
                 </tr>
             @endforeach
         @endforeach
