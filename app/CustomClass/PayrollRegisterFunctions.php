@@ -259,6 +259,17 @@ class PayrollRegisterFunctions
         dd($data,$key);
     }
 
+    public function computeTotalByDivision($data,$key){
+        $total = 0;
+
+        foreach($data->departments as $department)
+        {
+            $total += $this->computeTotalByDept($department,$key);
+        }
+
+        return $total;
+    }
+
     public function computeTotalByDept($data,$key){
         $total = 0;
 
@@ -275,6 +286,18 @@ class PayrollRegisterFunctions
         return $total;
     }
 
+    public function computeTotalOtherEarningByDivision($data,$key)
+    {
+        $total = 0;
+        
+        foreach($data->departments as $department)
+        {
+            $total += $this->computeTotalOtherEarningByDept($department,$key);
+        }
+
+        return $total;
+    }
+
     public function  computeTotalOtherEarningByDept($data,$key) {
         $total = 0;
         foreach ($data->employees as $emp)
@@ -283,6 +306,18 @@ class PayrollRegisterFunctions
             {
                 $total += $emp->other_earning[$key->compensation_type];
             }
+        }
+
+        return $total;
+    }
+
+    public function computeTotalDeductionsByDivision($data,$key)
+    {
+        $total = 0;
+
+        foreach ($data->departments as $department)
+        {
+            $total += $this->computeTotalDeductionsByDept($department,$key);
         }
 
         return $total;
