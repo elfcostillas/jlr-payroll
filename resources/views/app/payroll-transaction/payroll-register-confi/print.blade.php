@@ -283,7 +283,7 @@
             <td style="width:10%">
         </tr>
         <tr>
-            <td style="height:40px"></td>
+            <td style="height:25px"></td>
             <td style="text-align:left;vertical-align:bottom" ></td>
             <td style="text-align:left;vertical-align:bottom" ></td>
             <td style="text-align:left;vertical-align:bottom" ></td>
@@ -293,7 +293,7 @@
         <tr>
             <td></td>
             <td class="l"> {{ Auth::user()->name }}</td>
-            <td class="l">Herbert B. Camasura, </td>
+            <td class="l">Herbert B. Camasura </td>
             <td class="l">Gershwin Ralph G. Alvarez </td>
             <td></td>
         </tr>
