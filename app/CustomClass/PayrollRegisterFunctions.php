@@ -117,7 +117,19 @@ class PayrollRegisterFunctions
             }
         }
 
-        $col_to_filter = DB::table($this->db_table)->select(DB::raw($qry))->first();
+        if(get_class($this) == 'App\CustomClass\PayrollRegisterConfi'){
+            $type = 'confi';
+        }else{
+            $type = 'non-confi';
+        }
+
+        $col_to_filter = DB::table($this->db_table)
+            ->select(DB::raw($qry))
+            ->where('emp_level','=',$type)
+            ->where('period_id','=',$this->period->id)
+            ->first();
+
+       
 
         foreach($col_to_filter as $key => $value){
             if($value > 0){
@@ -132,11 +144,249 @@ class PayrollRegisterFunctions
     {
         return DB::table('payroll_column_header')
                 ->where('col_type','=',$type)
+                ->whereIn('var_name',$this->cols_with_value)
                 ->orderBy('sort','asc')
                 ->get();
     }
 
-    
+    public function getCompensationTypeCols($table)
+    {
+        $result =  DB::table($table)
+            ->join('employees',$table.'.biometric_id','=','employees.biometric_id')
+            ->join('compensation_types','compensation_types.id','=',$table.'.compensation_type')
+            ->select(DB::raw("$table.compensation_type,compensation_types.description"))
+            ->distinct()
+            ->where($table.'.period_id','=',$this->period->id)
+            ->where('user_id','=',Auth::user()->id);
+
+        if(get_class($this) == 'App\CustomClass\PayrollRegisterConfi'){
+            $result->where('employees.emp_level','<',5);
+        }else{
+            $result->where('employees.emp_level','>=',5);
+        }
+
+        return $result->get();
+    }
+
+    public function otherEarnings($employee,$period)
+    {
+      
+        $earning_array = [];
+
+        $others = DB::table('unposted_other_compensations')->select('compensation_type','amount')->where([['biometric_id','=',$employee->biometric_id],['period_id','=',$period->id]]);
+        $fixed = DB::table('unposted_fixed_compensations')->select('compensation_type','amount')->where([['biometric_id','=',$employee->biometric_id],['period_id','=',$period->id]])
+            ->unionAll($others);
+
+        $earnings = DB::table('compensation_types')
+                    ->select('description','compensation_type','amount')
+                    ->joinSub($fixed,'earnings',function($join){
+                        $join->on('earnings.compensation_type','=','compensation_types.id');
+                    })->orderBy('compensation_type')->get();
+        
+        foreach($earnings as $earn){
+            $earning_array[$earn->compensation_type] = $earn->amount;
+        }
+        
+        return $earning_array;
+       
+    }
+
+       public function getDeductions($biometric_id,$period_id)
+    {   
+        $ded_array = [];
+
+      
+        if($this->payroll_status == 'unposted')
+        {
+            //$table = ['unposted_fixed_deductions','unposted_installments','unposted_onetime_deductions'];
+            $onetime = DB::table("unposted_onetime_deductions")->select('deduction_type','amount')->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
+            $fixed = DB::table("unposted_fixed_deductions")->select('deduction_type','amount')->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
+            $install = DB::table("unposted_installments")->select('deduction_type','amount')->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]])
+            ->unionAll($onetime)->unionAll($fixed);
+
+        }else{
+
+        }
+
+
+        $deductions = DB::table('deduction_types')
+                        ->select('description','deduction_type','amount')
+                        ->joinSub($install,'deductions',function($join){
+                            $join->on('deductions.deduction_type','=','deduction_types.id');
+                        })->orderBy('deduction_type')->get();
+
+      
+        foreach($deductions as $deduction){
+           
+            if(array_key_exists($deduction->deduction_type,$ded_array)){
+                $ded_array[$deduction->deduction_type] += $deduction->amount;
+            }else{
+                $ded_array[$deduction->deduction_type] = 0;
+                $ded_array[$deduction->deduction_type] += $deduction->amount;
+            }
+        }
+
+        return $ded_array;
+
+        
+    }
+
+    public function getGovLoans($biometric_id,$period_id)
+    {
+      
+        $govLoan = [];
+        $loan = DB::table('unposted_loans')->select('id','description','amount')
+        ->join('loan_types','deduction_type','=','loan_types.id')
+        ->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]])
+        ->orderBy('deduction_type')->get();
+
+        foreach($loan as $l)
+        {
+            if(array_key_exists($l->id,$govLoan)){
+                $govLoan[$l->id] += $l->amount;
+            }else{
+                $govLoan[$l->id] = 0;
+                $govLoan[$l->id] += $l->amount;
+            }
+        }
+       
+        return $govLoan;
+        
+        //return $loan;
+    }
+
+    public function computeTotalByDeptT($data,$key){
+        dd($data,$key);
+    }
+
+    public function computeTotalByDept($data,$key){
+        $total = 0;
+
+        foreach ($data->employees as $emp)
+        {
+            if(is_object($key)){
+                $total += $emp->{$key->var_name};
+            }else{
+                $total += $emp->{$key};
+            }
+            
+        }
+
+        return $total;
+    }
+
+    public function  computeTotalOtherEarningByDept($data,$key) {
+        $total = 0;
+        foreach ($data->employees as $emp)
+        {
+            if($emp->other_earning)
+            {
+                $total += $emp->other_earning[$key->compensation_type];
+            }
+        }
+
+        return $total;
+    }
+
+    public function computeTotalDeductionsByDept($data,$key)
+    {
+        $total = 0;
+
+        foreach ($data->employees as $emp)
+        {
+           
+            if($emp->deductions && array_key_exists($key->id,$emp->deductions))
+            {
+                $total += $emp->deductions[$key->id];
+            }
+        }
+
+        return $total;
+    }
+
+    public function getGovLoansLabel() {
+        if($this->payroll_status == 'unposted')
+        {
+            $table = 'unposted_loans';
+        }else{
+            $table = 'posted_loans';
+        }
+
+        if(get_class($this) == 'App\CustomClass\PayrollRegisterConfi'){
+            $result = DB::table($table)->join('loan_types','loan_types.id','=',"$table.deduction_type")
+                ->join('employees','employees.biometric_id','=',"$table.biometric_id")
+                ->where("$table.period_id",'=',$this->period->id)
+                ->where('employees.emp_level','<',5)
+                ->select('loan_types.id','loan_types.description')->distinct();
+        }else{
+            $result = DB::table($table)->join('loan_types','loan_types.id','=',"$table.deduction_type")
+                ->join('employees','employees.biometric_id','=',"$table.biometric_id")
+                ->where("$table.period_id",'=',$this->period->id)
+                ->where('employees.emp_level','>=',5)
+                ->select('loan_types.id','loan_types.description')->distinct();
+        }
+
+        return $result->get();
+    }
+
+    public function getDeductionLabel()
+    {
+        $table = null;
+
+        if($this->payroll_status == 'unposted')
+        {
+            $table = ['unposted_fixed_deductions','unposted_installments','unposted_onetime_deductions'];
+        }else{
+
+        }
+
+        if($table != null){
+            
+            $result = null;
+            $final = null;
+
+            foreach($table as $key => $table){
+              
+                if($result == null){
+
+                       if(get_class($this) == 'App\CustomClass\PayrollRegisterConfi'){
+                            $result = DB::table($table)->join('deduction_types','deduction_types.id','=',"$table.deduction_type")
+                                ->join('employees','employees.biometric_id','=',"$table.biometric_id")
+                                ->where("$table.period_id",'=',$this->period->id)
+                                ->where('employees.emp_level','<',5)
+                                ->select('deduction_types.id','deduction_types.description')->distinct();
+                        }else{
+                            $result = DB::table($table)->join('deduction_types','deduction_types.id','=',"$table.deduction_type")
+                                ->join('employees','employees.biometric_id','=',"$table.biometric_id")
+                                ->where("$table.period_id",'=',$this->period->id)
+                                ->where('employees.emp_level','>=',5)
+                                ->select('deduction_types.id','deduction_types.description')->distinct();
+                        }
+                  
+                }else{
+
+                        if(get_class($this) == 'App\CustomClass\PayrollRegisterConfi'){
+                            $final = $result->union(DB::table($table)->join('deduction_types','deduction_types.id','=',"$table.deduction_type")
+                                ->join('employees','employees.biometric_id','=',"$table.biometric_id")
+                                ->where("$table.period_id",'=',$this->period->id)
+                                ->where('employees.emp_level','<',5)
+                                ->select('deduction_types.id','deduction_types.description')->distinct());
+                        }else{
+                            $result = $result->union(DB::table($table)->join('deduction_types','deduction_types.id','=',"$table.deduction_type")
+                                ->join('employees','employees.biometric_id','=',"$table.biometric_id")
+                                ->where("$table.period_id",'=',$this->period->id)
+                                ->where('employees.emp_level','>=',5)
+                                ->select('deduction_types.id','deduction_types.description')->distinct());
+                        }
+                   
+
+                }
+               
+            }
+
+            return $final->get();
+        }
+    }
 }
 
 /*
@@ -147,5 +397,18 @@ class PayrollRegisterFunctions
 		->leftJoin('emp_emp_stat','employee_stat','=','emp_emp_stat.id')
 		->leftJoin('emp_pay_types','pay_type','=','emp_pay_types.id')
 		->leftJoin('job_titles','employees.job_title_id','=','job_titles.id');
+
+SELECT DISTINCT unposted_fixed_compensations.compensation_type,compensation_types.description FROM `unposted_fixed_compensations` 
+INNER JOIN `employees` ON `unposted_fixed_compensations`.`biometric_id` = `employees`.`biometric_id` 
+INNER JOIN `compensation_types` ON `compensation_types`.`id` = `unposted_fixed_compensations`.`compensation_type` 
+WHERE `unposted_fixed_compensations`.`period_id` = 62 AND `user_id` = 1
+
+
+SELECT DISTINCT unposted_fixed_compensations.compensation_type,compensation_types.description FROM unposted_fixed_compensations
+INNER JOIN employees ON unposted_fixed_compensations.biometric_id = employees.biometric_id
+INNER JOIN compensation_types ON compensation_types.id = unposted_fixed_compensations.compensation_type
+WHERE unposted_fixed_compensations.period_id = 62
+AND employees.emp_level < 5
+AND user_id = 26;
 
         */

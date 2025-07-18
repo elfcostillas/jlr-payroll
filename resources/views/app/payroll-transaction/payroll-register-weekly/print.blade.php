@@ -12,7 +12,7 @@
         .pr4{
             text-align : right;
             padding-right : 4px;
-            width: 60px; /* 52*/
+            width: 64px; /* 52*/
         }
 
         .pr3 {
@@ -165,13 +165,13 @@
                     $location_dynamicCol[$key] = 0;
                 }
 
-            //    dd($additional);
+              
 
             ?>
 
             <table border=1  style="width:100%;border-collapse:collapse;margin-bottom:6px;" class="btable">
                 <tr>
-                    <td colspan={{ 16 + $additional }} > {{ $location->location_altername2 }}</td>  
+                    <td colspan={{ 15 + $additional }} > {{ $location->location_altername2 }}</td>  
                 </tr>
                 <thead>
                     <tr>

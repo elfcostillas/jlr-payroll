@@ -80,7 +80,7 @@ return [
             // 'database' => env('DB_DATABASE', 'jlr_hris_live'),
             'database' => env('DB_DATABASE', 'jlr_hris'),
 
-            'username' => env('DB_USERNAME', 'elmer'),
+            'username' => env('DB_USERNAME', 'root'),
             'password' => env('DB_PASSWORD', 'password'),
            
             'unix_socket' => env('DB_SOCKET', ''),

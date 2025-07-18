@@ -352,14 +352,13 @@ class PayrollRegisterConfiController extends Controller
         // $this->getSchema();
         
 
-        $payroll = new PayrollRegisterService(new PayrollRegisterConfi('payrollregister_unposted_s'));
+        $payroll = new PayrollRegisterService(new PayrollRegisterConfi('payrollregister_unposted_s','unposted'));
 
         $period = $payroll->getPeriod($request->period_id);
         
-        // dd($this->buildSchema());
-        $payroll->getHeaders();
-
         $data = $payroll->getPayrollData($period);
+
+        $payroll->getHeaders();
 
         if($period){
             $date_from = Carbon::createFromFormat('Y-m-d',$period->date_from);
