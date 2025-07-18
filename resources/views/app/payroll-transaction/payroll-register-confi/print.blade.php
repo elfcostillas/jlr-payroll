@@ -239,6 +239,34 @@
                 </tr>
             @endforeach
         @endforeach
+        <tr>
+            <td colspan="3" class="b" > Overall Total </td>
+            @foreach ($data->basic_cols as $bcols)
+                <td class="r b"  >{{ custom_format($data->computeOverAll($data,$bcols)) }}</td>
+            @endforeach
+            @foreach ($data->gross_cols as $gcols)
+                <td class="r b"  >{{ custom_format($data->computeOverAll($data,$gcols) )}}</td>
+            @endforeach
+            @foreach ($data->fixed_comp_hcols as $fxcols) <!-- Fixed Compensation -->
+                <td class="r b"  > {{ custom_format($data->computeOtherEarningsOverAll($data,$fxcols)) }} </td>
+            @endforeach
+            @foreach ($data->other_comp_hcols as $othcols) <!-- Fixed Compensation -->
+                <td class="r b"  > {{ custom_format($data->computeOtherEarningsOverAll($data,$othcols)) }} </td>
+            @endforeach
+            <td class="r b"  >  {{ custom_format($data->computeOverAll($data,'gross_total')) }} </td>
+            @foreach ($data->contri as $contri_cols)
+                <td class="r b"  >{{ custom_format($data->computeOverAll($data,$contri_cols)) }}</td>
+            @endforeach
+            @foreach ($data->deduction_hcols as $deduction_hcols)
+                <td class="r b"  > {{ custom_format($data->computeTotalDeductionsOverall($data,$deduction_hcols)) }} </td>
+            @endforeach
+            @foreach ($data->govloans_hcols as $govloans_hcols)
+                    <td class="r b"  > {{ custom_format($data->computeTotalLoanOverAll($data,$govloans_hcols)) }} </td>
+            @endforeach
+            <td class="r b"  >  {{ custom_format($data->computeOverAll($data,'total_deduction')) }} </td>
+            <td class="r b"  >  {{ custom_format($data->computeOverAll($data,'net_pay')) }} </td>
+        </tr>
     </table>
 </body>
 </html>
+

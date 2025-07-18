@@ -324,6 +324,26 @@ class PayrollRegisterFunctions
         return $total;
     }
 
+    public function computeTotalDeductionsByLocation($data,$key)
+    {
+        $total = 0;
+        foreach($data->divisions as $division)
+        {
+            $total += $this->computeTotalDeductionsByDivision($division,$key); 
+        }  
+        return $total;
+    }
+
+    public function computeTotalDeductionsOverall($data,$key)
+    {
+        $total = 0;
+        foreach($data->data as $location)
+        {
+            $total += $this->computeTotalDeductionsByLocation($location,$key);
+        }
+        return $total;
+    }
+
     public function computeTotalDeductionsByDept($data,$key)
     {
         $total = 0;
@@ -349,6 +369,71 @@ class PayrollRegisterFunctions
         foreach ($data->departments as $department)
         {
             $total += $this->computeTotalLoansByDept($department,$key);
+        }
+        return $total;
+    }
+
+    public function computeTotalLoanByLocation($data,$key)
+    {   
+        $total = 0;
+        foreach($data->divisions as $division)
+        {
+            $total += $this->computeTotalLoanByDivision($division,$key); 
+        }   
+
+        return $total;
+    }
+
+    public function computeTotalLoanOverAll($data,$key)
+    {
+        $total = 0;
+        // dd($data->data,$key);
+        foreach($data->data as $location)
+        {
+            $total += $this->computeTotalLoanByLocation($location,$key);
+        }
+
+        return $total;
+    }
+
+    public function computeTotalByLocation($data,$key)
+    {
+        $total = 0;
+            foreach($data->divisions as $division)
+            {
+                $total += $this->computeTotalByDivision($division,$key); 
+            }   
+        return $total;
+    }
+
+    public function computeOverAll($data,$key)
+    {
+        $total = 0;
+        // dd($data->data,$key);
+        foreach($data->data as $location)
+        {
+            $total += $this->computeTotalByLocation($location,$key);
+        }
+
+        return $total;
+    }
+
+    public function computeOtherEarningsByLocation($data,$key)
+    {
+        $total = 0;
+        foreach($data->divisions as $division)
+        {
+            $total += $this->computeTotalOtherEarningByDivision($division,$key); 
+        } 
+        return $total;
+    }
+
+    public function computeOtherEarningsOverAll($data,$key)
+    {
+        $total = 0;
+        foreach($data->data as $location)
+        {
+            $total += $this->computeOtherEarningsByLocation($location,$key);
         }
         return $total;
     }
