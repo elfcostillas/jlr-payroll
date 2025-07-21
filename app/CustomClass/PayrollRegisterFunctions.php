@@ -174,9 +174,14 @@ class PayrollRegisterFunctions
       
         $earning_array = [];
 
-        $others = DB::table('unposted_other_compensations')->select('compensation_type','amount')->where([['biometric_id','=',$employee->biometric_id],['period_id','=',$period->id]]);
-        $fixed = DB::table('unposted_fixed_compensations')->select('compensation_type','amount')->where([['biometric_id','=',$employee->biometric_id],['period_id','=',$period->id]])
-            ->unionAll($others);
+        $others = DB::table('unposted_other_compensations')->select('compensation_type','amount')
+        ->where([['biometric_id','=',$employee->biometric_id],['period_id','=',$period->id]])
+        ->where('user_id','=',Auth::user()->id);
+
+        $fixed = DB::table('unposted_fixed_compensations')->select('compensation_type','amount')
+        ->where([['biometric_id','=',$employee->biometric_id],['period_id','=',$period->id]])
+        ->where('user_id','=',Auth::user()->id)
+        ->unionAll($others);
 
         $earnings = DB::table('compensation_types')
                     ->select('description','compensation_type','amount')
@@ -200,9 +205,17 @@ class PayrollRegisterFunctions
         if($this->payroll_status == 'unposted')
         {
             //$table = ['unposted_fixed_deductions','unposted_installments','unposted_onetime_deductions'];
-            $onetime = DB::table("unposted_onetime_deductions")->select('deduction_type','amount')->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
-            $fixed = DB::table("unposted_fixed_deductions")->select('deduction_type','amount')->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
-            $install = DB::table("unposted_installments")->select('deduction_type','amount')->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]])
+            $onetime = DB::table("unposted_onetime_deductions")->select('deduction_type','amount')
+            ->where('user_id','=',Auth::user()->id)
+            ->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
+
+            $fixed = DB::table("unposted_fixed_deductions")->select('deduction_type','amount')
+            ->where('user_id','=',Auth::user()->id)
+            ->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
+
+            $install = DB::table("unposted_installments")->select('deduction_type','amount')
+            ->where('user_id','=',Auth::user()->id)
+            ->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]])
             ->unionAll($onetime)->unionAll($fixed);
 
         }else{
@@ -239,6 +252,7 @@ class PayrollRegisterFunctions
         $loan = DB::table('unposted_loans')->select('id','description','amount')
         ->join('loan_types','deduction_type','=','loan_types.id')
         ->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]])
+        ->where('user_id','=',Auth::user()->id)
         ->orderBy('deduction_type')->get();
 
         foreach($loan as $l)
@@ -469,12 +483,14 @@ class PayrollRegisterFunctions
                 ->join('employees','employees.biometric_id','=',"$table.biometric_id")
                 ->where("$table.period_id",'=',$this->period->id)
                 ->where('employees.emp_level','<',5)
+                ->where('user_id','=',Auth::user()->id)
                 ->select('loan_types.id','loan_types.description')->distinct();
         }else{
             $result = DB::table($table)->join('loan_types','loan_types.id','=',"$table.deduction_type")
                 ->join('employees','employees.biometric_id','=',"$table.biometric_id")
                 ->where("$table.period_id",'=',$this->period->id)
                 ->where('employees.emp_level','>=',5)
+                ->where('user_id','=',Auth::user()->id)
                 ->select('loan_types.id','loan_types.description')->distinct();
         }
 
@@ -506,12 +522,14 @@ class PayrollRegisterFunctions
                                 ->join('employees','employees.biometric_id','=',"$table.biometric_id")
                                 ->where("$table.period_id",'=',$this->period->id)
                                 ->where('employees.emp_level','<',5)
+                                ->where('user_id','=',Auth::user()->id)
                                 ->select('deduction_types.id','deduction_types.description')->distinct();
                         }else{
                             $result = DB::table($table)->join('deduction_types','deduction_types.id','=',"$table.deduction_type")
                                 ->join('employees','employees.biometric_id','=',"$table.biometric_id")
                                 ->where("$table.period_id",'=',$this->period->id)
                                 ->where('employees.emp_level','>=',5)
+                                ->where('user_id','=',Auth::user()->id)
                                 ->select('deduction_types.id','deduction_types.description')->distinct();
                         }
                   
@@ -522,12 +540,14 @@ class PayrollRegisterFunctions
                                 ->join('employees','employees.biometric_id','=',"$table.biometric_id")
                                 ->where("$table.period_id",'=',$this->period->id)
                                 ->where('employees.emp_level','<',5)
+                                ->where('user_id','=',Auth::user()->id)
                                 ->select('deduction_types.id','deduction_types.description')->distinct());
                         }else{
                             $result = $result->union(DB::table($table)->join('deduction_types','deduction_types.id','=',"$table.deduction_type")
                                 ->join('employees','employees.biometric_id','=',"$table.biometric_id")
                                 ->where("$table.period_id",'=',$this->period->id)
                                 ->where('employees.emp_level','>=',5)
+                                ->where('user_id','=',Auth::user()->id)
                                 ->select('deduction_types.id','deduction_types.description')->distinct());
                         }
                    

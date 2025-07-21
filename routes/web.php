@@ -40,8 +40,6 @@ use App\Http\Controllers\Reports\LeaveReportsController;
 use App\Http\Controllers\Reports\ManHoursController;
 use App\Http\Controllers\Reports\SGContributionsController;
 
-
-
 use Carbon\CarbonPeriod;
 
 use App\Http\Controllers\PayrollTransaction\PayrollRegisterController;
@@ -867,9 +865,15 @@ Route::middleware('auth')->prefix('compensations')->group(function(){
     
 });
 
+use Illuminate\Support\Facades\DB;
 
 
 Route::post('logout',[AuthenticatedSessionController::class,'logout'])->middleware('auth');
+
+Route::get('connection',function(){
+    
+    dd(DB::connection());
+});
 
 Route::get('test',function(){
     
@@ -900,7 +904,7 @@ Route::get('now',function(){
 });
 
 use App\Libraries\LeaveCreditsMaker;
-use Illuminate\Support\Facades\DB;
+
 
 Route::get('leave-credits-maker',function(){
     $maker = new LeaveCreditsMaker();

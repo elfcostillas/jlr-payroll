@@ -878,9 +878,9 @@ WHERE period_id = 1 AND total_amount > 0;*/
     {   
         $ded_array = [];
 
-        $onetime = DB::table("unposted_onetime_deductions")->select('deduction_type','amount')->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
-        $fixed = DB::table("unposted_fixed_deductions")->select('deduction_type','amount')->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
-        $install = DB::table("unposted_installments")->select('deduction_type','amount')->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]])
+        $onetime = DB::table("unposted_onetime_deductions")->select('deduction_type','amount')->where('user_id','=',Auth::user()->id)->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
+        $fixed = DB::table("unposted_fixed_deductions")->select('deduction_type','amount')->where('user_id','=',Auth::user()->id)->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
+        $install = DB::table("unposted_installments")->select('deduction_type','amount')->where('user_id','=',Auth::user()->id)->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]])
                     ->unionAll($onetime)->unionAll($fixed);
         $deductions = DB::table('deduction_types')
                         ->select('description','deduction_type','amount')
@@ -914,6 +914,7 @@ WHERE period_id = 1 AND total_amount > 0;*/
         $loan = DB::table('unposted_loans')->select('id','description','amount')
         ->join('loan_types','deduction_type','=','loan_types.id')
         ->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]])
+        ->where('user_id','=',Auth::user()->id)
         ->orderBy('deduction_type')->get();
 
         foreach($loan as $l)
