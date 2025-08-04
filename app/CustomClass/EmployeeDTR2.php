@@ -152,6 +152,8 @@ class EmployeeDTR2
 
         // dd($result->toSql(),$result->getBindings());
 
+        
+
         if($this->details->pay_type == 1){
             // $ndays = 13 - $this->row['vl_wp'] - $this->row['vl_wop'] - $this->row['sl_wp'] - $this->row['sl_wop'];
             $ndays = 13 - $this->row['vl_wp'] - $this->row['vl_wop'] - $this->row['sl_wp'] - $this->row['sl_wop'] - $hol_count - $sp_count;

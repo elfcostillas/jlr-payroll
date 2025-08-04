@@ -136,7 +136,8 @@ class DTRSummaryMapper extends AbstractMapper {
     }
 
     public function employeesToProcessConfi($period_id)
-    {
+    {   
+        /*
         $query = "select DISTINCT employees.biometric_id from edtr 
                     inner join payroll_period on edtr.dtr_date between payroll_period.date_from and payroll_period.date_to
                     inner join employees on employees.biometric_id = edtr.biometric_id
@@ -144,6 +145,16 @@ class DTRSummaryMapper extends AbstractMapper {
                     and employees.emp_level < 5
                     and ((time_in is not null and time_in != '' and time_in != '00:00') and (time_out is not null and time_out != '' and time_out != '00:00'))
                     and employees.biometric_id != 0";
+        */
+
+        $query = "select DISTINCT employees.biometric_id from edtr_totals
+        inner join employees on employees.biometric_id = edtr_totals.biometric_id
+        inner join payroll_period on edtr_totals.period_id = payroll_period.id
+        where payroll_period.id = $period_id and pay_type in (1,2)
+        and employees.emp_level < 5
+        and employees.biometric_id != 0;";
+
+
                     // and employees.biometric_id = 830";
     
         $ids = DB::select(DB::raw($query));
