@@ -126,15 +126,19 @@ class ThirteenthMonthMapper extends AbstractMapper
     function basicPayQuery($employee,$year)
     {   
         $subQuery = DB::table('payrollregister_posted_weekly')
-                ->select(DB::raw("period_id,biometric_id,basic_pay,basic_salary,ndays"))
+                ->select(DB::raw("payrollregister_posted_weekly.period_id,payrollregister_posted_weekly.biometric_id,basic_pay,basic_salary,ndays,late_eq_amount,ifnull(posted_weekly_compensation.retro_pay,0.00) retro_pay"))
                 ->leftJoin('payroll_period_weekly','payrollregister_posted_weekly.period_id','=','payroll_period_weekly.id')
+                ->leftJoin('posted_weekly_compensation',function($join){
+                    $join->on('payrollregister_posted_weekly.period_id','=','posted_weekly_compensation.period_id');
+                    $join->on('payrollregister_posted_weekly.biometric_id','=','posted_weekly_compensation.biometric_id');
+                })
                 ->where('payroll_period_weekly.pyear','=',$year)
-                ->where('biometric_id','=',$employee->biometric_id);
+                ->where('payrollregister_posted_weekly.biometric_id','=',$employee->biometric_id);
         
         
         // dd($employee->biometric_id);
         $result = DB::table("payroll_period_weekly")
-            ->select(DB::raw("payroll_period_weekly.id,ifnull(subQuery.basic_pay,0.00) as basic_pay"))
+            ->select(DB::raw("payroll_period_weekly.id,ifnull(subQuery.basic_pay,0.00) as basic_pay,late_eq_amount,ifnull(retro_pay,0.00) retro_pay"))
             ->leftJoinSub($subQuery,'subQuery',function($join){
                 $join->on('payroll_period_weekly.id','=','subQuery.period_id');
             })

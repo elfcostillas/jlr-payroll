@@ -195,8 +195,6 @@ class UploadLogController extends Controller
 
 			if($data && $data[0]==$inProgress->id)
 			{
-
-				
 				$key = array('biometric_id' => $data[1],'period_id' => $data[0]);
 
 				$formatted = array(
@@ -248,7 +246,8 @@ class UploadLogController extends Controller
 						'dblsphol_rdot' => ($data[45]=='') ? 0 : $data[45],
 						'dblsphol_nd' => ($data[46]=='') ? 0 : $data[46],
 						'dblsphol_ndot' => ($data[47]=='') ? 0 : $data[47],
-						'dblsphol_rdndot' => ($data[48]=='') ? 0 : $data[48]
+						'dblsphol_rdndot' => ($data[48]=='') ? 0 : $data[48],
+						'awol' => ($data[49]=='') ? 0 : $data[49]
 				);
 
 				$result = $this->mapper->updateSummary($key,$formatted);

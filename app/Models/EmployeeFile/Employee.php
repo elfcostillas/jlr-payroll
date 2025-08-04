@@ -54,7 +54,8 @@ class Employee extends Model
         'retired',
         'dept_category',
         'manual_wtax',
-        'fixed_rate'
+        'fixed_rate',
+        'alternate_sat',
     ];
 
 }

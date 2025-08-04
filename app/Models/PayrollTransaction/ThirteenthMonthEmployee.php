@@ -25,7 +25,7 @@ class ThirteenthMonthEmployee {
     {
         foreach($this->basic_pays as $basic_pay)
         {
-            $this->basic_pay_arr[$basic_pay->id] = $basic_pay->basic_pay;
+            $this->basic_pay_arr[$basic_pay->id] = $basic_pay->basic_pay - $basic_pay->late_eq_amount + $basic_pay->retro_pay;
         }
     }
 
@@ -49,7 +49,8 @@ class ThirteenthMonthEmployee {
         $gross_pay = 0;
         foreach($this->basic_pays as $basic_pay)
         {
-            $gross_pay += $basic_pay->basic_pay;
+            // $gross_pay += $basic_pay->basic_pay;
+            $gross_pay += $basic_pay->basic_pay - $basic_pay->late_eq_amount + $basic_pay->retro_pay;
         }
 
         return  $gross_pay;

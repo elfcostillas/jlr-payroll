@@ -157,6 +157,13 @@
                         let url = `dtr-summary/compute-confi/${data.id}`;
                         window.open(url);
                     },
+
+                    compute_confiV2 : function(e){
+                        let tr = $(e.target).closest("tr");
+                        let data = this.dataItem(tr);
+                        let url = `dtr-summary/compute-confi-v2/${data.id}`;
+                        window.open(url);
+                    },
                     prepareBlank : function(e){
                         alert();
                     }
@@ -227,6 +234,14 @@
                     {
                         command: [
                             { text : 'Compute - Confi',click : viewModel.toolbarHandler.compute_confi , icon : '' },
+                        ],
+                        attributes : { style : 'font-size:10pt !important;'},
+                        width : 130
+                    },
+
+                    {
+                        command: [
+                            { text : 'Compute - Confi V2',click : viewModel.toolbarHandler.compute_confiV2 , icon : '' },
                         ],
                         attributes : { style : 'font-size:10pt !important;'},
                         width : 130

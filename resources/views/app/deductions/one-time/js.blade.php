@@ -746,7 +746,7 @@
 
             var activeToolbar = $("#toolbar").kendoToolBar({
                 items : [
-                    { id : 'saveBtn', type: "button", text: "Save", icon: 'save', click : viewModel.buttonHandler.save },
+                    { id : 'saveBtn', type: "button", text: "Save Header", icon: 'save', click : viewModel.buttonHandler.save },
                     { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
                     { id : 'postBtn', type: "button", text: "Post", icon: 'print', click : viewModel.buttonHandler.post },
                     { id : 'downloadBtn', type: "button", text: "Download", icon: 'download', click : viewModel.buttonHandler.download },

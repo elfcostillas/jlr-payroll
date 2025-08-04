@@ -1289,11 +1289,22 @@ WHERE period_id = 1 AND total_amount > 0;*/
         where biometric_id = 664 and awol = 'Y' and dtr_date between '2024-12-16' and '2024-12-31'
         */
 
+        /*
         $result = DB::table('edtr')
             ->where('biometric_id',$biometric_id)
             ->where('awol','=','Y')
             ->whereBetween('dtr_date',[$period->date_from,$period->date_to])
             ->select(DB::raw("count(id) as awol_count"))
+            ->first();
+
+        $awol_count = (is_null($result)) ? 0 : $result->awol_count;
+
+        return $awol_count * 8.0;
+        */
+        $result = DB::table('edtr_totals')
+            ->where('biometric_id',$biometric_id)
+            ->where('period_id',$period->id)
+            ->select(DB::raw("awol as awol_count"))
             ->first();
 
         $awol_count = (is_null($result)) ? 0 : $result->awol_count;

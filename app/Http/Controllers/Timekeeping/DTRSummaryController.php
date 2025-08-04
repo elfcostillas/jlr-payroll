@@ -83,5 +83,17 @@ class DTRSummaryController extends Controller
         echo "Processed record : ". $ctr;
     }
 
+    
+    public function compute_confiV2(Request $request)
+    {   
+        $period_id = $request->period_id;
+
+        $ids = $this->mapper->employeesToProcessConfi($period_id);
+      
+        $ctr = $this->mapper->processConfiIDSV2($ids,$period_id);
+
+        echo "Processed record : ". $ctr;
+    }
+
 
 }

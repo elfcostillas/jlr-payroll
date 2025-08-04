@@ -67,6 +67,7 @@
             <td> DBL Sp Hol ND	</td>
             <td> DBL Sp Hol ND OT	</td>
             <td> DBL Sp Hol RD ND OT</td>
+            <td> AWOL</td>
         </tr>
        @foreach($employees as $div)
            <tr>
@@ -132,6 +133,7 @@
                         <td> {{ nformat($employee->dblsphol_nd) }}</td>
                         <td> {{ nformat($employee->dblsphol_ndot) }}</td>
                         <td> {{ nformat($employee->dblsphol_rdndot) }}</td>
+                        <td> {{ nformat($employee->awol) }}</td>
                     </tr>
                 @endforeach
            @endforeach

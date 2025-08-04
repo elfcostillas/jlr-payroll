@@ -36,6 +36,11 @@
                     { text: "Widowed/Widower", value: 4 },
                 ];
 
+                let yes_no = [
+                    { text: "Yes", value: 'Y' },
+                    { text: "No", value: 'N' },
+                ];
+
             let obj = {
                     id : null,
                     firstname: null,
@@ -84,7 +89,8 @@
                     deduct_wtax : null,
                     retired : null,
                     manual_wtax : null,
-                    fixed_rate : null
+                    fixed_rate : null,
+                    alternate_sat
 
             };
 
@@ -139,7 +145,8 @@
                         deduct_wtax : null,
                         retired : null,
                         manual_wtax : null,
-                        fixed_rate : null
+                        fixed_rate : null,
+                        alternate_sat
                     },
                     mirror : {
                         is_daily : false,
@@ -147,7 +154,8 @@
                         deduct_hdmf : false,
                         deduct_phic : false,
                         deduct_wtax : false,
-                        retired : false
+                        retired : false,
+                        alternate_sat : false
                     }
                   
                 },
@@ -833,6 +841,21 @@
                     schedule_desc: "",
                     schedule_id: null
                 },
+                dataBound : function(e){
+                  
+                }
+                //change: onChange
+            });
+
+            $("#alternate_sat").kendoDropDownList({
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: yes_no,
+                index: 0,
+                // optionLabel: {
+                //     text: "",
+                //     value: null
+                // },
                 dataBound : function(e){
                   
                 }
