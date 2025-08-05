@@ -714,9 +714,7 @@ class PayslipMapper extends AbstractMapper {
         ->groupByRaw('description,total_amount')
         ->get();
 
-        if($biometric_id == 313){
-            dd($result);
-        }
+        
 
         foreach($result as $loan){
             $loantotal += $loan->amount;
