@@ -12,7 +12,7 @@
         .pr4{
             text-align : right;
             padding-right : 4px;
-            width: 64px; /* 52*/
+            width: 55px; /* 52*/
         }
 
         .pr3 {
@@ -317,9 +317,9 @@
                     ?>
                     
                     <tr style="{{ $stylee }};">
-                        <td style="text-align:right;width:25px;padding-right:4px;" >{{ $ctr++ }}</td>
+                        <td style="text-align:right;width:25px;padding-right:6px;" >{{ $ctr++ }}</td>
                         <td style="width:52px" >  {{ $employee->dept_code }}</td>
-                        <td style="width:72px; background-color:{{$jtFill}};" > <div class="{{$jtCircle}}"> {{ $employee->job_title_name }} </div></td>
+                        <td style="width:102px; background-color:{{$jtFill}};" > <div class="{{$jtCircle}}"> {{ $employee->job_title_name }} </div></td>
                         <td style="text-align:left;padding-left :4px;"> {{ $employee->employee_name }} </td> 
                         <td class="pr4" style="text-align:right;"> <div class="">{{ number_format($employee->daily_rate,2) }} </div> </td>
                         <td class="" style="width:43px;text-align:right;{{$color}};padding:0px 2px;"> <div class="{{ $circle}}">{{ round($employee->ndays,2) }}</div> </td>
