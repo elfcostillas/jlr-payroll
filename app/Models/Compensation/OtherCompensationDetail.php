@@ -17,6 +17,7 @@ class OtherCompensationDetail extends Model
         'header_id',
         'biometric_id',
         'total_amount',
+        'remarks'
     ];
 
 }

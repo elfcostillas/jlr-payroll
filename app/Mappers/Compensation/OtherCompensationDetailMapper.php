@@ -48,7 +48,7 @@ class OtherCompensationDetailMapper extends AbstractMapper {
 
         // }
 
-        $result = $this->model->select(DB::raw("employee_names_vw.biometric_id,employee_names_vw.employee_name,line_id,header_id,ifnull(total_amount,0.00) total_amount"))
+        $result = $this->model->select(DB::raw("employee_names_vw.biometric_id,employee_names_vw.employee_name,line_id,header_id,ifnull(total_amount,0.00) total_amount,compensation_other_details.remarks"))
                               ->from("employee_names_vw")
                               ->join('employees','employees.biometric_id','=','employee_names_vw.biometric_id')
                               ->leftJoin('compensation_other_details',function($join) use ($id) {

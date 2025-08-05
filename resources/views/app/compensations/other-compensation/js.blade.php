@@ -183,6 +183,7 @@
                                     exit_status: { type : 'number' , },
                                     total_amount: { type : 'number' , },
                                     header_id: { type : 'number' ,editable : false  },
+                                    remarks : { type : 'string' }
                                 }
                             }
                         }
@@ -394,6 +395,7 @@
                                     editor : employeeEditor,
                                     template : "#if(biometric_id==0){#  #}else {# #= employee_name #  #}#"
                                 },
+                               
                                 {
                                     title : "Amount",
                                     field : "total_amount",
@@ -446,6 +448,10 @@
                                     field : "employee_name",
                                     editor : employeeEditor,
                                     template : "#if(biometric_id==0){#  #}else {# #= employee_name #  #}#"
+                                },
+                                {
+                                    title : "Remarks",
+                                    field : "remarks"
                                 },
                                 {
                                     title : "Amount",
