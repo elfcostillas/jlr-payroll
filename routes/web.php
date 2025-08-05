@@ -69,6 +69,7 @@ use App\Http\Controllers\Memo\TardinessMemoController;
 use App\Http\Controllers\PayrollTransaction\PayslipConfiController;
 use App\Http\Controllers\PayrollTransaction\ThirteenthMonthController;
 use App\Http\Controllers\Reports\AttendanceReportController;
+use App\Http\Controllers\Reports\JLRContributionsController;
 use App\Http\Controllers\Reports\PayrollSupportGroupController;
 use App\Http\Controllers\Timekeeping\ManageDTRConfiController;
 use App\Http\Controllers\Timekeeping\WeeklyDTRUploaderController;
@@ -669,6 +670,16 @@ Route::middleware('auth')->prefix('reports')->group(function(){
         Route::get('generate-web-type/{year}/{month}/{type}',[SGContributionsController::class,'webByType']);
         Route::get('generate-excel-type/{year}/{month}/{type}',[SGContributionsController::class,'excelByType']);
         Route::get('generate-excel-type-sorted/{year}/{month}/{type}',[SGContributionsController::class,'excelByTypeS']);
+
+    });
+
+    Route::prefix('contributions-jlr')->group(function(){
+        Route::get('/',[JLRContributionsController::class,'index']);
+        Route::get('year',[JLRContributionsController::class,'fy']);
+
+        Route::get('generate-web-type/{year}/{month}/{type}',[JLRContributionsController::class,'webByType']);
+        Route::get('generate-excel-type/{year}/{month}/{type}',[JLRContributionsController::class,'excelByType']);
+        Route::get('generate-excel-type-sorted/{year}/{month}/{type}',[JLRContributionsController::class,'excelByTypeS']);
 
     });
 
