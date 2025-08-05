@@ -15,6 +15,8 @@ class EmployeeDTR2
 
     ];
 
+    protected $leaves = [];
+
     public function __construct($biometric_id,$period_id)
     {
         
@@ -156,13 +158,22 @@ class EmployeeDTR2
 
         if($this->details->pay_type == 1){
             // $ndays = 13 - $this->row['vl_wp'] - $this->row['vl_wop'] - $this->row['sl_wp'] - $this->row['sl_wop'];
-            $ndays = 13 - $this->row['vl_wp'] - $this->row['vl_wop'] - $this->row['sl_wp'] - $this->row['sl_wop'] - $hol_count - $sp_count;
+            /*
+             $this->leaves['brv'] = round($brv->wp/8,2) + round($brv->wop/8,2);
+        $this->leaves['svl'] = round($svl->wp/8,2) + round($svl->wop/8,2);
+        $this->leaves['bl'] = round($bl->wp/8,2) + round($bl->wop/8,2);
+        */
+       
+            $ndays = 13 - $this->row['vl_wp'] - $this->row['vl_wop'] - $this->row['sl_wp'] - $this->row['sl_wop'] 
+            - $this->leaves['brv'] - $this->leaves['svl'] - $this->leaves['bl'] - $hol_count - $sp_count;
 
             // dd($this->row['vl_wp'] , $this->row['vl_wop'] , $this->row['sl_wp'] , $this->row['sl_wop']);
         }else{
             $ndays_result = $result->select(DB::raw('sum(ndays) as ndays'))->first();
             $ndays = $ndays_result->ndays;
         }
+
+
 
         $awol = DB::table('edtr_detailed')->join('payroll_period',function($join){
             $join->whereRaw("edtr_detailed.dtr_date between date_from and date_to");
@@ -174,7 +185,7 @@ class EmployeeDTR2
 
         // set ndays
         $this->row['ndays'] = $ndays - $awol->awol_count;
-
+     
     }
 
     public function compute_leaves()
@@ -193,10 +204,36 @@ class EmployeeDTR2
 
         $sl = DB::select($sl_qry)[0];
 
+        // BRV
+        $brv_qry = "select ifnull(sum(ifnull(with_pay,0)),0) as wp,ifnull(sum(ifnull(without_pay,0)),0) as wop from filed_leaves_vw 
+                    inner join payroll_period on leave_date between payroll_period.date_from and payroll_period.date_to 
+                    where payroll_period.id = $this->period_id and filed_leaves_vw.biometric_id = $this->biometric_id and leave_type = 'BRV';";
+
+        $brv = DB::select($brv_qry)[0];
+
+        // SVL
+        $svl_qry = "select ifnull(sum(ifnull(with_pay,0)),0) as wp,ifnull(sum(ifnull(without_pay,0)),0) as wop from filed_leaves_vw 
+                inner join payroll_period on leave_date between payroll_period.date_from and payroll_period.date_to 
+                where payroll_period.id = $this->period_id and filed_leaves_vw.biometric_id = $this->biometric_id and leave_type = 'SVL';";
+
+        $svl = DB::select($svl_qry)[0];
+        // BL
+
+        $bl_qry = "select ifnull(sum(ifnull(with_pay,0)),0) as wp,ifnull(sum(ifnull(without_pay,0)),0) as wop from filed_leaves_vw 
+                inner join payroll_period on leave_date between payroll_period.date_from and payroll_period.date_to 
+                where payroll_period.id = $this->period_id and filed_leaves_vw.biometric_id = $this->biometric_id and leave_type = 'BL';";
+
+        $bl = DB::select($bl_qry)[0];
+
+
         $this->row['vl_wp'] = round($vl->wp/8,2);
         $this->row['vl_wop'] = round($vl->wop/8,2);
         $this->row['sl_wp'] = round($sl->wp/8,2);
         $this->row['sl_wop'] = round($sl->wop/8,2);
+
+        $this->leaves['brv'] = round($brv->wp/8,2) + round($brv->wop/8,2);
+        $this->leaves['svl'] = round($svl->wp/8,2) + round($svl->wop/8,2);
+        $this->leaves['bl'] = round($bl->wp/8,2) + round($bl->wop/8,2);
        
     }
 
