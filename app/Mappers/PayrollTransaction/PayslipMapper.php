@@ -710,9 +710,13 @@ class PayslipMapper extends AbstractMapper {
         })
         ->join('deduction_types','deduction_types.id','=','deduction_installments.deduction_type')
         ->where('posted_installments.biometric_id',$biometric_id)
-        ->where('posted_installments.period_id',$period_id)
+        ->where('posted_installments.period_id','<=',$period_id)
         ->groupByRaw('description,total_amount')
         ->get();
+
+        if($biometric_id == 313){
+            dd($result);
+        }
 
         foreach($result as $loan){
             $loantotal += $loan->amount;
