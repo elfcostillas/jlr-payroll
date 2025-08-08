@@ -181,6 +181,31 @@
 
                         window.open(url);
                     },
+                    summarize_sg : function(e){
+                        let from =  kendo.toString($('#date_from_sg').data('kendoDatePicker').value(),'yyyy-MM-dd');
+                        let to =  kendo.toString($('#date_to_sg').data('kendoDatePicker').value(),'yyyy-MM-dd');
+                        let div = $('#division_id_sg').data('kendoDropDownList').value();
+                        let dept = $('#department_id_sg').data('kendoDropDownList').value();
+                        
+                        if(from==null || to ==null){
+                            custom_error('Please select date from and date to.');
+                        } else {
+                            let url = `tardiness-reports/generate-summary-sg/${from}/${to}/${div}/${dept}`;
+
+                            window.open(url);
+                        }
+                    },
+                    view_sg : function(e){
+                        let from =  kendo.toString($('#date_from_sg').data('kendoDatePicker').value(),'yyyy-MM-dd');
+                        let to =  kendo.toString($('#date_to_sg').data('kendoDatePicker').value(),'yyyy-MM-dd');
+                        let div = $('#division_id_sg').data('kendoDropDownList').value();
+                        let dept = $('#department_id_sg').data('kendoDropDownList').value();
+
+                        let url = `tardiness-reports/generate-detailed-sg/${from}/${to}/${div}/${dept}`;
+
+                        window.open(url);
+                    },
+
                     // leaveByEmployee : function()
                     // {
                     //     let from =  kendo.toString($('#date_from').data('kendoDatePicker').value(),'yyyy-MM-dd');
@@ -234,11 +259,53 @@
                 }
             });
 
+            $("#division_id_sg").kendoDropDownList({
+                dataTextField: "div_name",
+                dataValueField: "id",
+                dataSource: viewModel.ds.division,
+                //index: 1,
+                change: function(e){
+                    let selected = e.sender.dataItem();
+                    let deptUrl = `../employee-files/divisions-departments/department/list-option/${selected.id}`;
+                    viewModel.ds.department.transport.options.read.url = deptUrl;
+                    viewModel.ds.department.read();
+                },
+                optionLabel: {
+                    div_name: "ALL",
+                    id: "0"
+                }
+            });
+
+            $("#department_id_sg").kendoDropDownList({
+                dataTextField: "dept_name",
+                dataValueField: "id",
+                dataSource: viewModel.ds.department,
+                //index: 1,
+                change: function(e){
+                    // let selected = e.sender.dataItem();
+                    // let deptUrl = `../employee-files/divisions-departments/department/list-option/0`;
+                    // viewModel.ds.department.transport.options.read.url = deptUrl;
+                    // viewModel.ds.department.read();
+                },
+                optionLabel: {
+                    dept_name: "ALL",
+                    id: "0"
+                }
+            });
+
             $("#date_from").kendoDatePicker({
                 format: "MM/dd/yyyy"
             });
 
             $("#date_to").kendoDatePicker({
+                format: "MM/dd/yyyy"
+            });
+
+            $("#date_from_sg").kendoDatePicker({
+                format: "MM/dd/yyyy"
+            });
+
+            $("#date_to_sg").kendoDatePicker({
                 format: "MM/dd/yyyy"
             });
 

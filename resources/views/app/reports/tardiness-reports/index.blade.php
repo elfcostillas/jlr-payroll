@@ -121,6 +121,33 @@
                             </table>
                         </div>
                     </div>
+
+                    <div class="card card-secondary">
+                        <div class="card-header"> Employee Tardiness - Support Group </div>
+                        <div class="card-body"> 
+                            <table class="formTable" border=0 style="width:100%">
+                                <tr>
+                                    <td>Date From</td>
+                                    <td>Date To</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td> <input type="text" name="" id="date_from_sg"> </td>
+                                    <td> <input type="text" name="" id="date_to_sg"> </td>
+                                    
+                                    <td><input type="text" id="division_id_sg" ></td>
+                                    <td><input type="text" id="department_id_sg" ></td>
+                                    <td><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.summarize_sg'><i class="fas fa-download"></i> View Summary</button></td>
+                                    <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.view_sg'><i class="fas fa-table"></i> View Page</button></td> 
+                                </tr>
+                              
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
             

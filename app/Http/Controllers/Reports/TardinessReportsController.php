@@ -37,6 +37,24 @@ class TardinessReportsController extends Controller
     
     }
 
+    public function detailedReportSG(Request $request)
+    {
+       
+        $filter = [
+            'from' => $request->from,
+            'to' => $request->to,
+            'div_id' => $request->div,
+            'dept_id' => $request->dept,
+        ];
+
+       
+
+        $result = $this->mapper->detailedSG($filter);
+        
+        return view('app.reports.tardiness-reports.detailed',['data'=> $result]);
+    
+    }
+
     public function summarizedReport(Request $request)
     {
         $filter = [
@@ -47,6 +65,20 @@ class TardinessReportsController extends Controller
         ];
 
         $result = $this->mapper->summary($filter);
+
+        return view('app.reports.tardiness-reports.summary',['data'=> $result]);
+    }
+
+    public function summarizedReportSG(Request $request)
+    {
+        $filter = [
+            'from' => $request->from,
+            'to' => $request->to,
+            'div_id' => $request->div,
+            'dept_id' => $request->dept,
+        ];
+
+        $result = $this->mapper->summarySG($filter);
 
         return view('app.reports.tardiness-reports.summary',['data'=> $result]);
     }
