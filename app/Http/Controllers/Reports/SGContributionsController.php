@@ -118,7 +118,7 @@ class SGContributionsController extends Controller
         $result = $this->mapper->generateS($request->year,$request->month);
         $type = $request->type;
 
-        $this->sorted->setValues($result,$label,$type);
+        $this->sorted->setValues($result,$label,$type,'sg');
         return Excel::download($this->sorted,'Contribution'.$label.'.xlsx');
 
     }
