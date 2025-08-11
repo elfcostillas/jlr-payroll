@@ -114,7 +114,7 @@
                         let m = $("#scripts_months").data("kendoDropDownList").value();
                         let y = $("#scripts_year").data("kendoDropDownList").value();
 
-                        let url = `contributions-jlr/generate-excel/${y}/${m}`;
+                        let url = `contributions-jlr/generate-excel/confi/${y}/${m}`;
 
                         window.open(url);
                     },
@@ -124,7 +124,7 @@
                         let m = $("#scripts_months").data("kendoDropDownList").value();
                         let y = $("#scripts_year").data("kendoDropDownList").value();
 
-                        let url = `contributions-jlr/generate-web/${y}/${m}`;
+                        let url = `contributions-jlr/generate-web/confi/${y}/${m}`;
 
                         window.open(url);
                     },
@@ -135,7 +135,7 @@
                         let y = $("#scripts_year2").data("kendoDropDownList").value();
                         let t = $("#scripts_type2").data("kendoDropDownList").value();
 
-                        let url = `contributions-jlr/generate-excel-type/${y}/${m}/${t}`;
+                        let url = `contributions-jlr/generate-excel-type/confi/${y}/${m}/${t}`;
 
                         window.open(url);
                     },
@@ -146,7 +146,7 @@
                         let y = $("#scripts_year2").data("kendoDropDownList").value();
                         let t = $("#scripts_type2").data("kendoDropDownList").value();
 
-                        let url = `contributions-jlr/generate-web-type/${y}/${m}/${t}`;
+                        let url = `contributions-jlr/generate-web-type/confi/${y}/${m}/${t}`;
 
                         window.open(url);
                     },
@@ -157,7 +157,7 @@
                         let y = $("#scripts_year2").data("kendoDropDownList").value();
                         let t = $("#scripts_type2").data("kendoDropDownList").value();
 
-                        let url = `contributions-jlr/generate-excel-type-sorted/${y}/${m}/${t}`;
+                        let url = `contributions-jlr/generate-excel-type-sorted/confi/${y}/${m}/${t}`;
 
                         // console.log(url);
                         window.open(url);

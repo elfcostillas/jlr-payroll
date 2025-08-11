@@ -23,8 +23,11 @@
 
     <table>
         <tr>
+            <td> {{ $src }} </td>
+        </tr>
+        <tr>
             <td>
-                Confi <br>
+                 
                 @if ($type==2)
                     PAGIBIG Contribution  
                 @endif
@@ -35,9 +38,11 @@
                 @if ($type==1)
                     SSS Contribution
                 @endif
-                <br>
-            {{ $label }}
+
             </td>
+        </tr>
+        <tr>
+            <td>{{ $label }}</td>
         </tr>
     </table>
 
@@ -140,21 +145,22 @@
                     <td>{{ $employee->job_title_name }}</td>
                     <td>{{ $employee->employee_name }} </td>
                     @if ($type==2)
-                        <td> {{ $employee->hdmf_no }} </td>
-                        <td>{{ number_format($employee->hdmf_contri,2) }}</td>
-                        <td>{{ number_format($employee->hdmf_contri,2) }}</td>
+                        <td> {{ str_replace(['-',' '],"",$employee->hdmf_no) }} </td>
+                        <td>{{ $employee->hdmf_contri }}</td>
+                        <td>{{ $employee->hdmf_contri }}</td>
                     @endif
                     @if ($type==3)
-                        <td> {{ $employee->phic_no }} </td>
-                        <td>{{ number_format($employee->phil_prem,2) }}</td>   
-                        <td>{{ number_format($employee->phil_prem,2) }}</td>   
+                        <td> {{ str_replace(['-',' '],"",$employee->phic_no) }} </td>
+                        <td>{{ $employee->phil_prem }}</td>   
+                        <td>{{ $employee->phil_prem }}</td>   
                     @endif
 
                     @if ($type==1)
-                        <td> {{ $employee->sss_no }} </td>
-                        <td>{{ number_format($employee->sss_prem,2) }}</td>   
-                        <td>{{ number_format($employee->er_share,2) }} </td>   
-                        <td>{{ number_format($employee->ec,2) }}</td>   
+                        <td> {{ str_replace(['-',' '],"",$employee->sss_no) }} </td>
+                       
+                        <td>{{ $employee->sss_prem }}</td>   
+                        <td>{{ $employee->er_share }} </td>   
+                        <td>{{ $employee->ec }}</td>   
                     @endif
 
                 
@@ -169,45 +175,46 @@
              
                 @if ($type==2)
                 <td></td>
-                <td>{{ number_format($per_loc['hdmf_ee'],2) }}</td>
-                <td>{{ number_format($per_loc['hdmf_er'],2) }}</td>
+                <td>{{ $per_loc['hdmf_ee'] }}</td>
+                <td>{{ $per_loc['hdmf_er'] }}</td>
                 @endif
                 @if ($type==3)
                 <td></td>
-                <td>{{ number_format($per_loc['phic_ee'],2) }}</td>
-                <td>{{ number_format($per_loc['phic_er'],2) }}</td>
+                <td>{{ $per_loc['phic_ee'] }}</td>
+                <td>{{ $per_loc['phic_er'] }}</td>
                 @endif
 
                 @if ($type==1)
                 <td></td>
-                <td>{{ number_format($per_loc['sss_ee'],2) }}</td>
-                <td>{{ number_format($per_loc['sss_er'],2) }}</td>
-                <td>{{ number_format($per_loc['sss_ec'],2) }}</td>
+                <td>{{ $per_loc['sss_ee'] }}</td>
+                <td>{{ $per_loc['sss_er'] }}</td>
+                <td>{{ $per_loc['sss_ec'] }}</td>
 
                 @endif
             </tr>
-     
+        </table>
     @endforeach
-    
+
+    <table>
         <tr>
             <td colspan=4 >OVER ALL TOTAL</td>
 
                 @if ($type==2)
                 <td></td>
-                <td>{{ number_format($over_all['hdmf_ee'],2) }}</td>
-                <td>{{ number_format($over_all['hdmf_er'],2) }}</td>
+                <td>{{ $over_all['hdmf_ee'] }}</td>
+                <td>{{ $over_all['hdmf_er'] }}</td>
                 @endif
                 @if ($type==3)
                 <td></td>
-                <td>{{ number_format($over_all['phic_ee'],2) }}</td>
-                <td>{{ number_format($over_all['phic_er'],2) }}</td>
+                <td>{{ $over_all['phic_ee'] }}</td>
+                <td>{{ $over_all['phic_er'] }}</td>
                 @endif
 
                 @if ($type==1)
                 <td></td>
-                <td>{{ number_format($over_all['sss_ee'],2) }}</td>
-                <td>{{ number_format($over_all['sss_er'],2) }}</td>
-                <td>{{ number_format($over_all['sss_ec'],2) }}</td>
+                <td>{{ $over_all['sss_ee'] }}</td>
+                <td>{{ $over_all['sss_er'] }}</td>
+                <td>{{ $over_all['sss_ec'] }}</td>
                 @endif
         
             

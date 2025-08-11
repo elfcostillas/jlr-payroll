@@ -680,9 +680,9 @@ Route::middleware('auth')->prefix('reports')->group(function(){
         Route::get('/',[JLRContributionsController::class,'index']);
         Route::get('year',[JLRContributionsController::class,'fy']);
 
-        Route::get('generate-web-type/{year}/{month}/{type}',[JLRContributionsController::class,'webByType']);
-        Route::get('generate-excel-type/{year}/{month}/{type}',[JLRContributionsController::class,'excelByType']);
-        Route::get('generate-excel-type-sorted/{year}/{month}/{type}',[JLRContributionsController::class,'excelByTypeS']);
+        Route::get('generate-web-type/{emp_level}/{year}/{month}/{type}',[JLRContributionsController::class,'webByType']);
+        Route::get('generate-excel-type/{emp_level}/{year}/{month}/{type}',[JLRContributionsController::class,'excelByType']);
+        Route::get('generate-excel-type-sorted/{emp_level}/{year}/{month}/{type}',[JLRContributionsController::class,'excelByTypeS']);
 
     });
 

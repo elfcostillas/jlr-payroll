@@ -28,6 +28,7 @@ class Contribution implements ShouldAutoSize,WithColumnFormatting,FromView,WithE
     private $data;
     private $label;
     private $type;
+    private $src;
 
     public function registerEvents(): array
     {   
@@ -38,15 +39,31 @@ class Contribution implements ShouldAutoSize,WithColumnFormatting,FromView,WithE
         ];    
     }
 
-    public function setValues($data,$label,$type){
+    public function setValues($data,$label,$type,$src){
     	$this->data = $data;
     	$this->label = $label;
         $this->type = $type;
+        $this->src = $src;
     }  
 
     public function view(): View
     {
-        return view('app.reports.sg-contribution.export-by-type',['locations' => $this->data, 'label' => $this->label,'type' => $this->type ]);
+        switch($this->src) {
+           
+            case 'confi' : 
+                    return view('app.reports.jlr-contribution.export-by-type',['locations' => $this->data, 'label' => $this->label,'type' => $this->type,'src' => $this->src ]);
+                break;
+
+            case 'non-confi' : 
+                    return view('app.reports.jlr-contribution.export-by-type',['locations' => $this->data, 'label' => $this->label,'type' => $this->type,'src' => $this->src ]);
+                break;
+
+                 default : 
+                    return view('app.reports.sg-contribution.export-by-type',['locations' => $this->data, 'label' => $this->label,'type' => $this->type,'src' => $this->src ]);
+                break;
+        }
+
+
     }
 
     public function columnWidths(): array

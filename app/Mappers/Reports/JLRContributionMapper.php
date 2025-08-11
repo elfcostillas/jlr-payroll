@@ -23,14 +23,32 @@ class JLRContributionMapper
 
     }
 
-    public function generate($year, $month)
+    public function generate($year, $month,$emp_level)
     {
-        $locations = DB::table('employees')->select(DB::raw("distinct locations.*"))
-        ->join('payrollregister_posted_s','payrollregister_posted_s.biometric_id','=','employees.biometric_id')
-        ->join('locations','employees.location_id','=','locations.id')
-        ->whereRaw("payrollregister_posted_s.period_id in (select id from payroll_period where month(date_from) = ".$month." and year(date_from) = ".$year.")")
-        ->orderBy('employees.location_id','asc')
-        ->get();
+        if($emp_level == 'confi'){
+            $locations = DB::table('employees')->select(DB::raw("distinct locations.*"))
+            ->join('payrollregister_posted_s','payrollregister_posted_s.biometric_id','=','employees.biometric_id')
+            ->join('locations','employees.location_id','=','locations.id')
+            ->whereRaw("payrollregister_posted_s.period_id in (select id from payroll_period where month(date_from) = ".$month." and year(date_from) = ".$year.")")
+            ->where('employees.emp_level','<',5)
+            ->orderBy('employees.location_id','asc')
+            ->get();
+
+            $emp_level_qry = " AND employees.emp_level < 5 ";
+        }
+        else{ 
+            $locations = DB::table('employees')->select(DB::raw("distinct locations.*"))
+            ->join('payrollregister_posted_s','payrollregister_posted_s.biometric_id','=','employees.biometric_id')
+            ->join('locations','employees.location_id','=','locations.id')
+            ->whereRaw("payrollregister_posted_s.period_id in (select id from payroll_period where month(date_from) = ".$month." and year(date_from) = ".$year.")")
+            ->where('employees.emp_level','=',5)
+            ->orderBy('employees.location_id','asc')
+            ->get();
+
+            $emp_level_qry = " AND employees.emp_level = 5 ";
+
+        }
+       
 
         // $contri = DB::table("payrollregister_posted_s")
         // ->select(DB::raw("biometric_id,sum(ifnull(sss_prem,0)) as sss_prem,sum(ifnull(phil_prem,0)) as phil_prem,sum(ifnull(payrollregister_posted_s.hdmf_contri,0)) as hdmf_contri,er_share,ec"))
@@ -42,10 +60,11 @@ class JLRContributionMapper
         // dd($contri->toSql(),$contri->getBindings());
 
         $contri = "SELECT * FROM (
-            SELECT period_id,biometric_id,SUM(IFNULL(sss_prem,0)) AS sss_prem,SUM(IFNULL(phil_prem,0)) AS phil_prem,SUM(IFNULL(payrollregister_posted_s.hdmf_contri,0)) AS hdmf_contri
+            SELECT period_id,payrollregister_posted_s.biometric_id,SUM(IFNULL(sss_prem,0)) AS sss_prem,SUM(IFNULL(phil_prem,0)) AS phil_prem,SUM(IFNULL(payrollregister_posted_s.hdmf_contri,0)) AS hdmf_contri
             FROM payrollregister_posted_s 
             INNER JOIN `payroll_period` ON `payrollregister_posted_s`.`period_id` = `payroll_period`.`id` 
-            WHERE MONTH(date_from) = $month AND YEAR(date_from) = $year 
+            INNER JOIN `employees` on employees.biometric_id = payrollregister_posted_s.biometric_id 
+            WHERE MONTH(date_from) = $month AND YEAR(date_from) = $year ".$emp_level_qry."
             GROUP BY `biometric_id`
             ) AS table1
             LEFT JOIN (SELECT DISTINCT ec,er_share,ee_share FROM hris_sss_table_2025) AS table2 ON `table2`.`ee_share` = table1.sss_prem";
@@ -56,8 +75,11 @@ class JLRContributionMapper
 
         foreach($locations as $location)
         {
-            $employees = DB::table('payrollregister_posted_s')
-            ->select(DB::raw("payrollregister_posted_s.biometric_id,departments.dept_code,job_titles.job_title_name, concat(
+           
+            if($emp_level == 'confi'){
+
+                $employees = DB::table('payrollregister_posted_s')
+                ->select(DB::raw("payrollregister_posted_s.biometric_id,departments.dept_code,job_titles.job_title_name, concat(
                     ifnull(`employees`.`lastname`, ''),
                     ', ',
                     ifnull(`employees`.`firstname`, ''),
@@ -67,16 +89,42 @@ class JLRContributionMapper
                     ifnull(`employees`.`middlename`, '')
                 ) AS `employee_name`,
                 employees.lastname,employees.firstname,employees.middlename,contri.sss_prem,contri.phil_prem,contri.hdmf_contri,er_share,ec,tin_no,phic_no,sss_no,hdmf_no"))
-            ->join('employees','payrollregister_posted_s.biometric_id','=','employees.biometric_id')
-            ->joinSub($contri,'contri','contri.biometric_id','=','employees.biometric_id')
-            
-            ->join('departments','departments.id','=','employees.dept_id')
-            ->join('job_titles','job_titles.id','=','employees.job_title_id')
-            ->where('employees.location_id',$location->id)
-            ->orderBy('lastname','asc')
-            ->orderBy('firstname','asc')
-            ->groupBy('biometric_id')
-            ->get();
+                ->join('employees','payrollregister_posted_s.biometric_id','=','employees.biometric_id')
+                ->joinSub($contri,'contri','contri.biometric_id','=','employees.biometric_id')
+
+                ->join('departments','departments.id','=','employees.dept_id')
+                ->join('job_titles','job_titles.id','=','employees.job_title_id')
+                ->where('employees.location_id',$location->id)
+                ->where("employees.emp_level",'<','5')
+                ->orderBy('lastname','asc')
+                ->orderBy('firstname','asc')
+                ->groupBy('biometric_id')
+                ->get();
+            }else{
+                $employees = DB::table('payrollregister_posted_s')
+                ->select(DB::raw("payrollregister_posted_s.biometric_id,departments.dept_code,job_titles.job_title_name, concat(
+                        ifnull(`employees`.`lastname`, ''),
+                        ', ',
+                        ifnull(`employees`.`firstname`, ''),
+                        ' ',
+                        ifnull(`employees`.`suffixname`, ''),
+                        ' ',
+                        ifnull(`employees`.`middlename`, '')
+                    ) AS `employee_name`,
+                    employees.lastname,employees.firstname,employees.middlename,contri.sss_prem,contri.phil_prem,contri.hdmf_contri,er_share,ec,tin_no,phic_no,sss_no,hdmf_no"))
+                ->join('employees','payrollregister_posted_s.biometric_id','=','employees.biometric_id')
+                ->joinSub($contri,'contri','contri.biometric_id','=','employees.biometric_id')
+                
+                ->join('departments','departments.id','=','employees.dept_id')
+                ->join('job_titles','job_titles.id','=','employees.job_title_id')
+                ->where('employees.location_id',$location->id)
+                ->where("employees.emp_level",'=','5')
+                ->orderBy('lastname','asc')
+                ->orderBy('firstname','asc')
+                ->groupBy('biometric_id')
+                ->get();
+            }
+           
 
             $location->employees = $employees;
         }
@@ -85,16 +133,26 @@ class JLRContributionMapper
     
     }
 
-    public function generateS($year, $month)
+    public function generateS($year, $month,$emp_level)
     {
+
+        if($emp_level == 'confi'){
+            $emp_level_qry = " AND employees.emp_level < 5 ";
+        }
+        else{
+            $emp_level_qry = " AND employees.emp_level = 5 ";
+        }
        
 
-        $contri = DB::table("payrollregister_posted_s")
-        ->select(DB::raw("biometric_id,sum(ifnull(sss_prem,0)) as sss_prem,sum(ifnull(phil_prem,0)) as phil_prem,sum(ifnull(payrollregister_posted_s.hdmf_contri,0)) as hdmf_contri,er_share,ec"))
-        ->join('payroll_period','payrollregister_posted_s.period_id','=','payroll_period.id')
-        ->leftJoin('hris_sss_table_2025','ee_share','=','payrollregister_posted_s.sss_prem')
-        ->whereRaw("month(date_from) = $month and year(date_from) = $year")
-        ->groupBy('biometric_id');
+        $contri = "SELECT * FROM (
+            SELECT period_id,payrollregister_posted_s.biometric_id,SUM(IFNULL(sss_prem,0)) AS sss_prem,SUM(IFNULL(phil_prem,0)) AS phil_prem,SUM(IFNULL(payrollregister_posted_s.hdmf_contri,0)) AS hdmf_contri
+            FROM payrollregister_posted_s 
+            INNER JOIN `payroll_period` ON `payrollregister_posted_s`.`period_id` = `payroll_period`.`id` 
+            INNER JOIN `employees` on employees.biometric_id = payrollregister_posted_s.biometric_id 
+            WHERE MONTH(date_from) = $month AND YEAR(date_from) = $year ".$emp_level_qry."
+            GROUP BY `biometric_id`
+            ) AS table1
+            LEFT JOIN (SELECT DISTINCT ec,er_share,ee_share FROM hris_sss_table_2025) AS table2 ON `table2`.`ee_share` = table1.sss_prem";
 
         // foreach($locations as $location)
         // {
