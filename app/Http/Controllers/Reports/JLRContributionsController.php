@@ -78,7 +78,7 @@ class JLRContributionsController extends Controller
         $type = $request->type;
 
         $this->sorted->setValues($result,$label,$type,'confi');
-        return Excel::download($this->sorted,'Contribution '.$request->emp_level.$label.'.xlsx');
+        return Excel::download($this->sorted,'Contribution '.$request->emp_level.' '.$label.'.xlsx');
     }
 
 }
