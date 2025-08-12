@@ -67,6 +67,8 @@
                 @if ($type==1)
                 <td>SSS No</td>
                 <td colspan="3" style="text-align:center;" >SSS</td>
+                <td>MPF</td>
+                <td colspan="2"></td>
                 @endif
                 
                 
@@ -93,6 +95,10 @@
                 <td style="width:120px;text-align:center;" >EE</td>
                 <td style="width:120px;text-align:center;" >ER</td>
                 <td style="width:120px;text-align:center;" >EC</td>
+
+                <td style="width:120px;text-align:center;" >EE</td>
+                <td style="width:120px;text-align:center;" >ER</td>
+               
                 @endif
                 
 
@@ -115,6 +121,8 @@
             @foreach($location->employees as $employee)
                 <?php 
                     $ctr++;
+
+                   
                 
                     $over_all['hdmf_ee'] += $employee->hdmf_contri;
                     $over_all['hdmf_er'] += $employee->hdmf_contri;

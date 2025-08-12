@@ -18,6 +18,9 @@
             'sss_ee' => 0.00,
             'sss_er' => 0.00,
             'sss_ec' => 0.00,
+
+            'sss_wisp' => 0.00,
+            'mpf_er' => 0.00,
         ];
     ?>
 
@@ -59,9 +62,11 @@
                 <td colspan="2" style="text-align:center;" >PHIC</td>
                 @endif
 
-                @if ($type==1)
+                  @if ($type==1)
                 <td>SSS No</td>
                 <td colspan="3" style="text-align:center;" >SSS</td>
+
+                <td colspan="2" style="text-align:center;">MPF</td>
                 @endif
                 
                 
@@ -83,11 +88,14 @@
                 <td style="width:120px;text-align:center;" >ER</td>
                 @endif
 
-                @if ($type==1)
+               @if ($type==1)
                 <td></td>
                 <td style="width:120px;text-align:center;" >EE</td>
                 <td style="width:120px;text-align:center;" >ER</td>
                 <td style="width:120px;text-align:center;" >EC</td>
+
+                <td style="width:120px;text-align:center;" >EE</td>
+                <td style="width:120px;text-align:center;" >ER</td>
                 @endif
                 
 
@@ -105,11 +113,16 @@
                     'sss_ee' => 0.00,
                     'sss_er' => 0.00,
                     'sss_ec' => 0.00,
+
+                    'sss_wisp' => 0.00,
+                    'mpf_er' => 0.00,
                 ];
             ?>
             @foreach($location->employees as $employee)
                 <?php 
                     $ctr++;
+
+                   
                 
                     $over_all['hdmf_ee'] += $employee->hdmf_contri;
                     $over_all['hdmf_er'] += $employee->hdmf_contri;
@@ -120,6 +133,9 @@
                     $over_all['sss_ee'] += $employee->sss_prem;
                     $over_all['sss_er'] += $employee->er_share;
                     $over_all['sss_ec'] += $employee->ec;
+
+                    $over_all['sss_wisp'] += $employee->sss_wisp;
+                    $over_all['mpf_er'] += $employee->mpf_er;
 
                     /*---------------------- */
 
@@ -132,6 +148,9 @@
                     $per_loc['sss_ee'] += $employee->sss_prem;
                     $per_loc['sss_er'] += $employee->er_share;
                     $per_loc['sss_ec'] += $employee->ec;
+
+                    $per_loc['sss_wisp'] += $employee->sss_wisp;
+                    $per_loc['mpf_er'] += $employee->mpf_er;
                 ?>
                 
                 <tr>
@@ -155,6 +174,9 @@
                         <td>{{ number_format($employee->sss_prem,2) }}</td>   
                         <td>{{ number_format($employee->er_share,2) }} </td>   
                         <td>{{ number_format($employee->ec,2) }}</td>   
+
+                        <td>{{ number_format($employee->sss_wisp,2) }}</td>
+                        <td>{{ number_format($employee->mpf_er,2) }}</td>
                     @endif
 
                 
@@ -184,9 +206,16 @@
                 <td>{{ number_format($per_loc['sss_er'],2) }}</td>
                 <td>{{ number_format($per_loc['sss_ec'],2) }}</td>
 
+            
+
+                <td>{{ number_format($per_loc['sss_wisp'],2) }}</td>
+                <td>{{ number_format($per_loc['mpf_er'],2) }}</td>
+
+
                 @endif
             </tr>
      
+
     @endforeach
     
         <tr>
@@ -208,6 +237,9 @@
                 <td>{{ number_format($over_all['sss_ee'],2) }}</td>
                 <td>{{ number_format($over_all['sss_er'],2) }}</td>
                 <td>{{ number_format($over_all['sss_ec'],2) }}</td>
+
+                <td>{{ number_format($over_all['sss_wisp'],2) }}</td>
+                <td>{{ number_format($over_all['mpf_er'],2) }}</td>
                 @endif
         
             

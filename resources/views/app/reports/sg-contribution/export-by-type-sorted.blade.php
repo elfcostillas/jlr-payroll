@@ -67,6 +67,8 @@
                 @if ($type==1)
                 <td>SSS No</td>
                 <td colspan="3" style="text-align:center;" >SSS</td>
+                <td>MPF</td>
+                <td colspan="2"></td>
                 @endif
                 
                 
@@ -93,6 +95,10 @@
                 <td style="width:120px;text-align:center;" >EE</td>
                 <td style="width:120px;text-align:center;" >ER</td>
                 <td style="width:120px;text-align:center;" >EC</td>
+
+                 <td style="width:120px;text-align:center;" >EE</td>
+                <td style="width:120px;text-align:center;" >ER</td>
+               
                 @endif
                 
 
@@ -110,6 +116,9 @@
                     'sss_ee' => 0.00,
                     'sss_er' => 0.00,
                     'sss_ec' => 0.00,
+
+                    'sss_wisp' => 0.00,
+                    'mpf_fer' => 0.00,
                 ];
             ?>
             @foreach($employees as $employee)
@@ -161,6 +170,9 @@
                         <td>{{ $employee->sss_prem }}</td>   
                         <td>{{ $employee->er_share }} </td>   
                         <td>{{ $employee->ec }}</td>   
+
+                        <td></td>
+                        <td></td>
                     @endif
 
                 

@@ -62,6 +62,8 @@
                 @if ($type==1)
                 <td>SSS No</td>
                 <td colspan="3" style="text-align:center;" >SSS</td>
+
+                <td colspan="2" style="text-align:center;">MPF</td>
                 @endif
                 
                 
@@ -88,6 +90,9 @@
                 <td style="width:120px;text-align:center;" >EE</td>
                 <td style="width:120px;text-align:center;" >ER</td>
                 <td style="width:120px;text-align:center;" >EC</td>
+
+                <td style="width:120px;text-align:center;" >EE</td>
+                <td style="width:120px;text-align:center;" >ER</td>
                 @endif
                 
 
@@ -109,6 +114,7 @@
             ?>
             @foreach($location->employees as $employee)
                 <?php 
+
                     $ctr++;
                 
                     $over_all['hdmf_ee'] += $employee->hdmf_contri;
@@ -155,6 +161,9 @@
                         <td>{{ number_format($employee->sss_prem,2) }}</td>   
                         <td>{{ number_format($employee->er_share,2) }} </td>   
                         <td>{{ number_format($employee->ec,2) }}</td>   
+
+                        <td></td>
+                        <td></td>
                     @endif
 
                 

@@ -52,6 +52,7 @@ class JLRContributionsController extends Controller
 
     public function webByType(Request $request)
     {
+
         $label = $this->months[$request->month] .' '. $request->year;
         $result = $this->mapper->generate($request->year,$request->month,$request->emp_level);
         $type = $request->type;
