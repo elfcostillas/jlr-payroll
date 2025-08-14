@@ -92,6 +92,20 @@ class PayrollRegisterFunctions
                 ->get();
     }
 
+    public function getEmployeesByDeptAndDivision($division,$department)
+    {
+        return $this->mainQuery()
+                ->leftJoin('divisions_sub','divisions_sub.id','=','employees.sub_division')
+                ->leftJoin('job_titles','employees.job_title_id','=','job_titles.id')
+                ->leftJoin('sub_dept','sub_dept.id','=','employees.sub_dept')
+                ->select()
+                ->where('divisions_sub.id','=',$division->id)
+                ->where('employees.sub_dept','=',$department->id)
+                ->orderBy('lastname','asc')
+                ->orderBy('firstname','asc')
+                ->get();
+    }
+
     public function querySum()
     {
         $qry = '';
@@ -567,6 +581,17 @@ class PayrollRegisterFunctions
         ->select(DB::raw("divisions.id,divisions.div_name,count(employees.biometric_id) as head_count"))
         ->orderBy('divisions.id','ASC')
         ->groupBy('divisions.id');
+
+        return $result->get();
+    }
+
+    public function getCountsV2()
+    {
+        $result = $this->mainQuery()
+         ->leftJoin('divisions_sub','divisions_sub.id','=','employees.sub_division')
+        ->select(DB::raw("divisions_sub.id,divisions_sub.div_name,count(employees.biometric_id) as head_count"))
+        ->orderBy('divisions_sub.id','ASC')
+        ->groupBy('divisions_sub.id');
 
         return $result->get();
     }

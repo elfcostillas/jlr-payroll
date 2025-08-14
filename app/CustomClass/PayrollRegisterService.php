@@ -31,8 +31,8 @@ class PayrollRegisterService
 
     public function getPayrollData($period)
     {
-        
-        $this->payroll->process($period);
+
+        $this->payroll->processV2($period);
         return $this->payroll;
     }
 

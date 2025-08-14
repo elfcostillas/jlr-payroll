@@ -3,6 +3,7 @@
 namespace App\CustomClass;
 
 use App\CustomClass\PayrollRegisterFunctions;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 abstract class PayrollRegister extends PayrollRegisterFunctions
@@ -135,6 +136,87 @@ abstract class PayrollRegister extends PayrollRegisterFunctions
 
         $this->data = $data;
     }
+
+    public function processV2($period)
+    {
+        $this->period = $period;
+
+        $divisions = $this->getDivisionV2();
+
+        foreach($divisions as $division)
+        {
+            // dd($division);
+            $departments = $this->getDepartmentByDivision($division);
+
+            foreach($departments as $department)
+            {
+                $employees =  $this->getEmployeesByDeptAndDivision($division,$department);
+
+                foreach($employees as $employee)
+                {
+                    $other_earning = $this->otherEarnings($employee,$period);
+
+                    $employee->other_earning = $other_earning;
+                    
+                /*******************************/
+
+                /* Deductions for employee */
+                    $deductions = $this->getDeductions($employee->biometric_id,$period->id);
+                    
+                    $employee->deductions = $deductions;
+                    
+                /*******************************/
+
+                /* Gov Loan for employee */
+
+                    $gov_loans = $this->getGovLoans($employee->biometric_id,$period->id);
+
+                    $employee->gov_loans = $gov_loans;
+
+                /*******************************/
+
+                } 
+
+                $department->employees = $employees;
+            }
+
+            $division->departments = $departments;
+        }
+
+        $this->data = $divisions;
+
+    }
+
+    public function getDivisionV2()
+    {
+        $result = DB::table('employees')
+                    ->join('divisions_sub','divisions_sub.id','=','employees.sub_division')
+                    ->where('emp_level','<','5')
+                    ->where('exit_status',1)
+                    ->select('divisions_sub.id','divisions_sub.div_name')
+                    ->distinct()
+                    ->orderBy('divisions_sub.id','DESC')
+                    ->get();
+
+        return $result;
+    }
+
+    public function getDepartmentByDivision($division)
+    {   
+        $result = DB::table('employees') 
+            ->join('sub_dept','sub_dept.id','=','employees.sub_dept')
+            ->where('emp_level','<','5')
+            ->where('exit_status',1)
+            ->where('sub_division','=',$division->id)
+            ->select('sub_dept.id','sub_dept.dept_label as dept_name')
+            ->orderBy('sub_dept.id','asc')
+            ->distinct()
+            ->get();
+
+        return $result;
+    }
+
+
 
 
 }

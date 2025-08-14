@@ -361,7 +361,14 @@ class WeeklyEmployee
             //dd($period->period_type);
             $this->payreg['hdmf_contri'] = 0.00;
             $this->payreg['sss_prem'] = ($this->data['deduct_sss']=='Y') ?  $this->computeSSSPrem($period) : 0.00;
-            $this->payreg['phil_prem'] = ($this->data['deduct_phic']=='Y') ?  round(($this->rates['monthly_credit'] * ($this->philrate/100))/2,2) : 0.00;
+
+            if($this->rates['monthly_credit'] >= 100000.00){
+                $this->payreg['phil_prem'] = ($this->data['deduct_phic']=='Y') ?  round((100000.00 * ($this->philrate/100))/2,2) : 0.00;
+            }else{
+                $this->payreg['phil_prem'] = ($this->data['deduct_phic']=='Y') ?  round(($this->rates['monthly_credit'] * ($this->philrate/100))/2,2) : 0.00;
+            }
+
+           
             $this->payreg['sss_wisp'] = ($this->data['deduct_sss']=='Y') ?  $this->computeWISP() : 0.00;
         }
     }
