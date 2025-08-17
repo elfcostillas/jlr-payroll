@@ -467,7 +467,7 @@
                         command: [
                             { text : 'Prepare',click : viewModel.buttonHandler.prepare , },
                             { text : 'Download',click : viewModel.buttonHandler.download , },
-                            // { text : 'Compute All',click : viewModel.buttonHandler.computeAll , }
+                            { text : 'Compute All',click : viewModel.buttonHandler.computeAll , }
                         ],
                         attributes : { style : 'font-size:10pt !important;'},
                         width : 280

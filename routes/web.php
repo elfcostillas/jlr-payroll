@@ -71,6 +71,7 @@ use App\Http\Controllers\PayrollTransaction\ThirteenthMonthController;
 use App\Http\Controllers\Reports\AttendanceReportController;
 use App\Http\Controllers\Reports\JLRContributionsController;
 use App\Http\Controllers\Reports\PayrollSupportGroupController;
+use App\Http\Controllers\Timekeeping\LeaveCreditsSGController;
 use App\Http\Controllers\Timekeeping\ManageDTRConfiController;
 use App\Http\Controllers\Timekeeping\WeeklyDTRUploaderController;
 
@@ -326,6 +327,17 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::get('make-leave-credits',[LeaveCreditsController::class,'makeLeaveCredits']);
         Route::get('make-svl-credits/{year}',[LeaveCreditsController::class,'makeSVLCredits']);
 
+    });
+
+    Route::prefix('leave-credits-sg')->group(function(){
+        Route::get('/',[LeaveCreditsSGController::class,'index']);
+
+        Route::get('year',[LeaveCreditsSGController::class,'yearList']);
+        Route::get('employees/{year}',[LeaveCreditsSGController::class,'empList']);
+
+         Route::get('compute/{year}',[LeaveCreditsSGController::class,'computeLeaveCredits']);
+
+      
     });
 
     //DTRSummaryController

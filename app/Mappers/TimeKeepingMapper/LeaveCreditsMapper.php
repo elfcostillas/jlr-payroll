@@ -74,6 +74,27 @@ class LeaveCreditsMapper extends AbstractMapper {
         return $result->get();
     }
 
+      public function empListSG($year)
+    {
+        $result = $this->model->select(DB::raw("employee_names_vw.*,line_id,fy_year,IFNULL(sil,0) sil"))
+            ->from('employee_names_vw')
+            ->join('employees','employees.biometric_id','=','employee_names_vw.biometric_id')
+            //->leftJoin('leave_credits','leave_credits.biometric_id','=','employee_names_vw.biometric_id')
+            ->leftJoin('leave_credits',function($join) use ($year){
+                $join->on('leave_credits.biometric_id','=','employee_names_vw.biometric_id');
+                $join->where('fy_year',$year);
+            })
+            ->where('emp_level','>','5')
+            ->where('employees.exit_status',1)
+            ->where(function($q) use($year) {
+                $q->where('fy_year',$year);
+                $q->orWhereNull('fy_year');
+            })
+            ->orderBy('employee_name','asc');
+
+        return $result->get();
+    }
+
     public function process($year,$start,$end)
     {
         $qry = "  SELECT employees.biometric_id,lastname,firstname,suffixname,IFNULL(vacation_leave,0) vacation_leave,IFNULL(sick_leave,0) sick_leave,IFNULL(summer_vacation_leave,0) summer_vacation_leave,IFNULL(paternity_leave,0) paternity_leave,
