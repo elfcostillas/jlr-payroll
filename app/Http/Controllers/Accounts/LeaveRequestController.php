@@ -130,16 +130,18 @@ class LeaveRequestController extends Controller
 
             // $data = $this->credits->showLeaves($header->biometric_id,$start,$end);
            
-            $consumed = $this->credits->getBalance( $year,$start,$end,$header->biometric_id);
+            $consumed = $this->credits->getBalance($year,$start,$end,$header->biometric_id);
 
             if($consumed){
                 $balance_vl = ($consumed[0]->vacation_leave - $consumed[0]->VL_PAY) * 8;  
                 $balance_sl = ($consumed[0]->sick_leave - $consumed[0]->SL_PAY) * 8;   
                 $balance_svl = ($consumed[0]->summer_vacation_leave - $consumed[0]->SVL_PAY) * 8;   
+                $balance_sil = ($consumed[0]->sil - $consumed[0]->SIL_PAY) * 8;   
             }else {
                 $balance_vl = 0;
                 $balance_sl = 0;
                 $balance_svl = 0;
+                $balance_sil = 0;
             }
 
             $w_pay = ($request->with_pay) ? $request->with_pay : 0;
@@ -218,11 +220,38 @@ class LeaveRequestController extends Controller
                             // $no_pay = $w_pay + $wo_pay;
                         }
                         break;
+
+                    case 'SIL' :
+                            if(($balance_sil-$w_pay)>=0 || ($w_pay==0)){
+                                $ye_pay = ($balance_svl - $w_pay >=0) ? $w_pay : $w_pay - $balance_svl;
+                                $no_pay = ($balance_svl - $w_pay >=0) ? $wo_pay : ($balance_svl - $w_pay) + $wo_pay;
+                                $balance_svl = ($balance_svl- $ye_pay <= 0) ? 0 : $balance_svl- $ye_pay;
+                            }else {
+                                return response()->json(['error' => 'Insufficient SIL credits.'])->setStatusCode(500, 'Error');
+                                // $ye_pay = 0;
+                                // $no_pay = $w_pay + $wo_pay;
+                            }
+                        break;
                 }
             }
 
        
           
+            /*
+               +"biometric_id": "1525"
+    +"lastname": "Pardillo"
+    +"firstname": "Constancio"
+    +"suffixname": "Jr."
+    +"vacation_leave": "0.00"
+    +"sick_leave": "0.00"
+    +"summer_vacation_leave": "0.00"
+    +"bereavement": "0.00"
+    +"sil": "5.00"
+    +"VL_PAY": "0.00"
+    +"SL_PAY": "0.00"
+    +"SVL_PAY": "0.00"
+    +"SIL_PAY": "0.00"*/
+
             // $arrayd = array(
             //     'header_id' => $header->id,
             //     'leave_date' => $day,
@@ -273,6 +302,21 @@ class LeaveRequestController extends Controller
 
 
 /*
+
+   +"biometric_id": "1525"
+    +"lastname": "Pardillo"
+    +"firstname": "Constancio"
+    +"suffixname": "Jr."
+    +"vacation_leave": "0.00"
+    +"sick_leave": "0.00"
+    +"summer_vacation_leave": "0.00"
+    +"bereavement": "0.00"
+    +"sil": "5.00"
+    +"VL_PAY": "0.00"
+    +"SL_PAY": "0.00"
+    +"SVL_PAY": "0.00"
+    +"SIL_PAY": "0.00"
+
 SELECT * FROM leave_request_header INNER JOIN employees ON leave_request_header.biometric_id = employees.biometric_id
 LEFT JOIN divisions ON employees.division_id = divisions.id
 LEFT JOIN departments ON employees.dept_id = departments.id

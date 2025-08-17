@@ -16,6 +16,7 @@
                 { text: "Others", value: "O" },
                 { text: "SVL", value: "SVL" },
                 { text: "Bereavement Leave", value: "BRV" },
+                { text: "S.I.L.", value: "SIL" },
 
             ];
 

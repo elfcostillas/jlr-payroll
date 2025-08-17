@@ -198,8 +198,8 @@ SELECT biometric_id,ROUND(SUM(with_pay)/8,2)
     }
 
     function getBalance($year,$start,$end,$biometric_id){
-        $qry = "SELECT employees.biometric_id,lastname,firstname,suffixname,IFNULL(vacation_leave,0) vacation_leave,IFNULL(sick_leave,0) sick_leave,IFNULL(summer_vacation_leave,0) summer_vacation_leave,
-        IFNULL(VL_PAY,0) VL_PAY,IFNULL(SL_PAY,0) SL_PAY,IFNULL(SVL_PAY,0) SVL_PAY
+        $qry = "SELECT employees.biometric_id,lastname,firstname,suffixname,IFNULL(vacation_leave,0) vacation_leave,IFNULL(sick_leave,0) sick_leave,IFNULL(summer_vacation_leave,0) summer_vacation_leave,IFNULL(bereavement,0) bereavement,IFNULL(sil,0) sil,
+        IFNULL(VL_PAY,0) VL_PAY,IFNULL(SL_PAY,0) SL_PAY,IFNULL(SVL_PAY,0) SVL_PAY, IFNULL(SIL_PAY,0) SIL_PAY
         FROM employees LEFT JOIN leave_credits ON leave_credits.biometric_id = employees.biometric_id
         LEFT JOIN (
           SELECT biometric_id,ROUND(SUM(with_pay)/8,2) AS VL_PAY FROM leave_request_header 
@@ -231,8 +231,19 @@ SELECT biometric_id,ROUND(SUM(with_pay)/8,2)
           AND leave_request_header.received_by IS NOT NULL
           GROUP BY biometric_id
       ) AS svl ON employees.biometric_id = svl.biometric_id
+        LEFT JOIN (
+            SELECT biometric_id,ROUND(SUM(with_pay)/8,2) AS SIL_PAY FROM leave_request_header 
+                INNER JOIN leave_request_detail ON leave_request_header.id = header_id
+            WHERE leave_date BETWEEN '$start' AND '$end' AND leave_request_header.acknowledge_status = 'Approved' AND document_status = 'POSTED'
+            AND with_pay > 0
+            AND is_canceled = 'N'
+            AND leave_type = 'SIL'
+            AND leave_request_header.received_by IS NOT NULL
+            GROUP BY biometric_id
+        ) AS sil ON employees.biometric_id = sil.biometric_id
         WHERE leave_credits.fy_year = $year and employees.biometric_id = $biometric_id;";
-
+        
+        
         $result = DB::select($qry);
 
         return $result;
