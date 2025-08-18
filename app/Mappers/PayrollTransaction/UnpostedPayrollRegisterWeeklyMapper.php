@@ -355,6 +355,20 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         return $result;
     }
 
+    public function getFiledLeaves($biometric_id,$period_id)
+    {
+        $result = $this->model->select()->from('filed_leaves_vw')->leftJoin('payroll_period_weekly',function($join){
+            // $join->whereBetween('leave_date',['payroll_period.date_from','payroll_period.date_to']);
+                $join->whereRaw('leave_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
+        })
+        ->where([
+            ['biometric_id',$biometric_id],
+            ['payroll_period_weekly.id',$period_id]
+        ])->get();
+
+        return $result;
+    }
+
     public function getHolidayCounts($biometric_id,$period_id)
     {
         $qry = "SELECT holiday_type FROM holidays INNER JOIN holiday_location ON holidays.id = holiday_id
@@ -463,6 +477,23 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         $result = $this->model->select('var_name','col_label')->from('payreg_header')->orderBy('sort_no','ASC');
         return $result->get();
 
+    }
+
+    public function sil_total($period_id,$posted_status)
+    {
+        if($posted_status == 'unposted'){
+            return DB::table('payrollregister_unposted_weekly')
+                ->select(DB::raw("sum(vl_wpay) as vl_wpay"))
+                ->where('period_id',$period_id)
+                ->first();
+        }
+        else {
+            return DB::table('payrollregister_posted_weekly')
+                ->select(DB::raw("sum(vl_wpay) as vl_wpay"))
+                ->where('period_id',$period_id)
+                ->first();
+        }
+       
     }
     
     

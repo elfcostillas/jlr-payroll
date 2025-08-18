@@ -97,7 +97,26 @@ class PayrollRegisterWeeklyController extends Controller
 
         $phil_rate = $this->mapper->getPhilRate();
 
+        $sil_flag = false;
+
         foreach($employees as $employee){
+
+            $employee->vl_wpay = 0;
+            $employee->vl_wpay_amount = 0;
+
+            $leaves = $this->mapper->getFiledLeaves($employee->biometric_id,$pperiod->id);
+
+            if($leaves->count()>0){
+                 foreach($leaves as $leave){
+                    switch($leave->leave_type){
+                        case 'SIL' :
+                                $employee->vl_wpay += $leave->with_pay;                           
+                            break;
+                    }
+                }
+                $sil_flag = true;
+            }
+
             // $holidays = $this->mapper->getHolidayCounts($employee->biometric_id,$employee->period_id);
 
             // $employee->actual_reghol = 0;
@@ -159,6 +178,7 @@ class PayrollRegisterWeeklyController extends Controller
             'nopay' => $nopay,
             'headers' => $headers , 
             'labels' => $label,
+            'sil_flag' => $sil_flag
         ]);
     }
 
@@ -216,6 +236,8 @@ class PayrollRegisterWeeklyController extends Controller
             }
         }
 
+        $sil_flag = $this->mapper->sil_total($period,'unposted');
+
         $period_label = $this->period->makeRange($period);
 
         foreach($colHeaders  as  $value ){
@@ -232,6 +254,7 @@ class PayrollRegisterWeeklyController extends Controller
                 'period' => $periodObject,
                 'period_label' => $period_label->drange,
                 'perf' => $period_label->perf,
+                'sil_flag' => $sil_flag
             ])->setPaper('Folio','landscape');
        
         $pdf->output();

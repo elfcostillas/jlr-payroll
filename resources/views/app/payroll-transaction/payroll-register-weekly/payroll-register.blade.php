@@ -140,8 +140,11 @@
 
                         <th style="padding : 0px 4px;min-width:110px;" >Late (Hrs)</th>
                         <th style="padding : 0px 4px;min-width:110px;" >Late Amount</th>
-
-                       
+                        
+                        @if($sil_flag)
+                            <th style="padding : 0px 4px;min-width:110px;" >SIL</th>
+                            <th style="padding : 0px 4px;min-width:110px;" >SIL Pay</th>
+                        @endif
                        
 
                         @foreach($headers as $key => $val)
@@ -186,8 +189,11 @@
 
                                     <td style="text-align:right;"> {{ ($employee->late_eq>0) ? number_format($employee->late_eq,2) : ''; }}</td>
                                     <td style="text-align:right;"> {{ ($employee->late_eq_amount>0) ? number_format($employee->late_eq_amount,2) : ''; }}</td>
-                                
-                                  
+                                    
+                                    @if($sil_flag)
+                                        <td style="text-align:right;" >{{ ($employee->vl_wpay>0) ? number_format($employee->vl_wpay,2) : ''; }}</td>
+                                        <td style="text-align:right;" >{{ ($employee->vl_wpay_amount>0) ? number_format($employee->vl_wpay_amount,2) : ''; }}</td>
+                                    @endif
 
                                     @foreach($headers as $key => $val)
                                         <td style="text-align:right;">{{ ($employee->$key > 0) ? number_format($employee->$key,2) : '' }}</td>
