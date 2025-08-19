@@ -42,18 +42,15 @@ return [
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
- /*
+        /*
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '172.31.64.1'),
-           
             'port' => env('DB_PORT', '3307'),
             'database' => env('DB_DATABASE', 'jlr_hris'),
-
             'username' => env('DB_USERNAME', 'root'),
             'password' => env('DB_PASSWORD', 'elmer'),
-         
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
@@ -66,7 +63,7 @@ return [
                 PDO::ATTR_EMULATE_PREPARES => true,
             ]) : [],
         ],
-               */
+        */    
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),

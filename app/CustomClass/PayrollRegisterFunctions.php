@@ -300,17 +300,23 @@ class PayrollRegisterFunctions
     }
 
     public function computeTotalByDept($data,$key){
-        $total = 0;
 
-        foreach ($data->employees as $emp)
-        {
-            if(is_object($key)){
-                $total += $emp->{$key->var_name};
-            }else{
-                $total += $emp->{$key};
+        $total = 0;
+        
+        if(isset($data->employees)){
+            foreach ($data->employees as $emp)
+            {
+                if(is_object($key)){
+                    $total += $emp->{$key->var_name};
+                }else{
+                    $total += $emp->{$key};
+                }
+                
             }
-            
+        }else{
+            dd($data);
         }
+        
 
         return $total;
     }
@@ -346,11 +352,74 @@ class PayrollRegisterFunctions
 
         foreach ($data->departments as $department)
         {
+           
             $total += $this->computeTotalDeductionsByDept($department,$key);
         }
 
         return $total;
     }
+
+    public function computeTotalDeductionsByDivisionV2($data,$key)
+    {
+        $total = 0;
+
+        // foreach ($data->departments as $department)
+        // {
+           
+        //     $total += $this->computeTotalDeductionsByDept($department,$key);
+        // }
+
+        foreach ($data->data as $division)
+        {
+            foreach($division->departments as $department)
+            {
+                $total += $this->computeTotalDeductionsByDept($department,$key);
+            }
+           
+        }
+
+        return $total;
+    }
+
+    public function computeTotalByDivisionV2($data,$key)
+    {
+        $total = 0;
+
+        
+        foreach ($data->data as $division)
+        {
+            foreach($division->departments as $department)
+            {
+                $total += $this->computeTotalByDept($department,$key);
+            }
+           
+        }
+
+        return $total;
+    }
+
+    public function computeTotalOtherEarningByDivisionV2($data,$key)
+    {
+        $total = 0;
+        
+        // foreach($data->departments as $department)
+        // {
+        //     $total += $this->computeTotalOtherEarningByDept($department,$key);
+        // }
+
+        foreach ($data->data as $division)
+        {
+            foreach($division->departments as $department)
+            {
+                $total += $this->computeTotalOtherEarningByDept($department,$key);
+            }
+           
+        }
+
+        return $total;
+    }
+
+    
 
     public function computeTotalDeductionsByLocation($data,$key)
     {
@@ -388,6 +457,22 @@ class PayrollRegisterFunctions
         return $total;
     }
 
+    public function computeTotalDeductionsByDeptV2($data,$key)
+    {
+        $total = 0;
+
+        foreach ($data->employees as $emp)
+        {
+           
+            if($emp->deductions && array_key_exists($key->id,$emp->deductions))
+            {
+                $total += $emp->deductions[$key->id];
+            }
+        }
+
+        return $total;
+    }
+
     public function computeTotalLoanByDivision($data,$key)
     {
         $total = 0;
@@ -397,6 +482,22 @@ class PayrollRegisterFunctions
         foreach ($data->departments as $department)
         {
             $total += $this->computeTotalLoansByDept($department,$key);
+        }
+        return $total;
+    }
+
+    public function computeTotalLoanByDivisionV2($data,$key)
+    {
+        $total = 0;
+
+        // dd($data-.Department,$key);
+        foreach ($data->data as $division)
+        {
+            foreach($division->departments as $department)
+            {
+                $total += $this->computeTotalLoansByDept($department,$key);
+            }
+           
         }
         return $total;
     }
@@ -595,6 +696,77 @@ class PayrollRegisterFunctions
 
         return $result->get();
     }
+
+    public function total_pay_per_dept()
+    {
+        $result = $this->mainQuery()->leftJoin('sub_dept','employees.sub_dept','=','sub_dept.id')
+            ->distinct()
+            ->select(DB::raw("sub_dept.id, sub_dept.dept_label,sum(gross_pay) as gross_pay, sum(gross_total) as gross_total, sum(net_pay) as net_pay"))
+            ->groupBy('sub_dept.id')
+            ->orderBy('sub_dept.id','asc')
+            ->get();
+
+        return $result;
+    }
+
+    public function summaryDeptByLocation()
+    {
+        $locations = $this->mainQuery()->leftJoin('locations','employees.location_id','locations.id')
+            ->select('locations.id','locations.location_altername2')
+            ->distinct()
+            ->orderBy('locations.id','asc')
+            ->get();
+
+        $departments = $this->mainQuery()->leftJoin('sub_dept','employees.sub_dept','=','sub_dept.id')
+            ->distinct()
+            ->select(DB::raw("sub_dept.id, sub_dept.dept_label"))
+            ->orderBy('sub_dept.id','asc')
+            ->get();
+
+        $totals_by_loc = [];
+        $totals_by_dept = [];
+        $over_all = 0;
+
+        foreach($locations as $loc)
+        {
+            foreach($departments as $dept)
+            {
+                $employee =  $this->mainQuery()
+                    ->where('employees.sub_dept','=',$dept->id)
+                    ->where('employees.location_id','=',$loc->id)
+                    ->select(DB::raw("count(employees.id) as pax"))
+                    ->first();
+
+                $data[$dept->id][$loc->id] = $employee->pax;
+
+                if(array_key_exists($loc->id, $totals_by_loc)){
+                    $totals_by_loc[$loc->id] += $employee->pax;
+                }else{
+                    $totals_by_loc[$loc->id] = $employee->pax;
+                }
+
+                if(array_key_exists($dept->id, $totals_by_dept)){
+                    $totals_by_dept[$dept->id] += $employee->pax;
+                }else{
+                    $totals_by_dept[$dept->id] = $employee->pax;
+                }
+
+                $over_all += $employee->pax;
+
+            }
+        }
+
+        return [
+            'x' => $locations,
+            'y' => $departments,
+            'data' => $data,
+            'totals_by_loc' => $totals_by_loc,
+            'totals_by_dept' => $totals_by_dept,
+            'over_all' => $over_all
+        ];
+    }
+
+
 }
 
 /*

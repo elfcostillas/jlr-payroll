@@ -48,8 +48,6 @@
             position: fixed;
             margin-top :-80px;
         }
-
-
         
 
         /* header { position: fixed; top: -60px; left: 0px; right: 0px; background-color: lightblue; height: 50px; } */
@@ -221,10 +219,40 @@
                         </tr>
                     @endforeach
             @endforeach
+               <tr>
+                    <td colspan="3" > Total Overall </td>
+                    @foreach ($data->basic_cols as $bcols)
+                        <td class="r b">{{ custom_format($data->computeTotalByDivisionV2($data,$bcols)) }}</td>
+                    @endforeach
+                    @foreach ($data->gross_cols as $gcols)
+                        <td class="r b">{{ custom_format($data->computeTotalByDivisionV2($data,$gcols) )}}</td>
+                    @endforeach
+                    @foreach ($data->fixed_comp_hcols as $fxcols) <!-- Fixed Compensation -->
+                        <td class="r b"> {{ custom_format($data->computeTotalOtherEarningByDivisionV2($data,$fxcols)) }} </td>
+                    @endforeach
+                    @foreach ($data->other_comp_hcols as $othcols) <!-- Fixed Compensation -->
+                        <td class="r b"> {{ custom_format($data->computeTotalOtherEarningByDivisionV2($data,$othcols)) }} </td>
+                    @endforeach
+                    <td class="r b">  {{ custom_format($data->computeTotalByDivisionV2($data,'gross_total')) }} </td>
+
+                    @foreach ($data->contri as $contri_cols)
+                        <td class="r b">{{ custom_format($data->computeTotalByDivisionV2($data,$contri_cols)) }}</td>
+                    @endforeach
+
+                    @foreach ($data->deduction_hcols as $deduction_hcols)
+                        <!-- <td class="r b"> {{ (array_key_exists($deduction_hcols->id,$employee->deductions) ? custom_format($employee->deductions[$deduction_hcols->id]) : '') }}  -->
+                        <td class="r b"> {{ custom_format($data->computeTotalDeductionsByDivisionV2($data,$deduction_hcols)) }} </td>
+                    @endforeach
+                    @foreach ($data->govloans_hcols as $govloans_hcols)
+                        <td class="r b"> {{ custom_format($data->computeTotalLoanByDivisionV2($data,$govloans_hcols)) }} </td>
+                    @endforeach
+                    <td class="r b">  {{ custom_format($data->computeTotalByDivisionV2($data,'total_deduction')) }} </td>
+                    <td class="r b">  {{ custom_format($data->computeTotalByDivisionV2($data,'net_pay')) }} </td>
+                </tr>
         </table>
 
         <?php $head_count = 0; ?>
-        <table style="font-size :8pt;border-collapse:collapse; margin-top : 12px;" border=1>
+        {{-- <table style="float:left;font-size :8pt;border-collapse:collapse; margin-top : 12px;" border=1>
             @foreach ($data->getCountsv2() as $division )
             <tr>
                 <td class="l pad4">{{ $division->div_name }}</td>
@@ -236,9 +264,93 @@
                 <td class="l b pad4">TOTAL</td>
                 <td class="r b pad4"> {{ $head_count }}</td>
             </tr>
+        </table> --}}
+
+        <table style="float:left;font-size :6pt;border-collapse:collapse; margin-top : 12px;" border=1>
+            <tr> 
+                <td style="padding : 2px 6px;font-weight: bold;"> Departments</td>
+                @foreach ($data->summaryDeptByLocation()['x'] as $cols)
+                    <td style="font-weight: bold;padding : 2px 6px;">
+                        {{ $cols->location_altername2 }}
+                    </td>
+                @endforeach
+                <td style="padding : 2px 6px;font-weight: bold;"> TOTALS</td>
+                @foreach ($data->summaryDeptByLocation()['y'] as $rows)
+                    <tr> 
+                        <td style="padding : 0px 6px;">
+                            {{ $rows->dept_label }}
+                        </td>
+                   
+                        @foreach ($data->summaryDeptByLocation()['x'] as $cols)
+                            <td style="text-align: right;padding-right:6px;">
+                               {{  ($data->summaryDeptByLocation()['data'][$rows->id][$cols->id] > 0) ? $data->summaryDeptByLocation()['data'][$rows->id][$cols->id] : '' }}
+                            </td>
+                        @endforeach
+                        <td style="text-align: right;padding-right:6px;">
+                           {{ $data->summaryDeptByLocation()['totals_by_dept'][$rows->id] }}
+                        </td>
+                    </tr> 
+                @endforeach
+                <td style="padding : 2px 6px;font-weight: bold;"> TOTALS</td>
+                @foreach ($data->summaryDeptByLocation()['x'] as $cols)
+                    <td style="text-align: right;padding : 2px 6px;">
+                        {{ $data->summaryDeptByLocation()['totals_by_loc'][$cols->id] }}
+                    </td>
+                @endforeach
+                    <td style="text-align: right;padding : 2px 6px;">
+                        {{ $data->summaryDeptByLocation()['over_all'] }}
+                    </td>
+            </tr>
+            
         </table>
 
-        <table style="width:100%;margin-top:68px;font-size:8pt;" border=0>
+        <table style="float:left ;font-size :6pt;border-collapse:collapse;margin-top:154px;clear:left" border=1>
+            <tr> 
+                <td colspan="2" style="text-align: center;padding:2px 6px;" > Payroll / Gross Pay </td> 
+            </tr>
+             @php 
+                $total_gross = 0;
+            @endphp
+            @foreach ( $data->total_pay_per_dept() as $gross_dept)
+                @php 
+                    $total_gross += $gross_dept->gross_total;
+                @endphp
+                <tr>
+                    <td style="padding:2px 6px;"> {{  $gross_dept->dept_label }} </td>
+                    <td style="padding:2px 6px;text-align:right;"> {{  number_format($gross_dept->gross_total,2) }} </td>
+                </tr>
+              
+            @endforeach
+                <tr>
+                    <td> TOTAL </td>
+                    <td style="padding:2px 6px;text-align:right;"> {{  number_format($total_gross,2) }} </td>
+                </tr> 
+        </table>
+
+        <table style="float:left;margin-left:136px ;font-size :6pt;border-collapse:collapse;margin-top:154px;clear:left;" border=1>
+            <tr> 
+                <td colspan="2" style="text-align: center;padding:2px 6px;" > Payroll / Net Pay </td> 
+            </tr>
+             @php 
+                $total_netpay = 0;
+            @endphp
+            @foreach ( $data->total_pay_per_dept() as $gross_dept)
+                @php 
+                    $total_netpay += $gross_dept->net_pay;
+                @endphp
+                <tr>
+                    <td style="padding:2px 6px;"> {{  $gross_dept->dept_label }} </td>
+                    <td style="padding:2px 6px;text-align:right;"> {{  number_format($gross_dept->net_pay,2) }} </td>
+                </tr>
+              
+            @endforeach
+                <tr>
+                    <td> TOTAL </td>
+                    <td style="padding:2px 6px;text-align:right;"> {{  number_format($total_netpay,2) }} </td>
+                </tr> 
+        </table>
+
+        <table style="width:100%;margin-top:428px;font-size:8pt;" border=0>
             <tr>
                 <td style="width:10%">
                 <td style="width:26%">
