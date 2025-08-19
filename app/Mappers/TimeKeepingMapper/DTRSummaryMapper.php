@@ -147,12 +147,14 @@ class DTRSummaryMapper extends AbstractMapper {
                     and employees.biometric_id != 0";
         */
 
-        $query = "select DISTINCT employees.biometric_id from edtr_totals
-        inner join employees on employees.biometric_id = edtr_totals.biometric_id
-        inner join payroll_period on edtr_totals.period_id = payroll_period.id
-        where payroll_period.id = $period_id and pay_type in (1,2)
-        and employees.emp_level < 5
-        and employees.biometric_id != 0;";
+        // $query = "select DISTINCT employees.biometric_id from edtr_totals
+        // inner join employees on employees.biometric_id = edtr_totals.biometric_id
+        // inner join payroll_period on edtr_totals.period_id = payroll_period.id
+        // where payroll_period.id = $period_id and pay_type in (1,2)
+        // and employees.emp_level < 5
+        // and employees.biometric_id != 0;";
+        
+        $query = "SELECT DISTINCT employees.biometric_id FROM employees WHERE exit_status = 1 AND emp_level < 5";
 
 
                     // and employees.biometric_id = 830";

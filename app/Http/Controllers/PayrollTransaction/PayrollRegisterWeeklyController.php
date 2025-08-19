@@ -75,22 +75,6 @@ class PayrollRegisterWeeklyController extends Controller
         $period = $request->id;
         $payreg = [];
 
-    //     $result = $this->mapper->compute($period);
-       
-    //     $data = $this->mapper->showComputed($period);
-
-    //     return view('app.payroll-transaction.payroll-register-weekly.payroll-register',['data' => $data]); 
-
-        //getWeeklyHolidaysforComputation + computeWeeklyHoliday
-     
-        // $logs = $this->dtr->getWeeklyHolidaysforComputation($period);
-
-        // if($logs->count()>0)
-        // {
-        //         $this->dtr->computeWeeklyHoliday($logs,'weekly');
-         
-        // }
-
         $pperiod = DB::table('payroll_period_weekly')->select()->where('id',$period)->first();
 
         $employees = $this->mapper->getEmployeeWithDTRW($period,'non-confi');
