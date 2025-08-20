@@ -766,6 +766,35 @@ class PayrollRegisterFunctions
         ];
     }
 
+    public function countPerJobTitleLocation()
+    {
+        $locations = DB::table('locations')->get();
+
+        foreach($locations as $location)
+        {
+            $data = $this->countPerJobTitle($location);
+
+            $location->data = $data;
+        }
+
+        return $locations;
+    }
+
+    public function countPerJobTitle($location)
+    {
+        return $this->mainQuery()
+                ->leftJoin('divisions_sub','divisions_sub.id','=','employees.sub_division')
+                ->leftJoin('job_titles','employees.job_title_id','=','job_titles.id')
+                ->leftJoin('sub_dept','sub_dept.id','=','employees.sub_dept')
+                ->select(DB::raw("dept_label,job_title_name,count(employees.id) as pax"))
+                ->where('employees.location_id','=',$location->id)
+                ->groupBy('dept_label')
+                ->groupBy('job_title_name')
+                ->orderBy('dept_label','asc')
+                ->orderBy('job_title_name','asc')
+                ->get();
+    }
+
 
 }
 

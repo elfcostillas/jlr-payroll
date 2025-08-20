@@ -266,7 +266,7 @@
             </tr>
         </table> --}}
 
-        <table style="float:left;font-size :6pt;border-collapse:collapse; margin-top : 12px;" border=1>
+        <table style="page-break-before:always;float:left;font-size :6pt;border-collapse:collapse; margin-top : 12px;" border=1>
             <tr> 
                 <td style="padding : 2px 6px;font-weight: bold;"> Departments</td>
                 @foreach ($data->summaryDeptByLocation()['x'] as $cols)
@@ -303,8 +303,32 @@
             </tr>
             
         </table>
+        <!-- Job Title  -->
+        @foreach ($data->countPerJobTitleLocation() as $location)
+           
+            @if($location->data->count() > 0)
+            @php $count_total =0;  @endphp
+             <table style="padding-left: 12px;float:left;font-size :6pt;border-collapse:collapse; margin-top : 12px;" border=1>
+                <tr>
+                    <td colspan="3" > {{ $location->location_altername2 }} </td>
+                </tr>
+                @foreach ($location->data as $row)
+                    @php $count_total +=  $row->pax;  @endphp
+                    <tr>
+                        <td> {{ $row->dept_label }}</td>
+                        <td> {{ $row->job_title_name }}</td>
+                        <td style="text-align: right;padding : 2px 6px;"> {{ $row->pax }}</td>
+                    </tr>
+                @endforeach
+                <tr>
+                    <td colspan="2"> TOTAL </td>
+                    <td style="text-align: right;padding : 2px 6px;"> {{ $count_total }} </td>
+                </tr>
+            </table>
+            @endif
+        @endforeach
 
-        <table style="float:left ;font-size :6pt;border-collapse:collapse;margin-top:154px;clear:left" border=1>
+        <table style="float:left ;font-size :6pt;border-collapse:collapse;margin-top:284px;clear:left" border=1>
             <tr> 
                 <td colspan="2" style="text-align: center;padding:2px 6px;" > Payroll / Gross Pay </td> 
             </tr>
@@ -327,7 +351,7 @@
                 </tr> 
         </table>
 
-        <table style="float:left;margin-left:136px ;font-size :6pt;border-collapse:collapse;margin-top:154px;clear:left;" border=1>
+        <table style="float:left;margin-left:136px ;font-size :6pt;border-collapse:collapse;margin-top:284px;clear:left;" border=1>
             <tr> 
                 <td colspan="2" style="text-align: center;padding:2px 6px;" > Payroll / Net Pay </td> 
             </tr>
@@ -350,7 +374,7 @@
                 </tr> 
         </table>
 
-        <table style="width:100%;margin-top:428px;font-size:8pt;" border=0>
+        <table style="width:100%;margin-top:468px;font-size:8pt;" border=0>
             <tr>
                 <td style="width:10%">
                 <td style="width:26%">

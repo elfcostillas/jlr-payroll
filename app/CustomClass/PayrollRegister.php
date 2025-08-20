@@ -216,6 +216,8 @@ abstract class PayrollRegister extends PayrollRegisterFunctions
         return $result;
     }
 
+    
+
 
 
 
