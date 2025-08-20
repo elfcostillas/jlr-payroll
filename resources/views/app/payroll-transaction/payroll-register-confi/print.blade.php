@@ -268,13 +268,13 @@
 
         <table style="page-break-before:always;float:left;font-size :6pt;border-collapse:collapse; margin-top : 12px;" border=1>
             <tr> 
-                <td style="padding : 2px 6px;font-weight: bold;"> Departments</td>
+                <td style="padding : 2px 6px;"> Departments</td>
                 @foreach ($data->summaryDeptByLocation()['x'] as $cols)
-                    <td style="font-weight: bold;padding : 2px 6px;">
+                    <td style=";padding : 2px 6px;">
                         {{ $cols->location_altername2 }}
                     </td>
                 @endforeach
-                <td style="padding : 2px 6px;font-weight: bold;"> TOTALS</td>
+                <td style="padding : 2px 6px;"> TOTALS</td>
                 @foreach ($data->summaryDeptByLocation()['y'] as $rows)
                     <tr> 
                         <td style="padding : 0px 6px;">
@@ -291,7 +291,7 @@
                         </td>
                     </tr> 
                 @endforeach
-                <td style="padding : 2px 6px;font-weight: bold;"> TOTALS</td>
+                <td style="padding : 2px 6px;"> TOTALS</td>
                 @foreach ($data->summaryDeptByLocation()['x'] as $cols)
                     <td style="text-align: right;padding : 2px 6px;">
                         {{ $data->summaryDeptByLocation()['totals_by_loc'][$cols->id] }}
@@ -373,6 +373,45 @@
                     <td style="padding:2px 6px;text-align:right;"> {{  number_format($total_netpay,2) }} </td>
                 </tr> 
         </table>
+
+        <table style="float:left;margin-left:272px;font-size :6pt;border-collapse:collapse;margin-top:284px;clear:left;" border=1>
+            <tr> 
+                <td colspan=2 style="text-align: center;padding:2px 6px;" > Overtime Summary </td> 
+            </tr>
+
+            @foreach ($data->otSummary() as $key => $value )
+                <tr>
+                    <td style="padding:2px 6px;"> {{ $key }} </td>
+                    <td style="padding:2px 6px;text-align:right;"> {{ ($value > 0) ? (int) $value : ''  }} </td>
+                </tr>
+            @endforeach
+        </table>
+
+        <?php $starting_margin = 398; ?>
+
+        @foreach ($data->otSummary() as $key => $value )
+            @if($value > 0)
+                <?php
+                    $ot_data = $data->otByDeptJobtitle($key);
+                ?>
+
+                <table style="width:220px;float:left;margin-left:{{ $starting_margin }}px;font-size :6pt;border-collapse:collapse;margin-top:284px;clear:left;" border=1>
+                    <tr>
+                        <td style="text-align:center;" colspan="3"> {{ $key }} </td>
+                    </tr>
+                    @foreach ($ot_data as $row)
+                    <tr>
+                        <td> {{ $row->dept_label }}</td>
+                        <td>{{ $row->job_title_name }} - {{ $row->div_code }}</td>
+                        <td> {{ $row->pax}} </td>
+                    </tr>
+                        
+                    @endforeach
+                </table>
+
+                <?php $starting_margin += 228; ?>
+            @endif
+        @endforeach
 
         <table style="width:100%;margin-top:468px;font-size:8pt;" border=0>
             <tr>

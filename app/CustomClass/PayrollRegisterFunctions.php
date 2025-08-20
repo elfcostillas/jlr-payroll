@@ -795,6 +795,191 @@ class PayrollRegisterFunctions
                 ->get();
     }
 
+    public function otSummary()
+    {
+        $result = $this->mainQuery()->get();
+
+        $data = [
+            'Less than 10 Hrs' => 0,
+            '10 Hrs' => 0,
+            '20 Hrs' => 0,
+            '30 Hrs' => 0,
+            '40 Hrs' => 0,
+            '50 Hrs' => 0,
+            '60 Hrs' => 0,
+            '70 Hrs' => 0,
+            '80 Hrs' => 0,
+            '90 Hrs' => 0,
+            '100+ Hrs' => 0,
+        ];
+
+        foreach($result as $employee)
+        {
+            // dd($employee->reg_ot);
+            if($employee->reg_ot > 1 && $employee->reg_ot < 10)
+            {
+                $data['Less than 10 Hrs'] += 1;
+            }
+
+            if($employee->reg_ot >= 10 && $employee->reg_ot < 20)
+            {
+                $data['10 Hrs'] += 1;
+            }
+
+            if($employee->reg_ot >= 20 && $employee->reg_ot < 30)
+            {
+                $data['20 Hrs'] += 1;
+            }
+
+            if($employee->reg_ot >= 30 && $employee->reg_ot < 40)
+            {
+                $data['30 Hrs'] += 1;
+            }
+             if($employee->reg_ot >= 40 && $employee->reg_ot < 50)
+            {
+                $data['40 Hrs'] += 1;
+            }
+
+            if($employee->reg_ot >= 50 && $employee->reg_ot < 60)
+            {
+                $data['50 Hrs'] += 1;
+            }
+
+            if($employee->reg_ot >= 60 && $employee->reg_ot < 70)
+            {
+                $data['60 Hrs'] += 1;
+            }
+
+            if($employee->reg_ot >= 70 && $employee->reg_ot < 80)
+            {
+                $data['70 Hrs'] += 1;
+            }
+            if($employee->reg_ot >= 80 && $employee->reg_ot < 90)
+            {
+                $data['80 Hrs'] += 1;
+            }
+
+            if($employee->reg_ot >= 90 && $employee->reg_ot < 100)
+            {
+                $data['90 Hrs'] += 1;
+            }
+           
+            if($employee->reg_ot >= 100 )
+            {
+                $data['100+ Hrs'] += 1;
+            }
+        }
+
+        
+
+        return $data;
+    }
+
+    public function otByDeptJobtitle($key)
+    {
+            // 'less 10 Hrs' => 0,
+            // '10 Hrs' => 0,
+            // '20 Hrs' => 0,
+            // '30 Hrs' => 0,
+            // '40 Hrs' => 0,
+            // '50 Hrs' => 0,
+            // '60 Hrs' => 0,
+            // '70 Hrs' => 0,
+            // '80 Hrs' => 0,
+            // '90 Hrs' => 0,
+            // '100+ Hrs' => 0,
+
+            $qry = $this->mainQuery()
+                ->leftJoin('divisions_sub','divisions_sub.id','=','employees.sub_division')
+                ->leftJoin('job_titles','employees.job_title_id','=','job_titles.id')
+                ->leftJoin('sub_dept','sub_dept.id','=','employees.sub_dept')
+                ->select(DB::raw("divisions_sub.div_code,dept_label,job_title_name,count(employees.id) as pax"))
+                ->groupBy('dept_label')
+                ->groupBy('job_title_name')
+                ->groupBy('div_code')
+                ->orderBy('dept_label','asc')
+                ->orderBy('div_code','asc')
+                ->orderBy('job_title_name','asc');
+
+            switch($key){
+                case 'Less than 10 Hrs':
+                    $result = $qry->where(function($query){
+                        $query->where('reg_ot','>',1);
+                        $query->where('reg_ot','<',10);
+                    });
+                    break;
+
+                case '10 Hrs':
+                    $result = $qry->where(function($query){
+                        $query->where('reg_ot','>',10);
+                        $query->where('reg_ot','<',20);
+                    });
+                break;
+
+                case '20 Hrs':
+                    $result = $qry->where(function($query){
+                        $query->where('reg_ot','>',20);
+                        $query->where('reg_ot','<',30);
+                    });
+                break;
+
+                case '30 Hrs':
+                    $result = $qry->where(function($query){
+                        $query->where('reg_ot','>',30);
+                        $query->where('reg_ot','<',40);
+                    });
+                break;
+
+                case '40 Hrs':
+                    $result = $qry->where(function($query){
+                        $query->where('reg_ot','>',40);
+                        $query->where('reg_ot','<',50);
+                    });
+                break;
+
+                case '50 Hrs':
+                    $result = $qry->where(function($query){
+                        $query->where('reg_ot','>',50);
+                        $query->where('reg_ot','<',60);
+                    });
+                break;
+
+                case '60 Hrs':
+                    $result = $qry->where(function($query){
+                        $query->where('reg_ot','>',60);
+                        $query->where('reg_ot','<',70);
+                    });
+                break;
+
+                case '70 Hrs':
+                    $result = $qry->where(function($query){
+                        $query->where('reg_ot','>',70);
+                        $query->where('reg_ot','<',80);
+                    });
+                break;
+
+                case '80 Hrs':
+                    $result = $qry->where(function($query){
+                        $query->where('reg_ot','>',80);
+                        $query->where('reg_ot','<',90);
+                    });
+                break;
+
+                case '90 Hrs':
+                    $result = $qry->where(function($query){
+                        $query->where('reg_ot','>',90);
+                        $query->where('reg_ot','<',100);
+                    });
+                break;
+
+                case '100+ Hrs':
+                    $result = $qry->where('reg_ot','>',100);
+                break;
+            }
+
+            return $result->get();
+    }
+
 
 }
 
