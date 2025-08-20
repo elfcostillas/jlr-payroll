@@ -160,7 +160,8 @@ class PayrollRegisterFunctions
         return DB::table('payroll_column_header')
                 ->where('col_type','=',$type)
                 ->whereIn('var_name',$this->cols_with_value)
-                ->orderBy('sort','asc')
+                // ->orderBy('sort','asc')
+                ->orderBy('id','asc')
                 ->get();
     }
 
