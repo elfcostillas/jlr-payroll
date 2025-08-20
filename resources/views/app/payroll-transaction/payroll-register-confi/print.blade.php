@@ -413,6 +413,24 @@
             @endif
         @endforeach
 
+       
+        @if ($data->otMoreThan50hrs()->count()>0)
+             <table style="width:140px;float:left;margin-left:{{ $starting_margin }}px;font-size :6pt;border-collapse:collapse;margin-top:284px;clear:left;" border=1>
+                <tr>
+                    <td style="text-align:center;" colspan="2"> Overtime >= 50++ </td>
+                </tr>
+                @foreach ($data->otMoreThan50hrs() as $row )
+                    <tr>
+                        <td> {{ $row->div_code }} </td>
+                        <td style="text-align:right;";>{{ $row->pax }}</td>
+                    </tr>
+                @endforeach
+              
+            </table>
+        @endif
+
+
+
         <table style="width:100%;margin-top:468px;font-size:8pt;" border=0>
             <tr>
                 <td style="width:10%">

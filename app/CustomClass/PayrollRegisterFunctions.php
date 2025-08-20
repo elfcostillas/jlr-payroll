@@ -337,9 +337,16 @@ class PayrollRegisterFunctions
         $total = 0;
         foreach ($data->employees as $emp)
         {
+           
             if($emp->other_earning)
             {
-                $total += $emp->other_earning[$key->compensation_type];
+                if(array_key_exists($key->compensation_type,$emp->other_earning))
+                {
+                    $total += $emp->other_earning[$key->compensation_type];
+                }else{
+                    $total += 0;
+                }
+
             }
         }
 
@@ -978,6 +985,19 @@ class PayrollRegisterFunctions
             }
 
             return $result->get();
+    }
+
+    public function otMoreThan50hrs()
+    {
+        $qry = $this->mainQuery()
+            ->leftJoin('divisions_sub','divisions_sub.id','=','employees.sub_division')
+            ->leftJoin('job_titles','employees.job_title_id','=','job_titles.id')
+            ->leftJoin('sub_dept','sub_dept.id','=','employees.sub_dept')
+            ->select(DB::raw("divisions_sub.div_code,count(employees.id) as pax"))
+            ->where('reg_ot','>=',50)
+            ->groupBy('div_code');
+        
+        return $qry->get();
     }
 
 
