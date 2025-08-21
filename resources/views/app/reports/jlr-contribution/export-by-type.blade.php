@@ -18,6 +18,9 @@
             'sss_ee' => 0.00,
             'sss_er' => 0.00,
             'sss_ec' => 0.00,
+
+            'sss_wisp' => 0.00,
+            'mpf_er' => 0.00,
         ];
     ?>
 
@@ -67,6 +70,7 @@
                 @if ($type==1)
                 <td>SSS No</td>
                 <td colspan="3" style="text-align:center;" >SSS</td>
+                <td colspan="2" style="text-align:center;">MPF</td>
                 @endif
                 
                 
@@ -90,9 +94,12 @@
 
                 @if ($type==1)
                 <td></td>
-                <td style="width:120px;text-align:center;" >EE</td>
-                <td style="width:120px;text-align:center;" >ER</td>
-                <td style="width:120px;text-align:center;" >EC</td>
+                    <td style="width:120px;text-align:center;" >EE</td>
+                    <td style="width:120px;text-align:center;" >ER</td>
+                    <td style="width:120px;text-align:center;" >EC</td>
+
+                    <td style="width:120px;text-align:center;" >EE</td>
+                    <td style="width:120px;text-align:center;" >ER</td>
                 @endif
                 
 
@@ -110,6 +117,9 @@
                     'sss_ee' => 0.00,
                     'sss_er' => 0.00,
                     'sss_ec' => 0.00,
+
+                    'sss_wisp' => 0.00,
+                    'mpf_er' => 0.00,
                 ];
             ?>
             @foreach($location->employees as $employee)
@@ -126,6 +136,9 @@
                     $over_all['sss_er'] += $employee->er_share;
                     $over_all['sss_ec'] += $employee->ec;
 
+                    $over_all['sss_wisp'] += $employee->sss_wisp;
+                    $over_all['mpf_er'] += $employee->mpf_er;
+
                     /*---------------------- */
 
                     $per_loc['hdmf_ee'] += $employee->hdmf_contri;
@@ -137,6 +150,12 @@
                     $per_loc['sss_ee'] += $employee->sss_prem;
                     $per_loc['sss_er'] += $employee->er_share;
                     $per_loc['sss_ec'] += $employee->ec;
+
+                    $per_loc['sss_wisp'] += $employee->sss_wisp;
+                    $per_loc['mpf_er'] += $employee->mpf_er;
+
+                    
+
                 ?>
                 
                 <tr>
@@ -161,6 +180,9 @@
                         <td>{{ $employee->sss_prem }}</td>   
                         <td>{{ $employee->er_share }} </td>   
                         <td>{{ $employee->ec }}</td>   
+
+                        <td>{{ $employee->sss_wisp }}</td>
+                        <td>{{ $employee->mpf_er }}</td>
                     @endif
 
                 
@@ -189,6 +211,9 @@
                 <td>{{ $per_loc['sss_ee'] }}</td>
                 <td>{{ $per_loc['sss_er'] }}</td>
                 <td>{{ $per_loc['sss_ec'] }}</td>
+                
+                <td>{{ $per_loc['sss_wisp'] }}</td>
+                <td>{{ $per_loc['mpf_er'] }}</td>
 
                 @endif
             </tr>
@@ -215,6 +240,8 @@
                 <td>{{ $over_all['sss_ee'] }}</td>
                 <td>{{ $over_all['sss_er'] }}</td>
                 <td>{{ $over_all['sss_ec'] }}</td>
+                <td>{{ $over_all['sss_wisp'] }}</td>
+                <td>{{ $over_all['mpf_er'] }}</td>
                 @endif
         
             

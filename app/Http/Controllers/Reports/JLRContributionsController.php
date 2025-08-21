@@ -67,6 +67,8 @@ class JLRContributionsController extends Controller
         $result = $this->mapper->generate($request->year,$request->month,$request->emp_level);
         $type = $request->type;
 
+      
+
         $this->single->setValues($result,$label,$type,$request->emp_level);
         return Excel::download($this->single,'Contribution '.$request->emp_level.' '.$label.'.xlsx');
 
