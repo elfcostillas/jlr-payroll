@@ -422,7 +422,6 @@ class Employee
     public function getMonthGross($period)
     {
         //SELECT gross_pay FROM payrollregister_posted_s WHERE period_id = '' AND biometric_id = '';
-
         
         /* not sure because may be first half is not proccessed */
       

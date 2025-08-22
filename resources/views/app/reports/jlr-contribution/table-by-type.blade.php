@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+    <style>
+        * {
+            font-size: 9pt;
+        }
+    </style>
 </head>
 <body>
     <?php
@@ -21,6 +27,7 @@
 
             'sss_wisp' => 0.00,
             'mpf_er' => 0.00,
+            'emp_total' => 0.00,
         ];
     ?>
 
@@ -62,11 +69,13 @@
                 <td colspan="2" style="text-align:center;" >PHIC</td>
                 @endif
 
-                  @if ($type==1)
+                @if ($type==1)
                 <td>SSS No</td>
-                <td colspan="3" style="text-align:center;" >SSS</td>
+                <td style="text-align:center;" >SSS</td>
+                <td style="text-align:center;" >MPF</td>
+                <td style="text-align:center;" >SSS</td>
 
-                <td colspan="2" style="text-align:center;">MPF</td>
+                <td style="text-align:center;">MPF</td>
                 @endif
                 
                 
@@ -80,7 +89,7 @@
                 @if ($type==2)
                 <td></td>
                 <td style="width:120px;text-align:center;" >EE</td>
-                <td style="width:120px;text-align:center;" >ER</td>
+                <td style="width:120px;text-align:center;" >EE</td>
                 @endif
                 @if ($type==3)
                 <td></td>
@@ -91,11 +100,14 @@
                @if ($type==1)
                 <td></td>
                 <td style="width:120px;text-align:center;" >EE</td>
-                <td style="width:120px;text-align:center;" >ER</td>
-                <td style="width:120px;text-align:center;" >EC</td>
-
                 <td style="width:120px;text-align:center;" >EE</td>
+
                 <td style="width:120px;text-align:center;" >ER</td>
+                <td style="width:120px;text-align:center;" >ER</td>
+
+
+                <td style="width:120px;text-align:center;" >Total</td>
+                <td style="width:120px;text-align:center;" >EC</td>
                 @endif
                 
 
@@ -116,14 +128,15 @@
 
                     'sss_wisp' => 0.00,
                     'mpf_er' => 0.00,
+                    'emp_total' => 0.00,
                 ];
             ?>
             @foreach($location->employees as $employee)
                 <?php 
                     $ctr++;
 
-                   
-                
+                    $employee_total = $employee->sss_prem + $employee->sss_wisp + $employee->er_share + $employee->mpf_er;
+                       
                     $over_all['hdmf_ee'] += $employee->hdmf_contri;
                     $over_all['hdmf_er'] += $employee->hdmf_contri;
 
@@ -136,6 +149,8 @@
 
                     $over_all['sss_wisp'] += $employee->sss_wisp;
                     $over_all['mpf_er'] += $employee->mpf_er;
+
+                    $over_all['emp_total'] +=  $employee_total;
 
                     /*---------------------- */
 
@@ -151,6 +166,8 @@
 
                     $per_loc['sss_wisp'] += $employee->sss_wisp;
                     $per_loc['mpf_er'] += $employee->mpf_er;
+
+                    $per_loc['emp_total'] += $employee_total;
                 ?>
                 
                 <tr>
@@ -170,13 +187,16 @@
                     @endif
 
                     @if ($type==1)
+                      
                         <td> {{ $employee->sss_no }} </td>
                         <td>{{ number_format($employee->sss_prem,2) }}</td>   
-                        <td>{{ number_format($employee->er_share,2) }} </td>   
-                        <td>{{ number_format($employee->ec,2) }}</td>   
-
                         <td>{{ number_format($employee->sss_wisp,2) }}</td>
+
+                        <td>{{ number_format($employee->er_share,2) }} </td>   
                         <td>{{ number_format($employee->mpf_er,2) }}</td>
+                        <td>{{ number_format($employee_total,2)  }} </td>
+
+                        <td>{{ number_format($employee->ec,2) }}</td>   
                     @endif
 
                 
@@ -203,15 +223,13 @@
                 @if ($type==1)
                 <td></td>
                 <td>{{ number_format($per_loc['sss_ee'],2) }}</td>
-                <td>{{ number_format($per_loc['sss_er'],2) }}</td>
-                <td>{{ number_format($per_loc['sss_ec'],2) }}</td>
-
-            
-
                 <td>{{ number_format($per_loc['sss_wisp'],2) }}</td>
+
+                <td>{{ number_format($per_loc['sss_er'],2) }}</td>
                 <td>{{ number_format($per_loc['mpf_er'],2) }}</td>
 
-
+                <td>{{ number_format($per_loc['emp_total'],2) }}</td>
+                <td>{{ number_format($per_loc['sss_ec'],2) }}</td>
                 @endif
             </tr>
      
@@ -236,10 +254,11 @@
                 <td></td>
                 <td>{{ number_format($over_all['sss_ee'],2) }}</td>
                 <td>{{ number_format($over_all['sss_er'],2) }}</td>
-                <td>{{ number_format($over_all['sss_ec'],2) }}</td>
-
+              
                 <td>{{ number_format($over_all['sss_wisp'],2) }}</td>
                 <td>{{ number_format($over_all['mpf_er'],2) }}</td>
+                <td>{{ number_format($over_all['emp_total'],2) }} </td>
+                <td>{{ number_format($over_all['sss_ec'],2) }}</td>
                 @endif
         
             

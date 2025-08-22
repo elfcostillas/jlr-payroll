@@ -6,6 +6,7 @@
     <title>Document</title>
 </head>
 <body>
+    
     <?php
     
         $over_all = [
@@ -21,6 +22,7 @@
 
             'sss_wisp' => 0.00,
             'mpf_er' => 0.00,
+            'emp_total' => 0.00,
         ];
     ?>
 
@@ -69,8 +71,10 @@
 
                 @if ($type==1)
                 <td>SSS No</td>
-                <td colspan="3" style="text-align:center;" >SSS</td>
-                <td colspan="2" style="text-align:center;">MPF</td>
+                <td style="text-align:center;" >SSS</td>
+                <td style="text-align:center;" >MPF</td>
+                <td style="text-align:center;" >SSS</td>
+                <td style="text-align:center;">MPF</td>
                 @endif
                 
                 
@@ -94,12 +98,14 @@
 
                 @if ($type==1)
                 <td></td>
-                    <td style="width:120px;text-align:center;" >EE</td>
-                    <td style="width:120px;text-align:center;" >ER</td>
-                    <td style="width:120px;text-align:center;" >EC</td>
+                <td style="width:120px;text-align:center;" >EE</td>
+                <td style="width:120px;text-align:center;" >EE</td>
 
-                    <td style="width:120px;text-align:center;" >EE</td>
-                    <td style="width:120px;text-align:center;" >ER</td>
+                <td style="width:120px;text-align:center;" >ER</td>
+                <td style="width:120px;text-align:center;" >ER</td>
+
+                <td style="width:120px;text-align:center;" >Total</td>
+                <td style="width:120px;text-align:center;" >EC</td>
                 @endif
                 
 
@@ -120,12 +126,15 @@
 
                     'sss_wisp' => 0.00,
                     'mpf_er' => 0.00,
+                    'emp_total' => 0.00,
                 ];
             ?>
             @foreach($location->employees as $employee)
                 <?php 
                     $ctr++;
-                
+
+                    $employee_total = $employee->sss_prem + $employee->sss_wisp + $employee->er_share + $employee->mpf_er;
+                                
                     $over_all['hdmf_ee'] += $employee->hdmf_contri;
                     $over_all['hdmf_er'] += $employee->hdmf_contri;
 
@@ -138,6 +147,8 @@
 
                     $over_all['sss_wisp'] += $employee->sss_wisp;
                     $over_all['mpf_er'] += $employee->mpf_er;
+
+                    $over_all['emp_total'] +=  $employee_total;
 
                     /*---------------------- */
 
@@ -154,7 +165,7 @@
                     $per_loc['sss_wisp'] += $employee->sss_wisp;
                     $per_loc['mpf_er'] += $employee->mpf_er;
 
-                    
+                    $per_loc['emp_total'] += $employee_total;
 
                 ?>
                 
@@ -178,11 +189,12 @@
                         <td> {{ str_replace(['-',' '],"",$employee->sss_no) }} </td>
                        
                         <td>{{ $employee->sss_prem }}</td>   
-                        <td>{{ $employee->er_share }} </td>   
-                        <td>{{ $employee->ec }}</td>   
-
                         <td>{{ $employee->sss_wisp }}</td>
+
+                        <td>{{ $employee->er_share }} </td>   
                         <td>{{ $employee->mpf_er }}</td>
+                         <td>{{ $employee_total  }} </td>
+                        <td>{{ $employee->ec }}</td>   
                     @endif
 
                 
@@ -209,12 +221,13 @@
                 @if ($type==1)
                 <td></td>
                 <td>{{ $per_loc['sss_ee'] }}</td>
-                <td>{{ $per_loc['sss_er'] }}</td>
-                <td>{{ $per_loc['sss_ec'] }}</td>
-                
                 <td>{{ $per_loc['sss_wisp'] }}</td>
+
+                <td>{{ $per_loc['sss_er'] }}</td>
                 <td>{{ $per_loc['mpf_er'] }}</td>
 
+                <td>{{ $per_loc['emp_total'] }}</td>
+                <td>{{ $per_loc['sss_ec'] }}</td>
                 @endif
             </tr>
         </table>
@@ -239,9 +252,11 @@
                 <td></td>
                 <td>{{ $over_all['sss_ee'] }}</td>
                 <td>{{ $over_all['sss_er'] }}</td>
-                <td>{{ $over_all['sss_ec'] }}</td>
+              
                 <td>{{ $over_all['sss_wisp'] }}</td>
                 <td>{{ $over_all['mpf_er'] }}</td>
+                <td>{{ $over_all['emp_total'] }} </td>
+                <td>{{ $over_all['sss_ec'] }}</td>
                 @endif
         
             
