@@ -80,7 +80,7 @@ class JLRContributionMapper
             if($emp_level == 'confi'){
 
                 $employees = DB::table('payrollregister_posted_s')
-                ->select(DB::raw("payrollregister_posted_s.biometric_id,departments.dept_code,job_titles.job_title_name,payrollregister_posted_s.sss_wisp,contri.mpf_er,concat(
+                ->select(DB::raw("payrollregister_posted_s.biometric_id,departments.dept_code,job_titles.job_title_name,contri.sss_wisp,contri.mpf_er,concat(
                     ifnull(`employees`.`lastname`, ''),
                     ', ',
                     ifnull(`employees`.`firstname`, ''),
@@ -91,19 +91,21 @@ class JLRContributionMapper
                 ) AS `employee_name`,
                 employees.lastname,employees.firstname,employees.middlename,contri.sss_prem,contri.phil_prem,contri.hdmf_contri,er_share,ec,tin_no,phic_no,sss_no,hdmf_no"))
                 ->join('employees','payrollregister_posted_s.biometric_id','=','employees.biometric_id')
-                ->joinSub($contri,'contri','contri.biometric_id','=','employees.biometric_id')
+                ->leftJoinSub($contri,'contri','contri.biometric_id','=','employees.biometric_id')
 
-                ->join('departments','departments.id','=','employees.dept_id')
-                ->join('job_titles','job_titles.id','=','employees.job_title_id')
+                ->leftJoin('departments','departments.id','=','employees.dept_id')
+                ->leftJoin('job_titles','job_titles.id','=','employees.job_title_id')
                 ->where('employees.location_id',$location->id)
                 ->where("employees.emp_level",'<','5')
                 ->orderBy('lastname','asc')
                 ->orderBy('firstname','asc')
                 ->groupBy('biometric_id')
                 ->get();
+
+        
             }else{
                 $employees = DB::table('payrollregister_posted_s')
-                ->select(DB::raw("payrollregister_posted_s.biometric_id,departments.dept_code,job_titles.job_title_name,payrollregister_posted_s.sss_wisp,contri.mpf_er,concat(
+                ->select(DB::raw("payrollregister_posted_s.biometric_id,departments.dept_code,job_titles.job_title_name,contri.sss_wisp,contri.mpf_er,concat(
                         ifnull(`employees`.`lastname`, ''),
                         ', ',
                         ifnull(`employees`.`firstname`, ''),
@@ -159,7 +161,7 @@ class JLRContributionMapper
         // foreach($locations as $location)
         // {
             $employees = DB::table('payrollregister_posted_s')
-             ->select(DB::raw("payrollregister_posted_s.biometric_id,departments.dept_code,job_titles.job_title_name,payrollregister_posted_s.sss_wisp,contri.mpf_er,concat(
+             ->select(DB::raw("payrollregister_posted_s.biometric_id,departments.dept_code,job_titles.job_title_name,contri.sss_wisp,contri.mpf_er,concat(
                     ifnull(`employees`.`lastname`, ''),
                     ', ',
                     ifnull(`employees`.`firstname`, ''),
