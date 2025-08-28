@@ -52,8 +52,8 @@
         
         $arr = [];
 
-        // $ot_summ_label[3]='30 Hours';
-        // $ot_summ_label[4]='40 Hours';
+        $ot_summ_label[3]='30 Hours';
+        $ot_summ_label[4]='40 Hours';
         $ot_summ_label[5]='50 Hours';
         $ot_summ_label[6]='60 Hours';
         $ot_summ_label[7]='70 Hours';
@@ -68,8 +68,8 @@
 
 
         $ot_summ_value = [
-            // '3' => 0,
-            // '4' => 0,
+            '3' => 0,
+            '4' => 0,
             '5' => 0,
             '6' => 0,
             '7' => 0,
@@ -109,6 +109,8 @@
         }
 
         $otherOTTotal = [];
+        $otherOTTotal30 = [];
+        $otherOTTotal40 = [];
 
         $departmentalTotalNet = [];
         $departmentalTotalGross = [];
@@ -117,6 +119,11 @@
         $empCountPerDeptVal = [];
 
         $hide = "none";
+
+        function convert_hrs_to_days($hrs)
+        {
+            return ($hrs == '' || $hrs == 0) ? 0 : $hrs / 8;
+        }
     ?>
 
         <table border=0 style="width:100%;margin-bottom:2px;">
@@ -240,6 +247,79 @@
                     $empCountPerDeptVal[$employee->dept_code][$location->id] += 1;
 
                         // QAD SSDiv RMC RMD  // otherOTTotal
+
+                    if($employee->reg_ot >= 30 && $employee->reg_ot < 40) // from 30
+                    {
+                        switch($employee->div_code)
+                        {
+                           
+                            case 'RMC';
+                                if($employee->dept_code=='QA'){
+                                    if(array_key_exists($employee->dept_code,$otherOTTotal30))
+                                    {
+                                        $otherOTTotal30[$employee->dept_code] += 1;
+                                    }else{
+                                        $otherOTTotal30[$employee->dept_code] = 1;
+                                    }
+                                }else{
+                                    if(array_key_exists($employee->div_code,$otherOTTotal30))
+                                    {
+                                        $otherOTTotal30[$employee->div_code] += 1;
+                                    }else{
+                                        $otherOTTotal30[$employee->div_code] = 1;
+                                    }
+                                }
+                               
+                            
+                            break;
+
+                            default :
+                                if(array_key_exists($employee->div_code,$otherOTTotal30))
+                                {
+                                    $otherOTTotal30[$employee->div_code] += 1;
+                                }else{
+                                    $otherOTTotal30[$employee->div_code] = 1;
+                                }
+                            break;
+                        }
+                    }
+
+                    if($employee->reg_ot >= 40 && $employee->reg_ot < 50) // from 30
+                    {
+                        switch($employee->div_code)
+                        {
+                           
+                            case 'RMC';
+                                if($employee->dept_code=='QA'){
+                                    if(array_key_exists($employee->dept_code,$otherOTTotal40))
+                                    {
+                                        $otherOTTotal40[$employee->dept_code] += 1;
+                                    }else{
+                                        $otherOTTotal40[$employee->dept_code] = 1;
+                                    }
+                                }else{
+                                    if(array_key_exists($employee->div_code,$otherOTTotal40))
+                                    {
+                                        $otherOTTotal40[$employee->div_code] += 1;
+                                    }else{
+                                        $otherOTTotal40[$employee->div_code] = 1;
+                                    }
+                                }
+                               
+                            
+                            break;
+
+                            default :
+                                if(array_key_exists($employee->div_code,$otherOTTotal40))
+                                {
+                                    $otherOTTotal40[$employee->div_code] += 1;
+                                }else{
+                                    $otherOTTotal40[$employee->div_code] = 1;
+                                }
+                            break;
+                        }
+                    }
+
                     if($employee->reg_ot >= 50) // from 30
                     {
                         switch($employee->div_code)
@@ -308,7 +388,7 @@
 
                         if($employee->gross_total >= 9000 && ( $employee->retired !='Y' &&  $employee->job_title_name != 'Transit Mixer Driver' ) )
                         {
-                            $fourfive = 'yellow';
+                            $fourfive = '#89CFF0';
                             $fourfive_count++;
                         }else{
                             $fourfive = 'white';
@@ -343,13 +423,13 @@
                         <td class="pr3"  style="text-align:right;"> {{ ($employee->late_eq_amount>0) ? number_format($employee->late_eq_amount,2) : ''; }}</td> 
                         
                         @if($sil_flag->vl_wpay >0)
-                            <td class="pr3"  style="text-align:right;"> {{ ($employee->vl_wpay>0) ? number_format($employee->vl_wpay,2) : ''; }}</td>
+                            <td class="pr3"  style="text-align:right;"> {{ ($employee->vl_wpay>0) ? number_format(convert_hrs_to_days($employee->vl_wpay)) : ''; }}</td>
                             <td class="pr3"  style="text-align:right;"> {{ ($employee->vl_wpay_amount>0) ? number_format($employee->vl_wpay_amount,2) : ''; }}</td> 
                         @endif
 
                         @foreach($headers as $key => $val)
                             <?php
-                                $over30 = ($employee->$key >= 50 && $key == 'reg_ot' ) ? 'background-color:yellow ': '' ;
+                                $over30 = ($employee->$key >= 50 && $key == 'reg_ot' ) ? 'background-color:#FF46A2;': '' ;
                                 $over30circ = ($employee->$key >= 50 && $key == 'reg_ot' ) ? 'circle ': '' ;
 
                                 // $over30 = ($employee->$key >= 30 && $key == 'reg_ot' ) ? '': '' ;
@@ -357,9 +437,9 @@
                             ?> 
 
                             @if(str_contains($key,'amount'))
-                                        <td class="pr4"  style="text-align:right;{{ $over30 }}"> <div class="{{ $over30circ}}"> {{ ($employee->$key > 0) ? number_format($employee->$key,2) : '' }} </div></td>
+                                    <td class="pr4"  style="text-align:right;{{ $over30 }}"> <div class="{{ $over30circ}}"> {{ ($employee->$key > 0) ? number_format($employee->$key,2) : '' }} </div></td>
                             @else
-                                        <td class="pr4"  style="text-align:center;{{ $over30 }}"> <div class="{{ $over30circ}}"> {{ ($employee->$key > 0) ? round($employee->$key,2) : '' }} </div></td>
+                                    <td class="pr4"  style="text-align:right;{{ $over30 }}"> <div class="{{ $over30circ}}"> {{ ($employee->$key > 0) ? round($employee->$key,2) : '' }} </div></td>
                             @endif
 
                             <?php
@@ -367,7 +447,7 @@
                             ?>
 
                             <?php
-                            /*
+                            
                             if(($employee->$key >= 30 && $employee->$key <40) && $key == 'reg_ot'){
                                 $ot_summ_value[3] +=1;
 
@@ -423,7 +503,7 @@
                               
                             }
 
-                            */
+                            
 
                             if(($employee->$key >= 50 && $employee->$key <60) && $key == 'reg_ot'){
                                 $ot_summ_value[5] +=1;
@@ -595,7 +675,7 @@
                     <td class="pr3"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_late_amount > 0) ? number_format($location_late_amount,2) : '' }}</td>
                     
                     @if($sil_flag->vl_wpay >0)
-                        <td class="pr3"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_sil > 0) ? number_format($location_sil,2) : '' }}</td>
+                        <td class="pr3"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_sil > 0) ? number_format(convert_hrs_to_days($location_sil),2) : '' }}</td>
                         <td class="pr3"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_sil_pay > 0) ? number_format($location_sil_pay,2) : '' }}</td>
                     @endif
                    
@@ -672,7 +752,7 @@
             <td class="pr3" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_late_amount,2) }}</td>
             
             @if($sil_flag->vl_wpay >0)
-                <td class="pr3"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($over_all_sil > 0) ? number_format($over_all_sil,2) : '' }}</td>
+                <td class="pr3"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($over_all_sil > 0) ? number_format(convert_hrs_to_days($over_all_sil),2) : '' }}</td>
                 <td class="pr3"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($over_all_sil_pay > 0) ? number_format($over_all_sil_pay,2) : '' }}</td>
             @endif
 
@@ -820,10 +900,40 @@
                         </tr>
                 @endforeach
             </table>
+            @if($otherOTTotal30)
+                <table border=1 style="border-collapse: collapse;float:left;margin-left :8px;">
+                    <tr >
+                        <td colspan=2 style="padding:0px 4px;"> Over Time 30 - 39  </td>
+                    </tr>
+                    @foreach($otherOTTotal30 as $key => $val)
+                    <tr>
+                        <td style="padding-left:4px;"> {{ $key }} </td>
+                        <td style="text-align:center"> {{ $val }} </td>
+                    </tr>
+                    @endforeach 
+                
+                </table>
+            @endif
+
+            @if($otherOTTotal40)
+                <table border=1 style="border-collapse: collapse;float:left;margin-left :8px;">
+                    <tr >
+                        <td colspan=2 style="padding:0px 4px;"> Over Time 40 - 49  </td>
+                    </tr>
+                    @foreach($otherOTTotal40 as $key => $val)
+                    <tr>
+                        <td style="padding-left:4px;"> {{ $key }} </td>
+                        <td style="text-align:center"> {{ $val }} </td>
+                    </tr>
+                    @endforeach 
+                
+                </table>
+            @endif
+
             @if($otherOTTotal)
                 <table border=1 style="border-collapse: collapse;float:left;margin-left :8px;">
                     <tr >
-                        <td colspan=2 style="padding:0px 4px;"> Over Time >= 50++ </td>
+                        <td colspan=2 style="padding:0px 4px;background-color:#FF46A2"> Over Time >= 50++ </td>
                     </tr>
                     @foreach($otherOTTotal as $key => $val)
                     <tr>
@@ -834,9 +944,13 @@
                 
                 </table>
             @endif
+
+            <?php 
+                sort($otReport2);
+            ?>
             @foreach($otReport2 as $table)
-                
-                <table border=1 style="border-collapse:collapse;float:left;margin-left:12px;width:240px;">
+               
+                <table border=1 style="border-collapse:collapse;float:left;margin-left:10px;width:230px;">
                     <tr>
                         <td colspan=3  style="padding:2px;text-align:center;"> {{ $ot_summ_label[$table] }}</td>
                     </tr>
