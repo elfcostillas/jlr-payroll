@@ -807,6 +807,8 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::get('download-rcbc-template/{period_id}',[PayrollRegisterConfiController::class,'downloadRCBCTemplate']);
 
         Route::get('view-pdf-unposted/{period_id}',[PayrollRegisterConfiController::class,'viewPDF']);
+
+        Route::get('download-finance-template/{period_id}',[PayrollRegisterConfiController::class,'downloadFinanceTemplate']);
         // Route::get('/',[PayrollRegisterController::class,'index']);
         // Route::get('unposted-payroll',[PayrollRegisterController::class,'getUnpostedPeriod']);
         // Route::get('compute/{id}',[PayrollRegisterController::class,'compute']);

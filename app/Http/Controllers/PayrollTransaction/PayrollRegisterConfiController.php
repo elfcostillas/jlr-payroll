@@ -409,4 +409,9 @@ class PayrollRegisterConfiController extends Controller
             // DB::table('payroll_column_header')->insert(['var_name' => $col.'_amount']);
         }
     }
+
+    public function downloadFinanceTemplate(Request $request)
+    {
+        // dd($request->period_id);
+    }
 }

@@ -172,6 +172,12 @@
                         window.open(url);
                     },
 
+                    financeTemplate : function(e){
+                        let period = $("#posted_period").data("kendoDropDownList");
+
+                        let url = `payroll-register-confi/download-finance-template/${period.value()}`;
+                        window.open(url);
+                    }
                 },
                 functions : {
                     showPop : function(data)
