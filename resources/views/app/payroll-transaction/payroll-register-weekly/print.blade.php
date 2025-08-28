@@ -27,8 +27,24 @@
             padding-right : 4px;
         }
 
+        .pink {
+            background-color:#FF46A2;
+        }
+
+        .green {
+            background-color:#4CBB17;
+        }
+
+        .yellow {
+            background-color:yellow;
+        }
+
+        .pdl {
+            padding-left: 3px;
+        }
+
         @page {
-            margin : 72px 24px 24px 18px;
+            margin : 72px 18px 18px 18px;
            
         }
     </style>
@@ -376,11 +392,26 @@
 
                         $entitled = ($employee->ndays>=$perf) ? true : false;
 
-                        $entitled2 = ($employee->reg_ot >= 50) ? true : false;
+                        $entitled2 = ($employee->reg_ot >= 30) ? true : false;
 
                         if($entitled || $entitled2){
                             $jtCircle = 'circle';
-                            $jtFill = 'yellow';
+                            // $jtFill = 'yellow';
+
+                            if($employee->reg_ot >= 50)
+                            {
+                                 $jtCircle .= ' pink';
+                            }
+
+                            if($employee->reg_ot >= 40 && $employee->reg_ot < 50)
+                            {
+                                 $jtCircle .= ' green';
+                            }
+
+                            if($employee->reg_ot >= 30 && $employee->reg_ot < 40)
+                            {
+                                 $jtCircle .= ' yellow';
+                            }
                         }else{
                             $jtCircle = '';
                             $jtFill = 'white';
@@ -388,10 +419,13 @@
 
                         if($employee->gross_total >= 9000 && ( $employee->retired !='Y' &&  $employee->job_title_name != 'Transit Mixer Driver' ) )
                         {
-                            $fourfive = '#89CFF0';
+                            $fourfive = '#00FFFF';
                             $fourfive_count++;
+
+                            $jtFill = '#00FFFF';
                         }else{
                             $fourfive = 'white';
+                            $jtFill = 'white';
                         }
 
                         
@@ -413,12 +447,13 @@
                     
                     <tr style="{{ $stylee }};">
                         <td style="text-align:right;width:25px;padding-right:6px;" >{{ $ctr++ }}</td>
-                        <td style="width:52px" >  {{ $employee->dept_code }}</td>
-                        <td style="width:102px; background-color:{{$jtFill}};" > <div class="{{$jtCircle}}"> {{ $employee->job_title_name }} </div></td>
-                        <td style="text-align:left;padding-left :4px;"> {{ $employee->employee_name }} </td> 
-                        <td class="pr4" style="text-align:right;"> <div class="">{{ number_format($employee->daily_rate,2) }} </div> </td>
+                        <td style="width:48px" >  {{ $employee->dept_code }}</td>
+                        <td style="width:102px; background-color:{{$jtFill}};padding:0px 4px;" > <div class="pdl {{$jtCircle}}"> {{ $employee->job_title_name }} </div></td>
+                        <!-- <td style="background-color:{{$jtFill}};padding:0px 6px;" > <div class="{{$jtCircle}}"> {{ $employee->employee_name }} </div></td> -->
+                        <td style="text-align:left; background-color:{{$jtFill}};padding:0px 4px;"> <div class="pdl {{$jtCircle}}"> {{ $employee->employee_name }} </div> </td> 
+                        <td class="pr3" style="text-align:right;"> <div class="">{{ number_format($employee->daily_rate,2) }} </div> </td>
                         <td class="" style="width:43px;text-align:right;{{$color}};padding:0px 2px;"> <div class="{{ $circle}}">{{ round($employee->ndays,2) }}</div> </td>
-                        <td class="pr4"  style="text-align:right;"> {{ number_format($employee->basic_pay,2) }}</td>
+                        <td class="pr3"  style="text-align:right;"> {{ number_format($employee->basic_pay,2) }}</td>
                         <td class="pr3"  style="text-align:right;"> {{ ($employee->late_eq>0) ? number_format($employee->late_eq,2) : ''; }}</td>
                         <td class="pr3"  style="text-align:right;"> {{ ($employee->late_eq_amount>0) ? number_format($employee->late_eq_amount,2) : ''; }}</td> 
                         
@@ -429,11 +464,35 @@
 
                         @foreach($headers as $key => $val)
                             <?php
-                                $over30 = ($employee->$key >= 50 && $key == 'reg_ot' ) ? 'background-color:#FF46A2;': '' ;
-                                $over30circ = ($employee->$key >= 50 && $key == 'reg_ot' ) ? 'circle ': '' ;
+                                
+                                // $over30circ = ($employee->$key >= 50 && $key == 'reg_ot' ) ? 'circle pink': '' ;
+                                
+                                $over30 = '';
+                                $over30circ = '';
 
-                                // $over30 = ($employee->$key >= 30 && $key == 'reg_ot' ) ? '': '' ;
-                                // $over30circ = ($employee->$key >= 30 && $key == 'reg_ot' ) ? '': '' ;
+                                if($employee->reg_ot >= 50)
+                                {
+                                    // $jtCircle .= ' pink';
+                                    $over30 = ($employee->$key >= 50 && $key == 'reg_ot' ) ? 'background-color:#FF46A2;': '' ;
+                                    $over30circ = ($employee->$key >= 50 && $key == 'reg_ot' ) ? ' pink' : '' ;
+                                }
+
+                                if($employee->reg_ot >= 40 && $employee->reg_ot < 50)
+                                {
+                                    // $jtCircle .= ' green';
+                                    // $over30 =  'background-color:#4CBB17;'; // kelly green
+                                    // $over30 = ($employee->$key >= 30 && $employee->$key < 40 && $key == 'reg_ot' ) ?  'background-color:#4CBB17': '' ;
+                                    // $over30circ = ' green';
+                                    $over30 = ($employee->$key >= 40 && $employee->$key < 50 && $key == 'reg_ot' ) ?  'background-color:#4CBB17': '' ;
+                                     $over30circ = ($employee->$key >= 40 && $employee->$key < 50 && $key == 'reg_ot' ) ? ' green' : '' ;
+                                }
+
+                                if($employee->reg_ot >= 30 && $employee->reg_ot < 40)
+                                {
+                                    // $jtCircle .= ' yellow';
+                                    $over30 = ($employee->$key >= 30 && $employee->$key < 40 && $key == 'reg_ot' ) ?  'background-color:yellow': '' ;
+                                    $over30circ = ($employee->$key >= 30 && $employee->$key < 40 && $key == 'reg_ot' ) ? ' yellow' : '' ;
+                                }
                             ?> 
 
                             @if(str_contains($key,'amount'))
@@ -900,7 +959,7 @@
             @if($otherOTTotal30)
                 <table border=1 style="border-collapse: collapse;float:left;margin-left :8px;">
                     <tr >
-                        <td colspan=2 style="padding:0px 4px;"> Over Time 30 - 39  </td>
+                        <td colspan=2 style="padding:0px 4px;background-color: yellow;"> Over Time 30 - 39  </td>
                     </tr>
                     @foreach($otherOTTotal30 as $key => $val)
                     <tr>
@@ -915,7 +974,7 @@
             @if($otherOTTotal40)
                 <table border=1 style="border-collapse: collapse;float:left;margin-left :8px;">
                     <tr >
-                        <td colspan=2 style="padding:0px 4px;"> Over Time 40 - 49  </td>
+                        <td colspan=2 style="padding:0px 4px;background-color: #4CBB17;"> Over Time 40 - 49  </td>
                     </tr>
                     @foreach($otherOTTotal40 as $key => $val)
                     <tr>
@@ -1028,7 +1087,7 @@ departmentalTotalGross -->
 
             <table border=1 style="border-collapse: collapse;float:left;margin-left :8px;margin-top:8px;">
                 <tr>
-                    <td style="padding:2px;"> Gross Pay P9,000 ++ except TM Drivers </td>
+                    <td style="padding:2px;background-color:#00FFFF;"> Gross Pay P9,000 ++ except TM Drivers </td>
                 </tr>
                 <tr>
                     <td style="padding:2px;text-align:center"> {{ $fourfive_count }} </td>
