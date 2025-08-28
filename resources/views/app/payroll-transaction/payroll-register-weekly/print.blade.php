@@ -806,13 +806,10 @@
         <table border=1 style="border-collapse:collapse;float:left;width:180px;margin-right:12px;">
             <tr>
                 <td  style="padding:2px;text-align:center; min-width:120px;"> Employee Count Per Dept. </td>
-
                 <td  style="padding:2px;text-align:center;min-width:32px;"> North </td>
                 <td  style="padding:2px;text-align:center;min-width:32px;"> South </td>
                 <td  style="padding:2px;text-align:center;min-width:32px;"> Agg </td>
                 <td  style="padding:2px;text-align:center;min-width:32px;"> TOTAL </td>
-
-
             </tr>
             <?php 
                 $bpn_total = 0;

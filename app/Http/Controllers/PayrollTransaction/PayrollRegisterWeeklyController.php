@@ -168,6 +168,9 @@ class PayrollRegisterWeeklyController extends Controller
 
     public function downloadExcelUnposted(Request $request)
     {
+        
+        
+        $sil_flag = false;
         $period = $request->id;
         $headers = $this->mapper->getHeaders($period)->toArray();
         $colHeaders = $this->mapper->getColHeaders();
@@ -182,6 +185,10 @@ class PayrollRegisterWeeklyController extends Controller
                 unset($headers[$key]);
             }
         }
+
+        $sil_flag = $this->mapper->sil_total($period,'unposted');
+
+
         $period_label = $this->period->makeRange($period);
         foreach($colHeaders  as  $value ){
             //dd($value->var_name,$vaue->col_label);
@@ -197,7 +204,7 @@ class PayrollRegisterWeeklyController extends Controller
         //     'labels' => $label,
         //     ]);
 
-        $this->excel->setValues($collections,$label,$headers,$period_label);
+        $this->excel->setValues($collections,$label,$headers,$period_label,$sil_flag);
         return Excel::download($this->excel,'PayrollRegisterWeekly'.$period.'.xlsx');
 
         
