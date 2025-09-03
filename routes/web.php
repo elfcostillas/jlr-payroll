@@ -599,6 +599,7 @@ Route::middleware('auth')->prefix('deductions')->group(function(){
         Route::get('list-payroll-period',[GovtLoanSGController::class,'getPayrollPeriod']);
         Route::get('list-types',[GovtLoanSGController::class,'getTypes']);
         Route::post('save',[GovtLoanSGController::class,'save']);
+        Route::get('list/{biometric_id}',[GovtLoanSGController::class,'list']);
     });
     
 });
