@@ -1476,8 +1476,15 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
     public function onetimebigtime($period_id)
     {
-        $qry = " SELECT DISTINCT biometric_id FROM edtr_raw 
-        LEFT JOIN payroll_period ON edtr_raw.punch_date BETWEEN date_from AND date_to WHERE payroll_period.id = $period_id ";
+        // $qry = " SELECT DISTINCT biometric_id FROM edtr_raw 
+        // LEFT JOIN payroll_period ON edtr_raw.punch_date BETWEEN date_from AND date_to WHERE payroll_period.id = $period_id ";
+
+        $qry = "SELECT DISTINCT employees.biometric_id FROM edtr_raw 
+                inner join employees on employees.biometric_id = edtr_raw.biometric_id
+                LEFT JOIN payroll_period ON edtr_raw.punch_date BETWEEN date_from AND date_to 
+                WHERE payroll_period.id = $period_id
+                and employees.emp_level <= 5";
+
         $result = DB::select($qry);
 
         return $result;

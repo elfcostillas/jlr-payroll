@@ -4,6 +4,7 @@ namespace App\Http\Controllers\PayrollTransaction;
 
 use App\CustomClass\PayrollRegisterConfi;
 use App\CustomClass\PayrollRegisterService;
+use App\CustomClass\PayrollTransaction\PostedPayrollRegister;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mappers\PayrollTransaction\UnpostedPayrollRegisterMapper;
@@ -17,6 +18,7 @@ use Carbon\Carbon;
 use App\Excel\UnpostedPayrollRegister;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Excel\BankTransmittal;
+use App\Models\Timekeeping\PayrollPeriod;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -410,8 +412,22 @@ class PayrollRegisterConfiController extends Controller
         }
     }
 
-    public function downloadFinanceTemplate(Request $request)
+    public function downloadExcelPosted(PayrollPeriod $period)
+    {
+       
+    
+        
+    }
+
+    public function downloadFinanceTemplate(PayrollPeriod $period)
     {
         // dd($request->period_id);
+
+      
+        $payroll = new PostedPayrollRegister($period,'confi');
+        dd($payroll->getData());
+
+        return view('app.payroll-transaction.payroll-register-confi.finance-template',['payroll' => $payroll]);
+
     }
 }

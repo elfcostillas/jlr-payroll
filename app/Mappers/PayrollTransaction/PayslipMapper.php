@@ -579,18 +579,40 @@ class PayslipMapper extends AbstractMapper {
         GROUP BY description,total_amount
         */
 
-        $result = $this->model->select(DB::raw("loan_types.description,posted_loans.amount,total_amount-SUM(posted_loans.amount) AS balance"))
-        ->from('deduction_gov_loans')
-        ->join('posted_loans',function($join){
-            $join->on('deduction_gov_loans.id','=','posted_loans.deduction_id');
-            $join->on('deduction_gov_loans.biometric_id','=','posted_loans.biometric_id');
-            $join->on('deduction_gov_loans.deduction_type','=','posted_loans.deduction_type');
-        })
-        ->join('loan_types','loan_types.id','=','deduction_gov_loans.deduction_type')
-        ->where('posted_loans.biometric_id',$biometric_id)
-        ->where('posted_loans.period_id',$period_id)
-        ->groupByRaw('description,total_amount')
-        ->get();
+        
+        $paid = DB::table('posted_loans')->where('biometric_id','=',$biometric_id)
+                ->select(DB::raw("deduction_id,biometric_id,SUM(amount) AS paid_amount"))
+                ->where('period_id','<=',$period_id)
+                ->groupBy('deduction_id');
+
+        $result = $this->model->select(DB::raw("loan_types.description,posted_loans.amount,total_amount-paid.paid_amount AS balance"))
+                ->from('deduction_gov_loans')
+                ->join('posted_loans',function($join){
+                    $join->on('deduction_gov_loans.id','=','posted_loans.deduction_id');
+                    $join->on('deduction_gov_loans.biometric_id','=','posted_loans.biometric_id');
+                    $join->on('deduction_gov_loans.deduction_type','=','posted_loans.deduction_type');
+                })
+                ->leftJoinSub($paid,'paid',function($join){
+                    $join->on('paid.deduction_id','=','deduction_gov_loans.id');
+                })
+                ->join('loan_types','loan_types.id','=','deduction_gov_loans.deduction_type')
+                ->where('posted_loans.biometric_id',$biometric_id)
+                ->where('posted_loans.period_id','=',$period_id)
+                ->get();
+
+
+        // $result = $this->model->select(DB::raw("loan_types.description,posted_loans.amount,total_amount-SUM(posted_loans.amount) AS balance"))
+        // ->from('deduction_gov_loans')
+        // ->join('posted_loans',function($join){
+        //     $join->on('deduction_gov_loans.id','=','posted_loans.deduction_id');
+        //     $join->on('deduction_gov_loans.biometric_id','=','posted_loans.biometric_id');
+        //     $join->on('deduction_gov_loans.deduction_type','=','posted_loans.deduction_type');
+        // })
+        // ->join('loan_types','loan_types.id','=','deduction_gov_loans.deduction_type')
+        // ->where('posted_loans.biometric_id',$biometric_id)
+        // ->where('posted_loans.period_id',$period_id)
+        // ->groupByRaw('description,total_amount')
+        // ->get();
 
         foreach($result as $loan){
             $loantotal += $loan->amount;
@@ -701,20 +723,42 @@ class PayslipMapper extends AbstractMapper {
     public function installments($period_id,$biometric_id)
     {
         $loantotal = 0;
-        $result = $this->model->select(DB::raw("deduction_types.description,posted_installments.amount,total_amount-SUM(posted_installments.amount) AS balance"))
-        ->from('deduction_installments')
-        ->join('posted_installments',function($join){
-            $join->on('deduction_installments.id','=','posted_installments.deduction_id');
-            $join->on('deduction_installments.biometric_id','=','posted_installments.biometric_id');
-            $join->on('deduction_installments.deduction_type','=','posted_installments.deduction_type');
-        })
-        ->join('deduction_types','deduction_types.id','=','deduction_installments.deduction_type')
-        ->where('posted_installments.biometric_id',$biometric_id)
-        ->where('posted_installments.period_id','<=',$period_id)
-        ->groupByRaw('description,total_amount')
-        ->get();
 
-        
+        $paid = DB::table('posted_installments')->where('biometric_id','=',$biometric_id)
+                ->select(DB::raw("deduction_id,biometric_id,SUM(amount) AS paid_amount"))
+                ->where('period_id','<=',$period_id)
+                ->groupBy('deduction_id');
+
+
+        // $result = $this->model->select(DB::raw("deduction_types.description,posted_installments.amount,total_amount-SUM(posted_installments.amount) AS balance"))
+        // ->from('deduction_installments')
+        // ->join('posted_installments',function($join){
+        //     $join->on('deduction_installments.id','=','posted_installments.deduction_id');
+        //     $join->on('deduction_installments.biometric_id','=','posted_installments.biometric_id');
+        //     $join->on('deduction_installments.deduction_type','=','posted_installments.deduction_type');
+        // })
+        // ->join('deduction_types','deduction_types.id','=','deduction_installments.deduction_type')
+        // ->where('posted_installments.biometric_id',$biometric_id)
+        // ->where('posted_installments.period_id','<=',$period_id)
+        // ->groupByRaw('description,total_amount');
+
+        // echo  $result->toSql();
+
+        $result = $this->model->select(DB::raw("deduction_types.description,posted_installments.amount,total_amount-paid.paid_amount AS balance"))
+                ->from('deduction_installments')
+                ->join('posted_installments',function($join){
+                    $join->on('deduction_installments.id','=','posted_installments.deduction_id');
+                    $join->on('deduction_installments.biometric_id','=','posted_installments.biometric_id');
+                    $join->on('deduction_installments.deduction_type','=','posted_installments.deduction_type');
+                })
+                ->leftJoinSub($paid,'paid',function($join){
+                    $join->on('paid.deduction_id','=','deduction_installments.id');
+                })
+                ->join('deduction_types','deduction_types.id','=','deduction_installments.deduction_type')
+                ->where('posted_installments.biometric_id',$biometric_id)
+                ->where('posted_installments.period_id','=',$period_id)
+                ->get();
+
 
         foreach($result as $loan){
             $loantotal += $loan->amount;

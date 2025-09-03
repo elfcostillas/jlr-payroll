@@ -61,6 +61,7 @@ use  App\Http\Controllers\Deductions\WeeklyDeductionController;
 use App\Http\Controllers\Compentsations\OtherCompensationController;
 use App\Http\Controllers\Compentsations\FixCompensationController;
 use App\Http\Controllers\Compentsations\OtherIncomeWeeklyAppController;
+use App\Http\Controllers\Deductions\GovtLoanSGController;
 use App\Http\Controllers\EmployeeFile\EmployeeConfiController;
 use App\Http\Controllers\EmployeeFile\RatesController;
 use App\Http\Controllers\Memo\AWOLMemoController;
@@ -591,6 +592,15 @@ Route::middleware('auth')->prefix('deductions')->group(function(){
 
         Route::get('print/{period_id}',[WeeklyDeductionController::class,'print']);
     });
+
+    Route::prefix('government-loans-sg')->group(function(){
+        Route::get('/',[GovtLoanSGController::class,'index']);
+        Route::get('employee-list',[GovtLoanSGController::class,'getEmployees']);
+        Route::get('list-payroll-period',[GovtLoanSGController::class,'getPayrollPeriod']);
+        Route::get('list-types',[GovtLoanSGController::class,'getTypes']);
+        Route::post('save',[GovtLoanSGController::class,'save']);
+    });
+    
 });
 
 Route::middleware('auth')->prefix('reports')->group(function(){
@@ -808,7 +818,9 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
 
         Route::get('view-pdf-unposted/{period_id}',[PayrollRegisterConfiController::class,'viewPDF']);
 
-        Route::get('download-finance-template/{period_id}',[PayrollRegisterConfiController::class,'downloadFinanceTemplate']);
+        Route::get('download-posted/{period}',[PayrollRegisterConfiController::class,'downloadExcelPosted']);
+        Route::get('download-finance-template/{period}',[PayrollRegisterConfiController::class,'downloadFinanceTemplate']);
+
         // Route::get('/',[PayrollRegisterController::class,'index']);
         // Route::get('unposted-payroll',[PayrollRegisterController::class,'getUnpostedPeriod']);
         // Route::get('compute/{id}',[PayrollRegisterController::class,'compute']);

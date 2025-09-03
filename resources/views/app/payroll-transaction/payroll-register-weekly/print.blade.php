@@ -60,6 +60,8 @@
 
         $fourfive_count = 0;
 
+        $total_ctr = 0;
+
         $starting_count = ($period->cut_off == 1) ? 16 :17 ;
 
         if($sil_flag->vl_wpay >0){
@@ -165,7 +167,8 @@
 
             <?php 
 
-                $ctr=1; 
+                $ctr = 1; 
+                
 
                 $location_total = 0;
                 $location_gtotal = 0; 
@@ -251,6 +254,9 @@
                 @foreach($location->employees as $employee)
 
                     <?php
+
+                    $total_ctr++;
+
                     if(!array_key_exists($employee->dept_code,$empCountPerDept))
                     {
                         $empCountPerDept[$employee->dept_code] = $employee->dept_code;
@@ -1058,6 +1064,10 @@ departmentalTotalGross -->
                         <td>TOTAL</td>
                         <td style="text-align:right;padding-right:4px;">{{ number_format($totalPerDeptGross,2) }}</td>
                     </tr>
+                    <tr>
+                        <td> Avg. </td>
+                        <td style="text-align:right;padding-right:4px;"> {{ number_format($totalPerDeptGross/$total_ctr,2) }} </td>
+                    </tr>
             </table>
 
             <table border=1 style="border-collapse:collapse;float:left;margin-top:8px;width:180px;margin-left:8pt;">
@@ -1082,7 +1092,10 @@ departmentalTotalGross -->
                         <td style="text-align:right;padding-right:4px;">{{ number_format($totalPerDeptNet,2) }}</td>
                     </tr>
                 
-
+                    <!-- <tr>
+                        <td> AVG </td>
+                        <td style="text-align:right;padding-right:4px;"> {{ number_format($totalPerDeptNet/$total_ctr,2) }} </td>
+                    </tr> -->
             </table>
 
             <table border=1 style="border-collapse: collapse;float:left;margin-left :8px;margin-top:8px;">

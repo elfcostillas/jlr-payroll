@@ -94,9 +94,9 @@ class LeaveReportsMapper extends AbstractMapper {
         $start = $year.'-01-01';
 
         if($type=='nonconfi'){
-            $level = 'and emp_level >= 5 ';
+            $level = 'and employees.emp_level >= 5 ';
         }else {
-            $level = 'and emp_level < 5 ';
+            $level = 'and employees.emp_level < 5 ';
         }
         $employees = "SELECT leave_request_header.biometric_id,employee_name FROM leave_request_header 
         INNER JOIN leave_request_detail ON leave_request_header.id = leave_request_detail.header_id
@@ -344,7 +344,7 @@ class LeaveReportsMapper extends AbstractMapper {
             
             WHERE late > 0
             AND dtr_date BETWEEN '$start' AND '$end'
-            and emp_level >= 3
+            and employees.emp_level >= 3
             and job_title_id != 12
             and holiday_type is null 
             and employees.exit_status = 1
