@@ -16,6 +16,7 @@ use App\Mappers\EmployeeFileMapper\Repository\SemiMonthly;
 use App\Mappers\EmployeeFileMapper\Repository\Daily;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Mappers\PayrollTransaction\PayslipMapper;
+use App\Mappers\PayrollTransaction\UnpostedPayrollRegisterMapper;
 
 use  App\Excel\BankTransmittal;
 use App\Excel\PayrollRegisterWeekly;
@@ -35,9 +36,10 @@ class PayrollRegisterWeeklyController extends Controller
     private $posted;
     private $rcbc;
     private $dtr;
+    private $unposted;
     
 
-    public function __construct(DailyTimeRecordMapper $dtr,PostedPayrollRegisterWeeklyMapper $posted,PayslipMapper $payslip,EmployeeWeeklyMapper $employee,PayrollPeriodWeeklyMapper $period,UnpostedPayrollRegisterWeeklyMapper $mapper,PayrollRegisterWeekly $excel,BankTransmittal $rcbc)
+    public function __construct(UnpostedPayrollRegisterMapper $unposted,DailyTimeRecordMapper $dtr,PostedPayrollRegisterWeeklyMapper $posted,PayslipMapper $payslip,EmployeeWeeklyMapper $employee,PayrollPeriodWeeklyMapper $period,UnpostedPayrollRegisterWeeklyMapper $mapper,PayrollRegisterWeekly $excel,BankTransmittal $rcbc)
     {
         $this->employee = $employee;
         $this->period = $period;
@@ -47,6 +49,7 @@ class PayrollRegisterWeeklyController extends Controller
         $this->posted = $posted;
         $this->rcbc = $rcbc;
         $this->dtr = $dtr;
+        $this->unposted = $unposted;
         
     }
 
@@ -74,6 +77,7 @@ class PayrollRegisterWeeklyController extends Controller
     {
         $period = $request->id;
         $payreg = [];
+        $user = Auth::user();
 
         $pperiod = DB::table('payroll_period_weekly')->select()->where('id',$period)->first();
 
@@ -83,6 +87,9 @@ class PayrollRegisterWeeklyController extends Controller
 
         $sil_flag = false;
 
+        //$gloans = $this->unposted->runGovLoansSG($pperiod,$employees->pluck('biometric_id'),$user->id,'sg');
+
+        
         foreach($employees as $employee){
 
             $employee->vl_wpay = 0;
@@ -122,6 +129,7 @@ class PayrollRegisterWeeklyController extends Controller
             // }
             
             $person = new WeeklyEmployee($employee,new Daily);
+
             
             $person->compute($period);
             $deductions = $this->mapper->getDeductions($employee->biometric_id,$employee->period_id);
@@ -254,7 +262,7 @@ class PayrollRegisterWeeklyController extends Controller
         $canvas = $dom_pdf ->get_canvas();
         $canvas->page_text(850, 590, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
        
-        return $pdf->stream('JLR-DTR-Print.pdf'); 
+        return $pdf->stream('JLR-PayReg-Print.pdf'); 
 
 
     }

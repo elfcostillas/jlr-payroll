@@ -6,13 +6,13 @@
     <title>Document</title>
     <style>
         * {
-            font-size: 7pt;
+            font-size: 6pt;
         }
 
         .pr4{
             text-align : right;
             padding-right : 4px;
-            width: 55px; /* 52*/
+            width: 36px; /* 52*/
         }
 
         .pr3 {
@@ -454,9 +454,9 @@
                     <tr style="{{ $stylee }};">
                         <td style="text-align:right;width:25px;padding-right:6px;" >{{ $ctr++ }}</td>
                         <td style="width:48px" >  {{ $employee->dept_code }}</td>
-                        <td style="width:102px; background-color:{{$jtFill}};padding:0px 4px;" > <div class="pdl {{$jtCircle}}"> {{ $employee->job_title_name }} </div></td>
+                        <td style="width:48px; background-color:{{$jtFill}};padding:0px 4px;" > <div class="pdl {{$jtCircle}}"> {{ $employee->job_title_name }} </div></td>
                         <!-- <td style="background-color:{{$jtFill}};padding:0px 6px;" > <div class="{{$jtCircle}}"> {{ $employee->employee_name }} </div></td> -->
-                        <td style="text-align:left; background-color:{{$jtFill}};padding:0px 4px;"> <div class="pdl {{$jtCircle}}"> {{ $employee->employee_name }} </div> </td> 
+                        <td style="text-align:left;width:68px; background-color:{{$jtFill}};padding:0px 4px;"> <div class="pdl {{$jtCircle}}"> {{ $employee->employee_name }} </div> </td> 
                         <td class="pr3" style="text-align:right;"> <div class="">{{ number_format($employee->daily_rate,2) }} </div> </td>
                         <td class="" style="width:43px;text-align:right;{{$color}};padding:0px 2px;"> <div class="{{ $circle}}">{{ round($employee->ndays,2) }}</div> </td>
                         <td class="pr3"  style="text-align:right;"> {{ number_format($employee->basic_pay,2) }}</td>

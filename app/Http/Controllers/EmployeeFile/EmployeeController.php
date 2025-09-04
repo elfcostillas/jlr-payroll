@@ -298,6 +298,8 @@ class EmployeeController extends Controller
         ->where('exit_status','=',1)
         ->whereNotNull('birthdate')
         ->whereNotNull('email')
+        ->select('birthdate','emp_level','email','lastname','firstname','biometric_id')
+        ->distinct()
         ->get();
 
         foreach($employees as $employee)

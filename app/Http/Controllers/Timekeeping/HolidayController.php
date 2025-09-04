@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mappers\TimeKeepingMapper\HolidayMapper;
 use App\Mappers\TimeKeepingMapper\HolidayLocationMapper;
+use Illuminate\Support\Facades\DB;
+
 class HolidayController extends Controller
 {
     //
@@ -99,7 +101,12 @@ class HolidayController extends Controller
     }
     public function  destroyLocation(Request $request)
     {
-        $result = $this->location->updateValid($request->all());
+        // $result = $this->location->updateValid($request->all());
+
+        $data = $request->all();
+        
+
+        $result = DB::table('holiday_location')->where('holiday_id',$data['holiday_id'])->where('location_id',$data['location_id'])->delete();
 
         if(is_object($result)){
 			return response()->json($result)->setStatusCode(500, 'Error');

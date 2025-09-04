@@ -307,6 +307,58 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
         return $result;
     }
 
+    public function runGovLoansSG($period,$biometric_ids,$user_id,$emp_level)
+    {
+        // DB::table('unposted_loans_sg')->where('period_id',$period->id)->where('user_id',$user_id)->where('emp_level',$emp_level)->delete();
+        $tmp_loan = [];
+
+        
+        $loans = $this->model->select(DB::raw("deduction_gov_loans_sg.id,
+                                                        deduction_gov_loans_sg.biometric_id,
+                                                        deduction_gov_loans_sg.deduction_type,
+                                                        SUM(IFNULL(posted_loans_sg.amount,0)) AS paid,
+                                                        total_amount-SUM(IFNULL(posted_loans_sg.amount,0)) AS balance,
+                                                        IF(total_amount-SUM(IFNULL(posted_loans_sg.amount,0))<ammortization,total_amount-SUM(IFNULL(posted_loans_sg.amount,0)),ammortization) AS ammortization"))
+                                    ->from("deduction_gov_loans_sg")
+                                    ->leftJoin('posted_loans_sg','deduction_gov_loans_sg.id','=','posted_loans_sg.deduction_id')
+                                    ->join('loan_types','loan_types.id','=','deduction_gov_loans_sg.deduction_type')
+                                    ->whereRaw("is_stopped = 'N'")
+                                    ->whereIn('loan_types.sched',[$period->cut_off,3])
+                                    ->where('deduction_gov_loans_sg.period_id','<=',$period->id)
+                                    ->whereIn('deduction_gov_loans_sg.biometric_id',$biometric_ids)
+                                    ->groupBy(DB::raw("id,deduction_gov_loans_sg.biometric_id,deduction_gov_loans_sg.deduction_type"))
+                                    ->havingRaw('balance>0')->get();
+
+        // $str = '';
+        // foreach($biometric_ids as $id => $i)
+        // {
+        //     $str .= $i.',';
+            
+        // }
+        // dd($str);
+
+        dd($period->cut_off);
+                
+        foreach($loans as $loan)
+        {
+            $tmp = [
+                'period_id' => $period->id,
+                'biometric_id' => $loan->biometric_id,
+                'deduction_type' => $loan->deduction_type,
+                'amount' => $loan->ammortization,
+                'deduction_id' => $loan->id,
+                'emp_level' => $emp_level,
+                'user_id' => $user_id
+            ];
+
+            array_push($tmp_loan,$tmp);
+        }
+
+        dd($loans);
+
+        DB::table('unposted_loans_sg')->insertOrIgnore($tmp_loan);
+    }
+
     public function runGovLoans($period,$biometric_ids,$user_id,$emp_level)
     {
         //dd($period->id);
