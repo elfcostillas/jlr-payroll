@@ -9,10 +9,10 @@
             font-size: 6pt;
         }
 
-        .pr4{
+        .pr4 {
             text-align : right;
             padding-right : 4px;
-            width: 36px; /* 52*/
+            width: 38px; /* 52*/
         }
 
         .pr3 {
@@ -62,7 +62,7 @@
 
         $total_ctr = 0;
 
-        $starting_count = ($period->cut_off == 1) ? 16 :17 ;
+        $starting_count = ($period->cut_off == 1) ? 16 : 17 ;
 
         if($sil_flag->vl_wpay >0){
             $starting_count += 2;
@@ -454,11 +454,11 @@
                     <tr style="{{ $stylee }};">
                         <td style="text-align:right;width:25px;padding-right:6px;" >{{ $ctr++ }}</td>
                         <td style="width:48px" >  {{ $employee->dept_code }}</td>
-                        <td style="width:48px; background-color:{{$jtFill}};padding:0px 4px;" > <div class="pdl {{$jtCircle}}"> {{ $employee->job_title_name }} </div></td>
+                        <td style="width:82px; background-color:{{$jtFill}};padding:0px 4px;" > <div class="pdl {{$jtCircle}}"> {{ $employee->job_title_name }} </div></td>
                         <!-- <td style="background-color:{{$jtFill}};padding:0px 6px;" > <div class="{{$jtCircle}}"> {{ $employee->employee_name }} </div></td> -->
-                        <td style="text-align:left;width:68px; background-color:{{$jtFill}};padding:0px 4px;"> <div class="pdl {{$jtCircle}}"> {{ $employee->employee_name }} </div> </td> 
-                        <td class="pr3" style="text-align:right;"> <div class="">{{ number_format($employee->daily_rate,2) }} </div> </td>
-                        <td class="" style="width:43px;text-align:right;{{$color}};padding:0px 2px;"> <div class="{{ $circle}}">{{ round($employee->ndays,2) }}</div> </td>
+                        <td style="text-align:left; background-color:{{$jtFill}};padding:0px 4px;"> <div class="pdl {{$jtCircle}}"> {{ $employee->employee_name }} </div> </td> 
+                        <td class="pr4" style="text-align:right;"> <div class="">{{ number_format($employee->daily_rate,2) }} </div> </td>
+                        <td class="pr4" style="width:43px;text-align:right;{{$color}};padding:0px 2px;"> <div class="{{ $circle}}">{{ round($employee->ndays,2) }}</div> </td>
                         <td class="pr3"  style="text-align:right;"> {{ number_format($employee->basic_pay,2) }}</td>
                         <td class="pr3"  style="text-align:right;"> {{ ($employee->late_eq>0) ? number_format($employee->late_eq,2) : ''; }}</td>
                         <td class="pr3"  style="text-align:right;"> {{ ($employee->late_eq_amount>0) ? number_format($employee->late_eq_amount,2) : ''; }}</td> 
@@ -685,10 +685,10 @@
 
                         <td class="pr4"  style="text-align:right;font-weight:bold;background-color:{{$fourfive}};">{{ ($employee->gross_total > 0) ? number_format($employee->gross_total,2) : '' }}</td>
                         @if ($period->cut_off==1)
-                        <td class="pr3"  style="text-align:right;"> {{ ($employee->hdmf_contri>0) ? number_format($employee->hdmf_contri,2) : ''; }}</td> 
+                        <td class="pr4"  style="text-align:right;"> {{ ($employee->hdmf_contri>0) ? number_format($employee->hdmf_contri,2) : ''; }}</td> 
                         @else
-                        <td class="pr3"  style="text-align:right;"> {{ ($employee->sss_prem>0) ? number_format($employee->sss_prem,2) : ''; }}</td> 
-                        <td class="pr3"  style="text-align:right;"> {{ ($employee->phil_prem>0) ? number_format($employee->phil_prem,2) : ''; }}</td> 
+                        <td class="pr4"  style="text-align:right;"> {{ ($employee->sss_prem>0) ? number_format($employee->sss_prem,2) : ''; }}</td> 
+                        <td class="pr4"  style="text-align:right;"> {{ ($employee->phil_prem>0) ? number_format($employee->phil_prem,2) : ''; }}</td> 
                         @endif
                         <!-- <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['cash_advance']>0) ? number_format($employee->otherEarnings['cash_advance'],2) : ''; }}</td> -->
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['canteen']>0) ? number_format($employee->otherEarnings['canteen'],2) : ''; }}</td>
@@ -736,12 +736,12 @@
                 <tr>
                     <td colspan = {{ $colspan }} style="text-align:right;padding-right:4px;" > <b>SUB TOTAL </b></td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;"> {{ ($location_basic > 0) ? number_format($location_basic,2) : ''  }}</td> <!-- BASIC -->
-                    <td class="pr3"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_late_hrs > 0) ? number_format($location_late_hrs,2) : '' }}</td>
-                    <td class="pr3"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_late_amount > 0) ? number_format($location_late_amount,2) : '' }}</td>
+                    <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_late_hrs > 0) ? number_format($location_late_hrs,2) : '' }}</td>
+                    <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_late_amount > 0) ? number_format($location_late_amount,2) : '' }}</td>
                     
                     @if($sil_flag->vl_wpay >0)
-                        <td class="pr3"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_sil > 0) ? number_format(convert_hrs_to_days($location_sil),2) : '' }}</td>
-                        <td class="pr3"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_sil_pay > 0) ? number_format($location_sil_pay,2) : '' }}</td>
+                        <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_sil > 0) ? number_format(convert_hrs_to_days($location_sil),2) : '' }}</td>
+                        <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_sil_pay > 0) ? number_format($location_sil_pay,2) : '' }}</td>
                     @endif
                    
                     @foreach($headers as $key => $val)
@@ -812,7 +812,7 @@
     <table border=1  style="width:100%;border-collapse:collapse;margin-bottom:6px;" class="btable">
         <tr>
             <td style="text-align:right;padding-right:4px;" > <b>GRAND TOTAL </b></td>
-            <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_basic_pay,2) }}</td> <!-- BASIC -->
+            <td class="pr3" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_basic_pay,2) }}</td> <!-- BASIC -->
             <td class="pr3" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_late_hrs,2) }}</td>
             <td class="pr3" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_late_amount,2) }}</td>
             
@@ -830,7 +830,7 @@
             
             @endforeach
             <!-- <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_other_earning,2) }}</td> OTHER EARN -->
-            <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_retro_pay,2) }}</td></td> RETRO PAY
+            <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_retro_pay,2) }}</td></td> 
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_gross_total,2) }}</td>
             @if ($period->cut_off==1)
             <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_hdmf,2) }}</td> 
