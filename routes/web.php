@@ -791,6 +791,7 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
     Route::prefix('payroll-register-weekly')->middleware('access:payroll-transaction/payroll-register-weekly')->group(function(){
         Route::get('/',[PayrollRegisterWeeklyController::class,'index']);
         Route::get('unposted-payroll',[PayrollRegisterWeeklyController::class,'getUnpostedPeriod']);
+        Route::get('compute-v2/{period}',[PayrollRegisterWeeklyController::class,'computeV2']);
         Route::get('compute/{id}',[PayrollRegisterWeeklyController::class,'compute']);
         Route::get('pdf-unposted/{id}',[PayrollRegisterWeeklyController::class,'downloadPdfUnposted']);
         Route::get('download-unposted/{id}',[PayrollRegisterWeeklyController::class,'downloadExcelUnposted']);
@@ -804,6 +805,8 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
 
         Route::get('show-ot-breakdown/{id}',[PayrollRegisterWeeklyController::class,'showOTBreakdown']);
         Route::get('pdf-posted/{id}',[PayrollRegisterWeeklyController::class,'downloadPdfUnposted']);
+
+       
     });
 
     Route::prefix('payroll-register-confi')->middleware('access:payroll-transaction/payroll-register-confi')->group(function(){

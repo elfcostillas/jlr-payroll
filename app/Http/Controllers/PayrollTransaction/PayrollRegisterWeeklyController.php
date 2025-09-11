@@ -22,7 +22,11 @@ use  App\Excel\BankTransmittal;
 use App\Excel\PayrollRegisterWeekly;
 
 use App\Mappers\TimeKeepingMapper\DailyTimeRecordMapper;
+use App\Models\Timekeeping\PayrollPeriod;
+use App\Models\Timekeeping\PayrollPeriodWeekly;
+use App\Services\PayrollRegisterService;
 use Illuminate\Support\Facades\DB;
+use App\Contracts\PayrollPeriodContract;
 
 class PayrollRegisterWeeklyController extends Controller
 {
@@ -72,6 +76,16 @@ class PayrollRegisterWeeklyController extends Controller
         return response()->json($result);
     }
 
+    
+    public function computeV2(Request $period)
+    {
+    
+        $service = new PayrollRegisterService;
+        $service->set_employee_type('support')
+                ->setPayrollPeriod($period->period)
+                ->process();
+        
+    }
 
     public function compute(Request $request)
     {

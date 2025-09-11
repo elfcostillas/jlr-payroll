@@ -248,6 +248,22 @@ class EmployeeWeeklyMapper extends AbstractMapper {
 		return $index;
 	}
 
+	public function getActiveEmployees(){
+		$result = $this->model->select(DB::raw('employees.*,dept_code,div_code,emp_exit_status.status_desc,emp_emp_stat.estatus_desc,pay_description,job_title_name'))
+			->leftJoin('departments','departments.id','=','dept_id')
+			->leftJoin('divisions','divisions.id','=','division_id')
+			->leftJoin('civil_status','employees.civil_status','=','civil_status.id')
+			->leftJoin('emp_exit_status','exit_status','=','emp_exit_status.id')
+			->leftJoin('emp_emp_stat','employee_stat','=','emp_emp_stat.id')
+			->leftJoin('emp_pay_types','pay_type','=','emp_pay_types.id')
+			->leftJoin('job_titles','job_titles.id','=','job_title_id')
+			->where('exit_status' ,'=',1)
+			->where('emp_level','>',5)
+			->get();
+
+		return $result;
+	}
+
 
 
 

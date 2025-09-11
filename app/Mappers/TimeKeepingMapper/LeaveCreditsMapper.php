@@ -84,7 +84,7 @@ class LeaveCreditsMapper extends AbstractMapper {
                 $join->on('leave_credits.biometric_id','=','employee_names_vw.biometric_id');
                 $join->where('fy_year',$year);
             })
-            ->where('emp_level','>','5')
+            ->where('employees.emp_level','>','5')
             ->where('employees.exit_status',1)
             ->where(function($q) use($year) {
                 $q->where('fy_year',$year);

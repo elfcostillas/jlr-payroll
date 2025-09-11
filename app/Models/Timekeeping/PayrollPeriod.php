@@ -2,10 +2,11 @@
 
 namespace App\Models\Timekeeping;
 
+use App\Contracts\PayrollPeriodContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PayrollPeriod extends Model
+class PayrollPeriod extends Model 
 {
     use HasFactory;
 
