@@ -350,6 +350,7 @@ class WeeklyEmployee
 
     }
 
+    
     public function computeContribution($period){
        
         if($period->period_type==1){
@@ -466,6 +467,8 @@ class WeeklyEmployee
             }
         }
     }
+
+    
 
     public function computeGovContri($period)
     {

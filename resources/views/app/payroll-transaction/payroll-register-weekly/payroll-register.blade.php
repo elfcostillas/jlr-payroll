@@ -154,6 +154,14 @@
                         <th style="padding : 0px 4px;min-width:110px;" >Other Earnings</th>
                         <th style="padding : 0px 4px;min-width:110px;" >Retro Pay</th>
                         <th style="padding : 0px 4px;min-width:110px;" >Gross Pay</th>
+                        @foreach ($deductions_label as $deduction)
+                            <th style="text-align:right;"> {{ $deduction->description }} </th>
+                        @endforeach
+
+                        <!-- Govt Loan-->
+                        @foreach ($govloans_label as $govloan)
+                            <th style="text-align:right;"> {{ $govloan->description }} </th>
+                        @endforeach
                         <th style="padding : 0px 4px;min-width:110px;" >HDMF Contri</th>
                         <th style="padding : 0px 4px;min-width:110px;" >SSS Prem</th>
                         <th style="padding : 0px 4px;min-width:110px;" >PHIC Contri</th>
@@ -169,6 +177,7 @@
            
                   
                             @foreach($data as $employee)
+                           
                                
                                 <tr style="vertical-align: top;">
                                     <th>{{ $rcount }}</th>
@@ -202,6 +211,16 @@
                                         <td style="text-align:right;"> {{ ($employee->otherEarnings['retro_pay']>0) ? number_format($employee->otherEarnings['retro_pay'],2) : ''; }}</td>
                                 
                                         <td style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($employee->gross_total > 0) ? number_format($employee->gross_total,2) : '' }}</td>
+                                        <!-- Deduction Installment-->
+                                        @foreach ($deductions_label as $deduction)
+                                            <td style="text-align:right;" >{{ (array_key_exists($deduction->id,$employee->installments)) ? number_format($employee->installments[$deduction->id],2) : ''; }}</td>
+                                        @endforeach
+
+                                        <!-- Govt Loan-->
+                                        @foreach ($govloans_label as $govloan)
+                                            <td style="text-align:right;" >{{ (array_key_exists($govloan->id,$employee->govloans)) ? number_format($employee->govloans[$govloan->id],2) : ''; }}</td>
+                                        @endforeach
+
                                         <td style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($employee->hdmf_contri > 0) ? number_format($employee->hdmf_contri,2) : '' }}</td>
                                         
 

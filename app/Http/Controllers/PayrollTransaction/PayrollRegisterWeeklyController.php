@@ -96,10 +96,14 @@ class PayrollRegisterWeeklyController extends Controller
         $pperiod = DB::table('payroll_period_weekly')->select()->where('id',$period)->first();
 
         $employees = $this->mapper->getEmployeeWithDTRW($period,'non-confi');
-
+       
+        $gloans = $this->mapper->runGovtLoansSG($pperiod,$employees->pluck('biometric_id'),$user->id,'sg');
+        $installments = $this->mapper->runInstallments($pperiod,$employees->pluck('biometric_id'),$user->id,'sg');
+        
         $phil_rate = $this->mapper->getPhilRate();
 
         $sil_flag = false;
+        
 
         //$gloans = $this->unposted->runGovLoansSG($pperiod,$employees->pluck('biometric_id'),$user->id,'sg');
 
@@ -148,6 +152,7 @@ class PayrollRegisterWeeklyController extends Controller
             $person->compute($period);
             $deductions = $this->mapper->getDeductions($employee->biometric_id,$employee->period_id);
             $person->setPhilRate($phil_rate->rate);
+            // $person->computeGovtLoan($pperiod);
             $person->computeGovContri($pperiod);
             $person->computeGrossTotal($deductions);
             $person->computeNetPay();
@@ -159,6 +164,11 @@ class PayrollRegisterWeeklyController extends Controller
         $flag = $this->mapper->reInsert($period,$payreg,'weekly');
 
         $headers = $this->mapper->getHeaders($period)->toArray();
+        $deductions =  $this->mapper->getDeductionLabel($pperiod);
+        $govtLoans =  $this->mapper->getGovLoanLabel($pperiod);
+
+        // dd($deductions);
+   
         //dd($headers->toArray());
         $colHeaders = $this->mapper->getColHeaders();
 
@@ -182,6 +192,8 @@ class PayrollRegisterWeeklyController extends Controller
         return view('app.payroll-transaction.payroll-register-weekly.payroll-register',[
             'data' => $collections,
             'nopay' => $nopay,
+            'deductions_label' => $deductions,
+            'govloans_label' => $govtLoans,
             'headers' => $headers , 
             'labels' => $label,
             'sil_flag' => $sil_flag

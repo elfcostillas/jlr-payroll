@@ -479,6 +479,30 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
 
     }
 
+    public function getDeductionLabel($period)
+    {
+       
+        $qry = "SELECT DISTINCT deduction_type FROM (
+            SELECT * FROM unposted_installments_sg
+        ) AS deduction_types where period_id = '".$period->id."';";
+
+        $result = DB::select($qry);
+         
+        $dedLabel = $this->model->select('id','description')->from('deduction_types')->whereIn('id',collect($result)->pluck('deduction_type'));
+
+        return $dedLabel->get();
+    }
+
+    public function getGovLoanLabel($period){
+        $qry = "SELECT DISTINCT deduction_type FROM unposted_loans_sg WHERE period_id = ".$period->id;
+
+        $result = DB::select($qry); //SELECT id,loan_code FROM loan_types WHERE id IN ();
+        
+        $govLabel = $this->model->select('id','description')->from('loan_types')->whereIn('id',collect($result)->pluck('deduction_type'));
+
+        return $govLabel->get();
+    }
+
     public function sil_total($period_id,$posted_status)
     {
         if($posted_status == 'unposted'){
@@ -637,7 +661,10 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
                     'PAG IBIG Contri' => 0,
                 ]
             );
-        
+
+            $employee->installments = $this->getDeductionsInstallments($employee->biometric_id,$period);
+            $employee->govloans = $this->getGovLoans($employee->biometric_id,$period);
+
         }
 
         return $employees;
@@ -714,6 +741,153 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
                                 ->orderBy('employee_name','asc'); 
         return $result->get();
     }   
+
+    public function runGovtLoansSG($period,$biometric_ids,$user_id,$emp_level){
+
+        DB::table('unposted_loans_sg')->where('period_id',$period->id)->where('user_id',$user_id)->where('emp_level',$emp_level)->delete();
+        $tmp_loan = [];
+
+        $loans = DB::table('deduction_gov_loans_sg')->select(DB::raw("deduction_gov_loans_sg.id,
+                                                deduction_gov_loans_sg.biometric_id,
+                                                deduction_gov_loans_sg.deduction_type,
+                                                SUM(IFNULL(posted_loans_sg.amount,0)) AS paid,
+                                                total_amount-SUM(IFNULL(posted_loans_sg.amount,0)) AS balance,
+                                                IF(total_amount-SUM(IFNULL(posted_loans_sg.amount,0))<ammortization,total_amount-SUM(IFNULL(posted_loans_sg.amount,0)),ammortization) AS ammortization"))
+            ->leftJoin('posted_loans_sg','deduction_gov_loans_sg.id','=','posted_loans_sg.deduction_id')
+            ->join('loan_types','loan_types.id','=','deduction_gov_loans_sg.deduction_type')
+            ->whereRaw("is_stopped = 'N'")
+            ->whereIn('loan_types.sched',[$period->cut_off,3])
+            // ->whereIn('loan_types.sched',[1,3])
+            ->where('deduction_gov_loans_sg.period_id','<=',$period->id)
+            ->whereIn('deduction_gov_loans_sg.biometric_id',$biometric_ids)
+            ->groupBy(DB::raw("id,deduction_gov_loans_sg.biometric_id,deduction_gov_loans_sg.deduction_type"))
+            ->havingRaw('balance>0')
+            ->get();
+        
+        foreach($loans as $loan)
+        {
+            $tmp = [
+                'period_id' => $period->id,
+                'biometric_id' => $loan->biometric_id,
+                'deduction_type' => $loan->deduction_type,
+                'amount' => $loan->ammortization,
+                'deduction_id' => $loan->id,
+                'emp_level' => $emp_level,
+                'user_id' => $user_id
+            ];
+
+            array_push($tmp_loan,$tmp);
+        }
+
+        DB::table('unposted_loans_sg')->insertOrIgnore($tmp_loan);
+
+
+    }
+
+    public function runInstallments($period,$biometric_ids,$user_id,$emp_level)
+    {
+        //dd($period->id)
+
+        DB::table('unposted_installments_sg')->where('period_id',$period->id)->where('user_id',$user_id)->where('emp_level',$emp_level)->delete();
+        $tmp_loan = [];
+        $loans = $this->model->select(DB::raw("deduction_installments_sg.id,
+                                                deduction_installments_sg.biometric_id,
+                                                deduction_installments_sg.deduction_type,
+                                                SUM(IFNULL(posted_installments_sg.amount,0)) AS paid,
+                                                total_amount-SUM(IFNULL(posted_installments_sg.amount,0)) AS balance,
+                                                IF(total_amount-SUM(IFNULL(posted_installments_sg.amount,0))<ammortization,total_amount-SUM(IFNULL(posted_installments_sg.amount,0)),ammortization) AS ammortization"))
+                            ->from("deduction_installments_sg")
+                            ->leftJoin('posted_installments_sg','deduction_installments_sg.id','=','posted_installments_sg.deduction_id')
+                            ->join('deduction_types','deduction_types.id','=','deduction_installments_sg.deduction_type')
+                            ->whereRaw("is_stopped = 'N'")
+                            ->where('deduction_installments_sg.period_id','<=',$period->id)
+                            ->whereIn('deduction_installments_sg.biometric_id',$biometric_ids)
+                            ->whereIn('deduction_types.deduction_sched',[$period->cut_off,3])
+                            ->whereIn('deduction_installments_sg.biometric_id',$biometric_ids)
+                            ->groupBy(DB::raw("id,deduction_installments_sg.biometric_id,deduction_installments_sg.deduction_type")) 
+                            ->havingRaw('balance>0')
+                            ->get();
+        
+        foreach($loans as $loan)
+        {
+            $tmp = [
+                'period_id' => $period->id,
+                'biometric_id' => $loan->biometric_id,
+                'deduction_type' => $loan->deduction_type,
+                'amount' => $loan->ammortization,
+                'deduction_id' => $loan->id,
+                'emp_level' => $emp_level,
+                'user_id' => $user_id
+            ];
+
+            array_push($tmp_loan,$tmp);
+        }
+
+        DB::table('unposted_installments_sg')->insertOrIgnore($tmp_loan);
+
+    }
+
+    public function getDeductionsInstallments($biometric_id,$period_id)
+    {   
+        $ded_array = [];
+
+        //$onetime = DB::table("unposted_onetime_deductions")->select('deduction_type','amount')->where('user_id','=',Auth::user()->id)->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
+        //$fixed = DB::table("unposted_fixed_deductions")->select('deduction_type','amount')->where('user_id','=',Auth::user()->id)->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
+        $install = DB::table("unposted_installments_sg")
+                ->select('deduction_type','amount')
+                ->where('user_id','=',Auth::user()->id)
+                ->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
+
+        $deductions = DB::table('deduction_types')
+                        ->select('description','deduction_type','amount')
+                        ->joinSub($install,'deductions',function($join){
+                            $join->on('deductions.deduction_type','=','deduction_types.id');
+                        })->orderBy('deduction_type')->get();
+
+        //return $deductions;
+        foreach($deductions as $deduction){
+            //$ded_array[$deduction->deduction_type] 
+            if(array_key_exists($deduction->deduction_type,$ded_array)){
+                $ded_array[$deduction->deduction_type] += $deduction->amount;
+            }else{
+                $ded_array[$deduction->deduction_type] = 0;
+                $ded_array[$deduction->deduction_type] += $deduction->amount;
+            }
+        }
+
+        return $ded_array;
+
+        
+    }
+
+    public function getGovLoans($biometric_id,$period_id)
+    {
+        /*
+        SELECT description,amount FROM unposted_loans INNER JOIN loan_types ON deduction_type = loan_types.id
+        WHERE period_id = 1 AND biometric_id = 847
+        */
+        $govLoan = [];
+        $loan = DB::table('unposted_loans_sg')->select('id','description','amount')
+        ->join('loan_types','deduction_type','=','loan_types.id')
+        ->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]])
+        ->where('user_id','=',Auth::user()->id)
+        ->orderBy('deduction_type')->get();
+
+        foreach($loan as $l)
+        {
+            if(array_key_exists($l->id,$govLoan)){
+                $govLoan[$l->id] += $l->amount;
+            }else{
+                $govLoan[$l->id] = 0;
+                $govLoan[$l->id] += $l->amount;
+            }
+        }
+       
+        return $govLoan;
+        
+        //return $loan;
+    }
+
 }
 
 /*
