@@ -538,6 +538,25 @@ class WeeklyEmployee
 
     }
 
+    public function computeTotalDeductions($deductions,$govloans)
+    {
+        if($deductions){
+            foreach($deductions as $d)
+            {
+                $this->payreg['total_deduction'] += $d;
+            }
+        }
+
+         if($govloans){
+            foreach($govloans as $g)
+            {
+                $this->payreg['total_deduction'] += $g;
+            }
+        }
+       
+         
+    }
+
     public function computeNetPay()
     {
         $this->payreg['net_pay'] = $this->payreg['gross_total'] - $this->payreg['total_deduction'];

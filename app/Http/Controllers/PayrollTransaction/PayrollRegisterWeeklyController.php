@@ -148,6 +148,9 @@ class PayrollRegisterWeeklyController extends Controller
             
             $person = new WeeklyEmployee($employee,new Daily);
 
+            $p_deductions = $this->mapper->getDeductionsInstallments($employee->biometric_id,$employee->period_id);
+            $p_gloans = $this->mapper->getGovLoans($employee->biometric_id,$employee->period_id); 
+
             
             $person->compute($period);
             $deductions = $this->mapper->getDeductions($employee->biometric_id,$employee->period_id);
@@ -155,6 +158,7 @@ class PayrollRegisterWeeklyController extends Controller
             // $person->computeGovtLoan($pperiod);
             $person->computeGovContri($pperiod);
             $person->computeGrossTotal($deductions);
+            $person->computeTotalDeductions($p_deductions,$p_gloans);
             $person->computeNetPay();
           
 
@@ -270,6 +274,9 @@ class PayrollRegisterWeeklyController extends Controller
             $label[$value->var_name] = $value->col_label;
         }
 
+        $deductions =  $this->mapper->getDeductionLabel($periodObject);
+        $govtLoans =  $this->mapper->getGovLoanLabel($periodObject);
+
         $collections = $this->mapper->getEmployees($period);
 
         $pdf = PDF::loadView('app.payroll-transaction.payroll-register-weekly.print',[
@@ -279,7 +286,9 @@ class PayrollRegisterWeeklyController extends Controller
                 'period' => $periodObject,
                 'period_label' => $period_label->drange,
                 'perf' => $period_label->perf,
-                'sil_flag' => $sil_flag
+                'sil_flag' => $sil_flag,
+                'deductions_label' => $deductions,
+                'govloans_label' => $govtLoans,
             ])->setPaper('Folio','landscape');
        
         $pdf->output();
