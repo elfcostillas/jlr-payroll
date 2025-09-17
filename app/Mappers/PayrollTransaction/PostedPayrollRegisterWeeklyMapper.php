@@ -144,6 +144,10 @@ class PostedPayrollRegisterWeeklyMapper extends AbstractMapper {
             ['period_id','=',$period_id]
         ])->delete();
 
+        DB::table('posted_weekly_compensation')->where('period_id',$period_id)->delete();
+        DB::table('posted_installments_sg')->where('period_id',$period_id)->delete();
+        DB::table('posted_loans_sg')->where('period_id',$period_id)->delete();
+
         $posted = DB::table('payrollregister_posted_weekly')
                         ->where('period_id','=',$period_id)
                         ->delete();

@@ -176,6 +176,28 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         ->where('period_id',$period_id)->get()->toArray();
         $tmp_array = [];
         $comp_array = [];
+
+        $tmp_installments = [];
+        $tmp_govloans = [];
+
+        $installments = DB::table('unposted_installments_sg')
+                    ->select('period_id','biometric_id','deduction_type','amount','deduction_id','emp_level','user_id')
+                    ->where('period_id',$period_id)
+                    ->get()->toArray();
+
+        $govloans = DB::table('posted_loans_sg')
+                    ->select('period_id','biometric_id','deduction_type','amount','deduction_id','emp_level','user_id')
+                    ->where('period_id',$period_id)
+                    ->get()->toArray();
+
+        foreach($installments as $installment){
+           
+            array_push($tmp_installments,(array)$installment);
+        }
+
+        foreach($govloans as $govloan){
+            array_push($tmp_govloans,(array)$govloan);
+        }
         
         $compensation = $this->model->select('period_id','earnings','retro_pay','deductions','biometric_id','canteen','remarks','cash_advance','canteen_bps','canteen_bpn','canteen_agg','office_account')
                         ->from('unposted_weekly_compensation')->where('period_id',$period_id)->get()->toArray();
@@ -196,6 +218,10 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         $flag = DB::table('payrollregister_posted_weekly')->insertOrIgnore($tmp_array);
 
         $flag2 = DB::table('posted_weekly_compensation')->insertOrIgnore($comp_array);
+
+        $flag3 = DB::table('posted_installments_sg')->insertOrIgnore($tmp_installments);
+
+        // $flag4 = DB::table('posted_loans_sg')->insertOrIgnore($tmp_govloans);
 
         if(!is_object($flag)){
             DB::table('posting_info')->insert([
