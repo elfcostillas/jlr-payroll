@@ -65,7 +65,7 @@ class TardinessReportMapper extends AbstractMapper {
                 // })
                 ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
                 //->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)');
-                ->where('emp_level','>',2) 
+                ->where('employees.emp_level','>',2) 
                 ->where('pay_type','!=',3) 
                 ->where('job_title_id','!=',12)
                 ->where('employees.dept_id','!=',5)
@@ -99,7 +99,7 @@ class TardinessReportMapper extends AbstractMapper {
                 ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
                 //->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)');
                 ->where('pay_type','!=',3)
-                ->where('emp_level','>',2) 
+                ->where('employees.emp_level','>',2) 
                 ->where('job_title_id','!=',12)
                 ->where('employees.dept_id','=',5)
                 ->leftJoinSub($holidays,'holidays',function($join){
@@ -214,7 +214,7 @@ class TardinessReportMapper extends AbstractMapper {
                 // })
                 ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
                 //->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)');
-                ->where('emp_level','>',5) 
+                ->where('employees.emp_level','>',5) 
                 // ->where('pay_type','!=',3) 
                 ->where('job_title_id','!=',12)
                 ->where('employees.dept_id','!=',5)
@@ -248,7 +248,7 @@ class TardinessReportMapper extends AbstractMapper {
                 ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
                 //->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)');
                 // ->where('pay_type','!=',3)
-                ->where('emp_level','>',5) 
+                ->where('employees.emp_level','>',5) 
                 ->where('job_title_id','!=',12)
                 ->where('employees.dept_id','=',5)
                 ->leftJoinSub($holidays,'holidays',function($join){
@@ -410,7 +410,7 @@ class TardinessReportMapper extends AbstractMapper {
         // })
         ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
         //->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)')
-        ->where('emp_level','>',5) 
+        ->where('employees.emp_level','>',5) 
         // ->where('pay_type','!=',3) 
         ->where('job_title_id','!=',12)
         
