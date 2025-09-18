@@ -221,7 +221,7 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
 
         $flag3 = DB::table('posted_installments_sg')->insertOrIgnore($tmp_installments);
 
-        // $flag4 = DB::table('posted_loans_sg')->insertOrIgnore($tmp_govloans);
+        $flag4 = DB::table('posted_loans_sg')->insertOrIgnore($tmp_govloans);
 
         if(!is_object($flag)){
             DB::table('posting_info')->insert([
