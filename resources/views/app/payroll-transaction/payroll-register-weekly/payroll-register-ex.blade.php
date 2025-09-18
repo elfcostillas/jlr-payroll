@@ -56,6 +56,16 @@
             return ($hrs == '' || $hrs == 0) ? 0 : $hrs / 8;
         }
 
+        foreach ($govloans_label as $govloan)
+        {
+            $over_all_loans[$govloan->id] = 0;  
+        }
+
+        foreach ($deductions_label as $deduction)
+        {
+            $over_all_deductions[$deduction->id] = 0;
+        }
+
     ?>
 
     <table border=0 style="width:100%;margin-bottom:2px;">
@@ -146,7 +156,21 @@
                         <th >Other Earnings</th>
                         <th >Retro Pay</th>
                         <th> Gross Pay</th>
+                        @foreach ($deductions_label as $deduction)
+                            <?php 
+                            
+                                $location_deductions[$location->id][$deduction->id] = 0;
+                            ?>
+                            <th style=""> {{ $deduction->description }} </th>
+                        @endforeach
 
+                        <!-- Govt Loan-->
+                        @foreach ($govloans_label as $govloan)
+                            <?php 
+                                $location_loans[$location->id][$govloan->id] = 0;
+                            ?>
+                            <th style=""> {{ $govloan->description }} </th>
+                        @endforeach
                         <th> HDMF </th>
                         <th> SSS Prem</th>
                         <th> PHIC</th>
@@ -198,6 +222,30 @@
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['retro_pay']>0) ? $employee->otherEarnings['retro_pay'] : ''; }}</td>
 
                         <td class="pr4"  style="text-align:right;font-weight:bold;">{{ ($employee->gross_total > 0) ? $employee->gross_total : '' }}</td>
+
+                        @foreach ($deductions_label as $deduction)
+                            <?php
+                                if(array_key_exists($deduction->id,$employee->installments)){
+                                    $location_deductions[$location->id][$deduction->id] += $employee->installments[$deduction->id];
+                                    $over_all_deductions[$deduction->id] += $employee->installments[$deduction->id];
+                                }
+                                
+                            ?>
+                            <td style="text-align:right;" >{{ (array_key_exists($deduction->id,$employee->installments)) ? number_format($employee->installments[$deduction->id],2) : ''; }}</td>
+                        @endforeach
+
+                        <!-- Govt Loan-->
+                        @foreach ($govloans_label as $govloan)
+                            <?php
+                            if(array_key_exists($govloan->id,$employee->govloans))
+                            {
+                                $location_loans[$location->id][$govloan->id] += $employee->govloans[$govloan->id];
+                                $over_all_loans[$govloan->id] += $employee->govloans[$govloan->id];
+                            }
+                               
+                            ?>
+                            <td style="text-align:right;" >{{ (array_key_exists($govloan->id,$employee->govloans)) ? number_format($employee->govloans[$govloan->id],2) : ''; }}</td>
+                        @endforeach
 
                         <td class="pr3"  style="text-align:right;"> {{ ($employee->hdmf_contri>0) ? number_format($employee->hdmf_contri,2) : ''; }}</td> 
                         <td class="pr3"  style="text-align:right;"> {{ ($employee->sss_prem>0) ? number_format($employee->sss_prem,2) : ''; }}</td> 
@@ -271,6 +319,16 @@
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_other_earning > 0) ? $location_other_earning : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_retro_pay > 0) ? $location_retro_pay : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_total > 0) ? $location_total : '' }}</td>
+
+                       @foreach ($deductions_label as $deduction)
+                        <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;"> {{  number_format($location_deductions[$location->id][$deduction->id],2) }}</td>
+                        @endforeach
+
+                        <!-- Govt Loan-->
+                        @foreach ($govloans_label as $govloan)
+                        <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;"> {{ number_format($location_loans[$location->id][$govloan->id],2) }}</td>
+                        @endforeach
+
 
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{($location_hdmf > 0) ? number_format($location_hdmf,2) : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{($location_sss > 0) ? number_format($location_sss,2) : '' }}</td>
@@ -346,6 +404,18 @@
             <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_other_earning }}</td> 
             <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_retro_pay }}</td>
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_gross_total }}</td>
+
+             @foreach ($deductions_label as $deduction)
+                <?php
+                    
+                ?>
+                <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;"> {{ number_format($over_all_deductions[$deduction->id],2) }}</td>
+            @endforeach
+
+            <!-- Govt Loan-->
+            @foreach ($govloans_label as $govloan)
+              <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;"> {{ number_format( $over_all_loans[$govloan->id],2) }} </td>
+            @endforeach
 
             <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_hdmf,2) }}</td> 
             <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_sss,2) }}</td> 

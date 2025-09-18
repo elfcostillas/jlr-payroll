@@ -31,6 +31,9 @@ class PayrollRegisterWeekly implements ShouldAutoSize,WithColumnFormatting,FromV
     private $headers;
     private $period_label;
     private $sil_flag;
+
+    private $deductions;
+    private $govloans;
     // private $headers;
     // private $deductions;
     // private $gov;
@@ -56,6 +59,9 @@ class PayrollRegisterWeekly implements ShouldAutoSize,WithColumnFormatting,FromV
             'headers' => $this->headers,
             'period_label' => $this->period_label->drange,
             'sil_flag' => $this->sil_flag,
+
+            'deductions_label' => $this->deductions,
+            'govloans_label' => $this->govloans,
             // 'headers' => $this->headers , 
             // 'labels' => $this->label,
             // 'deductionLabel' => $this->deductions,
@@ -65,12 +71,15 @@ class PayrollRegisterWeekly implements ShouldAutoSize,WithColumnFormatting,FromV
         ]);
     }
 
-    public function setValues($collections,$label,$headers,$period_label,$sil_flag){
+    public function setValues($collections,$label,$headers,$period_label,$sil_flag,$deductions,$govloans){
     	$this->collections = $collections;
         $this->label = $label;
         $this->headers = $headers;
         $this->period_label = $period_label;
         $this->sil_flag = $sil_flag;
+
+        $this->deductions = $deductions;
+        $this->govloans = $govloans;
         // $this->headers = $headers;
         // $this->deductions = $deductions;
         // $this->gov = $gov;
