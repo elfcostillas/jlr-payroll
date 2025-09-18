@@ -647,6 +647,9 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
                         'PAG IBIG Contri' => 0,
                     ]
                 );
+
+                $employee->installments = $this->getDeductionsInstallments($employee->biometric_id,$period);
+                $employee->govloans = $this->getGovLoans($employee->biometric_id,$period);
             
             }
 

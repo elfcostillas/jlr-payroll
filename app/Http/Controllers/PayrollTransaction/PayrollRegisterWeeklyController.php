@@ -395,6 +395,11 @@ class PayrollRegisterWeeklyController extends Controller
             }
         }
 
+        $periodObject = $this->period->find($period);
+        $deductions =  $this->mapper->getDeductionLabel($periodObject);
+        $govtLoans =  $this->mapper->getGovLoanLabel($periodObject);
+
+
         $period_label = $this->period->makeRange($period);
 
         foreach($colHeaders  as  $value ){
@@ -405,7 +410,9 @@ class PayrollRegisterWeeklyController extends Controller
         $collections = $this->mapper->getEmployeesPosted($period);
         $sil_flag = $this->mapper->sil_total($period,'posted');
 
-        $this->excel->setValues($collections,$label,$headers,$period_label,$sil_flag);
+        // $this->excel->setValues($collections,$label,$headers,$period_label,$sil_flag);
+        $this->excel->setValues($collections,$label,$headers,$period_label,$sil_flag,$deductions,$govtLoans);
+        
         return Excel::download($this->excel,'PayrollRegisterWeekly'.$period.'.xlsx');
     }
 
