@@ -812,13 +812,13 @@ class PayrollRegisterFunctions
             '10 Hrs' => 0,
             '20 Hrs' => 0,
             '30 Hrs' => 0,
-            '40 Hrs' => 0,
-            '50 Hrs' => 0,
-            '60 Hrs' => 0,
-            '70 Hrs' => 0,
-            '80 Hrs' => 0,
-            '90 Hrs' => 0,
-            '100+ Hrs' => 0,
+            // '40 Hrs' => 0,
+            // '50 Hrs' => 0,
+            // '60 Hrs' => 0,
+            // '70 Hrs' => 0,
+            // '80 Hrs' => 0,
+            // '90 Hrs' => 0,
+            // '100+ Hrs' => 0,
         ];
 
         foreach($result as $employee)
@@ -839,43 +839,49 @@ class PayrollRegisterFunctions
                 $data['20 Hrs'] += 1;
             }
 
-            if($employee->reg_ot >= 30 && $employee->reg_ot < 40)
+            if($employee->reg_ot >= 30)
             {
                 $data['30 Hrs'] += 1;
             }
-             if($employee->reg_ot >= 40 && $employee->reg_ot < 50)
-            {
-                $data['40 Hrs'] += 1;
-            }
 
-            if($employee->reg_ot >= 50 && $employee->reg_ot < 60)
-            {
-                $data['50 Hrs'] += 1;
-            }
 
-            if($employee->reg_ot >= 60 && $employee->reg_ot < 70)
-            {
-                $data['60 Hrs'] += 1;
-            }
+            // if($employee->reg_ot >= 30 && $employee->reg_ot < 40)
+            // {
+            //     $data['30 Hrs'] += 1;
+            // }
+            //  if($employee->reg_ot >= 40 && $employee->reg_ot < 50)
+            // {
+            //     $data['40 Hrs'] += 1;
+            // }
 
-            if($employee->reg_ot >= 70 && $employee->reg_ot < 80)
-            {
-                $data['70 Hrs'] += 1;
-            }
-            if($employee->reg_ot >= 80 && $employee->reg_ot < 90)
-            {
-                $data['80 Hrs'] += 1;
-            }
+            // if($employee->reg_ot >= 50 && $employee->reg_ot < 60)
+            // {
+            //     $data['50 Hrs'] += 1;
+            // }
 
-            if($employee->reg_ot >= 90 && $employee->reg_ot < 100)
-            {
-                $data['90 Hrs'] += 1;
-            }
+            // if($employee->reg_ot >= 60 && $employee->reg_ot < 70)
+            // {
+            //     $data['60 Hrs'] += 1;
+            // }
+
+            // if($employee->reg_ot >= 70 && $employee->reg_ot < 80)
+            // {
+            //     $data['70 Hrs'] += 1;
+            // }
+            // if($employee->reg_ot >= 80 && $employee->reg_ot < 90)
+            // {
+            //     $data['80 Hrs'] += 1;
+            // }
+
+            // if($employee->reg_ot >= 90 && $employee->reg_ot < 100)
+            // {
+            //     $data['90 Hrs'] += 1;
+            // }
            
-            if($employee->reg_ot >= 100 )
-            {
-                $data['100+ Hrs'] += 1;
-            }
+            // if($employee->reg_ot >= 100 )
+            // {
+            //     $data['100+ Hrs'] += 1;
+            // }
         }
 
         

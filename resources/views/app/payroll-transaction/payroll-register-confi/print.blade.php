@@ -303,7 +303,7 @@
             </tr>
             
         </table>
-        <!-- Job Title  -->
+        <!-- Job Title 
         @foreach ($data->countPerJobTitleLocation() as $location)
            
             @if($location->data->count() > 0)
@@ -327,8 +327,8 @@
             </table>
             @endif
         @endforeach
-
-        <table style="float:left ;font-size :6pt;border-collapse:collapse;margin-top:284px;clear:left" border=1>
+        -->    <!--284px -->
+        <table style="float:left ;font-size :6pt;border-collapse:collapse;margin-top:184px;clear:left" border=1>
             <tr> 
                 <td colspan="2" style="text-align: center;padding:2px 6px;" > Payroll / Gross Pay </td> 
             </tr>
