@@ -43,6 +43,18 @@
             padding-left: 3px;
         }
 
+        .c3 {
+            background-color:yellow;
+        }
+
+        .c4 {
+            background-color:#4CBB17;
+        }
+
+        .c5 {
+             background-color:#FF46A2;
+        }
+
         @page {
             margin : 72px 18px 18px 18px;
            
@@ -1094,7 +1106,7 @@
                
                 <table border=1 style="border-collapse:collapse;float:left;margin-left:10px;width:230px;">
                     <tr>
-                        <td colspan=3  style="padding:2px;text-align:center;"> {{ $ot_summ_label[$table] }}</td>
+                        <td colspan=3  style="padding:2px;text-align:center;" class="c{{$table}}"> {{ $ot_summ_label[$table] }}</td>
                     </tr>
                 
                     @foreach($otByJobtitleValue[$table] as $key => $row) 
