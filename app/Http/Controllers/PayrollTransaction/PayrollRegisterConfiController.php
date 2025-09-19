@@ -253,7 +253,25 @@ class PayrollRegisterConfiController extends Controller
 
     public function downloadExcelUnposted(Request $request)
     {
-        //dd($request->id);
+        $payroll = new PayrollRegisterService(new PayrollRegisterConfi('payrollregister_unposted_s','unposted'));
+        $period = $payroll->getPeriod($request->id);
+
+        $data = $payroll->getPayrollData($period);
+
+        $payroll->getHeaders();
+
+        if($period){
+            $date_from = Carbon::createFromFormat('Y-m-d',$period->date_from);
+            $date_to = Carbon::createFromFormat('Y-m-d',$period->date_to);
+
+            $label = $date_from->format('m/d/Y').' - '.$date_to->format('m/d/Y');
+        
+
+            $this->excel->setValues($data,$label);
+            return Excel::download($this->excel,'PayrollRegister'.$period->id.'.xlsx');
+        }
+
+        /*
         $period = $this->unposted->getPeriod($request->id);
         
         if($period){
@@ -265,13 +283,14 @@ class PayrollRegisterConfiController extends Controller
             $noPay = $this->unposted->semiEmployeeNoPayroll($period->id);
 
             $collections = $this->unposted->getPprocessed($period,'confi');
+
             $headers =  $this->unposted->getHeaders($period)->toArray();
             $colHeaders = $this->unposted->getColHeaders();
 
             $deductions = $this->unposted->getDeductionLabel($period);
             $gov = $this->unposted->getGovLoanLabel($period);
             $compensation = $this->unposted->getUsedCompensation($period);
-            //dd($compensation);
+           
             $label = [];
 
             foreach($headers as $key => $value){
@@ -281,13 +300,14 @@ class PayrollRegisterConfiController extends Controller
             }
 
             foreach($colHeaders  as  $value ){
-                //dd($value->var_name,$vaue->col_label);
+               
                 $label[$value->var_name] = $value->col_label;
             }
 
             $this->excel->setValues($collections,$noPay,$headers,$deductions,$gov,$compensation,$label, $payperiod_label,$colHeaders);
             return Excel::download($this->excel,'PayrollRegister'.$period->id.'.xlsx');
         }
+        */
     }
 
     public function postPayroll(Request $request)

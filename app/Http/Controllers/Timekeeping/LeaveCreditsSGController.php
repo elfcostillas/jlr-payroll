@@ -8,6 +8,7 @@ use App\Mappers\TimeKeepingMapper\LeaveCreditsMapper;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class LeaveCreditsSGController extends Controller
 {
@@ -149,6 +150,27 @@ class LeaveCreditsSGController extends Controller
 
         return (float) $num + $new_decimal;
 
+    }
+
+    public function showLeaves(Request $request)
+    {
+        $year = $request->year;
+        $biometric_id = $request->biometric_id;
+
+        $start = $year.'-01-01';
+        $end = $year.'-12-31';
+        $employee = $this->mapper->getEmployeeInfo($biometric_id);
+        $data = $this->mapper->showLeaves($biometric_id,$start,$end);
+       
+        $leave_credits = $this->mapper->getLeaveCredits($biometric_id,$year);
+
+        // dd($leave_credits);
+        
+        $pdf = PDF::loadView('app.timekeeping.leave-credits-sg.print',['data' => $data,'leave_credits'=>$leave_credits,'employee' => $employee,'year' => $year])->setPaper('A4','portrait');
+        // $pdf = PDF::loadView('app.timekeeping.leave-credits-sg.print')->setPaper('A4','portrait');
+
+        return $pdf->stream('JLR-Leaves-Print.pdf'); 
+    
     }
 
     

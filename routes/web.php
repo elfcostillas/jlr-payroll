@@ -337,7 +337,8 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::get('year',[LeaveCreditsSGController::class,'yearList']);
         Route::get('employees/{year}',[LeaveCreditsSGController::class,'empList']);
 
-         Route::get('compute/{year}',[LeaveCreditsSGController::class,'computeLeaveCredits']);
+        Route::get('compute/{year}',[LeaveCreditsSGController::class,'computeLeaveCredits']);
+        Route::get('show-leaves/{biometric_id}/{year}',[LeaveCreditsSGController::class,'showLeaves']);
 
       
     });

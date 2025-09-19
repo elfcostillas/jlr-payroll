@@ -32,9 +32,12 @@ class UnpostedPayrollRegister implements ShouldAutoSize,WithColumnFormatting,Fro
     private $deductions;
     private $gov;
     private $compensation;
-    private $label;
+    // private $label;
     private $payperiod_label;
     private $colHeaders;
+
+    protected $data;
+    protected $label;
 
     public function registerEvents(): array
     {   
@@ -48,30 +51,37 @@ class UnpostedPayrollRegister implements ShouldAutoSize,WithColumnFormatting,Fro
     public function view(): View
     {
 		//dd($this->label['asOf']);
-        return view('app.payroll-transaction.payroll-register.payroll-register-ex', [
-            'data' => $this->collections,
-            'no_pay' => $this->noPay,
-            'headers' => $this->headers , 
-            'labels' => $this->label,
-            'deductionLabel' => $this->deductions,
-            'govLoan' => $this->gov,
-            'compensation' => $this->compensation,
-            'payperiod_label' => $this->payperiod_label,
-            'colHeaders' => $this->colHeaders
+        return view('app.payroll-transaction.payroll-register.payroll-register-ex2', [
+            // 'data' => $this->collections,
+            // 'no_pay' => $this->noPay,
+            // 'headers' => $this->headers , 
+            // 'labels' => $this->label,
+            // 'deductionLabel' => $this->deductions,
+            // 'govLoan' => $this->gov,
+            // 'compensation' => $this->compensation,
+            // 'payperiod_label' => $this->payperiod_label,
+            // 'colHeaders' => $this->colHeaders
+            'data' => $this->data,
+            'label' => $this->label
         ]);
     }
 
-    public function setValues($collections,$noPay,$headers,$deductions,$gov,$compensation,$label,$payperiod_label,$colHeaders){
-    	$this->collections = $collections;
-        $this->noPay = $noPay;
-        $this->headers = $headers;
-        $this->deductions = $deductions;
-        $this->gov = $gov;
-        $this->compensation = $compensation;
-        $this->label = $label;
-        $this->payperiod_label = $payperiod_label;
-        $this->colHeaders = $colHeaders;
-    }   
+    // public function setValues($collections,$noPay,$headers,$deductions,$gov,$compensation,$label,$payperiod_label,$colHeaders){
+    // 	$this->collections = $collections;
+    //     $this->noPay = $noPay;
+    //     $this->headers = $headers;
+    //     $this->deductions = $deductions;
+    //     $this->gov = $gov;
+    //     $this->compensation = $compensation;
+    //     $this->label = $label;
+    //     $this->payperiod_label = $payperiod_label;
+    //     $this->colHeaders = $colHeaders;
+    // }   
+
+    public function setValues($data,$label){
+        $this->data =  $data;
+        $this->label =  $label;
+    }
 
     public function columnFormats(): array
     {

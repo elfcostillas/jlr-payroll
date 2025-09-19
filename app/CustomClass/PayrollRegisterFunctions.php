@@ -21,6 +21,7 @@ class PayrollRegisterFunctions
             $result->where('employees.emp_level','>=',5);
         }
 
+
         $result->join($this->db_table,'employees.biometric_id','=',$this->db_table.'.biometric_id');
         $result->where($this->db_table.'.period_id','=',$this->period->id);
         $result->where($this->db_table.'.user_id','=',Auth::user()->id);
