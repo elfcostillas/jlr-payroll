@@ -820,7 +820,7 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::get('download-posted/{id}',[PayrollRegisterWeeklyController::class,'downloadExcelPosted']);
 
         Route::get('show-ot-breakdown/{id}',[PayrollRegisterWeeklyController::class,'showOTBreakdown']);
-        Route::get('pdf-posted/{id}',[PayrollRegisterWeeklyController::class,'downloadPdfUnposted']);
+        Route::get('pdf-posted/{id}',[PayrollRegisterWeeklyController::class,'downloadPdfPosted']);
 
        
     });

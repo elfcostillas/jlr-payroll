@@ -312,7 +312,8 @@ class PayrollRegisterWeeklyController extends Controller
     {
         $period = $request->id;
         $headers = $this->mapper->getHeaders($period)->toArray();
-
+        $periodObject = $this->period->find($period);
+        
         $colHeaders = $this->mapper->getColHeaders();
 
         foreach($headers as $key => $value){
@@ -321,6 +322,8 @@ class PayrollRegisterWeeklyController extends Controller
             }
         }
 
+        $sil_flag = $this->mapper->sil_total($period,'unposted');
+
         $period_label = $this->period->makeRange($period);
 
         foreach($colHeaders  as  $value ){
@@ -328,15 +331,28 @@ class PayrollRegisterWeeklyController extends Controller
             $label[$value->var_name] = $value->col_label;
         }
 
+        $deductions =  $this->mapper->getDeductionLabel($periodObject);
+        $govtLoans =  $this->mapper->getGovLoanLabel($periodObject);
+
         $collections = $this->mapper->getEmployeesPosted($period);
 
         $pdf = PDF::loadView('app.payroll-transaction.payroll-register-weekly.print',[
                 'data' => $collections,
                 'headers' => $headers,
                 'label' => $label,
-                'period' => $period,
+                'period' => $periodObject,
                 'period_label' => $period_label->drange,
                 'perf' => $period_label->perf,
+                'sil_flag' => $sil_flag,
+                // 'data' => $collections,
+                // 'headers' => $headers,
+                // 'label' => $label,
+                // 'period' => $periodObject,
+                // 'period_label' => $period_label->drange,
+                // 'perf' => $period_label->perf,
+                // 'sil_flag' => $sil_flag,
+                'deductions_label' => $deductions,
+                'govloans_label' => $govtLoans,
             ])->setPaper('Folio','landscape');
        
         $pdf->output();
