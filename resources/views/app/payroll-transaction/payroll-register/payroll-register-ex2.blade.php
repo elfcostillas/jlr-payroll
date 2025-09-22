@@ -16,11 +16,14 @@
 <body>
  
     <?php
-        $cols = 6 + count($data->basic_cols) + count($data->gross_cols) + count($data->fixed_comp_hcols) 
-                + count($data->other_comp_hcols) + count($data->contri) + count($data->deduction_hcols)
-                + count($data->govloans_hcols);
+        $cols = 0;
+        // $cols = 6 + count($data->basic_cols) + count($data->gross_cols) + count($data->fixed_comp_hcols) 
+        //         + count($data->other_comp_hcols) + count($data->contri) + count($data->deduction_hcols)
+        //         + count($data->govloans_hcols);
 
         $grandCtr = 0;
+
+
     //   <img src="{{ public_path('images/header-logo.jpg') }}" style="height:24px;" class="center" >
     ?>
     <div id="" >
@@ -65,18 +68,18 @@
                 @foreach ($data->contri as $contricols)
                     <td class="vtop c b">{{ $contricols->col_label }}</td>
                 @endforeach
-
-                @foreach ($data->deduction_hcols as $deduction_cols)
-                    <td class="vtop c b">{{ $deduction_cols->description }}</td>
-                @endforeach
-
-                @foreach ($data->govloans_hcols as $govloans_hcols)
-                    <td class="vtop c b">{{ $govloans_hcols->description }}</td>
-                @endforeach
-
+                @if ($data->deduction_hcols)
+                    @foreach ($data->deduction_hcols as $deduction_cols)
+                        <td class="vtop c b">{{ $deduction_cols->description }}</td>
+                    @endforeach
+                @endif
+                @if ($data->govloans_hcols)
+                    @foreach ($data->govloans_hcols as $govloans_hcols)
+                        <td class="vtop c b">{{ $govloans_hcols->description }}</td>
+                    @endforeach
+                @endif
                     <td class="vtop c b">Total Deduction</td>
                     <td class="vtop c b">Net Pay</td>
-
                 
             </tr>
             @foreach ($data->data as $division)
@@ -117,13 +120,18 @@
                                 @foreach ($data->contri as $contri_cols)
                                     <td class="r">{{ $employee->{$contri_cols->var_name} }}</td>
                                 @endforeach
-                                @foreach ($data->deduction_hcols as $deduction_hcols)
-                                    <td class="r"> {{ array_key_exists($deduction_hcols->id,$employee->deductions) ? $employee->deductions[$deduction_hcols->id] : '' }}
-                                    
-                                @endforeach
-                                @foreach ($data->govloans_hcols as $govloans_hcols)
-                                    <td class="r"> {{ array_key_exists($govloans_hcols->id,$employee->gov_loans) ? $employee->gov_loans[$govloans_hcols->id] : '' }}
-                                @endforeach
+                                @if ($data->deduction_hcols)
+                                    @foreach ($data->deduction_hcols as $deduction_hcols)
+                                        <td class="r"> {{ array_key_exists($deduction_hcols->id,$employee->deductions) ? $employee->deductions[$deduction_hcols->id] : '' }}
+                                        
+                                    @endforeach
+                                @endif
+                                @if ($data->govloans_hcols)
+                                    @foreach ($data->govloans_hcols as $govloans_hcols)
+                                        <td class="r"> {{ array_key_exists($govloans_hcols->id,$employee->gov_loans) ? $employee->gov_loans[$govloans_hcols->id] : '' }}
+                                    @endforeach
+                                @endif
+                            
                                 <td class="r"> {{ $employee->total_deduction }} </td>
                                 <td class="r"> {{ $employee->net_pay }}</td>
 
@@ -150,13 +158,17 @@
                             @foreach ($data->contri as $contri_cols)
                                 <td class="r b">{{ $data->computeTotalByDept($department,$contri_cols) }}</td>
                             @endforeach
-
-                            @foreach ($data->deduction_hcols as $deduction_hcols)
-                                <td class="r b"> {{ $data->computeTotalDeductionsByDept($department,$deduction_hcols) }} </td>
-                            @endforeach
-                            @foreach ($data->govloans_hcols as $govloans_hcols)
-                                <td class="r b"> {{ $data->computeTotalLoansByDept($department,$govloans_hcols) }} </td>
-                            @endforeach
+                            @if ($data->deduction_hcols)
+                                @foreach ($data->deduction_hcols as $deduction_hcols)
+                                    <td class="r b"> {{ $data->computeTotalDeductionsByDept($department,$deduction_hcols) }} </td>
+                                @endforeach
+                            @endif
+                            @if ($data->govloans_hcols)
+                                @foreach ($data->govloans_hcols as $govloans_hcols)
+                                    <td class="r b"> {{ $data->computeTotalLoansByDept($department,$govloans_hcols) }} </td>
+                                @endforeach
+                            @endif
+                            
                             <td class="r b">  {{ $data->computeTotalByDept($department,'total_deduction') }} </td>
                             <td class="r b">  {{ $data->computeTotalByDept($department,'net_pay') }} </td>
                         </tr>
@@ -181,13 +193,17 @@
                     @foreach ($data->contri as $contri_cols)
                         <td class="r b">{{ $data->computeTotalByDivisionV2($data,$contri_cols) }}</td>
                     @endforeach
-
-                    @foreach ($data->deduction_hcols as $deduction_hcols)
-                        <td class="r b"> {{ $data->computeTotalDeductionsByDivisionV2($data,$deduction_hcols) }} </td>
-                    @endforeach
-                    @foreach ($data->govloans_hcols as $govloans_hcols)
-                        <td class="r b"> {{ $data->computeTotalLoanByDivisionV2($data,$govloans_hcols) }} </td>
-                    @endforeach
+                    @if ($data->deduction_hcols)
+                        @foreach ($data->deduction_hcols as $deduction_hcols)
+                            <td class="r b"> {{ $data->computeTotalDeductionsByDivisionV2($data,$deduction_hcols) }} </td>
+                        @endforeach
+                    @endif
+                    @if ($data->govloans_hcols)
+                        @foreach ($data->govloans_hcols as $govloans_hcols)
+                            <td class="r b"> {{ $data->computeTotalLoanByDivisionV2($data,$govloans_hcols) }} </td>
+                        @endforeach
+                    @endif
+                   
                     <td class="r b">  {{ $data->computeTotalByDivisionV2($data,'total_deduction') }} </td>
                     <td class="r b">  {{ $data->computeTotalByDivisionV2($data,'net_pay') }} </td>
                 </tr>

@@ -432,9 +432,25 @@ class PayrollRegisterConfiController extends Controller
         }
     }
 
-    public function downloadExcelPosted(PayrollPeriod $period)
+    public function downloadExcelPosted(Request $request)
     {
-       
+        $payroll = new PayrollRegisterService(new PayrollRegisterConfi('payrollregister_posted_s','posted'));
+        $period = $payroll->getPeriod($request->id);
+
+        $data = $payroll->getPayrollData($period);
+
+        $payroll->getHeaders();
+
+        if($period){
+            $date_from = Carbon::createFromFormat('Y-m-d',$period->date_from);
+            $date_to = Carbon::createFromFormat('Y-m-d',$period->date_to);
+
+            $label = $date_from->format('m/d/Y').' - '.$date_to->format('m/d/Y');
+        
+
+            $this->excel->setValues($data,$label);
+            return Excel::download($this->excel,'PayrollRegister'.$period->id.'.xlsx');
+        }
     
         
     }

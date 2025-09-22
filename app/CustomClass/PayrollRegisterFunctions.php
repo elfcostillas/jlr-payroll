@@ -31,7 +31,7 @@ class PayrollRegisterFunctions
  
     public function getPeriod($id)
     {
-       
+      
         return DB::table('payroll_period')->select()
         ->where('id','=',$id)
         ->first();
@@ -235,7 +235,18 @@ class PayrollRegisterFunctions
             ->unionAll($onetime)->unionAll($fixed);
 
         }else{
+            $onetime = DB::table("posted_onetime_deductions")->select('deduction_type','amount')
+            ->where('user_id','=',Auth::user()->id)
+            ->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
 
+            $fixed = DB::table("posted_fixed_deductions")->select('deduction_type','amount')
+            ->where('user_id','=',Auth::user()->id)
+            ->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
+
+            $install = DB::table("posted_installments")->select('deduction_type','amount')
+            ->where('user_id','=',Auth::user()->id)
+            ->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]])
+            ->unionAll($onetime)->unionAll($fixed);
         }
 
 
