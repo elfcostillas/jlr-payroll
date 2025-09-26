@@ -5,7 +5,7 @@ use App\CustomClass\PayrollRegister;
 
 class PayrollRegisterService
 {
-    private $payroll;
+    public $payroll;
 
     public function __construct(PayrollRegister $payroll)
     {
@@ -20,7 +20,6 @@ class PayrollRegisterService
     public function getPeriod($id)
     {
         return $this->payroll->getPeriod($id);
-       
     }
 
     public function getLocations()

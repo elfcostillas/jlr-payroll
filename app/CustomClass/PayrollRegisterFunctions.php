@@ -640,7 +640,7 @@ class PayrollRegisterFunctions
         {
             $table = ['unposted_fixed_deductions','unposted_installments','unposted_onetime_deductions'];
         }else{
-
+            $table = ['posted_fixed_deductions','posted_installments','posted_onetime_deductions'];
         }
 
         if($table != null){

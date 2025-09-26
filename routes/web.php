@@ -840,7 +840,7 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::get('view-pdf-unposted/{period_id}',[PayrollRegisterConfiController::class,'viewPDF']);
 
         Route::get('download-posted/{id}',[PayrollRegisterConfiController::class,'downloadExcelPosted']);
-        Route::get('download-finance-template/{period}',[PayrollRegisterConfiController::class,'downloadFinanceTemplate']);
+        Route::get('download-finance-template/{id}',[PayrollRegisterConfiController::class,'downloadFinanceTemplate']);
 
         // Route::get('/',[PayrollRegisterController::class,'index']);
         // Route::get('unposted-payroll',[PayrollRegisterController::class,'getUnpostedPeriod']);

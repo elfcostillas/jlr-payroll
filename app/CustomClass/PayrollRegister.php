@@ -55,6 +55,7 @@ abstract class PayrollRegister extends PayrollRegisterFunctions
             $deductions = $this->getDeductionLabel();
             $govloans_hcols = $this->getGovLoansLabel();
         }else{
+
             $fixed_comp_hcols = $this->getCompensationTypeCols('posted_fixed_compensations');
             $other_comp_hcols = $this->getCompensationTypeCols('posted_other_compensations');
 

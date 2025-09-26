@@ -4,6 +4,7 @@ namespace App\Http\Controllers\PayrollTransaction;
 
 use App\CustomClass\PayrollRegisterConfi;
 use App\CustomClass\PayrollRegisterService;
+use App\CustomClass\PayrollRegisterServiceFinance;
 use App\CustomClass\PayrollTransaction\PostedPayrollRegister;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -22,6 +23,7 @@ use App\Models\Timekeeping\PayrollPeriod;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use App\Excel\PayRegFinanceTemplate;
 
 class PayrollRegisterConfiController extends Controller
 {
@@ -31,14 +33,22 @@ class PayrollRegisterConfiController extends Controller
     private $employee;
     private $excel;
     private $rcbc;
+    private $fin_excel;
 
-    public function __construct(UnpostedPayrollRegister $excel,UnpostedPayrollRegisterMapper $unposted,PostedPayrollRegisterMapper $posted,EmployeeMapper $employee,BankTransmittal $rcbc)
+    public function __construct(
+        UnpostedPayrollRegister $excel,
+        UnpostedPayrollRegisterMapper $unposted,
+        PostedPayrollRegisterMapper $posted,
+        EmployeeMapper $employee,
+        BankTransmittal $rcbc,
+        PayRegFinanceTemplate $fin_excel)
     {
         $this->unposted = $unposted;
         $this->posted = $posted;
         $this->employee = $employee;
         $this->excel = $excel;
         $this->rcbc = $rcbc;
+        $this->fin_excel = $fin_excel;
     }
 
     public function index()
@@ -455,15 +465,31 @@ class PayrollRegisterConfiController extends Controller
         
     }
 
-    public function downloadFinanceTemplate(PayrollPeriod $period)
+    public function downloadFinanceTemplate(Request $request)
     {
-        // dd($request->period_id);
+
+        // dd(bccomp(1.001,1.002,2));
+        $payroll = new PayrollRegisterServiceFinance(new PayrollRegisterConfi('payrollregister_posted_s','posted'));
+
+        $period = $payroll->getPeriod($request->id);
+
+
+        $data = $payroll->getPayrollData($period);
+
+        $payroll->getHeaders();
+
+        if($period){
+            $date_from = Carbon::createFromFormat('Y-m-d',$period->date_from);
+            $date_to = Carbon::createFromFormat('Y-m-d',$period->date_to);
+
+            $label = $date_from->format('m/d/Y').' - '.$date_to->format('m/d/Y');
+            $label2 = $date_from->format('m/d').'-'.$date_to->format('d/Y');
+
+            return view('app.payroll-transaction.payroll-register-confi.payroll-register-finance',['data' => $data,'label' => $label,'label2' => $label2,'payroll' => $payroll]);
+        }
 
       
-        $payroll = new PostedPayrollRegister($period,'confi');
-        dd($payroll->getData());
-
-        return view('app.payroll-transaction.payroll-register-confi.finance-template',['payroll' => $payroll]);
+       
 
     }
 }
