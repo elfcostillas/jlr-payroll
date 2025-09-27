@@ -231,6 +231,174 @@ class PayrollRegisterServiceFinance extends PayrollRegisterService
         return $value;
     }
 
+    /* By Division */
+    public function getOverAllCountDivision($division)
+    {
+        $count = 0;
+
+        foreach($division->departments as $department)
+        {
+            $count += count($department->employees);
+        }
+        
+
+        return $count;
+    }
+
+    public function getOverAllTotalDivision($col,$division)
+    {
+        $value = 0;
+       
+        foreach($division->departments as $department)
+        {
+            $value += $this->getDepartmentTotal($col,$department);
+        }
+
+        return $value;
+    }
+
+    public function getOverAllTotalCompensationDivision($col,$division)
+    {
+        $value = 0;
+       
+        foreach($division->departments as $department)
+        {
+            $value += $this->getDepartmentTotalCompensation($col,$department);
+        }
+       
+
+        return $value;
+    }
+
+    public function getTotalContriDivision($col,$division)
+    {
+        $value = 0;
+        
+        foreach($division->departments as $department)
+        {
+            $value += $this->getDeptTotalContri($col,$department);
+        }
+
+        return $value;
+    }
+
+    public function getOverAllDeductionDivision($col,$division)
+    {
+        $value = 0;
+        
+        foreach($division->departments as $department)
+        {
+            $value += $this->getDeptDeduction($col,$department);
+        }
+
+        return $value;
+    }
+
+    public function getOverAllALoanDivision($col,$division)
+    {
+        $value = 0;
+        
+        foreach($division->departments as $department)
+        {
+            $value += $this->getDeptGovLoan($col,$department);
+        }
+        
+        return $value;
+    }
+
+    /* */
+
+    public function getOverAllCount($data)
+    {
+        $count = 0;
+
+        foreach($data as $division)
+        {
+            foreach($division->departments as $department)
+            {
+                $count += count($department->employees);
+            }
+        }
+    
+        return $count;
+    }
+
+    public function getOverAllTotal($col,$data)
+    {
+        $value = 0;
+        foreach($data as $division)
+        {
+            foreach($division->departments as $department)
+            {
+                $value += $this->getDepartmentTotal($col,$department);
+            }
+        }
+    
+
+        return $value;
+    }
+
+    public function getOverAllTotalCompensation($col,$data)
+    {
+        $value = 0;
+
+        foreach($data as $division)
+        {
+            foreach($division->departments as $department)
+            {
+                $value += $this->getDepartmentTotalCompensation($col,$department);
+            }
+        }
+
+    
+
+        return $value;
+    }
+
+    public function getTotalContri($col,$data)
+    {
+        $value = 0;
+
+        foreach($data as $division)
+        {
+            foreach($division->departments as $department)
+            {
+                $value += $this->getDeptTotalContri($col,$department);
+            }
+        }
+       
+
+        return $value;
+    }
+
+    public function getOverAllDeduction($col,$data)
+    {
+        $value = 0;
+        foreach($data as $division)
+        {
+            foreach($division->departments as $department)
+            {
+                $value += $this->getDeptDeduction($col,$department);
+            }
+        }
+
+        return $value;
+    }
+
+    public function getOverAllALoan($col,$data)
+    {
+        $value = 0;
+
+        foreach($data as $division)
+        {
+            foreach($division->departments as $department)
+            {
+                $value += $this->getDeptGovLoan($col,$department);
+            }
+        }
+        return $value;
+    }
+
 
   
 

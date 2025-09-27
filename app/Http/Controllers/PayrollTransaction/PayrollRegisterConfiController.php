@@ -485,7 +485,11 @@ class PayrollRegisterConfiController extends Controller
             $label = $date_from->format('m/d/Y').' - '.$date_to->format('m/d/Y');
             $label2 = $date_from->format('m/d').'-'.$date_to->format('d/Y');
 
-            return view('app.payroll-transaction.payroll-register-confi.payroll-register-finance',['data' => $data,'label' => $label,'label2' => $label2,'payroll' => $payroll]);
+
+            $this->fin_excel->setValues($data,$label,$label2,$payroll);
+            return Excel::download($this->fin_excel,'PayrollRegisterFinanceTemplate'.$period->id.'.xlsx');
+
+            // return view('app.payroll-transaction.payroll-register-confi.payroll-register-finance',['data' => $data,'label' => $label,'label2' => $label2,'payroll' => $payroll]);
         }
 
       
