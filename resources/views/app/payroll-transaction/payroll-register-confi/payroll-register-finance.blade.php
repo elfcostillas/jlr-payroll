@@ -144,8 +144,7 @@
                                     @endforeach
                                 @endif
                                 <td>{{ $payroll->getTotalDeduction($employee) }} </td>
-                                <!-- <td> {{ bccomp($employee->net_pay,$payroll->getGrossPay($employee) - $payroll->getTotalDeduction($employee),3) }} </td> -->
-                                <td class="{{ bccomp($employee->net_pay,$payroll->getGrossPay($employee) - $payroll->getTotalDeduction($employee),3) ==0 ? 'green' : 'red' }}" >{{ $employee->net_pay }}</td>
+                                <td  >{{ $employee->net_pay }}</td>
                                 
                                
                             </tr>
