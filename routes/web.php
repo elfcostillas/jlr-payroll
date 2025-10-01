@@ -617,6 +617,12 @@ Route::middleware('auth')->prefix('deductions')->group(function(){
         Route::get('list-types',[GovtLoanSGController::class,'getTypes']);
         Route::post('save',[GovtLoanSGController::class,'save']);
         Route::get('list/{biometric_id}',[GovtLoanSGController::class,'list']);
+
+        Route::get('read-header/{id}',[GovtLoanSGController::class,'readHeader']);
+        
+        Route::get('list-payroll-period',[GovtLoanSGController::class,'getPayrollPeriod']);
+        Route::get('list-types',[GovtLoanSGController::class,'getTypes']);
+ 
     });
     
 });

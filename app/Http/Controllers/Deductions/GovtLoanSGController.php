@@ -88,4 +88,20 @@ class GovtLoanSGController extends Controller
         return response()->json($result);
     }
 
+        public function getDeductSched()
+    {
+        $result = $this->mapper->getDeductSched();
+
+        return response()->json($result);
+    }
+
+    public function readHeader(Request $request)
+    {
+        $result = $this->mapper->header($request->id);
+
+        return response()->json($result);
+    }
+
+
+
 }
