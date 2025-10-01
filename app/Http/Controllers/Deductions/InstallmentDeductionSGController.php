@@ -103,4 +103,13 @@ class InstallmentDeductionSGController extends Controller
 
     }
 
+    public function ammortization(Request $request)
+    {
+        // dd($request->bio_id);
+        $id = $request->id;
+
+        $result = $this->mapper->get_ammortization($id);
+        return response()->json($result);
+    }
+
 }

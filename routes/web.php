@@ -583,6 +583,7 @@ Route::middleware('auth')->prefix('deductions')->group(function(){
         
         Route::get('list-payroll-period',[InstallmentDeductionSGController::class,'getPayrollPeriod']);
         Route::get('list-types',[InstallmentDeductionSGController::class,'getTypes']);
+        Route::get('posted_ammortization/{id}',[InstallmentDeductionSGController::class,'ammortization']);
         Route::post('save',[InstallmentDeductionSGController::class,'save']);
 
         // Route::get('download-non-confi',[InstallmentDeductionController::class,'dlNonConfi']);
