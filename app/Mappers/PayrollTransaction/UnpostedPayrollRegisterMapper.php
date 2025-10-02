@@ -336,8 +336,6 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
             
         // }
         // dd($str);
-
-        dd($period->cut_off);
                 
         foreach($loans as $loan)
         {

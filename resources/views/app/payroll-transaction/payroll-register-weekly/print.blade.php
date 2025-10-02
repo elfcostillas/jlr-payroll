@@ -89,9 +89,9 @@
         $ot_summ_label[3]='30 Hours';
         $ot_summ_label[4]='40 Hours';
         $ot_summ_label[5]='50 Hours';
-        $ot_summ_label[6]='60 Hours';
-        $ot_summ_label[7]='70 Hours';
-        $ot_summ_label[8]='80+ Hours';
+        // $ot_summ_label[6]='60 Hours';
+        // $ot_summ_label[7]='70 Hours';
+        // $ot_summ_label[8]='80+ Hours';
         
         $otByJobtitleValue = [];
         $otDept = [];
@@ -616,7 +616,8 @@
 
                             
 
-                            if(($employee->$key >= 50 && $employee->$key <60) && $key == 'reg_ot'){
+                            // if(($employee->$key >= 50 && $employee->$key <60) && $key == 'reg_ot'){
+                            if(($employee->$key >= 50 ) && $key == 'reg_ot'){
                                 $ot_summ_value[5] +=1;
 
                                 if(!in_array(5,$otReport2)){
@@ -643,86 +644,86 @@
                               
                             }
 
-                            if(($employee->$key >= 60 && $employee->$key <70) && $key == 'reg_ot'){
-                                $ot_summ_value[6] +=1;
+                            // if(($employee->$key >= 60 && $employee->$key <70) && $key == 'reg_ot'){
+                            //     $ot_summ_value[6] +=1;
 
-                                if(!in_array(6,$otReport2)){
-                                    array_push($otReport2,6);
+                            //     if(!in_array(6,$otReport2)){
+                            //         array_push($otReport2,6);
                                    
-                                }
+                            //     }
 
-                                if(!in_array($employee->dept_code,$otDept))
-                                {
-                                    array_push($otDept,$employee->dept_code);
-                                }
+                            //     if(!in_array($employee->dept_code,$otDept))
+                            //     {
+                            //         array_push($otDept,$employee->dept_code);
+                            //     }
 
-                                if(!in_array($employee->job_title_name,$otJobtitle))
-                                {
-                                    array_push($otJobtitle,$employee->job_title_name);
-                                }
+                            //     if(!in_array($employee->job_title_name,$otJobtitle))
+                            //     {
+                            //         array_push($otJobtitle,$employee->job_title_name);
+                            //     }
 
-                                if(isset($otByJobtitleValue[6][$employee->dept_code][$employee->job_title_name]))
-                                {
-                                    $otByJobtitleValue[6][$employee->dept_code][$employee->job_title_name] += 1;
-                                }else{
-                                    $otByJobtitleValue[6][$employee->dept_code][$employee->job_title_name] = 1;
-                                }
-
-                               
-                            }
-
-                            if(($employee->$key >= 70 && $employee->$key <80) && $key == 'reg_ot'){
-                                $ot_summ_value[7] +=1;
-
-                                if(!in_array(7,$otReport2)){
-                                    array_push($otReport2,7);
-                                }
-
-                                if(!in_array($employee->dept_code,$otDept))
-                                {
-                                    array_push($otDept,$employee->dept_code);
-                                }
-
-                                if(!in_array($employee->job_title_name,$otJobtitle))
-                                {
-                                    array_push($otJobtitle,$employee->job_title_name);
-                                }
-
-                                if(isset($otByJobtitleValue[7][$employee->dept_code][$employee->job_title_name]))
-                                {
-                                    $otByJobtitleValue[7][$employee->dept_code][$employee->job_title_name] += 1;
-                                }else{
-                                    $otByJobtitleValue[7][$employee->dept_code][$employee->job_title_name] = 1;
-                                }
+                            //     if(isset($otByJobtitleValue[6][$employee->dept_code][$employee->job_title_name]))
+                            //     {
+                            //         $otByJobtitleValue[6][$employee->dept_code][$employee->job_title_name] += 1;
+                            //     }else{
+                            //         $otByJobtitleValue[6][$employee->dept_code][$employee->job_title_name] = 1;
+                            //     }
 
                                
-                            }
+                            // }
 
-                            if(($employee->$key >= 80) && $key == 'reg_ot'){
-                                $ot_summ_value[8] +=1;
+                            // if(($employee->$key >= 70 && $employee->$key <80) && $key == 'reg_ot'){
+                            //     $ot_summ_value[7] +=1;
 
-                                if(!in_array(8,$otReport2)){
-                                    array_push($otReport2,8);
-                                }
+                            //     if(!in_array(7,$otReport2)){
+                            //         array_push($otReport2,7);
+                            //     }
 
-                                if(!in_array($employee->dept_code,$otDept))
-                                {
-                                    array_push($otDept,$employee->dept_code);
-                                }
+                            //     if(!in_array($employee->dept_code,$otDept))
+                            //     {
+                            //         array_push($otDept,$employee->dept_code);
+                            //     }
 
-                                if(!in_array($employee->job_title_name,$otJobtitle))
-                                {
-                                    array_push($otJobtitle,$employee->job_title_name);
-                                }
+                            //     if(!in_array($employee->job_title_name,$otJobtitle))
+                            //     {
+                            //         array_push($otJobtitle,$employee->job_title_name);
+                            //     }
 
-                                if(isset($otByJobtitleValue[8][$employee->dept_code][$employee->job_title_name]))
-                                {
-                                    $otByJobtitleValue[8][$employee->dept_code][$employee->job_title_name] += 1;
-                                }else{
-                                    $otByJobtitleValue[8][$employee->dept_code][$employee->job_title_name] = 1;
-                                }
+                            //     if(isset($otByJobtitleValue[7][$employee->dept_code][$employee->job_title_name]))
+                            //     {
+                            //         $otByJobtitleValue[7][$employee->dept_code][$employee->job_title_name] += 1;
+                            //     }else{
+                            //         $otByJobtitleValue[7][$employee->dept_code][$employee->job_title_name] = 1;
+                            //     }
 
-                            }
+                               
+                            // }
+
+                            // if(($employee->$key >= 80) && $key == 'reg_ot'){
+                            //     $ot_summ_value[8] +=1;
+
+                            //     if(!in_array(8,$otReport2)){
+                            //         array_push($otReport2,8);
+                            //     }
+
+                            //     if(!in_array($employee->dept_code,$otDept))
+                            //     {
+                            //         array_push($otDept,$employee->dept_code);
+                            //     }
+
+                            //     if(!in_array($employee->job_title_name,$otJobtitle))
+                            //     {
+                            //         array_push($otJobtitle,$employee->job_title_name);
+                            //     }
+
+                            //     if(isset($otByJobtitleValue[8][$employee->dept_code][$employee->job_title_name]))
+                            //     {
+                            //         $otByJobtitleValue[8][$employee->dept_code][$employee->job_title_name] += 1;
+                            //     }else{
+                            //         $otByJobtitleValue[8][$employee->dept_code][$employee->job_title_name] = 1;
+                            //     }
+
+                            // }
                             
                             ?>
                         @endforeach
