@@ -60,6 +60,18 @@ class PayrollPeriodWeeklyMapper extends AbstractMapper {
 		return $result->get();
 	}
 
+	public function listforPostedDropDown()
+	{
+		$posted = $this->model->select('period_id')->from('payrollregister_posted_weekly')->distinct()->get();
+
+		$result = $this->model->select(DB::raw("id,CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) AS drange"))
+								->whereIn('id',$posted->pluck('period_id'))
+								// ->whereNotIn('id',$posted)
+								->orderBy('id','DESC');
+
+		return $result->get();
+	}
+
 	public function makeRange($period)
 	{
 		$result = $this->model->select(DB::raw("id,CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) AS drange,datediff(date_to,date_from)+1 as perf"))->where('id',$period);

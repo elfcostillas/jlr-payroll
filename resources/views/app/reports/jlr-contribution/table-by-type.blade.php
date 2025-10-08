@@ -199,10 +199,6 @@
 
                         <td>{{ number_format($employee->ec,2) }}</td>   
                     @endif
-
-                
-                  
-                  
                 </tr>
             @endforeach
             <tr>

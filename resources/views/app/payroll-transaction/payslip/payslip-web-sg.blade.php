@@ -37,6 +37,10 @@
 <body>
 
     @foreach($data as $e)
+
+        <?php
+          
+        ?>
         <table class="payslipTable" border=1 style="border-collapse:collapse;page-break-inside: avoid;font-size:8pt;" width="920px">
             <tr>
                 <td colspan="2"> 
