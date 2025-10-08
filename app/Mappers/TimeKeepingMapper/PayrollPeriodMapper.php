@@ -59,6 +59,20 @@ class PayrollPeriodMapper extends AbstractMapper {
 		return ($result>0) ? true : false;
 	}
 
+	public function listforPostedDropDown()
+	{	
+		
+		$posted = $this->model->select('period_id')->from('payrollregister_posted')->distinct()->get();
+
+		$result = $this->model->select(DB::raw("id,CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) AS drange"))
+								->from('payroll_period_vw')
+								->whereIn('id',$posted->pluck('period_id'))
+								// ->whereNotIn('id',$posted)
+								->orderBy('id','DESC');
+
+		return $result->get();
+	}
+
 
 }
  

@@ -71,6 +71,7 @@ use App\Http\Controllers\Memo\TardinessMemoController;
 use App\Http\Controllers\PayrollTransaction\PayslipConfiController;
 use App\Http\Controllers\PayrollTransaction\ThirteenthMonthController;
 use App\Http\Controllers\Reports\AttendanceReportController;
+use App\Http\Controllers\Reports\DeductedLoanController;
 use App\Http\Controllers\Reports\JLRContributionsController;
 use App\Http\Controllers\Reports\PayrollSupportGroupController;
 use App\Http\Controllers\Timekeeping\LeaveCreditsSGController;
@@ -732,6 +733,11 @@ Route::middleware('auth')->prefix('reports')->group(function(){
         Route::get('generate-excel-type-sorted/{emp_level}/{year}/{month}/{type}',[JLRContributionsController::class,'excelByTypeS']);
 
     });
+
+    Route::prefix('govt-loans')->group(function(){
+        Route::get('/',[DeductedLoanController::class,'index']);
+    });
+
 
 });
 

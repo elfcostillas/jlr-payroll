@@ -222,9 +222,10 @@
                 @if ($type==1)
                 <td></td>
                 <td>{{ $per_loc['sss_ee'] }}</td>
+                <td>{{ $per_loc['sss_er'] }}</td>
                 <td>{{ $per_loc['sss_wisp'] }}</td>
 
-                <td>{{ $per_loc['sss_er'] }}</td>
+                
                 <td>{{ $per_loc['mpf_er'] }}</td>
 
                 <td>{{ $per_loc['emp_total'] }}</td>

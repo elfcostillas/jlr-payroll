@@ -239,6 +239,62 @@ class PayslipMapper extends AbstractMapper {
         return $data;
     }
 
+    public function getDataSG($period_id,$division,$department,$biometric_id)
+    {
+        //dd($period_id,$division,$department,$biometric_id);
+
+        $result = $this->model->select(DB::raw("payrollregister_posted_weekly.*,dept_id,division_id,concat(lastname,', ',firstname) as employee_name,suffixname,dept_name"))
+                    ->from('payrollregister_posted_weekly')
+                    ->join('employees','employees.biometric_id','=','payrollregister_posted_weekly.biometric_id')
+                    ->leftJoin('departments','departments.id','=','dept_id')
+                    ->where('employees.emp_level','=',6);
+                    
+
+        if($period_id != 0 && $period_id != "" && $period_id != null){
+            $result->where('period_id',$period_id);
+        }
+
+        if($division != 0 && $division != "" && $division != null){
+            $result->where('division_id',$division);
+        }
+
+        if($department != 0 && $department != "" && $department != null){
+            $result->where('dept_id',$department);
+        }
+
+        if($biometric_id != 0 && $biometric_id != "" && $biometric_id != null){
+            $result->where('employees.biometric_id',$biometric_id);
+        }
+
+        $result->orderBy('lastname','ASC');
+        $result->orderBy('firstname','ASC');
+
+        $data = $result->get();
+
+       
+        foreach($data as $epay)
+        {
+            if(is_object($epay)){
+                $epay->basic = $this->basic($epay);
+                $epay->gov_loan = $this->paySlipGovLoan($period_id,$epay->biometric_id);
+                $epay->reg_earnings = $this->regEarnings($epay);
+                $epay->restday = $this->restDay($epay);
+                $epay->legalHol = $this->legalHol($epay);
+                $epay->specialHol = $this->specialHol($epay);
+                $epay->dblLegHol = $this->dblLegHol($epay);
+                $epay->allowances = $this->allowances($epay);
+                $epay->otherEearnings = $this->otherEearnings($period_id,$epay->biometric_id);
+                $epay->slvl = $this->slvl($epay);
+                $epay->fixedDeduction = $this->fixedDeduction($period_id,$epay->biometric_id);
+                $epay->installments = $this->installments($period_id,$epay->biometric_id);
+            }
+            
+            
+        }
+
+        return $data;
+    }
+
     public function basic($e)
     {
         $earnings=[];

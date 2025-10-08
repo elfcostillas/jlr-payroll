@@ -51,9 +51,7 @@ class PayslipConfiController extends Controller
 
     public function getEmployees(Request $request)
     {
-        
         $result = $this->payslip->getConfiEmployees($request->period,$request->div,$request->dept);
-
         return response()->json($result);
     }
 

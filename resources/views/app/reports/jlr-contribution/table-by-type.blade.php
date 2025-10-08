@@ -190,9 +190,10 @@
                       
                         <td> {{ $employee->sss_no }} </td>
                         <td>{{ number_format($employee->sss_prem,2) }}</td>   
-                        <td>{{ number_format($employee->sss_wisp,2) }}</td>
-
                         <td>{{ number_format($employee->er_share,2) }} </td>   
+                       
+
+                        <td>{{ number_format($employee->sss_wisp,2) }}</td>
                         <td>{{ number_format($employee->mpf_er,2) }}</td>
                         <td>{{ number_format($employee_total,2)  }} </td>
 

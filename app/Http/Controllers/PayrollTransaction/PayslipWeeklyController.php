@@ -90,6 +90,7 @@ class PayslipWeeklyController  extends Controller
         return $pdf->stream('DTR.pdf'); 
     }
 
+    /*
     public function pdfView(Request $request)
     {   
         $period_label = $this->payslip->getPeriodLabelWeekly($request->period);
@@ -123,5 +124,17 @@ class PayslipWeeklyController  extends Controller
         $canvas->page_text(510, 812, "Page {PAGE_NUM} of {PAGE_COUNT} ", null, 10, array(0, 0, 0));
 
         return $pdf->stream('Payslip.pdf'); 
+    }
+    */
+
+    public function pdfView(Request $request)
+    {
+        $period_label = $this->payslip->getPeriodLabelWeekly($request->period);
+        $result = $this->payslip->getDataSG($request->period,$request->div,$request->dept,$request->bio_id);
+      
+        return view('app.payroll-transaction.payslip.payslip-web-sg',[
+            'data' => $result,
+            'period_label' =>$period_label
+        ]);
     }
 }
