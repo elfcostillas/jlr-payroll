@@ -66,25 +66,27 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card card-secondary">
-                        <div class="card-header"> Employee - JLR </div>
+                        <div class="card-header"> Employee - JLR  </div>
                         <div class="card-body"> 
                             <table class="formTable" border=0 style="width:100%">
                                 <tr>
-                                    <td colspan=2>Payroll Period</td>
+                                    <td colspan=1>Month</td>
+                                    <td colspan=1>Year</td>
                                     <td colspan=2>Type</td>
                                     <td colspan=2></td>
-                                    <td colspan=2></td>
+                                    <td colspan=3></td>
                                 </tr>
                                 <tr>
-                                    <td colspan=2><input type="text" id="location_id" ></td>
-                                    <td colspan=2><input type="text" id="division_id" ></td>
+                                    <td colspan=1><input type="text" id="payroll_period" ></td>
+                                    <td colspan=1><input type="text" id="fy_year_jlr" ></td>
+                                    <td colspan=2><input type="text" id="loan_tye" ></td>
                                     <td colspan=2></td>
-                                    <td colspan=2></td>
+                                    <td colspan=3></td>
                                     
                                 </tr>
                                 <tr>
-                                    <td colspan="2"><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download'><i class="fas fa-download"></i> Download Employee List</button></td>
-                                    <td colspan="2"><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download_weekly'><i class="fas fa-download"></i> Download Support Group List</button></td>
+                                    <td colspan="2"><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download_confi'><i class="fas fa-download"></i> Download (Confi)</button></td>
+                                    <td colspan="2"><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download'><i class="fas fa-download"></i> Download (Rank n File)</button></td>
                                     <td colspan="4"></td>
                                 </tr>
                             </table>
@@ -100,21 +102,23 @@
                         <div class="card-body"> 
                             <table class="formTable" border=0 style="width:100%">
                                 <tr>
-                                    <td colspan=2>Payroll Period</td>
+                                    <td colspan=1>Month</td>
+                                    <td colspan=1>Year</td>
                                     <td colspan=2>Type</td>
                                     <td colspan=2></td>
-                                    <td colspan=2></td>
+                                    <td colspan=3></td>
                                 </tr>
                                 <tr>
-                                    <td colspan=2><input type="text" id="location_id" ></td>
-                                    <td colspan=2><input type="text" id="division_id" ></td>
+                                    <td colspan=1><input type="text" id="payroll_period_sg" ></td>
+                                    <td colspan=1><input type="text" id="fy_year_sg" ></td>
+                                    <td colspan=2><input type="text" id="loan_tye_sg" ></td>
                                     <td colspan=2></td>
-                                    <td colspan=2></td>
+                                    <td colspan=3></td>
                                     
                                 </tr>
                                 <tr>
-                                    <td colspan="2"><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download'><i class="fas fa-download"></i> Download Employee List</button></td>
-                                    <td colspan="2"><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download_weekly'><i class="fas fa-download"></i> Download Support Group List</button></td>
+                                    <td colspan="2"><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download_weekly'><i class="fas fa-download"></i> Download Employee List</button></td>
+                                    <td colspan="2"></td>
                                     <td colspan="4"></td>
                                 </tr>
                             </table>

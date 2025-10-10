@@ -736,6 +736,7 @@ Route::middleware('auth')->prefix('reports')->group(function(){
 
     Route::prefix('govt-loans')->group(function(){
         Route::get('/',[DeductedLoanController::class,'index']);
+        Route::get('download/{month}/{year}/{loan_type}/{emp_type}',[DeductedLoanController::class,'download']);
     });
 
 

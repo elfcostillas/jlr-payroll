@@ -6,7 +6,181 @@
     <script>
         $(document).ready(function(){
 
-            let payroll_period =<?php echo json_encode($emp_stat) ?>;
+            // let payroll_period =<?php echo json_encode($payroll_period) ?>;
+            // let payroll_period_sg =<?php echo json_encode($payroll_period_sg) ?>;
+
+            let loan_types =<?php echo json_encode($loan_types) ?>;
+            let loan_types_sg =<?php echo json_encode($loan_types) ?>;
+
+            let fy_year =<?php echo json_encode($fy_year) ?>;
+
+            let months = [
+                { text: "January", value: "1" },
+                { text: "February", value: "2" },
+                { text: "March", value: "3" },
+                { text: "April", value: "4" },
+                { text: "May", value: "5" },
+                { text: "June", value: "6" },
+                { text: "July", value: "7" },
+                { text: "August", value: "8" },
+                { text: "September", value: "9" },
+                { text: "October", value: "10" },
+                { text: "November", value: "11" },
+                { text: "December", value: "12" },
+            ];
+
+            $("#payroll_period").kendoDropDownList({
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: months,
+                index: 0,
+                dataBound : function(e){
+                  
+                }
+                
+            });
+
+            $("#fy_year_jlr").kendoDropDownList({
+                dataTextField: "fy",
+                dataValueField: "fy",
+                dataSource: fy_year,
+                index: 0,
+                dataBound : function(e){
+                  
+                }
+                
+            });
+
+            $("#fy_year_sg").kendoDropDownList({
+                dataTextField: "fy",
+                dataValueField: "fy",
+                dataSource: fy_year,
+                index: 0,
+                dataBound : function(e){
+                  
+                }
+                
+            });
+
+            $("#payroll_period_sg").kendoDropDownList({
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: months,
+                index: 0,
+                dataBound : function(e){
+                  
+                }
+                
+            });
+
+            $("#loan_tye").kendoDropDownList({
+                dataTextField: "description",
+                dataValueField: "id",
+                dataSource: loan_types,
+                index: 0,
+                dataBound : function(e){
+                  
+                }
+                
+            });
+
+             $("#loan_tye_sg").kendoDropDownList({
+                dataTextField: "description",
+                dataValueField: "id",
+                dataSource: loan_types_sg,
+                index: 0,
+                dataBound : function(e){
+                  
+                }
+                
+            });
+
+            var viewModel = kendo.observable({ 
+                included : [],
+                form : {
+                    model : {
+                        
+                        division_id: null,
+                        dept_id: null,
+                    },
+                  
+                },
+                ds : {
+                    fy : new kendo.data.DataSource({
+                        transport : {
+                            read : {
+                                url : '../reports/contributions-jlr/year',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },
+                        },
+                        schema : {
+                           
+                            model : {
+                                id : 'fy',
+                                fields : {
+                                    fy : { type : 'number',editable :false },   
+                                    
+                                }
+                            }
+                        }
+                    }),
+                },
+                buttonHandler : {  
+                    download : function()
+                    {
+                        // process();
+                        let period =  $("#payroll_period").data("kendoDropDownList").value();
+                        let fy_year =  $("#fy_year_jlr").data("kendoDropDownList").value();
+                        let loan_type =  $("#loan_tye").data("kendoDropDownList").value();
+
+                        let url = `govt-loans/download/${period}/${fy_year}/${loan_type}/semi`;
+                        window.open(url);
+
+                        // console.log(period,fy_year,loan_type);
+                    },
+
+                    download_confi : function()
+                    {
+                        // process();
+                        let period =  $("#payroll_period").data("kendoDropDownList").value();
+                        let fy_year =  $("#fy_year_jlr").data("kendoDropDownList").value();
+                        let loan_type =  $("#loan_tye").data("kendoDropDownList").value();
+
+                        let url = `govt-loans/download/${period}/${fy_year}/${loan_type}/confi`;
+                        window.open(url);
+
+                        // console.log(period,fy_year,loan_type);
+                    },
+
+                    download_sg : function()
+                    {
+                        // process();
+                        let period =  $("#payroll_period").data("kendoDropDownList").value();
+                        let fy_year =  $("#fy_year_jlr").data("kendoDropDownList").value();
+                        let loan_type =  $("#loan_tye").data("kendoDropDownList").value();
+
+                        let url = `govt-loans/download/${period}/${fy_year}/${loan_type}/sg`;
+                        window.open(url);
+
+                        // console.log(period,fy_year,loan_type);
+                    },
+                }
+            });
+
+            function process()
+            {
+                // let period =  $("#payroll_period").data("kendoDropDownList").value();
+                // let fy_year =  $("#fy_year_jlr").data("kendoDropDownList").value();
+                // let loan_type =  $("#loan_tye").data("kendoDropDownList").value();
+                // let url = `reports/govt-loansdivision=${period}&department=${fy_year}&location=${loan_type}`;
+                // window.open(url);
+            }
+
+            kendo.bind($("#viewModel"),viewModel);
 
             /*
             $("#employee_stat").kendoDropDownList({

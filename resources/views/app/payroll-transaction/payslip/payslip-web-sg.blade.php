@@ -104,6 +104,12 @@
                         <tr>
                             <td colspan="3" class="pad4 headings"><b> Basic Earnings </b> </td>
                         </tr>
+                        <?php
+                            $basic_total = 0;
+
+                           
+                        ?>
+                        
                         @foreach($e->basic as $b)
                             @if($b->amount>0)
                                 <tr>
@@ -113,7 +119,7 @@
                                 </tr>
                             @endif
                         @endforeach
-
+                        <!-- 
                         @foreach($e->reg_earnings as $earn)
                             @if($earn->amount>0)
                                 <tr>
@@ -133,7 +139,8 @@
                                     </tr>
 
                                 @endif
-                        @endforeach
+                        @endforeach -->
+                        
                     </table>
 
                     @if($e->allowances['total']>0)
@@ -225,12 +232,12 @@
                             @endforeach
                         </table>
                     @endif
-                    <table border=1 style="border-collapse:collapse;width:100%;margin-bottom:1px;">
+                    <!-- <table border=1 style="border-collapse:collapse;width:100%;margin-bottom:1px;">
                         <tr>
                             <td class="pad4" colspan="2" width="70%" ><b>Gross Pay</b></td>
                             <td class="pad4" style="text-align:right;padding-right:4px;"> {{ number_format($e->gross_pay,2) }} </td>
                         </tr>
-                    </table>
+                    </table> -->
                     @if($e->otherEearnings['total']>0)
                         <table border=1 style="border-collapse:collapse;width:100%;margin-bottom:1px;">
                             <tr>
