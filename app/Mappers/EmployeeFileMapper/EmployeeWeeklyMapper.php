@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Auth;
 
 class EmployeeWeeklyMapper extends AbstractMapper {
 
-	// protected $modelClassName = 'App\Models\EmployeeFile\EmployeeWeekly';
-	protected $modelClassName = 'App\Models\EmployeeFile\Employee';
+	protected $modelClassName = 'App\Models\EmployeeFile\EmployeeWeekly';
+	// protected $modelClassName = 'App\Models\EmployeeFile\Employee';
    
     protected $rules = [
 		'firstname' => 'required|sometimes',

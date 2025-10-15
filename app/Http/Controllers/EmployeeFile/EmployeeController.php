@@ -119,7 +119,7 @@ class EmployeeController extends Controller
             }
 
             $result = $this->mapper->insertValid($data_arr);
-            $result2 = $this->weekly->insertValid($data_arr);
+            // $result2 = $this->weekly->insertValid($data_arr);
 
             if(is_object($result)){
                 return response()->json($result)->setStatusCode(500, 'Error');
@@ -134,8 +134,8 @@ class EmployeeController extends Controller
             $record = $this->mapper->header($data_arr['id']);
             
             $result = $this->mapper->updateValid($data_arr);
-            $result2 = $this->weekly->insertValid($data_arr);
-            $result3 = $this->weekly->updateValid($data_arr);
+            // $result2 = $this->weekly->insertValid($data_arr);
+            // $result3 = $this->weekly->updateValid($data_arr);
             if($result){
                 //$record = $this->mapper->header($data_arr['id']);
                 $this->createLog('update',$data_arr['id'],$record);
