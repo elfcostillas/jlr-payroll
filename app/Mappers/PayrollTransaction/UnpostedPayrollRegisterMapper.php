@@ -448,7 +448,7 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
         
         $tmp_loan = [];
 
-        $onetime = $this->model->select(DB::raw("deduction_onetime_headers.period_id,deduction_onetime_details.biometric_id,deduction_type,amount,deduction_onetime_headers.id"))
+        $onetime = $this->model->select(DB::raw("deduction_onetime_headers.period_id,deduction_onetime_details.biometric_id,deduction_type,amount,deduction_onetime_headers.id,deduction_onetime_details.remarks"))
                             ->from('deduction_onetime_headers')
                             ->join('deduction_onetime_details','deduction_onetime_headers.id','=','deduction_onetime_details.header_id')
                             ->whereIn('deduction_onetime_details.biometric_id',$biometric_ids)
@@ -466,7 +466,8 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                 'amount' => $loan->amount,
                 'deduction_id' => $loan->id,
                 'emp_level' => $emp_level,
-                'user_id' => $user_id
+                'user_id' => $user_id,
+                'remarks' => $loan->remarks
             ];
 
             array_push($tmp_loan,$tmp);
