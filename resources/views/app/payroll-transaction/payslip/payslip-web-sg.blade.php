@@ -109,7 +109,7 @@
 
                            
                         ?>
-                        
+                           <!-- 
                         @foreach($e->basic as $b)
                             @if($b->amount>0)
                                 <tr>
@@ -119,7 +119,7 @@
                                 </tr>
                             @endif
                         @endforeach
-                        <!-- 
+                     
                         @foreach($e->reg_earnings as $earn)
                             @if($earn->amount>0)
                                 <tr>

@@ -177,6 +177,7 @@
                                     biometric_id : { type : 'string' ,editable:false,navigatable:false },
                                     amount : { type : 'number' },
                                     empname  : { type : 'string',editable:false },
+                                    remarks : { type : 'string' }
                                     // date_release: { type : 'date' },
                                     // man_hours: { type : 'number' },
                                 }
@@ -486,9 +487,11 @@
                                     //editor : amountEditor
                                 },
                                 {
-                                    width : 30
-                                }
-                            
+                                    title : "Remakrs",
+                                    field : "remarks",
+                                    // width : 90,    
+                                },
+                              
                             ],
                         
                         });

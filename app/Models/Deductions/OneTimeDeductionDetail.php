@@ -17,6 +17,7 @@ class OneTimeDeductionDetail extends Model
         'header_id',
         'biometric_id',
         'amount',
+        'remarks'
     ];
     
 }
