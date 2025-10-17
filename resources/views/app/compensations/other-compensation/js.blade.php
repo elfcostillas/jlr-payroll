@@ -167,7 +167,7 @@
                             },
                         },
                         batch : true,
-                        pageSize :14,
+                        pageSize : 999,
                         serverPaging : true,
                         serverFiltering : true,
                         aggregate: [ { field: "total_amount", aggregate: "sum" },],
