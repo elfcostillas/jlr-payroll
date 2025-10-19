@@ -70,8 +70,7 @@ return [
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '172.17.42.100'),
             // 'host' => env('DB_HOST', '172.24.224.1'),
-            // 'host' => env('DB_HOST', '172.24.224.1'),
-            'port' => env('DB_PORT', '3306'),
+            'port' => env('DB_PORT', '3307'),
             'database' => env('DB_DATABASE', 'jlr_hris'),
 
             'username' => env('DB_USERNAME', 'admin_prog'),

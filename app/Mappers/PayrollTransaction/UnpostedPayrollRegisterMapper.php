@@ -1026,11 +1026,11 @@ WHERE period_id = 1 AND total_amount > 0;*/
     {
         //dd($period->id);
         $qry = "SELECT DISTINCT deduction_type FROM (
-            SELECT * FROM unposted_fixed_deductions
+            SELECT line_id,period_id,biometric_id,deduction_type,amount,deduction_id,emp_level,user_id FROM unposted_fixed_deductions
             UNION ALL 
-            SELECT * FROM unposted_installments
+            SELECT line_id,period_id,biometric_id,deduction_type,amount,deduction_id,emp_level,user_id FROM unposted_installments
             UNION ALL
-            SELECT * FROM unposted_onetime_deductions
+            SELECT line_id,period_id,biometric_id,deduction_type,amount,deduction_id,emp_level,user_id FROM unposted_onetime_deductions
         ) AS deduction_types where period_id = '".$period->id."';";
 
         $result = DB::select($qry);
