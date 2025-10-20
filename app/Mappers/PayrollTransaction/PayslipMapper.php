@@ -287,7 +287,7 @@ class PayslipMapper extends AbstractMapper {
                 $epay->slvl = $this->slvl($epay);
                 // $epay->fixedDeduction = $this->fixedDeductionSG($period_id,$epay->biometric_id);
                 $epay->fixedDeduction = $this->deductionsWeekly($period_id,$epay->biometric_id);
-                $epay->installments = $this->installments($period_id,$epay->biometric_id);
+                $epay->installments = $this->installmentsSG($period_id,$epay->biometric_id);
             }
             
             
@@ -869,6 +869,42 @@ class PayslipMapper extends AbstractMapper {
                 ->join('deduction_types','deduction_types.id','=','deduction_installments.deduction_type')
                 ->where('posted_installments.biometric_id',$biometric_id)
                 ->where('posted_installments.period_id','=',$period_id)
+                ->get();
+
+
+        foreach($result as $loan){
+            $loantotal += $loan->amount;
+        }
+
+        return array(
+            'total' => $loantotal,
+            'list' => $result
+        );
+        
+    }
+
+    public function installmentsSG($period_id,$biometric_id)
+    {
+        $loantotal = 0;
+
+        $paid = DB::table('posted_installments_sg')->where('biometric_id','=',$biometric_id)
+                ->select(DB::raw("deduction_id,biometric_id,SUM(amount) AS paid_amount"))
+                ->where('period_id','<=',$period_id)
+                ->groupBy('deduction_id');
+
+        $result = $this->model->select(DB::raw("deduction_types.description,posted_installments_sg.amount,total_amount-paid.paid_amount AS balance"))
+                ->from('deduction_installments_sg')
+                ->join('posted_installments_sg',function($join){
+                    $join->on('deduction_installments_sg.id','=','posted_installments_sg.deduction_id');
+                    $join->on('deduction_installments_sg.biometric_id','=','posted_installments_sg.biometric_id');
+                    $join->on('deduction_installments_sg.deduction_type','=','posted_installments_sg.deduction_type');
+                })
+                ->leftJoinSub($paid,'paid',function($join){
+                    $join->on('paid.deduction_id','=','deduction_installments_sg.id');
+                })
+                ->join('deduction_types','deduction_types.id','=','deduction_installments_sg.deduction_type')
+                ->where('posted_installments_sg.biometric_id',$biometric_id)
+                ->where('posted_installments_sg.period_id','=',$period_id)
                 ->get();
 
 

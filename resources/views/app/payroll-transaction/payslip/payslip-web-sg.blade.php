@@ -299,19 +299,39 @@
                     </table>
                     @if(sumArray($e->fixedDeduction) > 0)
 
-                    <table border=1 style="border-collapse:collapse;width:100%">
-                        <tr>
-                            <td colspan="3" class="pad4 headings"><b>Fixed and Onetime Deductions</b></td>
-                        </tr>
+                        <table border=1 style="border-collapse:collapse;width:100%">
+                            <tr>
+                                <td colspan="3" class="pad4 headings"><b>Fixed and Onetime Deductions</b></td>
+                            </tr>
 
-                        @if($e->fixedDeduction['canteen'] > 0)
-                        <tr>
-                            <td class="pad4" width="70%">Canteen</td>
-                            <td class="pad4" width="30%" style="text-align:right;padding-right:4px;">{{ number_format($e->fixedDeduction['canteen'],2) }}</td>
-                        </tr>
-                        @endif
+                            @if($e->fixedDeduction['canteen'] > 0)
+                            <tr>
+                                <td class="pad4" width="70%">Canteen</td>
+                                <td class="pad4" width="30%" style="text-align:right;padding-right:4px;">{{ number_format($e->fixedDeduction['canteen'],2) }}</td>
+                            </tr>
+                            @endif
 
-                    </table>
+                            @if($e->fixedDeduction['deductions'] > 0)
+                            <tr>
+                                <td class="pad4" width="70%">Other Deductions</td>
+                                <td class="pad4" width="30%" style="text-align:right;padding-right:4px;">{{ number_format($e->fixedDeduction['deductions'],2) }}</td>
+                            </tr>
+                            @endif
+
+                            @if($e->fixedDeduction['cash_advance'] > 0)
+                            <tr>
+                                <td class="pad4" width="70%">Cash Advance</td>
+                                <td class="pad4" width="30%" style="text-align:right;padding-right:4px;">{{ number_format($e->fixedDeduction['cash_advance'],2) }}</td>
+                            </tr>
+                            @endif
+
+                            @if($e->fixedDeduction['office_account'] > 0)
+                            <tr>
+                                <td class="pad4" width="70%">Office Accounts</td>
+                                <td class="pad4" width="30%" style="text-align:right;padding-right:4px;">{{ number_format($e->fixedDeduction['office_account'],2) }}</td>
+                            </tr>
+                            @endif
+                        </table>
                     @endif
 
                   
