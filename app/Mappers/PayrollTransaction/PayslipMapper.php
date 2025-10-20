@@ -276,7 +276,7 @@ class PayslipMapper extends AbstractMapper {
         {
             if(is_object($epay)){
                 $epay->basic = $this->basic($epay);
-                $epay->gov_loan = $this->paySlipGovLoan($period_id,$epay->biometric_id);
+                $epay->gov_loan = $this->paySlipGovLoanSG($period_id,$epay->biometric_id);
                 $epay->reg_earnings = $this->regEarnings($epay);
                 $epay->restday = $this->restDay($epay);
                 $epay->legalHol = $this->legalHol($epay);
@@ -682,6 +682,48 @@ class PayslipMapper extends AbstractMapper {
         
     }
 
+        public function paySlipGovLoanSG($period_id,$biometric_id)
+    {
+        //SELECT SUM(amount) AS amount FROM posted_loans WHERE biometric_id = AND period_id = 0;
+        $loantotal = 0;
+
+        
+        $paid = DB::table('posted_loans_sg')->where('biometric_id','=',$biometric_id)
+                ->select(DB::raw("deduction_id,biometric_id,SUM(amount) AS paid_amount"))
+                ->where('period_id','<=',$period_id)
+                ->groupBy('deduction_id');
+
+        $result = $this->model->select(DB::raw("loan_types.description,posted_loans_sg.amount,total_amount-paid.paid_amount AS balance"))
+                ->from('deduction_gov_loans_sg')
+                ->join('posted_loans_sg',function($join){
+                    $join->on('deduction_gov_loans_sg.id','=','posted_loans_sg.deduction_id');
+                    $join->on('deduction_gov_loans_sg.biometric_id','=','posted_loans_sg.biometric_id');
+                    $join->on('deduction_gov_loans_sg.deduction_type','=','posted_loans_sg.deduction_type');
+                })
+                ->leftJoinSub($paid,'paid',function($join){
+                    $join->on('paid.deduction_id','=','deduction_gov_loans_sg.id');
+                })
+                ->join('loan_types','loan_types.id','=','deduction_gov_loans_sg.deduction_type')
+                ->where('posted_loans_sg.biometric_id',$biometric_id)
+                ->where('posted_loans_sg.period_id','=',$period_id)
+                ->get();
+
+        foreach($result as $loan){
+            $loantotal += $loan->amount;
+        }
+
+        // if($biometric_id == 707)
+        // {
+        //     dd($paid->get());
+        // }
+
+        return array(
+            'total' => $loantotal,
+            'list' => $result
+        );
+        
+    }
+
     public function otherEearnings($period_id,$biometric_id)
     {
         $total = 0;
@@ -980,7 +1022,7 @@ class PayslipMapper extends AbstractMapper {
         {
             if(is_object($epay)){
                 $epay->basic = $this->basic($epay);
-                $epay->gov_loan = $this->paySlipGovLoan($period_id,$epay->biometric_id);
+                $epay->gov_loan = $this->paySlipGovLoanSG($period_id,$epay->biometric_id);
                 $epay->reg_earnings = $this->regEarnings($epay);
                 $epay->restday = $this->restDay($epay);
                 $epay->legalHol = $this->legalHol($epay);
