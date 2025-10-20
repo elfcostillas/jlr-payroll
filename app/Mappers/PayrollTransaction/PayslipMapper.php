@@ -285,7 +285,8 @@ class PayslipMapper extends AbstractMapper {
                 $epay->allowances = $this->allowances($epay);
                 $epay->otherEearnings = $this->otherEearningsWeekly($period_id,$epay->biometric_id);
                 $epay->slvl = $this->slvl($epay);
-                $epay->fixedDeduction = $this->fixedDeduction($period_id,$epay->biometric_id);
+                // $epay->fixedDeduction = $this->fixedDeductionSG($period_id,$epay->biometric_id);
+                $epay->fixedDeduction = $this->deductionsWeekly($period_id,$epay->biometric_id);
                 $epay->installments = $this->installments($period_id,$epay->biometric_id);
             }
             
@@ -786,6 +787,38 @@ class PayslipMapper extends AbstractMapper {
         WHERE biometric_id = $biometric_id AND period_id = $period_id";
 
         $result = DB::select($query); 
+
+        foreach($result as $earn)
+        {
+            $total += $earn->amount;
+        }
+        
+        return array(
+            'total' => $total,
+            'list' => $result
+        );
+
+    }
+
+    public function fixedDeductionSG($period_id,$biometric_id)
+    {
+        $total = 0;
+
+        // $query = "SELECT description,amount FROM posted_fixed_deductions 
+        // INNER JOIN deduction_types ON deduction_type = deduction_types.id
+        // WHERE biometric_id = $biometric_id AND period_id = $period_id
+        // UNION ALL
+        // SELECT description,amount FROM posted_onetime_deductions 
+        // INNER JOIN deduction_types ON deduction_type = deduction_types.id
+        // WHERE biometric_id = $biometric_id AND period_id = $period_id";
+
+        $query = "SELECT canteen,deductions,cash_advance,office_account from posted_weekly_compensation
+                    WHERE biometric_id = $biometric_id AND period_id = $period_id
+                ";
+
+        $result = DB::select($query); 
+
+        dd($result);
 
         foreach($result as $earn)
         {

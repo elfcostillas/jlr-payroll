@@ -36,6 +36,20 @@
 </head>
 <body>
 
+    <?php
+            function sumArray($array)
+            {
+                $total = 0;
+
+                foreach($array as $key => $value)
+                {
+                    $total += $value;
+                }
+
+                return $total;
+            }
+    ?>
+
     @foreach($data as $e)
 
         <?php
@@ -283,6 +297,24 @@
                             <td class="pad4" width="30%"  style="text-align:right;padding-right:4px;">{{  ($e->wtax > 0) ? number_format($e->wtax,2) : '-' }}</td>
                         </tr>
                     </table>
+                    @if(sumArray($e->fixedDeduction) > 0)
+
+                    <table border=1 style="border-collapse:collapse;width:100%">
+                        <tr>
+                            <td colspan="3" class="pad4 headings"><b>Fixed and Onetime Deductions</b></td>
+                        </tr>
+
+                        @if($e->fixedDeduction['canteen'] > 0)
+                        <tr>
+                            <td class="pad4" width="70%">Canteen</td>
+                            <td class="pad4" width="30%" style="text-align:right;padding-right:4px;">{{ number_format($e->fixedDeduction['canteen'],2) }}</td>
+                        </tr>
+                        @endif
+
+                    </table>
+                    @endif
+
+                  
                     @if($e->gov_loan['total']>0)
                         <table border=1 style="border-collapse:collapse;width:100%">
                             <tr>
@@ -306,21 +338,7 @@
                             @endforeach
                         </table>
                     @endif
-                    @if($e->fixedDeduction['total']>0)
-                    <table border=1 style="border-collapse:collapse;width:100%">
-                        <tr>
-                            <td colspan="3" class="pad4 headings"><b>Fixed and Onetime Deductions</b></td>
-                        </tr>
-                        @foreach($e->fixedDeduction['list'] as $deduction)
-                            @if($deduction->amount>0)
-                                <tr>
-                                    <td class="pad4" width="70%" >{{ $deduction->description }}</td>
-                                    <td class="pad4" width="30%" style="text-align:right;padding-right:4px;">{{ number_format($deduction->amount,2) }}</td>
-                                </tr>
-                            @endif
-                        @endforeach
-                    </table>
-                    @endif
+               
                     @if($e->installments['total']>0)
                         <table border=1 style="border-collapse:collapse;width:100%">
                             <tr>

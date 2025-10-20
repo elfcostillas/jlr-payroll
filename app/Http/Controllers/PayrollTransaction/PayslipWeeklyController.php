@@ -131,6 +131,7 @@ class PayslipWeeklyController  extends Controller
     {
         $period_label = $this->payslip->getPeriodLabelWeekly($request->period);
         $result = $this->payslip->getDataSG($request->period,$request->div,$request->dept,$request->bio_id);
+    
       
         return view('app.payroll-transaction.payslip.payslip-web-sg',[
             'data' => $result,

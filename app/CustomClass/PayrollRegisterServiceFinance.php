@@ -77,7 +77,7 @@ class PayrollRegisterServiceFinance extends PayrollRegisterService
             }
         }
 
-        return $this->getBasicPay($employee) + $employee->reg_ot_amount + $employee->semi_monthly_allowance + $other_earning;
+        return $this->getBasicPay($employee) + $employee->reg_ot_amount + $employee->semi_monthly_allowance + $other_earning + $employee->rd_hrs_amount;
     }
 
     public function getTotalDeduction($employee)
@@ -141,6 +141,7 @@ class PayrollRegisterServiceFinance extends PayrollRegisterService
 
             case 'semi_monthly_allowance' :
             case 'reg_ot_amount' :
+            case 'rd_hrs_amount' :
             case 'net_pay':
                     foreach($department->employees as $employee)
                     {

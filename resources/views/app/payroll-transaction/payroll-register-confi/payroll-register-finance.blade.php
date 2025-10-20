@@ -70,6 +70,7 @@
                 <td >Basic Salary (Reg Hours)</td>
                 <td >BELS</td>
                 <td >OT REGULAR</td>
+                <td >REST DAY</td>
                 @foreach ($data->fixed_comp_hcols as $fxcols)
                     <td>{{ $fxcols->description }}</td>
                 @endforeach
@@ -115,6 +116,7 @@
                                 <td> {{ $payroll->getBasicPay($employee) }}</td>
                                 <td> {{ $employee->semi_monthly_allowance }}</td>
                                 <td> {{ $employee->reg_ot_amount }}</td>
+                                <td> {{ $employee->rd_hrs_amount }}</td>
                                 @foreach ($data->fixed_comp_hcols as $fxcols) <!-- Fixed Compensation -->
                                     <td class="r"> {{ (array_key_exists($fxcols->compensation_type,$employee->other_earning) ? $employee->other_earning[$fxcols->compensation_type] : '') }}
                                 @endforeach
@@ -157,6 +159,7 @@
                             <td> {{ $payroll->getDepartmentTotal('basic_pay',$department) }}</td>
                             <td> {{ $payroll->getDepartmentTotal('semi_monthly_allowance',$department) }}</td>
                             <td> {{ $payroll->getDepartmentTotal('reg_ot_amount',$department) }}</td>
+                            <td> {{ $payroll->getDepartmentTotal('rd_hrs_amount',$department) }}</td>
                             @foreach ($data->fixed_comp_hcols as $fxcols) <!-- Fixed Compensation -->
                                 <td> {{ $payroll->getDepartmentTotalCompensation($fxcols,$department) }} </td>
                             @endforeach
@@ -203,7 +206,8 @@
                 <td> ({{ $payroll->getOverAllCount($data->data) }}) </td>
                 <td> {{ $payroll->getOverAllTotal('basic_pay',$data->data) }}</td>
                 <td> {{ $payroll->getOverAllTotal('semi_monthly_allowance',$data->data) }}</td>
-                    <td> {{ $payroll->getOverAllTotal('reg_ot_amount',$data->data) }}</td>
+                <td> {{ $payroll->getOverAllTotal('reg_ot_amount',$data->data) }}</td>
+                <td> {{ $payroll->getOverAllTotal('rd_hrs_amount',$data->data) }}</td>
                     @foreach ($data->fixed_comp_hcols as $fxcols)
                         <td> {{ $payroll->getOverAllTotalCompensation($fxcols,$data->data) }} </td>
                     @endforeach
@@ -254,6 +258,7 @@
                 <td >Basic Salary (Reg Hours)</td>
                 <td >BELS</td>
                 <td >OT REGULAR</td>
+                <td >REST DAY</td>
                 @foreach ($data->fixed_comp_hcols as $fxcols)
                     <td>{{ $fxcols->description }}</td>
                 @endforeach
@@ -294,6 +299,7 @@
                             <td> {{ $payroll->getDepartmentTotal('basic_pay',$department) }}</td>
                             <td> {{ $payroll->getDepartmentTotal('semi_monthly_allowance',$department) }}</td>
                             <td> {{ $payroll->getDepartmentTotal('reg_ot_amount',$department) }}</td>
+                            <td> {{ $payroll->getDepartmentTotal('rd_hrs_amount',$department) }}</td>
                             @foreach ($data->fixed_comp_hcols as $fxcols) <!-- Fixed Compensation -->
                                 <td> {{ $payroll->getDepartmentTotalCompensation($fxcols,$department) }} </td>
                             @endforeach
@@ -342,7 +348,8 @@
                 <td> ({{ $payroll->getOverAllCount($data->data) }}) </td>
                 <td> {{ $payroll->getOverAllTotal('basic_pay',$data->data) }}</td>
                 <td> {{ $payroll->getOverAllTotal('semi_monthly_allowance',$data->data) }}</td>
-                    <td> {{ $payroll->getOverAllTotal('reg_ot_amount',$data->data) }}</td>
+                <td> {{ $payroll->getOverAllTotal('reg_ot_amount',$data->data) }}</td>
+                <td> {{ $payroll->getOverAllTotal('rd_hrs_amount',$data->data) }}</td>
                     @foreach ($data->fixed_comp_hcols as $fxcols)
                         <td> {{ $payroll->getOverAllTotalCompensation($fxcols,$data->data) }} </td>
                     @endforeach
@@ -392,6 +399,8 @@
                 <td >Basic Salary (Reg Hours)</td>
                 <td >BELS</td>
                 <td >OT REGULAR</td>
+                <td >REST DAY</td>
+
                 @foreach ($data->fixed_comp_hcols as $fxcols)
                     <td>{{ $fxcols->description }}</td>
                 @endforeach
@@ -431,6 +440,7 @@
                             <td> {{ $payroll->getOverAllTotalDivision('basic_pay',$division) }}</td>
                             <td> {{ $payroll->getOverAllTotalDivision('semi_monthly_allowance',$division) }}</td>
                             <td> {{ $payroll->getOverAllTotalDivision('reg_ot_amount',$division) }}</td>
+                            <td> {{ $payroll->getOverAllTotalDivision('rd_hrs_amount',$division) }}</td>
                             @foreach ($data->fixed_comp_hcols as $fxcols) <!-- Fixed Compensation -->
                                 <td> {{ $payroll->getOverAllTotalCompensationDivision($fxcols,$division) }} </td>
                             @endforeach
@@ -480,7 +490,8 @@
                 <td> ({{ $payroll->getOverAllCount($data->data) }}) </td>
                 <td> {{ $payroll->getOverAllTotal('basic_pay',$data->data) }}</td>
                 <td> {{ $payroll->getOverAllTotal('semi_monthly_allowance',$data->data) }}</td>
-                    <td> {{ $payroll->getOverAllTotal('reg_ot_amount',$data->data) }}</td>
+                <td> {{ $payroll->getOverAllTotal('reg_ot_amount',$data->data) }}</td>
+                <td> {{ $payroll->getOverAllTotal('rd_hrs_amount',$data->data) }}</td>
                     @foreach ($data->fixed_comp_hcols as $fxcols)
                         <td> {{ $payroll->getOverAllTotalCompensation($fxcols,$data->data) }} </td>
                     @endforeach
