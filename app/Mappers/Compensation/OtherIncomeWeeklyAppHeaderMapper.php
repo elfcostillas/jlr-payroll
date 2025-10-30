@@ -67,7 +67,7 @@ SELECT period_id,earnings,deductions,biometric_id FROM unposted_weekly_compensat
                     })
                     //->where('unposted_weekly_compensation.period_id',$period_id)
                     ->where('employees.exit_status',1)
-                    ->where('employees.pay_type',3);
+                    ->where('employees.emp_level',6);
 
         return $employees->get();
     }   
