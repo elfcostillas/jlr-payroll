@@ -1440,7 +1440,8 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
             ->join('payroll_period',function($join){
                 $join->whereRaw('dtr_date between payroll_period.date_from and payroll_period.date_to');
             })
-            ->whereIn('pay_type',[1,2])
+            // ->whereIn('pay_type',[1,2])
+            ->where('emp_level','<',6)
             ->where('exit_status',1)
             ->where('edtr.biometric_id',$biometric_id)
             ->where('payroll_period.id',$period_id)
@@ -1452,7 +1453,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
             ->join('payroll_period_weekly',function($join){
                 $join->whereRaw('dtr_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
             })
-            ->where('pay_type',3)
+            ->where('emp_level',6)
             ->where('exit_status',1)
             ->where('edtr.biometric_id',$biometric_id)
             ->where('payroll_period_weekly.id',$period_id)
@@ -1728,7 +1729,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                     ->where('dept_id','=',$dept->id)
 
                     ->where('employees.exit_status','=',1)
-                    ->where('employees.pay_type','<>',3)
+                    ->where('employees.emp_level','<',6)
                     ->where('employees.date_hired','<',$date_to)
                     ->leftJoinSub($awol,'awol',function($join) { //use ($type)
                         $join->on('awol.biometric_id','=','employees.biometric_id');
@@ -1965,7 +1966,8 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                             })  
                             ->join('employee_names_vw','employee_names_vw.biometric_id','=','employees.biometric_id')
                             ->select('employees.biometric_id','employee_names_vw.employee_name')
-                            ->where('employees.exit_status','=',1)->where('pay_type','=',3)
+                            ->where('employees.exit_status','=',1)
+                            ->where('emp_level','=',6)
                             ->whereRaw("COALESCE(tmp.loc_id,employees.location_id) = ". $location->id)
                             ->get();
 
@@ -2006,7 +2008,8 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                     ->leftJoin('emp_pay_types','emp_pay_types.id','=','pay_type')
                     ->leftJoin('work_schedules','sched_mtwtf','=','work_schedules.id')
                     ->where('exit_status',1)
-                    ->where('pay_type','!=',3)
+                    // ->where('pay_type','!=',3)
+                    ->where('emp_level','<',6)
                     ->where('job_title_id','!=',130)
                     ->get();
         //work_schedules ON sched_mtwtf = work_schedules.id
