@@ -80,7 +80,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
             */
             $empWithPunch = $this->model->select('employees.biometric_id','sched_mtwtf','sched_sat')->from('employees')
             ->leftJoin('work_schedules_default','employees.dept_id','=','work_schedules_default.dept_id')
-            ->whereIn('emp_level',[1,2,3,4,5])
+            ->whereIn('employees.emp_level',[1,2,3,4,5])
             ->where('exit_status',1)
             //->where('payroll_period.id',$period_id)
             ->distinct()
@@ -95,7 +95,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
             //     $join->whereRaw('punch_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
             // })
             ->leftJoin('work_schedules_default','employees.dept_id','=','work_schedules_default.dept_id')
-            ->where('emp_level',6)
+            ->where('employees.emp_level',6)
             ->where('exit_status',1)
             //->where('payroll_period_weekly.id',$period_id)
             ->distinct()
@@ -158,8 +158,8 @@ class DailyTimeRecordMapper extends AbstractMapper {
                             })
                             ->join('departments','employees.dept_id','=','departments.id')
                             ->join('divisions','employees.division_id','=','divisions.id')
-                            // ->whereIn('emp_level',[1,2])
-                            ->where('emp_level','<',6)
+                            // ->whereIn('employees.emp_level',[1,2])
+                            ->where('employees.emp_level','<',6)
                             ->where('exit_status',1)
                             ->where('payroll_period.id',$period_id)
                             ->distinct()
@@ -173,7 +173,7 @@ class DailyTimeRecordMapper extends AbstractMapper {
                             ->join('payroll_period_weekly',function($join){
                                 $join->whereRaw('dtr_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
                             })
-                            ->where('emp_level',6)
+                            ->where('employees.emp_level',6)
                             ->where('exit_status',1)
                             ->where('payroll_period_weekly.id',$period_id)
                             ->leftJoin('weekly_tmp_locations',function($join) use ($period_id){
@@ -238,8 +238,8 @@ class DailyTimeRecordMapper extends AbstractMapper {
                         })
                         ->join('departments','employees.dept_id','=','departments.id')
                         ->join('divisions','employees.division_id','=','divisions.id')
-                        // ->whereIn('emp_level',[1,2])
-                        ->where('emp_level','<',5)
+                        // ->whereIn('employees.emp_level',[1,2])
+                        ->where('employees.emp_level','<',5)
                         ->where('exit_status',1)
                         ->where('payroll_period.id',$period_id)
                         ->distinct()
@@ -1441,7 +1441,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                 $join->whereRaw('dtr_date between payroll_period.date_from and payroll_period.date_to');
             })
             // ->whereIn('pay_type',[1,2])
-            ->where('emp_level','<',6)
+            ->where('employees.emp_level','<',6)
             ->where('exit_status',1)
             ->where('edtr.biometric_id',$biometric_id)
             ->where('payroll_period.id',$period_id)
@@ -1453,7 +1453,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
             ->join('payroll_period_weekly',function($join){
                 $join->whereRaw('dtr_date between payroll_period_weekly.date_from and payroll_period_weekly.date_to');
             })
-            ->where('emp_level',6)
+            ->where('employees.emp_level',6)
             ->where('exit_status',1)
             ->where('edtr.biometric_id',$biometric_id)
             ->where('payroll_period_weekly.id',$period_id)
@@ -1802,7 +1802,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
         $employees = DB::table('employees')
         ->where('exit_status',1)
         ->where('pay_type','!=',3)
-        ->where('emp_level','!=',6)
+        ->where('employees.emp_level','!=',6)
         // ->where('biometric_id',1807)
         ->get();
 
@@ -1967,7 +1967,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                             ->join('employee_names_vw','employee_names_vw.biometric_id','=','employees.biometric_id')
                             ->select('employees.biometric_id','employee_names_vw.employee_name')
                             ->where('employees.exit_status','=',1)
-                            ->where('emp_level','=',6)
+                            ->where('employees.emp_level','=',6)
                             ->whereRaw("COALESCE(tmp.loc_id,employees.location_id) = ". $location->id)
                             ->get();
 
@@ -2009,7 +2009,7 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
                     ->leftJoin('work_schedules','sched_mtwtf','=','work_schedules.id')
                     ->where('exit_status',1)
                     // ->where('pay_type','!=',3)
-                    ->where('emp_level','<',6)
+                    ->where('employees.emp_level','<',6)
                     ->where('job_title_id','!=',130)
                     ->get();
         //work_schedules ON sched_mtwtf = work_schedules.id
