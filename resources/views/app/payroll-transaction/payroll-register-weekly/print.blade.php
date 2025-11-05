@@ -12,13 +12,13 @@
         .pr4 {
             text-align : right;
             padding-right : 4px;
-            width: 44px; /* 52*/
+            width: 42px; /* 52*/
         }
 
         .pr3 {
             text-align : right;
             padding-right : 4px;
-            width: 44px;
+            width: 42px;
         }
 
         .circle {
@@ -74,7 +74,7 @@
 
         $total_ctr = 0;
 
-        $starting_count = ($period->cut_off == 1) ? 16 : 17 ;
+        $starting_count = ($period->cut_off == 1) ? 17 : 18 ;
 
         if($sil_flag->vl_wpay >0){
             $starting_count += 2;
@@ -288,7 +288,7 @@
                      
                      
 
-                        <!-- <th>Cash Advance</th> -->
+                        <th>Cash Advance</th>
                         <th> Canteen </th>
                         <!-- <th> PPE </th> -->
                         <!-- <th> Office Acct. </th> -->
@@ -762,7 +762,7 @@
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->sss_prem>0) ? number_format($employee->sss_prem,2) : ''; }}</td> 
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->phil_prem>0) ? number_format($employee->phil_prem,2) : ''; }}</td> 
                         @endif
-                        <!-- <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['cash_advance']>0) ? number_format($employee->otherEarnings['cash_advance'],2) : ''; }}</td> -->
+                        <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['cash_advance']>0) ? number_format($employee->otherEarnings['cash_advance'],2) : ''; }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['canteen']>0) ? number_format($employee->otherEarnings['canteen'],2) : ''; }}</td>
                         <!-- <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['deductions']>0) ? number_format($employee->otherEarnings['deductions'],2) : ''; }}</td>-->
                         <!-- <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['office_account']>0) ? number_format($employee->otherEarnings['office_account'],2) : ''; }}</td>  -->
@@ -846,7 +846,7 @@
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{($location_sss > 0) ? number_format($location_sss,2) : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{($location_phic > 0) ? number_format($location_phic,2) : '' }}</td>
                     @endif
-                    <!-- <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_cash_advance > 0) ? number_format($location_cash_advance,2) : '' }}</td> -->
+                    <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_cash_advance > 0) ? number_format($location_cash_advance,2) : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_canteen_total > 0) ? number_format($location_canteen_total,2) : '' }}</td>
                     <!-- <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_ppe > 0) ? number_format($location_ppe,2) : '' }}</td>-->
                     <!-- <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_office_account > 0) ? number_format($location_office_account,2) : '' }}</td>  -->
@@ -934,7 +934,7 @@
            
           
              
-            <!-- <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_ca_total,2) }}</td> -->
+            <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_ca_total,2) }}</td>
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_cantenn_total,2) }}</td>
             <!-- <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_ppe,2) }}</td> -->
             <!-- <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_office_account,2) }}</td> -->
