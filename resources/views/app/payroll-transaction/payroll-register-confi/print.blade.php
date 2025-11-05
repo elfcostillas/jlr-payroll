@@ -8,8 +8,8 @@
     <style>
         @page {
             margin-top: 160px;
-            margin-left: 15px;
-            margin-right: 15px;
+            margin-left: 8px;
+            margin-right: 8px;
             margin-bottom: 24px;
           
         }
@@ -27,11 +27,12 @@
         }
 
         .pad4 {
-            padding : 0px 4px;
+            padding : 0px 2px;
         }
 
         .vtop {
             vertical-align: top;
+          
         }
 
         .b {
@@ -98,7 +99,7 @@
         
         ?>
 
-        <table id="main" border=1 style="width:100%;border-collapse:collapse;font-size :5pt;">
+        <table id="main" border=1 style="width:100%;border-collapse:collapse;font-size :4pt;">
             <tr>
                 <td class="vtop c b">No.</td>
                 <td class="vtop c b">Name</td>
