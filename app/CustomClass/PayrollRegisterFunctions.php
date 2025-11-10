@@ -162,7 +162,7 @@ class PayrollRegisterFunctions
                 ->where('col_type','=',$type)
                 ->whereIn('var_name',$this->cols_with_value)
                 // ->orderBy('sort','asc')
-                ->orderBy('id','asc')
+                ->orderBy('sort','asc')
                 ->get();
     }
 
