@@ -117,7 +117,7 @@
                                     
                                 </tr>
                                 <tr>
-                                    <td colspan="2"><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download_weekly'><i class="fas fa-download"></i> Download Employee List</button></td>
+                                    <td colspan="2"><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download_sg'><i class="fas fa-download"></i> Download Employee List</button></td>
                                     <td colspan="2"></td>
                                     <td colspan="4"></td>
                                 </tr>

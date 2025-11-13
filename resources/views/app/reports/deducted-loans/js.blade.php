@@ -159,9 +159,9 @@
                     download_sg : function()
                     {
                         // process();
-                        let period =  $("#payroll_period").data("kendoDropDownList").value();
-                        let fy_year =  $("#fy_year_jlr").data("kendoDropDownList").value();
-                        let loan_type =  $("#loan_tye").data("kendoDropDownList").value();
+                        let period =  $("#payroll_period_sg").data("kendoDropDownList").value();
+                        let fy_year =  $("#fy_year_sg").data("kendoDropDownList").value();
+                        let loan_type =  $("#loan_tye_sg").data("kendoDropDownList").value();
 
                         let url = `govt-loans/download/${period}/${fy_year}/${loan_type}/sg`;
                         window.open(url);
