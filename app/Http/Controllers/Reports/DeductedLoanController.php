@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Reports;
 
+use App\Excel\DeductedGovtLoan;
 use App\Http\Controllers\Controller;
 use App\Mappers\TimeKeepingMapper\PayrollPeriodMapper;
 use App\Mappers\TimeKeepingMapper\PayrollPeriodWeeklyMapper;
 use App\Repository\DeductedLoansRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
+use Maatwebsite\Excel\Facades\Excel;
 
 class DeductedLoanController extends Controller
 {
@@ -17,14 +20,18 @@ class DeductedLoanController extends Controller
     public $period_sg;
     public $repo;
 
+    private $excel;
+
     public function __construct(
         PayrollPeriodMapper $period,
         PayrollPeriodWeeklyMapper $perid_sg,
-        DeductedLoansRepository $repo
+        DeductedLoansRepository $repo,
+        DeductedGovtLoan $excel
     ) {
         $this->period = $period;
         $this->period_sg = $perid_sg;
         $this->repo = $repo;
+        $this->excel = $excel;
     }
 
     public function index()
@@ -69,14 +76,16 @@ class DeductedLoanController extends Controller
         $periods = $this->periodFactory($array)->pluck('id');
 
         $deducted_loans = $this->repo->getDeductedLoans($periods,$array);
-
-        return view('app.reports.deducted-loans.export',[
-            'label' => $label,
-            'array' => $array,
-            'data' => $deducted_loans
-        ]);
-
         
+        // return view('app.reports.deducted-loans.export',[
+        //     'label' => $label,
+        //     'array' => $array,
+        //     'data' => $deducted_loans
+        // ]);
+
+        $this->excel->setValues($label,$array,$deducted_loans);
+
+        return Excel::download($this->excel,'DeductedGovtLoans.xlsx');
         
     }
 
