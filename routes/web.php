@@ -389,6 +389,8 @@ Route::middleware('auth')->prefix('employee-files')->group(function(){
 
         Route::get('get-emp-rates/{id}',[RatesController::class,'getRates']);
         Route::post('create-emp-rates',[RatesController::class,'createRates']);
+
+        Route::post('upload-photo',[EmployeeController::class,'uploadPhoto']);
         
     });
 
@@ -1000,6 +1002,15 @@ Route::get('leave-credits-maker',function(){
 });
 
 Route::get('send-to-eportal',[EmployeeController::class,'sendToEportal']);
+
+Route::get('upload-test',function(){
+    $path = storage_path('app/public/photos');
+
+    if (!is_dir($path)) {
+        mkdir($path, 0755, true);
+    }
+    
+});
 
 
 // Route::get('process-sheet4',function(){

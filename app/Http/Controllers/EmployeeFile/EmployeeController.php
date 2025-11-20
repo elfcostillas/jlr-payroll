@@ -13,6 +13,7 @@ use App\Mappers\EmployeeFileMapper\OnlineRequestUserMapper;
 use App\Mappers\EmployeeFileMapper\RatesMapper;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class EmployeeController extends Controller
 {
@@ -288,6 +289,31 @@ class EmployeeController extends Controller
             $result = (object) array('error'=>"Record not found.");
         }
        return response()->json($result);
+
+    }
+
+    public function uploadPhoto(Request $request)
+    {
+        // $path = storage_path('photos');
+        // if (!is_dir($path)) {
+        //     mkdir($path, 0755, true);
+        // }
+
+        // $file = $request->file('files');
+        // $path = Storage::disk('public')->put('photos',$file);
+        if (!Storage::disk('public')->exists('photos')) {
+            Storage::disk('public')->makeDirectory('photos');
+        }
+
+        $originalName = $request->file('files')->getClientOriginalName();
+        $extension = $request->file('files')->getClientOriginalExtension();
+
+        $path = $request->file('files')->store('photos','public');
+        $filename = basename($path);
+
+        DB::table('employees')->where('id','=',$request->employee_id)->update(['emp_photo'=>$filename]);
+
+        // dd( $filename,$request->employee_id);
 
     }
 

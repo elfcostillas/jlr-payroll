@@ -311,8 +311,9 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
                     ->join('employees','edtr.biometric_id','=','employees.biometric_id')
                    
                     ->where('payroll_period_weekly.id','=',$period_id)
-                    ->whereIn('pay_type',[3])
+                    ->whereIn('pay_type',[2,3])
                     ->where('exit_status',1)
+                    ->where('emp_level',6)
                     // ->whereNotNull('time_in')
                     // ->whereNotNull('time_out')
                     // ->where('time_in','!=','00:00')
@@ -342,14 +343,14 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
                                 daily_allowance'));
                     // ->havingRaw('SUM(ndays) > ?', [0]);
                                 
-            if($emp_level=='non-confi')
-            {
-                $result = $result->where('emp_level','>=',5);
-            }
-            else
-            {
-                $result = $result->where('emp_level','<',5);
-            }
+            // if($emp_level=='non-confi')
+            // {
+            //     $result = $result->where('emp_level','>=',5);
+            // }
+            // else
+            // {
+            //     $result = $result->where('emp_level','<',5);
+            // }
            
 
         return $result->get();

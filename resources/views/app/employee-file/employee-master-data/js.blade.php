@@ -6,6 +6,8 @@
     <script>
         $(document).ready(function(){
 
+            var token = $('meta[name="_token"]').attr('content');  
+
             let emp_stat =<?php echo json_encode($emp_stat) ?>;
             let exit_stat =<?php echo json_encode($exit_stat) ?>;
             let pay_type =<?php echo json_encode($pay_type) ?>;
@@ -90,12 +92,14 @@
                     retired : null,
                     manual_wtax : null,
                     fixed_rate : null,
-                    alternate_sat
+                    alternate_sat : null,
+                    emp_photo : null
 
             };
 
             var viewModel = kendo.observable({ 
                 selected : null,
+                img_path : null,
                 form : {
                     model : {
                         id : null,
@@ -146,7 +150,8 @@
                         retired : null,
                         manual_wtax : null,
                         fixed_rate : null,
-                        alternate_sat
+                        alternate_sat : null,
+                        emp_photo : null
                     },
                     mirror : {
                         is_daily : false,
@@ -456,6 +461,35 @@
                                 }
                             }).data("kendoWindow").center().open();
                         }
+                    },
+                    photos : function(e)
+                    {
+                        if(viewModel.form.model.id){
+
+                            // console.log(viewModel.form.model.emp_photo);
+                            let baseParh = "{{ asset('storage/photos') }}/";
+                            // console.log(baseParh+viewModel.form.model.emp_photo)
+                            viewModel.set('img_path',baseParh+viewModel.form.model.emp_photo);
+                            var myWindow3 = $("#photoPop");
+                            
+                            myWindow3.kendoWindow({
+                                width: "440", //1124 - 1152
+                                height: "560",
+                                title: "Photo",
+                                visible: false,
+                                animation: false,
+                                actions: [
+                                    "Pin",
+                                    "Minimize",
+                                    "Maximize",
+                                    "Close"
+                                ],
+                                close: viewModel.buttonHandler.closePop,
+                                position : {
+                                    top : 0
+                                }
+                            }).data("kendoWindow").center().open();
+                        }
                     }
                 },
                 functions : {
@@ -523,6 +557,18 @@
 
                         viewModel.ds.ratesgrid.transport.options.read.url = `employee-master-data/get-emp-rates/${data.id}`;
                         viewModel.ds.ratesgrid.read();
+                    },
+                    readAfterUpload : async function(id)
+                    {
+                        let url  = `employee-master-data/read/${id}`;
+                        await read(url,viewModel);
+
+                        console.log(viewModel.form.model.emp_photo);
+
+                        // let basePath = "{{ asset('storage/photos') }}/";
+                        // viewModel.set('img_path',basePath+viewModel.form.model.emp_photo);
+                        // console.log(viewModel.form.model.emp_photo);
+                        // $("#emp_photo").attr('src',viewModel.img_path);
                     }
                    
 
@@ -883,6 +929,56 @@
 
             $("#daily_allowance").kendoNumericTextBox({  decimals: 2});
             $("#monthly_allowance").kendoNumericTextBox({  decimals: 2});
+
+            $("#files").kendoUpload({
+                async: {
+                    saveUrl: "employee-master-data/upload-photo",
+                    autoUpload: false
+                },
+                validation: {
+                    maxFileSize: 20000000,
+                    allowedExtensions: [".jpg"]
+                },
+                upload: onUpload,
+                success : async function(){
+                    await viewModel.functions.readAfterUpload(viewModel.form.model.id);
+                    // let path = img_path
+                    // $("#emp_photo").attr("src",img_path)
+                    setTimeout(function(){
+                        let basePath = "{{ asset('storage/photos') }}/";
+                        viewModel.set('img_path',basePath+viewModel.form.model.emp_photo);
+                        console.log(viewModel.form.model.emp_photo);
+                        $("#emp_photo").attr('src',viewModel.img_path);
+                    },2000);
+                    
+
+                    // let basePath = "{{ asset('storage/photos') }}/";
+                    // viewModel.set('img_path',basePath+viewModel.form.model.emp_photo);
+                    // console.log(viewModel.form.model.emp_photo);
+                    // $("#emp_photo").attr('src',viewModel.img_path);
+                }
+            });
+
+            function onUpload(e) {
+                var xhr = e.XMLHttpRequest;
+                if (xhr) {
+                    xhr.addEventListener("readystatechange", function (e) {
+                        if (xhr.readyState == 1 /* OPENED */) {
+                            xhr.setRequestHeader("X-CSRF-TOKEN", token);
+                        }
+                    });
+
+                    e.data = {
+                        employee_id : viewModel.form.model.id
+                    };
+
+                    
+
+                    // let url  = `employee-master-data/read/${data.id}`;
+                    // viewModel.functions.prepareForm(data);
+                    // read(url,viewModel);
+                }
+            }
             
             //<input type="checkbox" data-bind="checked: isChecked" /> <input class="form-check-input" type="checkbox">
 
@@ -892,6 +988,7 @@
                     { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
                     { id : 'copy', type: "button", text: "Copy to Online Request", icon: 'copy', click : viewModel.buttonHandler.copy },
                     { id : 'copy2', type: "button", text: "Manage Rates", icon: 'dollar', click : viewModel.buttonHandler.rates },
+                    { id : 'photos', type: "button", text: "View Photo", icon: 'img', click : viewModel.buttonHandler.photos },
                 ]
             });
 

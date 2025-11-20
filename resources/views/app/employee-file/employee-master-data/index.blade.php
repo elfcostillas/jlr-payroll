@@ -77,6 +77,21 @@
             <div id="ratePop" style="display:none ;background-color:#212529;">
                 <div id="ratesTable"></div>
             </div>
+            <div id="photoPop" style="display:none ;background-color:#212529;">
+                <div style="width:256px;margin : 0 auto;" >
+                    <!-- <img width="256" src="{{ asset('storage/photos/default.jpg') }}" alt=""> -->
+                    <!-- <img data-bind="attr: { src: img_path(form.model.emp_photo) }" style="width:120px;"> -->
+                    <img id="emp_photo" data-bind="attr: { src: img_path }" style="width:256px;">
+
+                    <div style="margin-top: 8px; font-size:8pt;">
+                        <div class="demo-section">
+                            <input name="files" id="files" type="file" />
+                            
+                            <meta name="_token" content="{!! csrf_token() !!}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div id="pop" style="display:none;background-color:#212529;"><!--f8f9fa  #343a40 #212529 2d3035-->
                 <div id="toolbar"></div>

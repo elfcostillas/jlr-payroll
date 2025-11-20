@@ -95,6 +95,11 @@
                     return number_format($n,2);
                 }
             }
+                    
+            function convert_hrs_to_days($hrs)
+            {
+                return ($hrs == '' || $hrs == 0) ? '' : $hrs / 8;
+            }
 
         
         ?>
@@ -157,7 +162,12 @@
                                 <td class="r">{{ custom_format($employee->{$bcols->var_name}) }}</td>
                                 @endforeach
                                 @foreach ($data->gross_cols as $gcols)
-                                    <td class="r">{{ custom_format($employee->{$gcols->var_name} )}}</td>
+                                    @if (in_array($gcols->var_name,['vl_wpay','sl_wpay','absences']))
+                                        <td class="r">{{ convert_hrs_to_days($employee->{$gcols->var_name} )}}</td>
+                                    @else
+                                        <td class="r">{{ custom_format($employee->{$gcols->var_name} )}}</td>
+                                    @endif
+                                   
                                 @endforeach
                                 
                                 @foreach ($data->fixed_comp_hcols as $fxcols) <!-- Fixed Compensation -->
@@ -193,7 +203,14 @@
                                 <td class="r b">{{ custom_format($data->computeTotalByDept($department,$bcols)) }}</td>
                             @endforeach
                             @foreach ($data->gross_cols as $gcols)
-                                <td class="r b">{{ custom_format($data->computeTotalByDept($department,$gcols) )}}</td>
+                                @if (in_array($gcols->var_name,['vl_wpay','sl_wpay','absences']))
+                                    
+                                    <td class="r b">{{ convert_hrs_to_days($data->computeTotalByDept($department,$gcols) )}}</td>
+                                @else
+                                    <td class="r b">{{ custom_format($data->computeTotalByDept($department,$gcols) )}}</td>
+                                @endif
+
+                                <!-- <td class="r b">{{ custom_format($data->computeTotalByDept($department,$gcols) )}}</td> -->
                             @endforeach
                             @foreach ($data->fixed_comp_hcols as $fxcols) <!-- Fixed Compensation -->
                                 <td class="r b"> {{ custom_format($data->computeTotalOtherEarningByDept($department,$fxcols)) }} </td>
@@ -226,7 +243,15 @@
                         <td class="r b">{{ custom_format($data->computeTotalByDivisionV2($data,$bcols)) }}</td>
                     @endforeach
                     @foreach ($data->gross_cols as $gcols)
-                        <td class="r b">{{ custom_format($data->computeTotalByDivisionV2($data,$gcols) )}}</td>
+
+                        <!-- <td class="r b">{{ custom_format($data->computeTotalByDivisionV2($data,$gcols) )}}</td>
+                          -->
+                         @if (in_array($gcols->var_name,['vl_wpay','sl_wpay','absences']))
+                                    
+                            <td class="r b">{{ convert_hrs_to_days($data->computeTotalByDivisionV2($data,$gcols) )}}</td>
+                        @else
+                            <td class="r b">{{ custom_format($data->computeTotalByDivisionV2($data,$gcols) )}}</td>
+                        @endif
                     @endforeach
                     @foreach ($data->fixed_comp_hcols as $fxcols) <!-- Fixed Compensation -->
                         <td class="r b"> {{ custom_format($data->computeTotalOtherEarningByDivisionV2($data,$fxcols)) }} </td>
