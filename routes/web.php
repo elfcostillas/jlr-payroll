@@ -70,6 +70,7 @@ use App\Http\Controllers\Reports\TardinessReportsController;
 use App\Http\Controllers\Memo\TardinessMemoController;
 use App\Http\Controllers\PayrollTransaction\PayslipConfiController;
 use App\Http\Controllers\PayrollTransaction\ThirteenthMonthController;
+use App\Http\Controllers\PayrollTransaction\ThirteenthMonthJLRController;
 use App\Http\Controllers\Reports\AttendanceReportController;
 use App\Http\Controllers\Reports\DeductedLoanController;
 use App\Http\Controllers\Reports\JLRContributionsController;
@@ -886,7 +887,16 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::get('download-banktransmittal-conso/{year}',[ThirteenthMonthController::class,'conso_bank_transmittal']);
         
     });
+
+    Route::prefix('thirteenth-month-confi')->middleware('access:payroll-transaction/thirteenth-month-confi')->group(function(){
+        Route::get('/',[ThirteenthMonthJLRController::class,'index_confi']);
+        Route::get('show-table/{year}/{month}',[ThirteenthMonthJLRController::class,'showTable']);
+
+        Route::post('insert-or-update',[ThirteenthMonthJLRController::class,'insertOrUpdate']);
+
+    });
 });
+
 
 
 Route::middleware('auth')->prefix('memo')->group(function(){
