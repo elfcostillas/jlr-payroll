@@ -121,12 +121,31 @@ class ThirteenthMonthMapper extends AbstractMapper
 
     public function buildDataJLRConfi($year,$months)
     {
+        DB::table('thirteenth_month')
+            ->where('pyear' ,$year)
+            ->where('semi_annual' ,$months)
+            ->where('user_id',Auth::user()->id)
+            ->where('stat','=','DRAFT')
+            ->delete();
+        
         $employees = $this->getConfi()->get();
         
-
         foreach($employees as $employee)
         {
             $e = $this->employeeJLRFactory($employee,$year,$months);
+
+            if($e){
+                DB::table('thirteenth_month')->insert([
+                    'user_id' => Auth::user()->id,
+                    'pyear' => $year,
+                    'semi_annual' => $months,
+                    'biometric_id' => $e->getBiometricID(),
+                    'net_pay' => $e->getNetPay(),
+                    'gross_pay' => $e->getGrossPay(),
+                    'created_on' => now(),
+                    'emp_level' => 'confi']);
+            }
+
             $employee->thirteenth_pay = $e;
         }
 
@@ -328,6 +347,28 @@ class ThirteenthMonthMapper extends AbstractMapper
         return $result->get();
     }
 
+    public function getPostedJLR($year,$month,$emp_level)
+    {
+       
+        $result = DB::table('thirteenth_month')->select(DB::raw('employee_names_vw.employee_name,employees.bank_acct,thirteenth_month.net_pay'))
+        ->leftJoin('employees','thirteenth_month.biometric_id','=','employees.biometric_id')
+        ->leftJoin('employee_names_vw','thirteenth_month.biometric_id','=','employee_names_vw.biometric_id')
+        ->where('pyear','=',$year)
+        ->where('semi_annual','=',$month)
+        ->where('stat','POSTED')
+        ->orderBy('lastname','ASC')
+        ->orderBy('firstname','ASC');
+
+        if($emp_level == 'confi')
+        {
+            $result->where('employees.emp_level','<','5');
+        }else{
+            $result->where('employees.emp_level','=','5');
+        }
+
+        return $result->get();
+    }
+
     public function getConsoPosted($cyear)
     {
        
@@ -382,6 +423,21 @@ class ThirteenthMonthMapper extends AbstractMapper
         {
             $result->where('location_id','=',$location);
         }
+
+        return $result->get();
+    }
+
+    public function getNetpayJLR($year,$month,$emp_level)
+    {
+     
+        $result = DB::table('thirteenth_month')
+            ->leftJoin('employees','employees.biometric_id','=','thirteenth_month.biometric_id')
+            ->leftJoin('employee_names_vw','employee_names_vw.biometric_id','=','thirteenth_month.biometric_id')
+            ->select(DB::raw('thirteenth_month.net_pay,thirteenth_month.biometric_id,employee_names_vw.employee_name'))
+            ->where('stat','POSTED')
+            ->where('semi_annual',$month)
+            ->where('thirteenth_month.emp_level',$emp_level)
+            ->where('pyear',$year);
 
         return $result->get();
     }
@@ -520,6 +576,48 @@ class ThirteenthMonthMapper extends AbstractMapper
                 ]
             );
     }
+
+    public function isPostedJLR($year,$month,$emp_level)
+    {
+        $result = DB::table("thirteenth_month")
+                ->where('stat','=','POSTED')
+                ->where('pyear','=',$year)
+                ->where('semi_annual','=',$month)
+                ->where('emp_level','=',$emp_level)
+                ->get();
+
+        return (count($result)>0) ? true : false;
+    }
+
+    public function post13thMonthJLR($year,$month,$emp_level)
+    {
+        $user = Auth::user();
+
+        $result = DB::table("thirteenth_month")
+                ->where('stat','=','DRAFT')
+                ->where('pyear','=',$year)
+                ->where('semi_annual','=',$month)
+                ->where('emp_level','=',$emp_level)
+                ->where('user_id',$user->id)
+                ->get();
+        
+        foreach($result as $row){
+            $result = DB::table('thirteenth_month')->insert([
+                'user_id' => $user->id,
+                'pyear' => $year,
+                'semi_annual' => $month,
+                'biometric_id' => $row->biometric_id,
+                'net_pay' => $row->net_pay,
+                'gross_pay' => $row->gross_pay,
+                'created_on' => now(),
+                'emp_level' => $row->emp_level,
+                'stat' => 'POSTED',
+            ]);
+
+        }
+        
+    }
+
 
 }
 /*

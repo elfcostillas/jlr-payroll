@@ -893,7 +893,11 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::get('show-table/{year}/{month}',[ThirteenthMonthJLRController::class,'showTable']);
 
         Route::post('insert-or-update',[ThirteenthMonthJLRController::class,'insertOrUpdate']);
+        Route::get('download-excel/{year}/{month}',[ThirteenthMonthJLRController::class,'download']);
+        Route::get('download-banktransmittal/{year}/{month}',[ThirteenthMonthJLRController::class,'bank_transmittal']);
+        Route::post('post',[ThirteenthMonthJLRController::class,'post']);
 
+        Route::get('print-payslip/{year}/{month}',[ThirteenthMonthJLRController::class,'print']);
     });
 });
 

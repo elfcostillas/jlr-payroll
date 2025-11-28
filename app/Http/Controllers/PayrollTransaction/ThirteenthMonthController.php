@@ -55,12 +55,8 @@ class ThirteenthMonthController extends Controller
     {
         $result = $this->mapper->buildData($request->year);
 
-        
-
         $this->excel->setValues($result);
         return Excel::download($this->excel,"ThirteenthMonthSG{$request->year}.xlsx");
-
-        // dd($request->year);
     }
 
     public function post(Request $request)

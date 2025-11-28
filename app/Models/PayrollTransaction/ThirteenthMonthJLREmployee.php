@@ -64,11 +64,14 @@ class ThirteenthMonthJLREmployee
 
     public function getGrossPay()
     {
+        // dd($this->basic_pay_arr);
+
         $gross_pay = 0;
-        // foreach($this->basic_pays as $basic_pay)
-        // {
-        //     $gross_pay += $basic_pay->basic_pay - $basic_pay->late_eq_amount;
-        // }
+        foreach($this->basic_pays as $basic_pay)
+        {
+            // $gross_pay += $basic_pay->basic_pay - $basic_pay->late_eq_amount;
+            $gross_pay += (float) $this->getBasicPay($basic_pay->id)['value'];
+        }
 
         return  $gross_pay;
     }

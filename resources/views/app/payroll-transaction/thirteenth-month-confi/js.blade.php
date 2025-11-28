@@ -54,24 +54,28 @@
                     },
                     download : function()
                     {
-                        let selected = $("#pyear").data("kendoDropDownList");
-                        let url = `thirteenth-month-weekly/download-excel/${selected.value()}`;
+                        let selectedYear = $("#pyear").data("kendoDropDownList");
+                        let selectedMonth = $("#pmonth").data("kendoDropDownList");
+
+                        let url = `thirteenth-month-confi/download-excel/${selectedYear.value()}/${selectedMonth.value()}`;
                         window.open(url);
                     },
 
                     banktransmittal : function()
                     {
-                        let selected = $("#pyear").data("kendoDropDownList");
+                        let selectedYear = $("#pyear").data("kendoDropDownList");
+                        let selectedMonth = $("#pmonth").data("kendoDropDownList");
 
-                        let url = `thirteenth-month-weekly/download-banktransmittal/${selected.value()}`;
+                        let url = `thirteenth-month-confi/download-banktransmittal/${selectedYear.value()}/${selectedMonth.value()}`;
                         window.open(url);
                     },
                     post : function()
                     {
-                        let selected = $("#pyear").data("kendoDropDownList");
+                        let selectedYear = $("#pyear").data("kendoDropDownList");
+                        let selectedMonth = $("#pmonth").data("kendoDropDownList");
                 
                         Swal.fire({
-                                title: 'Finalize and Post 13th Month (Support Group)',
+                                title: 'Finalize and Post 13th Month (Confi)',
                                 text: "You won't be able to revert this!",
                                 icon: 'warning',
                                 showCancelButton: true,
@@ -80,8 +84,9 @@
                                 confirmButtonText: 'Finalize'
                             }).then((result) => {
                                 if (result.value) {                       
-                                    $.post('thirteenth-month-weekly/post',{
-                                        cyear : selected.value()
+                                    $.post('thirteenth-month-confi/post',{
+                                        cyear : selectedYear.value(),
+                                        cmonth : selectedMonth.value()
                                     },function(data,staus){
                                         if(data.success){
                                             Swal.fire({
@@ -129,29 +134,14 @@
                     },
                     closePop : function(){},
                     print : function(){
-
-                        let year = $("#popyear").data("kendoDropDownList");
-                        let location = $("#ddLocation").data("kendoDropDownList");
                         
-                        let url = `thirteenth-month-weekly/print/${year.value()}/${location.value()}`;
+                        let selectedYear = $("#pyear").data("kendoDropDownList");
+                        let selectedMonth = $("#pmonth").data("kendoDropDownList");
+                        
+                        let url = `thirteenth-month-confi/print-payslip/${selectedYear.value()}/${selectedMonth.value()}`;
                         window.open(url);
                     },
-                    conso : function ()
-                    {
-                        let selected = $("#pyear").data("kendoDropDownList");
-
-                        let url = `thirteenth-month-weekly/download-conso/${selected.value()}`;
-                        window.open(url);
-                    },
-                    banktransmittalconso : function()
-                    {
-                        let selected = $("#pyear").data("kendoDropDownList");
-
-                        let url = `thirteenth-month-weekly/download-banktransmittal-conso/${selected.value()}`;
-                        window.open(url);
-                    }
-
-                    
+                   
                 }
             });
 
@@ -187,14 +177,14 @@
                     type : "button",text : "Bank Transmittal", icon : 'print',click : viewModel.handler.banktransmittal
                 },
                 {
-                    type : "button",text : "Payslip", icon : 'print',click : viewModel.handler.showPop
+                    type : "button",text : "Payslip", icon : 'print',click : viewModel.handler.print
                 },
-                {
-                    type : "button",text : "Consolidated", icon : 'table',click : viewModel.handler.conso
-                },
-                {
-                    type : "button",text : "Consolidated Bank Transmittal", icon : 'print',click : viewModel.handler.banktransmittalconso
-                },
+                // {
+                //     type : "button",text : "Consolidated", icon : 'table',click : viewModel.handler.conso
+                // },
+                // {
+                //     type : "button",text : "Consolidated Bank Transmittal", icon : 'print',click : viewModel.handler.banktransmittalconso
+                // },
                 
             ]
         });
@@ -229,8 +219,6 @@
 
             }
         });
-
-        
 
         $("#popyear").kendoDropDownList({
             dataTextField: "text",
