@@ -178,7 +178,7 @@
                         <th> Cash Advance </th>
                         <th> Canteen </th>
                         <th> PPE </th>
-                        <th> Office Acct. </th>
+                        <!-- <th> Office Acct. </th> -->
                         <th> Total Deduction</th>
                         <th> Net Pay</th>
                     
@@ -254,7 +254,7 @@
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['cash_advance']>0) ? $employee->otherEarnings['cash_advance'] : ''; }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['canteen']>0) ? $employee->otherEarnings['canteen'] : ''; }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['deductions']>0) ? $employee->otherEarnings['deductions'] : ''; }}</td>
-                        <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['office_account']>0) ? $employee->otherEarnings['office_account'] : ''; }}</td>
+                        <!-- <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['office_account']>0) ? $employee->otherEarnings['office_account'] : ''; }}</td> -->
                         <td class="pr4"  style="text-align:right;font-weight:bold;" >{{ ($employee->total_deduction>0) ? $employee->total_deduction : ''; }}</td>
                         <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:double;" >{{ ($employee->net_pay>0) ? $employee->net_pay :  $employee->net_pay }}</td>
                     </tr>
@@ -337,7 +337,7 @@
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_cash_advance > 0) ? $location_cash_advance : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_canteen_total > 0) ? $location_canteen_total : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_ppe > 0) ? $location_ppe : '' }}</td>
-                    <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_office_account > 0) ? $location_office_account : '' }}</td>
+                    <!-- <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_office_account > 0) ? $location_office_account : '' }}</td> -->
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_total_ded > 0) ? $location_total_ded : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_gtotal > 0) ? $location_gtotal : '' }}</td>
                    
@@ -424,7 +424,7 @@
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_ca_total }}</td>
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_cantenn_total }}</td>
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_ppe }}</td>
-            <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_office_account }}</td>
+            <!-- <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_office_account }}</td> -->
            
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_total_ded }}</td>
             
