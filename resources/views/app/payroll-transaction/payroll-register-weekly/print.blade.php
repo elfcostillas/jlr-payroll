@@ -12,13 +12,13 @@
         .pr4 {
             text-align : right;
             padding-right : 4px;
-            width: 42px; /* 52*/
+            width: 38px; /* 52*/
         }
 
         .pr3 {
             text-align : right;
             padding-right : 4px;
-            width: 42px;
+            width: 38px;
         }
 
         .circle {
