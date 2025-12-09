@@ -64,7 +64,7 @@ return [
             ]) : [],
         ],
     */ 
-         
+    
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
@@ -91,7 +91,7 @@ return [
             ]) : [],
         ],
 
-        /*
+             /*
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
