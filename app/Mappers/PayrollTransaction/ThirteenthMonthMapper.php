@@ -320,6 +320,10 @@ class ThirteenthMonthMapper extends AbstractMapper
     public function basicPayQueryJLR($employee,$year,$months)
     {
         $payroll_periods = $this->getPayrollPeriodsJLR($year,$months);
+
+        $copmensations = DB::table('posted_other_compensations')
+        ->whereIn('period_id',$payroll_periods->pluck('id'))
+        ->where('biometric_id',$employee->biometric_id);
         
         $payrolls = DB::table('payrollregister_posted_s')
                 ->whereIn('period_id',$payroll_periods->pluck('id'))
@@ -329,6 +333,11 @@ class ThirteenthMonthMapper extends AbstractMapper
             ->leftJoinSub($payrolls,'subQuery',function($join){ 
                 $join->on('payroll_period.id','=','subQuery.period_id');
             })
+             ->leftJoinSub($copmensations,'subQuery2',function($join){ 
+                $join->on('payroll_period.id','=','subQuery2.period_id');
+            })
+
+
             // ->select(DB::raw("payroll_period.id,ifnull(subQuery.basic_pay,0.00) as basic_pay,late_eq_amount"))
             ->select(DB::raw("payroll_period.id,ifnull(subQuery.basic_pay,0.00) 
                     + ifnull(sl_wpay_amount,0.00) 
@@ -338,6 +347,7 @@ class ThirteenthMonthMapper extends AbstractMapper
                     + ifnull(semi_monthly_allowance,0.00)
                     + ifnull(leghol_count_amount,0.00)
                     + ifnull(sphol_count_amount,0.00)
+                    + ifnull(subQuery2.amount,0.00)
                     as basic_pay"))
             ->whereIn('id',$payroll_periods->pluck('id'));
 
