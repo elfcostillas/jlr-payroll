@@ -157,5 +157,14 @@ class ThirteenthMonthController extends Controller
         // return view('app.payroll-transaction.thirteenth-month-weekly.conso',['semi' => $semi,'weekly' => $weekly,'months' => $months ]);
     }
 
+    public function downloadInActive(Request $request)
+    {
+       
+        $result = $this->mapper->buildData($request->year);
+
+        $this->excel->setValues($result);
+        return Excel::download($this->excel,"ThirteenthMonthSG{$request->year}.xlsx");
+    }
+
 
 }

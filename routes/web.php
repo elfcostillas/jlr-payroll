@@ -885,7 +885,7 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
 
         Route::get('download-conso/{year}',[ThirteenthMonthController::class,'conso']);
         Route::get('download-banktransmittal-conso/{year}',[ThirteenthMonthController::class,'conso_bank_transmittal']);
-        
+        Route::get('download-excel-inactive/{year}',[ThirteenthMonthController::class,'downloadInActive']);
     });
 
     Route::prefix('thirteenth-month-confi')->middleware('access:payroll-transaction/thirteenth-month-confi')->group(function(){

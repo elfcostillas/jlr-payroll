@@ -146,8 +146,13 @@
 
                         let url = `thirteenth-month-weekly/download-banktransmittal-conso/${selected.value()}`;
                         window.open(url);
+                    },
+                    downloadInActive : function()
+                    {
+                        let selected = $("#pyear").data("kendoDropDownList");
+                        let url = `thirteenth-month-weekly/download-excel-inactive/${selected.value()}`;
+                        window.open(url);
                     }
-
                     
                 }
             });
@@ -185,6 +190,9 @@
                     {
                         type : "button",text : "Consolidated Bank Transmittal", icon : 'print',click : viewModel.handler.banktransmittalconso
                     },
+                    {
+                        type : "button",text : "Download Excel - Inactive Employee", icon : 'download',click : viewModel.handler.downloadInActive
+                    }
                   
                 ]
             });

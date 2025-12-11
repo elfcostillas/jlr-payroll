@@ -59,7 +59,12 @@ class OtherCompensationDetailMapper extends AbstractMapper {
         if($filter['filter']!=null){
 			foreach($filter['filter']['filters'] as $f)
 			{
-				$result->where($f['field'],'like','%'.$f['value'].'%');
+                if($f['field'] == 'remarks'){
+                    $result->where('compensation_other_details.remarks','like','%'.$f['value'].'%');
+                }else{
+	                $result->where($f['field'],'like','%'.$f['value'].'%');
+                }
+		
 			}
 		}
 

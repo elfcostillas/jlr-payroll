@@ -96,7 +96,6 @@ class DeductedLoanController extends Controller
                 $periods = DB::table('payroll_period_weekly')
                 ->whereRaw("MONTH(date_from) = ? ",[ $array['month']])
                 ->whereRaw("YEAR(date_from) = ? ",[ $array['year']]);
-                
                 break;
 
             case 'confi' :

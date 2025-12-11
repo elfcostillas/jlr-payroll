@@ -122,6 +122,9 @@ class PayrollRegisterConfiController extends Controller
 
             foreach($holidays as $holiday){
                 //dd();
+                $h = Carbon::createFromFormat('Y-m-d',$holiday->holiday_date);
+
+                // dd($h->shortEnglishDayOfWeek);
                 switch($holiday->holiday_type){
                     case 1 : case '1' :
                         $employee->actual_reghol += 1;
