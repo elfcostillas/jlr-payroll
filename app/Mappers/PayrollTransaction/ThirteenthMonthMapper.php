@@ -334,6 +334,7 @@ class ThirteenthMonthMapper extends AbstractMapper
                     + ifnull(sl_wpay_amount,0.00) 
                     + ifnull(bl_wpay_amount,0.00) 
                     + ifnull(vl_wpay_amount,0.00)
+                    + ifnull(svl_amount,0.00)
                     + ifnull(semi_monthly_allowance,0.00)
                     as basic_pay"))
             ->whereIn('id',$payroll_periods->pluck('id'));
