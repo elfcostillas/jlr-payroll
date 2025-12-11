@@ -160,7 +160,8 @@ class ThirteenthMonthController extends Controller
     public function downloadInActive(Request $request)
     {
        
-        $result = $this->mapper->buildData($request->year);
+        $result = $this->mapper->buildDataInActive($request->year);
+       
 
         $this->excel->setValues($result);
         return Excel::download($this->excel,"ThirteenthMonthSG{$request->year}.xlsx");

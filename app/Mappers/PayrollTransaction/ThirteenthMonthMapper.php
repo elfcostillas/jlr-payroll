@@ -119,6 +119,64 @@ class ThirteenthMonthMapper extends AbstractMapper
         ];
     }
 
+    function buildDataInActive($year)
+    {
+        
+        // dd(Auth::user()->id);
+        $locations = $this->baseQueryI()->select(DB::raw("employees.location_id,location_name"))
+                ->distinct()
+                ->where('payroll_period_weekly.pyear',$year)
+                ->orderBy('location_id','ASC')
+                ->get();
+        
+        DB::table('thirteenth_month_sg')->where('pyear' ,$year)->where('user_id',Auth::user()->id)->where('stat','=','DRAFT')->delete();
+        
+        foreach($locations as $location)
+        {
+            $employee_array = [];
+
+            $employees = $this->baseQueryI()
+                ->select(DB::raw("employees.biometric_id,employees.lastname,employees.firstname,employees.middlename"))
+                ->distinct()
+                ->where('payroll_period_weekly.pyear',$year)
+                ->where('employees.location_id','=',$location->location_id)
+                ->orderBy('employees.lastname','asc')->orderBy('employees.firstname','asc')->orderBy('employees.middlename','asc')
+                ->get();
+
+            foreach($employees as $employee)
+            {
+                // array_push($employee_array,)
+                
+                $e = $this->employeeFactory($employee,$year);
+
+                if($e){
+
+                    DB::table('thirteenth_month_sg')->insert(['user_id' => Auth::user()->id,
+                        'pyear' => $year,
+                        'biometric_id' => $e->getBiometricID(),
+                        'net_pay' => $e->getNetPay(),
+                        'gross_pay' => $e->getGrossPay(),
+                        'created_on' => now() ]);
+                }
+
+                array_push($employee_array,$e);
+            }
+
+            $location->employees = $employee_array;
+           
+        }
+
+        $payrollPeriodOfYear = DB::table("payroll_period_weekly")
+                ->select(DB::raw("id,date_from,date_to"))
+                ->where("pyear",$year)
+                ->get();
+
+        return [
+            'location' => $locations,
+            'payroll_period' => $payrollPeriodOfYear
+        ];
+    }
+
     public function buildDataJLRConfi($year,$months)
     {
         DB::table('thirteenth_month')
@@ -192,6 +250,17 @@ class ThirteenthMonthMapper extends AbstractMapper
             ->leftJoin('payroll_period_weekly','payroll_period_weekly.id','=','payrollregister_posted_weekly.period_id')
             ->leftJoin('locations','employees.location_id','=','locations.id')
             ->where('employees.exit_status',1);
+
+        return $result;
+    }
+
+    function baseQueryI()
+    {
+        $result = DB::table("payrollregister_posted_weekly")
+            ->leftJoin('employees','payrollregister_posted_weekly.biometric_id','=','employees.biometric_id')
+            ->leftJoin('payroll_period_weekly','payroll_period_weekly.id','=','payrollregister_posted_weekly.period_id')
+            ->leftJoin('locations','employees.location_id','=','locations.id')
+            ->where('employees.exit_status','!=',1);
 
         return $result;
     }
