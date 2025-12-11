@@ -329,7 +329,13 @@ class ThirteenthMonthMapper extends AbstractMapper
             ->leftJoinSub($payrolls,'subQuery',function($join){ 
                 $join->on('payroll_period.id','=','subQuery.period_id');
             })
-            ->select(DB::raw("payroll_period.id,ifnull(subQuery.basic_pay,0.00) as basic_pay,late_eq_amount"))
+            // ->select(DB::raw("payroll_period.id,ifnull(subQuery.basic_pay,0.00) as basic_pay,late_eq_amount"))
+            ->select(DB::raw("payroll_period.id,ifnull(subQuery.basic_pay,0.00) 
+                    + ifnull(sl_wpay_amount,0.00) 
+                    + ifnull(bl_wpay_amount,0.00) 
+                    + ifnull(vl_wpay_amount,0.00)
+                    + ifnull(semi_monthly_allowance,0.00)
+                    as basic_pay"))
             ->whereIn('id',$payroll_periods->pluck('id'));
 
         return $result->get();
