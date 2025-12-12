@@ -63,8 +63,20 @@ class ThirteenthMonthMapper extends AbstractMapper
     
     public function getConfiR($year,$months)
     {
+        $payroll_periods = $this->getPayrollPeriodsJLR($year,$months)->get();
+
+        $biometric_ids = DB::table('payrollregister_posted_s')
+            ->leftJoin('employees','payrollregister_posted_s.biometric_id','=','employees.biometric_id')
+            ->whereIn('payrollregister_posted_s.period_id',$payroll_periods->pluck('id'))
+            ->where('employees.emp_level','<',5)
+            ->where('employees.exit_status','!=',1)
+            ->select('employees.biometric_id')
+            ->distinct();
+
         $result = $this->empQueryR()
-            ->where('emp_level','<',5);
+          
+            ->whereIn('employees.biometric_id',$biometric_ids->pluck('biometric_id'))
+            ->where('employees.emp_level','<',5);
         return $result;
     }
 
