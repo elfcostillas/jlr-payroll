@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Excel\ThirteenthMonthConfi;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Excel\BankTransmittal;
+use App\Excel\ThirteenthMonthMonthly;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class ThirteenthMonthJLRController extends Controller
@@ -15,12 +16,14 @@ class ThirteenthMonthJLRController extends Controller
     //
     private $mapper;
     private $excel;
+    private $excel2;
     private $rcbc;
 
-    public function __construct(ThirteenthMonthMapper $mapper,ThirteenthMonthConfi $excel,BankTransmittal $rcbc)
+    public function __construct(ThirteenthMonthMapper $mapper,ThirteenthMonthConfi $excel, ThirteenthMonthMonthly $excel2,BankTransmittal $rcbc)
     {
         $this->mapper = $mapper;
         $this->excel = $excel;
+        $this->excel2 = $excel2;
         $this->rcbc = $rcbc;
     }
 
@@ -108,7 +111,6 @@ class ThirteenthMonthJLRController extends Controller
 
         return response()->json(['success'=>"13th Month of year $year was successfully posted."]);
 
-       
     }
 
     public function print(Request $request)
@@ -130,6 +132,59 @@ class ThirteenthMonthJLRController extends Controller
         $canvas->page_text(510, 758, "Page {PAGE_NUM} of {PAGE_COUNT} ", null, 10, array(0, 0, 0));
 
         return $pdf->stream('DTR.pdf'); 
+
+    }
+
+    public function downloadInactive(Request $request)
+    {
+        $year = $request->year;
+        $month = $request->month;
+
+        $result = $this->mapper->buildDataJLRConfiInActive($request->year,$request->month);
+        $this->excel->setValues($result);
+
+        return Excel::download($this->excel,"ThirteenthMonthConfi{$request->year}.xlsx");
+
+    }
+
+    public function conso(Request $request)
+    {
+        $year = $request->year;
+        $month = $request->month;
+
+        if($month == 1){
+            $months = [
+                12 => 'DECEMBER',
+                1 => 'JANUARY',
+                2 => 'FEBRUARY',
+                3 => 'MARCH',
+                4 => 'APRIL',
+              
+            ];
+        }else{
+            $months = [
+
+                5 => 'MAY',
+                6 => 'JUNE',
+                7 => 'JULY',
+                8 => 'AUGUST',
+                9 => 'SEPTEMBER',
+                10 => 'OCTOBER',
+                11 => 'NOVEMBER',
+            ];
+        }
+
+        $semi = $this->mapper->buildSemiMonthlyJLR($months,$year);
+       
+        $this->excel2->setValues($semi,$months);
+        return Excel::download($this->excel2,"ThirteenthMonthConfiMonthly{$request->year}.xlsx");
+
+        // dd($semi['employees']);
+
+        // return view("app.payroll-transaction.thirteenth-month-confi.conso",[
+        //     'semi' => $semi,
+        //     'months' => $months ,
+        // ]);
 
     }
 }

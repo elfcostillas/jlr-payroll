@@ -898,6 +898,8 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::post('post',[ThirteenthMonthJLRController::class,'post']);
 
         Route::get('print-payslip/{year}/{month}',[ThirteenthMonthJLRController::class,'print']);
+        Route::get('download-excel-inactive/{year}/{month}',[ThirteenthMonthJLRController::class,'downloadInactive']);
+        Route::get('download-conso/{year}/{month}',[ThirteenthMonthJLRController::class,'conso']);
     });
 });
 

@@ -141,7 +141,20 @@
                         let url = `thirteenth-month-confi/print-payslip/${selectedYear.value()}/${selectedMonth.value()}`;
                         window.open(url);
                     },
-                   
+                    conso : function() {
+                        let selectedYear = $("#pyear").data("kendoDropDownList");
+                        let selectedMonth = $("#pmonth").data("kendoDropDownList");
+                        
+                        let url = `thirteenth-month-confi/download-conso/${selectedYear.value()}/${selectedMonth.value()}`;
+                        window.open(url);
+                    },
+                    downloadInActive : function() {
+                        let selectedYear = $("#pyear").data("kendoDropDownList");
+                        let selectedMonth = $("#pmonth").data("kendoDropDownList");
+
+                        let url = `thirteenth-month-confi/download-excel-inactive/${selectedYear.value()}/${selectedMonth.value()}`;
+                        window.open(url);
+                    }
                 }
             });
 
@@ -179,9 +192,12 @@
                 {
                     type : "button",text : "Payslip", icon : 'print',click : viewModel.handler.print
                 },
-                // {
-                //     type : "button",text : "Consolidated", icon : 'table',click : viewModel.handler.conso
-                // },
+                {
+                    type : "button",text : "Consolidated", icon : 'table',click : viewModel.handler.conso
+                },
+                {
+                        type : "button",text : "Download Excel - Inactive Employees", icon : 'download',click : viewModel.handler.downloadInActive
+                }
                 // {
                 //     type : "button",text : "Consolidated Bank Transmittal", icon : 'print',click : viewModel.handler.banktransmittalconso
                 // },

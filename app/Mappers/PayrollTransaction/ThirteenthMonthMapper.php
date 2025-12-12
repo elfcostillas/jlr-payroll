@@ -40,8 +40,15 @@ class ThirteenthMonthMapper extends AbstractMapper
     public function empQuery()
     {
         $result = DB::table('employees')
-            ->where('employees.exit_status',1)
-            ->where('exit_status',1);
+            ->where('employees.exit_status',1);
+
+        return $result;
+    }
+
+    public function empQueryR()
+    {
+        $result = DB::table('employees')
+            ->where('employees.exit_status','!=',1);
 
         return $result;
     }
@@ -49,6 +56,14 @@ class ThirteenthMonthMapper extends AbstractMapper
     public function getConfi()
     {
         $result = $this->empQuery()
+            ->where('emp_level','<',5);
+        return $result;
+    }
+
+    
+    public function getConfiR()
+    {
+        $result = $this->empQueryR()
             ->where('emp_level','<',5);
         return $result;
     }
@@ -215,6 +230,44 @@ class ThirteenthMonthMapper extends AbstractMapper
         
     }
 
+    public function buildDataJLRConfiInActive($year,$months)
+    {
+        DB::table('thirteenth_month')
+            ->where('pyear' ,$year)
+            ->where('semi_annual' ,$months)
+            ->where('user_id',Auth::user()->id)
+            ->where('stat','=','DRAFT-R')
+            ->delete();
+        
+        $employees = $this->getConfiR()->get();
+        
+        foreach($employees as $employee)
+        {
+            $e = $this->employeeJLRFactory($employee,$year,$months);
+
+            if($e){
+                DB::table('thirteenth_month')->insert([
+                    'user_id' => Auth::user()->id,
+                    'pyear' => $year,
+                    'semi_annual' => $months,
+                    'biometric_id' => $e->getBiometricID(),
+                    'net_pay' => $e->getNetPay(),
+                    'gross_pay' => $e->getGrossPay(),
+                    'created_on' => now(),
+                    'stat' => 'DRAFT-R',
+                    'emp_level' => 'confi']);
+            }
+
+            $employee->thirteenth_pay = $e;
+        }
+
+        return [
+            'employees' => $employees,
+            'payroll_periods' => $this->getPayrollPeriodsJLR($year,$months)->get(),
+        ];
+
+    }
+
     function employeeFactory($employee,$year)
     {
         $basic_pays = $this->basicPayQuery($employee,$year);
@@ -233,14 +286,59 @@ class ThirteenthMonthMapper extends AbstractMapper
         return $basic_pays;
     }
 
+    public function buildMonthlyPay($employee,$year,$months)
+    {
+        $monthly_arr = [];
+
+        foreach($months as $key => $value)
+        {
+
+            $payroll_periods = $this->getPayrollPeriodsByMonth($year,$key);
+            
+            $copmensations = DB::table('posted_other_compensations')
+                ->whereIn('period_id',$payroll_periods->pluck('id'))
+                ->where('biometric_id',$employee->biometric_id);
+                
+            $payrolls = DB::table('payrollregister_posted_s')
+                    ->whereIn('period_id',$payroll_periods->pluck('id'))
+                    ->where('biometric_id',$employee->biometric_id);
+            
+            $result = DB::table('payroll_period')
+            ->leftJoinSub($payrolls,'subQuery',function($join){ 
+                $join->on('payroll_period.id','=','subQuery.period_id');
+            })
+             ->leftJoinSub($copmensations,'subQuery2',function($join){ 
+                $join->on('payroll_period.id','=','subQuery2.period_id');
+            })
+            ->select(DB::raw("payroll_period.id,ifnull(subQuery.basic_pay,0.00) 
+                    + sum(ifnull(sl_wpay_amount,0.00))
+                    + sum(ifnull(bl_wpay_amount,0.00))
+                    + sum(ifnull(vl_wpay_amount,0.00))
+                    + sum(ifnull(svl_amount,0.00))
+                    + sum(ifnull(semi_monthly_allowance,0.00))
+                    + sum(ifnull(leghol_count_amount,0.00))
+                    + sum(ifnull(sphol_count_amount,0.00))
+                    + sum(ifnull(subQuery2.amount,0.00))
+                    as basic_pay"))
+            ->whereIn('id',$payroll_periods->pluck('id'))
+            ->first();
+
+            $monthly_arr[$key] = $result->basic_pay;
+        }
+
+        return $monthly_arr;
+       
+    }
+
     function employeeJLRFactory($employee,$year,$months)
     {
         //basicPayQueryJLR
 
         $basic_pays = $this->basicPayQueryJLR($employee,$year,$months);
         $manual_input = $this->getEncodedBasicPay($employee,$year,$months);
+        $monthly = $this->buildMonthlyPay($employee,$year,$months);
 
-        return new ThirteenthMonthJLREmployee($months,$employee,$basic_pays,$manual_input);
+        return new ThirteenthMonthJLREmployee($months,$employee,$basic_pays,$manual_input,$monthly);
     }
 
     function baseQuery()
@@ -315,6 +413,14 @@ class ThirteenthMonthMapper extends AbstractMapper
 
         return  $payroll_periods;
 
+    }
+
+    public function getPayrollPeriodsByMonth($year,$month)
+    {
+
+        return DB::table('payroll_period') ->where('payroll_period.pyear','=',$year)
+            ->whereRaw('month(date_from) = ?',[$month])
+            ->get();
     }
 
     public function basicPayQueryJLR($employee,$year,$months)
@@ -554,6 +660,28 @@ class ThirteenthMonthMapper extends AbstractMapper
                 ->first();
 
         return $start->label . ' - ' . $end->label;
+    }
+
+    public function buildSemiMonthlyJLR($months,$year)
+    {
+        $employees = $this->getConfi()->get();
+
+        foreach($employees as $employee)
+        {
+            $e = $this->employeeJLRFactory($employee,$year,$months);
+
+            // if($e){
+            //     // dd($e->getMonthly());
+            // }
+
+            $employee->thirteenth_month_monthly = $e;
+        }
+
+        // return $employees;
+        return [
+            'employees' => $employees,
+            'payroll_periods' => $this->getPayrollPeriodsJLR($year,$months)->get(),
+        ];
     }
 
     public function buildSemiMonthly($months,$year)

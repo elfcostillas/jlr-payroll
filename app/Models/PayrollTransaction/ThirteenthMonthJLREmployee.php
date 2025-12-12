@@ -17,14 +17,25 @@ class ThirteenthMonthJLREmployee
     private $basic_pay_arr = [];
     private $mbasic_pay_arr = [];
 
-    public function __construct($months,$employee,$basic_pays,$manual_input)
+    private $conso_array = [];
+    private $monthly;
+
+    public function __construct($months,$employee,$basic_pays,$manual_input,$monthly)
     {
         $this->employee_info = $employee;
         $this->basic_pays = $basic_pays;
         $this->months = $months;
         $this->manual_input = $manual_input;
+        $this->monthly = $monthly;
 
         $this->setBasicPayArray();
+        
+    
+    }
+
+    public function setConsoArray()
+    {
+       
     }
 
     public function setBasicPayArray()
@@ -80,5 +91,10 @@ class ThirteenthMonthJLREmployee
     {
         $divider = ($this->months == 2) ? 7 : 5;
         return round($this->getGrossPay()/$divider,2);
+    }
+
+    public function getMonthly()
+    {
+        return $this->monthly;
     }
 }

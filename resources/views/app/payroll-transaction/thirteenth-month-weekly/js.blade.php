@@ -191,7 +191,7 @@
                         type : "button",text : "Consolidated Bank Transmittal", icon : 'print',click : viewModel.handler.banktransmittalconso
                     },
                     {
-                        type : "button",text : "Download Excel - Inactive Employee", icon : 'download',click : viewModel.handler.downloadInActive
+                        type : "button",text : "Download Excel - Inactive Employees", icon : 'download',click : viewModel.handler.downloadInActive
                     }
                   
                 ]
