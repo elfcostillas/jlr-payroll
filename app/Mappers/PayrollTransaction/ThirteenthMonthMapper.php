@@ -61,7 +61,7 @@ class ThirteenthMonthMapper extends AbstractMapper
     }
 
     
-    public function getConfiR()
+    public function getConfiR($year,$months)
     {
         $result = $this->empQueryR()
             ->where('emp_level','<',5);
@@ -239,7 +239,7 @@ class ThirteenthMonthMapper extends AbstractMapper
             ->where('stat','=','DRAFT-R')
             ->delete();
         
-        $employees = $this->getConfiR()->get();
+        $employees = $this->getConfiR($year,$months)->get();
         
         foreach($employees as $employee)
         {
@@ -286,6 +286,23 @@ class ThirteenthMonthMapper extends AbstractMapper
         return $basic_pays;
     }
 
+    function getEncodedBasicPayByMonth($employee,$payroll_periods)
+    {
+        $total_basic = 0;
+
+        $basic_pays = DB::table('manual_basicpay')
+            ->whereIn('period_id',$payroll_periods->pluck('id'))
+            ->where('biometric_id',$employee->biometric_id)
+            ->get();
+
+        foreach($basic_pays as $basic_pay)
+        {
+            $total_basic += (float) $basic_pay->basic_pay;
+        }
+
+        return $total_basic;
+    }
+
     public function buildMonthlyPay($employee,$year,$months)
     {
         $monthly_arr = [];
@@ -310,7 +327,7 @@ class ThirteenthMonthMapper extends AbstractMapper
              ->leftJoinSub($copmensations,'subQuery2',function($join){ 
                 $join->on('payroll_period.id','=','subQuery2.period_id');
             })
-            ->select(DB::raw("payroll_period.id,ifnull(subQuery.basic_pay,0.00) 
+            ->select(DB::raw("sum(ifnull(subQuery.basic_pay,0.00)) 
                     + sum(ifnull(sl_wpay_amount,0.00))
                     + sum(ifnull(bl_wpay_amount,0.00))
                     + sum(ifnull(vl_wpay_amount,0.00))
@@ -323,7 +340,9 @@ class ThirteenthMonthMapper extends AbstractMapper
             ->whereIn('id',$payroll_periods->pluck('id'))
             ->first();
 
-            $monthly_arr[$key] = $result->basic_pay;
+            $manual_input = $this->getEncodedBasicPayByMonth($employee,$payroll_periods );
+
+            $monthly_arr[$key] = $result->basic_pay + $manual_input;
         }
 
         return $monthly_arr;
@@ -338,11 +357,14 @@ class ThirteenthMonthMapper extends AbstractMapper
         $manual_input = $this->getEncodedBasicPay($employee,$year,$months);
         if(is_array($months)){
             $monthly = $this->buildMonthlyPay($employee,$year,$months);
+
+            $month = (count($months) == 7) ? 2 : 1;
         }else{
             $monthly = [];
+            $month = $months;
         }
 
-        return new ThirteenthMonthJLREmployee($months,$employee,$basic_pays,$manual_input,$monthly);
+        return new ThirteenthMonthJLREmployee($month,$employee,$basic_pays,$manual_input,$monthly);
     }
 
     function baseQuery()
@@ -666,7 +688,7 @@ class ThirteenthMonthMapper extends AbstractMapper
         return $start->label . ' - ' . $end->label;
     }
 
-    public function buildSemiMonthlyJLR($months,$year)
+    public function buildSemiMonthlyJLR($months,$month,$year)
     {
         $employees = $this->getConfi()->get();
 

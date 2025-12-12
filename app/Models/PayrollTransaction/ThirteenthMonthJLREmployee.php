@@ -90,6 +90,7 @@ class ThirteenthMonthJLREmployee
     public function getNetPay()
     {
         $divider = ($this->months == 2) ? 7 : 5;
+        
         return round($this->getGrossPay()/$divider,2);
     }
 
