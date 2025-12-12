@@ -290,8 +290,6 @@ class ThirteenthMonthMapper extends AbstractMapper
     {
         $monthly_arr = [];
 
-        dd($months);
-
         foreach($months as $key => $value)
         {
 
