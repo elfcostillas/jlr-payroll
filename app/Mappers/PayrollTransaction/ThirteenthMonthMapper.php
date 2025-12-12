@@ -290,6 +290,8 @@ class ThirteenthMonthMapper extends AbstractMapper
     {
         $monthly_arr = [];
 
+        dd($months);
+
         foreach($months as $key => $value)
         {
 
@@ -336,7 +338,11 @@ class ThirteenthMonthMapper extends AbstractMapper
 
         $basic_pays = $this->basicPayQueryJLR($employee,$year,$months);
         $manual_input = $this->getEncodedBasicPay($employee,$year,$months);
-        $monthly = $this->buildMonthlyPay($employee,$year,$months);
+        if(is_array($months)){
+            $monthly = $this->buildMonthlyPay($employee,$year,$months);
+        }else{
+            $monthly = [];
+        }
 
         return new ThirteenthMonthJLREmployee($months,$employee,$basic_pays,$manual_input,$monthly);
     }
