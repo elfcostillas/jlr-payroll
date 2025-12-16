@@ -11,15 +11,19 @@
     foreach($weekly as $location)
     {
         // dd($location->id);
-        foreach($location->employees as $e)
+        if(isset($location->employees))
         {
-            // dd($e->biometric_id);
-            foreach($e->basic as $month => $basic)
+            foreach($location->employees as $e)
             {
-                // dd($month,$basic);
-                $weekly_basic_arr[$e->biometric_id][$month] = $basic;
+                // dd($e->biometric_id);
+                foreach($e->basic as $month => $basic)
+                {
+                    // dd($month,$basic);
+                    $weekly_basic_arr[$e->biometric_id][$month] = $basic;
+                }
             }
         }
+       
     }
 
 
@@ -91,27 +95,31 @@
             <td>NET PAY</td>
         </tr>
         @foreach($weekly as $location)
-            <?php
-                $ctr = 1;
-            ?>
-            <tr>
-                <td colspan=16> {{ $location->location_name  }} </td>
-            </tr>
-            @foreach($location->employees as $e)
+            @if(isset($location->employees))
+                
                 <?php
-                    $total = 0;
+                    $ctr = 1;
                 ?>
                 <tr>
-                    <td> {{ $ctr++ }} </td>
-                    <td> {{ $e->lastname }}, {{ $e->firstname }} </td>
-                    @foreach($months as $key => $value)
-                        <td> {{ $e->basic[$key]  }} </td>
-                        <?php $total +=$e->basic[$key];   ?>
-                    @endforeach
-                    <td> {{ $total }}</td>
-                    <td> {{ round($total/12,2) }}</td>
+                    <td colspan=16> {{ $location->location_name  }} </td>
                 </tr>
-            @endforeach
+                @foreach($location->employees as $e)
+                    <?php
+                        $total = 0;
+                    ?>
+                    <tr>
+                        <td> {{ $ctr++ }} </td>
+                        <td> {{ $e->lastname }}, {{ $e->firstname }} </td>
+                        @foreach($months as $key => $value)
+                            <td> {{ $e->basic[$key]  }} </td>
+                            <?php $total +=$e->basic[$key];   ?>
+                        @endforeach
+                        <td> {{ $total }}</td>
+                        <td> {{ round($total/12,2) }}</td>
+                    </tr>
+                @endforeach
+           
+            @endif
         @endforeach
     </table>
 </body>

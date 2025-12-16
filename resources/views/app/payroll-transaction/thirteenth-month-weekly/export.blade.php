@@ -36,6 +36,7 @@ $total_net = 0;
     @foreach($result as $location)
     <?php $ctr = 1; ?>
     <tr>
+        <td></td>
         <td class="p02 t_header c-align" style="min-width: 200px;font-weight:bold;">{{ $location->location_name }}</td>
         @foreach($payroll_period as $period)
             <td  class="p02 t_header c-align" style="min-width: 106px;font-weight:bold;"> {{ dformat($period->date_from) }} - {{ dformat($period->date_to) }} </td>

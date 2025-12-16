@@ -163,12 +163,39 @@ class ThirteenthMonthController extends Controller
 
     public function downloadInActive(Request $request)
     {
-       
         $result = $this->mapper->buildDataInActive($request->year);
        
-
         $this->excel->setValues($result);
         return Excel::download($this->excel,"ThirteenthMonthSG{$request->year}.xlsx");
+    }
+
+
+    public function downloadInActiveConso(Request $request)
+    {
+        $year = $request->year;
+
+        $months = [
+            12 => 'DECEMBER',
+            1 => 'JANUARY',
+            2 => 'FEBRUARY',
+            3 => 'MARCH',
+            4 => 'APRIL',
+            5 => 'MAY',
+            6 => 'JUNE',
+            7 => 'JULY',
+            8 => 'AUGUST',
+            9 => 'SEPTEMBER',
+            10 => 'OCTOBER',
+            11 => 'NOVEMBER',
+        ];
+
+        $semi = $this->mapper->buildSemiMonthlyI($months,$year);
+        $weekly = $this->mapper->buildWeeklyI($months,$year);
+
+        $this->conso->setValues($semi,$weekly,$months);
+        return Excel::download($this->conso,"ThirteenthMonthConso_$year.xlsx");
+        
+
     }
 
 

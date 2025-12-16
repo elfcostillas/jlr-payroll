@@ -152,8 +152,13 @@
                         let selected = $("#pyear").data("kendoDropDownList");
                         let url = `thirteenth-month-weekly/download-excel-inactive/${selected.value()}`;
                         window.open(url);
+                    },
+                    downloadInActiveConso : function()
+                    {
+                        let selected = $("#pyear").data("kendoDropDownList");
+                        let url = `thirteenth-month-weekly/download-excel-inactive-conso/${selected.value()}`;
+                        window.open(url);
                     }
-                    
                 }
             });
 
@@ -192,8 +197,10 @@
                     },
                     {
                         type : "button",text : "Download Excel - Inactive Employees", icon : 'download',click : viewModel.handler.downloadInActive
+                    },
+                    {
+                        type : "button",text : "Download Excel - Inactive Employees (Conso)", icon : 'download',click : viewModel.handler.downloadInActiveConso
                     }
-                  
                 ]
             });
 
