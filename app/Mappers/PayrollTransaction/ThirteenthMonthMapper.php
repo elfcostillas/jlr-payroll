@@ -467,6 +467,7 @@ class ThirteenthMonthMapper extends AbstractMapper
 
         $copmensations = DB::table('posted_other_compensations')
         ->whereIn('period_id',$payroll_periods->pluck('id'))
+        ->where('compensation_type','=',19)
         ->where('biometric_id',$employee->biometric_id);
         
         $payrolls = DB::table('payrollregister_posted_s')
