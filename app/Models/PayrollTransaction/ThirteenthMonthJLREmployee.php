@@ -90,8 +90,9 @@ class ThirteenthMonthJLREmployee
     public function getNetPay()
     {
         $divider = ($this->months == 2) ? 7 : 5;
+        // $divider = ($this->months == 2) ? 7 : 5;
         
-        return round($this->getGrossPay()/$divider,2);
+        return round($this->getGrossPay()/12,2);
     }
 
     public function getMonthly()

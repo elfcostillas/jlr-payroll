@@ -762,13 +762,25 @@ class ThirteenthMonthMapper extends AbstractMapper
                     {
                         $result = DB::table('payrollregister_posted_weekly')
                         ->join('payroll_period_weekly','payrollregister_posted_weekly.period_id','=','payroll_period_weekly.id')
-                        ->select(DB::raw("ifnull(sum(basic_pay),0.00) as basic_pay"))
+                        ->select(DB::raw("ifnull(sum(basic_pay),0.00) as basic_pay,vl_wpay_amount,late_eq_amount"))
                         ->where('payrollregister_posted_weekly.biometric_id','=',$e->biometric_id)
                         ->where('payroll_period_weekly.pyear','=',$year)
                         ->whereRaw('month(date_from) = ?',[$key])->first();
                         // $basic_pay[$key]
 
-                        $basic_pays[$key] = $result->basic_pay;
+                        
+                        $retro = DB::table('posted_weekly_compensation')
+                                ->join('payroll_period_weekly','payroll_period_weekly.id','=','posted_weekly_compensation.period_id')
+                                ->where('posted_weekly_compensation.biometric_id','=',$e->biometric_id)
+                                ->where('payroll_period_weekly.pyear','=',$year)
+                                ->whereRaw('month(date_from) = ?',[$key])
+                                ->select(DB::raw("ifnull(retro_pay,0.00) as retro_pay"))
+                                ->first();
+                        // $basic_pay[$key]
+
+                        $basic_pays[$key] = ($retro) ?  $result->basic_pay + $retro->retro_pay :  $result->basic_pay;
+
+                        // $basic_pays[$key] = $result->basic_pay;
                     }
 
                     $e->basic = $basic_pays;
@@ -848,15 +860,27 @@ class ThirteenthMonthMapper extends AbstractMapper
 
                     foreach($months as $key => $value)
                     {
+                       
                         $result = DB::connection('weekly')->table('payrollregister_posted_weekly')
                         ->join('payroll_period_weekly','payrollregister_posted_weekly.period_id','=','payroll_period_weekly.id')
-                        ->select(DB::raw("ifnull(sum(basic_pay),0.00) as basic_pay"))
+                        // ->select(DB::raw("ifnull(sum(basic_pay-late_eq_amount),0.00) as basic_pay"))
+                         ->select(DB::raw("ifnull(sum(basic_pay),0.00) as basic_pay,vl_wpay_amount,late_eq_amount"))
                         ->where('payrollregister_posted_weekly.biometric_id','=',$e->biometric_id)
                         ->where('payroll_period_weekly.pyear','=',$year)
                         ->whereRaw('month(date_from) = ?',[$key])->first();
+
+                        $retro = DB::connection('weekly')->table('posted_weekly_compensation')
+                                ->join('payroll_period_weekly','payroll_period_weekly.id','=','posted_weekly_compensation.period_id')
+                                ->where('posted_weekly_compensation.biometric_id','=',$e->biometric_id)
+                                ->where('payroll_period_weekly.pyear','=',$year)
+                                ->whereRaw('month(date_from) = ?',[$key])
+                                ->select(DB::raw("ifnull(retro_pay,0.00) as retro_pay"))
+                                ->first();
                         // $basic_pay[$key]
 
-                        $basic_pays[$key] = $result->basic_pay;
+                        $basic_pays[$key] = ($retro) ?  $result->basic_pay + $retro->retro_pay + $result->vl_wpay_amount - $result->late_eq_amount  :  $result->basic_pay + $result->vl_wpay_amount - $result->late_eq_amount;
+
+                        // $basic_pays[$key] = $result->basic_pay + $retro->retro_pay;
                     }
 
                     $e->basic = $basic_pays;

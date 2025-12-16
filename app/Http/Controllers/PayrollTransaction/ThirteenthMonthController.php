@@ -53,6 +53,7 @@ class ThirteenthMonthController extends Controller
 
     public function download(Request $request)
     {
+
         $result = $this->mapper->buildData($request->year);
 
         $this->excel->setValues($result);
@@ -148,6 +149,7 @@ class ThirteenthMonthController extends Controller
 
         $semi = $this->mapper->buildSemiMonthly($months,$year);
         $weekly = $this->mapper->buildWeekly($months,$year);
+        // $weekly_sub = $this->mapper->buildWeeklySub($months,$year);
 
         $this->conso->setValues($semi,$weekly,$months);
         return Excel::download($this->conso,"ThirteenthMonthConso_$year.xlsx");
