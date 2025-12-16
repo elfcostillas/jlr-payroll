@@ -152,7 +152,11 @@ class ThirteenthMonthController extends Controller
         $this->conso->setValues($semi,$weekly,$months);
         return Excel::download($this->conso,"ThirteenthMonthConso_$year.xlsx");
         
-        // dd($weekly);
+        // return view("app.payroll-transaction.thirteenth-month-weekly.conso-v2",[
+        //     'semi' => $semi,
+        //     'weekly' => $weekly ,
+        //     'months' => $months ,
+        // ]);
 
         // return view('app.payroll-transaction.thirteenth-month-weekly.conso',['semi' => $semi,'weekly' => $weekly,'months' => $months ]);
     }

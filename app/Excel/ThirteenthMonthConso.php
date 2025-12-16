@@ -37,7 +37,7 @@ class ThirteenthMonthConso implements ShouldAutoSize,WithColumnFormatting,FromVi
     public function view() : View
     {
         
-        return view("app.payroll-transaction.thirteenth-month-weekly.conso",[
+        return view("app.payroll-transaction.thirteenth-month-weekly.conso-v2",[
                 'semi' => $this->semi,
                 'weekly' => $this->weekly ,
                 'months' => $this->months ,
