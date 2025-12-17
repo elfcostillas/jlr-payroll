@@ -50,7 +50,7 @@
                             },
                            
                         },
-                        pageSize :12,
+                        pageSize :50,
                         schema : {
                             model : {
                                 id : 'period_id',
