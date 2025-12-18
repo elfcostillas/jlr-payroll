@@ -14,10 +14,10 @@ use Maatwebsite\Excel\Events\AfterSheet;
 class ThirteenthMonthConso implements ShouldAutoSize,WithColumnFormatting,FromView,WithEvents 
 {
     //
-    private $weekly;
-    private $semi;
-    private $months;
-    private $year;
+    protected $weekly;
+    protected $semi;
+    protected $months;
+    protected $year;
 
     public function registerEvents(): array
     {   
@@ -50,7 +50,7 @@ class ThirteenthMonthConso implements ShouldAutoSize,WithColumnFormatting,FromVi
     public function columnFormats(): array
     {
         $cols = [];
-        $limit = count($this->months) + 2;
+        $limit = count($this->months) + 3;
         $col = 'B';
 
         for($x=1;$x<=$limit;$x++){

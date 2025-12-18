@@ -434,7 +434,7 @@ class ThirteenthMonthMapper extends AbstractMapper
     {
         $result = DB::connection('weekly')->table("payrollregister_posted_weekly")
             ->leftJoin('employees','payrollregister_posted_weekly.biometric_id','=','employees.biometric_id')
-            ->leftJoin('payroll_period_weekly','payroll_period_weekly.id','=','payrollregister_posted_weekly.period_id')
+            ->join('payroll_period_weekly','payroll_period_weekly.id','=','payrollregister_posted_weekly.period_id')
             ->leftJoin('locations','employees.location_id','=','locations.id')
             ->where('employees.exit_status','!=',1);
 
@@ -919,7 +919,7 @@ class ThirteenthMonthMapper extends AbstractMapper
         return $locations;
     }
 
-    public function buildSemiMonthlyI($months,$year) // im here
+    public function buildSemiMonthlyI($months,$year)
     {
         // $employee
         $locations = $this->baseQueryI()->select(DB::raw("employees.location_id,location_name"))
@@ -946,13 +946,26 @@ class ThirteenthMonthMapper extends AbstractMapper
                     {
                         $result = DB::table('payrollregister_posted_weekly')
                         ->join('payroll_period_weekly','payrollregister_posted_weekly.period_id','=','payroll_period_weekly.id')
-                        ->select(DB::raw("ifnull(sum(basic_pay),0.00) as basic_pay"))
+                        // ->select(DB::raw("ifnull(sum(basic_pay),0.00) as basic_pay,vl_wpay_amount,late_eq_amount"))
+                        ->select(DB::raw("ifnull(sum(basic_pay),0.00)-ifnull(sum(late_eq_amount),0.00) + ifnull(sum(vl_wpay_amount),0.00) as basic_pay,vl_wpay_amount,late_eq_amount"))
                         ->where('payrollregister_posted_weekly.biometric_id','=',$e->biometric_id)
                         ->where('payroll_period_weekly.pyear','=',$year)
                         ->whereRaw('month(date_from) = ?',[$key])->first();
                         // $basic_pay[$key]
 
-                        $basic_pays[$key] = $result->basic_pay;
+                        
+                        $retro = DB::table('posted_weekly_compensation')
+                                ->join('payroll_period_weekly','payroll_period_weekly.id','=','posted_weekly_compensation.period_id')
+                                ->where('posted_weekly_compensation.biometric_id','=',$e->biometric_id)
+                                ->where('payroll_period_weekly.pyear','=',$year)
+                                ->whereRaw('month(date_from) = ?',[$key])
+                                ->select(DB::raw("sum(ifnull(retro_pay,0.00)) as retro_pay"))
+                                ->first();
+                        // $basic_pay[$key]
+
+                        $basic_pays[$key] = ($retro) ?  $result->basic_pay + $retro->retro_pay :  $result->basic_pay;
+
+                        // $basic_pays[$key] = $result->basic_pay;
                     }
 
                     $e->basic = $basic_pays;
@@ -962,6 +975,50 @@ class ThirteenthMonthMapper extends AbstractMapper
 
         return $locations;
     }
+
+    // public function buildSemiMonthlyI($months,$year) // im here
+    // {
+    //     // $employee
+    //     $locations = $this->baseQueryI()->select(DB::raw("employees.location_id,location_name"))
+    //             ->distinct()
+    //             ->where('payroll_period_weekly.pyear',$year)
+    //             ->orderBy('location_id','ASC')
+    //             ->get();
+
+    //     foreach($locations as $location)
+    //     {
+    //         $employees = $this->baseQueryI()
+    //             ->select(DB::raw("employees.biometric_id,employees.lastname,employees.firstname,employees.middlename"))
+    //             ->distinct()
+    //             ->where('payroll_period_weekly.pyear',$year)
+    //             ->where('employees.location_id','=',$location->location_id)
+    //             ->orderBy('employees.lastname','asc')->orderBy('employees.firstname','asc')->orderBy('employees.middlename','asc')
+    //             ->get();
+            
+    //             foreach($employees as $e)
+    //             {
+    //                 $basic_pays = [];
+
+    //                 foreach($months as $key => $value)
+    //                 {
+    //                     $result = DB::table('payrollregister_posted_weekly')
+    //                     ->join('payroll_period_weekly','payrollregister_posted_weekly.period_id','=','payroll_period_weekly.id')
+    //                     ->select(DB::raw("ifnull(sum(basic_pay),0.00) as basic_pay"))
+    //                     ->where('payrollregister_posted_weekly.biometric_id','=',$e->biometric_id)
+    //                     ->where('payroll_period_weekly.pyear','=',$year)
+    //                     ->whereRaw('month(date_from) = ?',[$key])->first();
+    //                     // $basic_pay[$key]
+
+    //                     $basic_pays[$key] = $result->basic_pay;
+    //                 }
+
+    //                 $e->basic = $basic_pays;
+    //             }
+    //         $location->employees = $employees;
+    //     }
+
+    //     return $locations;
+    // }
 
     public function buildWeekly($months,$year)
     {
@@ -1036,37 +1093,48 @@ class ThirteenthMonthMapper extends AbstractMapper
                 ->orderBy('location_id','ASC')
                 ->get();
 
-        foreach($locations as $location)
-        {
-            $employees = $this->baseQueryWI()
-                ->select(DB::raw("employees.biometric_id,employees.lastname,employees.firstname,employees.middlename"))
-                ->distinct()
-                ->where('payroll_period_weekly.pyear',$year)
-                ->where('employees.location_id','=',$location->location_id)
-                ->orderBy('employees.lastname','asc')->orderBy('employees.firstname','asc')->orderBy('employees.middlename','asc')
-                ->get();
-            
-                foreach($employees as $e)
-                {
-                    $basic_pays = [];
-
-                    foreach($months as $key => $value)
+            foreach($locations as $location)
+            {
+                $employees = $this->baseQueryW()
+                    ->select(DB::raw("employees.biometric_id,employees.lastname,employees.firstname,employees.middlename"))
+                    ->distinct()
+                    ->where('payroll_period_weekly.pyear',$year)
+                    ->where('employees.location_id','=',$location->location_id)
+                    ->orderBy('employees.lastname','asc')->orderBy('employees.firstname','asc')->orderBy('employees.middlename','asc')
+                    ->get();
+                
+                    foreach($employees as $e)
                     {
-                        $result = DB::connection('weekly')->table('payrollregister_posted_weekly')
-                        ->join('payroll_period_weekly','payrollregister_posted_weekly.period_id','=','payroll_period_weekly.id')
-                        ->select(DB::raw("ifnull(sum(basic_pay),0.00) as basic_pay"))
-                        ->where('payrollregister_posted_weekly.biometric_id','=',$e->biometric_id)
-                        ->where('payroll_period_weekly.pyear','=',$year)
-                        ->whereRaw('month(date_from) = ?',[$key])->first();
-                        // $basic_pay[$key]
+                        $basic_pays = [];
 
-                        $basic_pays[$key] = $result->basic_pay;
+                        foreach($months as $key => $value)
+                        {
+                        
+                        
+                            $result = DB::connection('weekly')->table('payrollregister_posted_weekly')
+                            ->join('payroll_period_weekly','payrollregister_posted_weekly.period_id','=','payroll_period_weekly.id')
+                            // ->select(DB::raw("ifnull(sum(basic_pay-late_eq_amount),0.00) as basic_pay"))
+                            ->select(DB::raw("ifnull(sum(basic_pay),0.00) as basic_pay,ifnull(sum(vl_wpay_amount),0.00) as vl_wpay_amount,ifnull(sum(late_eq_amount),0.00) as late_eq_amount "))
+                            ->where('payrollregister_posted_weekly.biometric_id','=',$e->biometric_id)
+                            ->where('payroll_period_weekly.pyear','=',$year)
+                            ->whereRaw('month(date_from) = ?',[$key])->first();
+
+                            $retro = DB::connection('weekly')->table('posted_weekly_compensation')
+                                    ->join('payroll_period_weekly','payroll_period_weekly.id','=','posted_weekly_compensation.period_id')
+                                    ->where('posted_weekly_compensation.biometric_id','=',$e->biometric_id)
+                                    ->where('payroll_period_weekly.pyear','=',$year)
+                                    ->whereRaw('month(date_from) = ?',[$key])
+                                    ->select(DB::raw("sum(ifnull(retro_pay,0.00)) as retro_pay"))
+                                    ->first();
+
+                            $basic_pays[$key] = ($retro) ?  $result->basic_pay + $retro->retro_pay + $result->vl_wpay_amount - $result->late_eq_amount  :  $result->basic_pay + $result->vl_wpay_amount - $result->late_eq_amount;
+
+                        }
+
+                        $e->basic = $basic_pays;
                     }
-
-                    $e->basic = $basic_pays;
-                }
-            $location->employees = $employees;
-        }
+                $location->employees = $employees;
+            }
 
         return $locations;
 

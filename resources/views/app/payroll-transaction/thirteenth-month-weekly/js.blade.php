@@ -63,6 +63,13 @@
                         let url = `thirteenth-month-weekly/download-banktransmittal/${selected.value()}`;
                         window.open(url);
                     },
+                    banktransmittal2: function()
+                    {
+                        let selected = $("#pyear2").data("kendoDropDownList");
+
+                        let url = `thirteenth-month-weekly/download-banktransmittal/${selected.value()}`;
+                        window.open(url);
+                    },
                     post : function()
                     {
                         let selected = $("#pyear").data("kendoDropDownList");
@@ -160,6 +167,7 @@
                             }
                         }).data("kendoWindow").center().open().title() ;
                     },
+                    
                     closePop : function(){},
                     print : function(){
 
@@ -198,7 +206,7 @@
                     },
                     downloadInActiveConso : function()
                     {
-                        let selected = $("#pyear").data("kendoDropDownList");
+                        let selected = $("#pyear2").data("kendoDropDownList");
                         let url = `thirteenth-month-weekly/download-excel-inactive-conso/${selected.value()}`;
                         window.open(url);
                     }
@@ -241,9 +249,9 @@
                     {
                         type : "button",text : "Download Excel - Inactive Employees", icon : 'download',click : viewModel.handler.downloadInActive
                     },
-                    {
-                        type : "button",text : "Download Excel - Inactive Employees (Conso)", icon : 'download',click : viewModel.handler.downloadInActiveConso
-                    }
+                    // {
+                    //     type : "button",text : "Download Excel - Inactive Employees (Conso)", icon : 'download',click : viewModel.handler.downloadInActiveConso
+                    // }
                 ]
             });
 
@@ -263,6 +271,15 @@
                     {
                         type : "button",text : "Post", icon : 'save',click : viewModel.handler.post_conso
                     },
+                    {
+                        type : "button",text : "Bank Transmittal", icon : 'print',click : viewModel.handler.banktransmittal2
+                    },
+                    {
+                        type : "button",text : "Payslip", icon : 'print',click : viewModel.handler.showPop
+                    },
+                    {
+                        type : "button",text : "Download Excel - Inactive Employees (Conso)", icon : 'download',click : viewModel.handler.downloadInActiveConso
+                    }
                    
                 ]
             });

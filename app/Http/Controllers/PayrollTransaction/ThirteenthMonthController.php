@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use  App\Excel\BankTransmittal;
 use  App\Excel\ThirteenthMonthConso;
+use App\Excel\ThirteenthMonthConsoR;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class ThirteenthMonthController extends Controller
@@ -18,13 +19,15 @@ class ThirteenthMonthController extends Controller
     private $excel;
     private $rcbc;
     private $conso;
+    private $consor;
 
-    public function __construct(ThirteenthMonthMapper $mapper,ThirteenthMonthSG $excel,BankTransmittal $rcbc,ThirteenthMonthConso $conso)
+    public function __construct(ThirteenthMonthMapper $mapper,ThirteenthMonthSG $excel,BankTransmittal $rcbc,ThirteenthMonthConso $conso,ThirteenthMonthConsoR $consor)
     {
         $this->mapper = $mapper;
         $this->excel = $excel;
         $this->rcbc = $rcbc;
         $this->conso = $conso;
+        $this->consor = $consor;
     }
 
     public function index()
@@ -209,12 +212,12 @@ class ThirteenthMonthController extends Controller
         ];
 
         $semi = $this->mapper->buildSemiMonthlyI($months,$year);
+        
         $weekly = $this->mapper->buildWeeklyI($months,$year);
 
-        $this->conso->setValues($semi,$weekly,$months);
-        return Excel::download($this->conso,"ThirteenthMonthConso_$year.xlsx");
+        $this->consor->setValues($semi,$weekly,$months,$year);
+        return Excel::download($this->consor,"ThirteenthMonthConsoI_$year.xlsx");
         
-
     }
 
 
