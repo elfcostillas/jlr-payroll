@@ -86,6 +86,12 @@
             <div class="row">
              
                 <div id="toolbar" style="width:100%" ></div>
+                
+            </div>
+            <div class="row mt-4" >
+                <div>Consolidated</div>
+                <div id="toolbar2" style="width:100%" ></div>
+                
             </div>
             <div class="row mt-2">
                 <div style="overflow:scroll;width :100%;height:580px;">

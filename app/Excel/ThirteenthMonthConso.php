@@ -17,6 +17,7 @@ class ThirteenthMonthConso implements ShouldAutoSize,WithColumnFormatting,FromVi
     private $weekly;
     private $semi;
     private $months;
+    private $year;
 
     public function registerEvents(): array
     {   
@@ -27,11 +28,12 @@ class ThirteenthMonthConso implements ShouldAutoSize,WithColumnFormatting,FromVi
         ];    
     }
 
-    public function setValues($semi,$weekly,$months)
+    public function setValues($semi,$weekly,$months,$year)
     {
         $this->weekly = $weekly;
         $this->semi = $semi;
         $this->months = $months;
+        $this->year = $year;
     }
 
     public function view() : View
@@ -41,6 +43,7 @@ class ThirteenthMonthConso implements ShouldAutoSize,WithColumnFormatting,FromVi
                 'semi' => $this->semi,
                 'weekly' => $this->weekly ,
                 'months' => $this->months ,
+                'year' => $this->year
             ]);
     }
 

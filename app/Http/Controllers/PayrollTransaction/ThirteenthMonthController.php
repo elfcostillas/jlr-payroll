@@ -29,7 +29,7 @@ class ThirteenthMonthController extends Controller
 
     public function index()
     {
-        $years =  $this->mapper->getYears();
+        $years =  $this->mapper->getYearsSG();
 
         return view('app.payroll-transaction.thirteenth-month-weekly.index',['years' => $years]);
     }
@@ -71,8 +71,25 @@ class ThirteenthMonthController extends Controller
         }
 
         return response()->json(['success'=>"13th Month of year $year was successfully posted."]);
+    }
 
-       
+    public function postConso(Request $request)
+    {
+        $year = $request->cyear;
+
+        if(!$this->mapper->isPosted($year)){
+            $result = $this->mapper->post13thMonthConso($year)[0];
+
+            if($result['error'])
+            {
+                return response()->json(['error'=>$result['message']])->setStatusCode(500);
+            }
+          
+        }else{
+            return response()->json(['error'=>"Year $year is already posted."])->setStatusCode(500);
+        }
+
+        return response()->json(['success'=>"13th Month of year $year was successfully posted."]);
     }
 
     public function bank_transmittal(Request $request)
@@ -151,7 +168,7 @@ class ThirteenthMonthController extends Controller
         $weekly = $this->mapper->buildWeekly($months,$year);
         // $weekly_sub = $this->mapper->buildWeeklySub($months,$year);
 
-        $this->conso->setValues($semi,$weekly,$months);
+        $this->conso->setValues($semi,$weekly,$months,$year);
         return Excel::download($this->conso,"ThirteenthMonthConso_$year.xlsx");
         
         // return view("app.payroll-transaction.thirteenth-month-weekly.conso-v2",[

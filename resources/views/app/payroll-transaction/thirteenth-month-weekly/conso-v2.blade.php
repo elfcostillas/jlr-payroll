@@ -6,6 +6,20 @@
 
 <?php
 
+    use Illuminate\Support\Facades\Auth;
+    use Illuminate\Support\Facades\DB;
+
+    $now = now();
+    $user = Auth::user();
+
+    DB::table('conso_13thmonth_headers')
+        ->where('generated_by','=',$user->id)
+        ->where('status','=','DRAFT')->delete();
+
+    DB::table('conso_13thmonth_details')
+        ->where('generated_by','=',$user->id)
+        ->where('status','=','DRAFT')->delete();
+
     $weekly_basic_arr = [];
 
     foreach($weekly as $location)
@@ -41,6 +55,37 @@
 
         return 0.00;
     }
+
+    function inserToDB($basic_pay,$e,$key,$now,$user,$year)
+    {
+
+        $data = array(
+            'biometric_id' => $e->biometric_id,
+            'pyear' => $year,
+            'pmonth' => $key,
+            'basic_pay' => $basic_pay,
+            'status' => 'DRAFT',
+            'generated_by' => $user->id,
+            'generated_on' => $now,
+        );
+
+        DB::table('conso_13thmonth_details')->insert($data);
+    }
+
+    function insertNetPay($total,$e,$key,$now,$user,$year)
+    {
+        $data = array(
+            'pyear' => $year,
+            'biometric_id' => $e->biometric_id,
+            'status' => 'DRAFT',
+            'generated_by' => $user->id,
+            'generated_on' => $now,
+            'gross_pay' => $total,
+            'net_pay' => round($total/12,2)
+        );
+    
+        DB::table('conso_13thmonth_headers')->insert($data);
+    }
 ?>
 
 <body>
@@ -72,11 +117,20 @@
                     <td> {{ $e->lastname }}, {{ $e->firstname }} </td>
                     @foreach($months as $key => $value)
                         <?php
-                            $val = getMultiDimension($weekly_basic_arr,$e,$key);
+                            $val = getMultiDimension($weekly_basic_arr,$e,$key,$now,$user);
+
+                            $monthly = $e->basic[$key] + $val;
+
+                            inserToDB($monthly,$e,$key,$now,$user,$year);
                         ?>
                         <td  style="background-color : {{ ($val > 0 ) ? 'orange' : 'none' }} "> {{ $e->basic[$key] + $val  }} </td>
-                        <?php $total +=$e->basic[$key] + $val ;   ?>
+                        <?php 
+                            $total += $e->basic[$key] + $val;   
+                        ?>
                     @endforeach
+                        <?php
+                            insertNetPay($total,$e,$key,$now,$user,$year);
+                        ?>
                     <td> {{ $total }}</td>
                     <td> {{ round($total/12,2) }}</td>
                 </tr>

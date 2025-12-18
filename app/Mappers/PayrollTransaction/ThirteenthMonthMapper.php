@@ -37,6 +37,23 @@ class ThirteenthMonthMapper extends AbstractMapper
         return $result;
     }
 
+    function getYearsSG()
+    {   
+        //SELECT pyear FROM payroll_year 
+
+        // $result = DB::table("payroll_year")
+        //     ->select(DB::raw("pyear as text,pyear as value"))->get();
+        // return $result;
+        // select distinct(year(date_from)) from payroll_period
+
+        $result = DB::table('payroll_period_weekly')
+            ->select(DB::raw("distinct(year(date_from)) as text,year(date_from) as pyear"))
+            ->orderBy('date_from','desc')
+            ->get();
+
+        return $result;
+    }
+
     public function empQuery()
     {
         $result = DB::table('employees')
@@ -522,6 +539,116 @@ class ThirteenthMonthMapper extends AbstractMapper
         );
     }
 
+    public function post13thMonthConso($year)
+    {
+        $user = Auth::user();
+        $total = 0;
+
+        $details = DB::table('conso_13thmonth_details')
+                ->where('generated_by','=',$user->id)
+                ->where('pyear','=',$year)
+                ->where('status','=','DRAFT')
+                ->select(DB::raw("biometric_id,pyear,pmonth,basic_pay,status,generated_by,generated_on"))
+                ->get();
+
+      
+        if(count($details) < 1){
+            return array([ 'error' => true, 'message' => 'No data found.' ]);
+        }
+
+        $header = DB::table('conso_13thmonth_headers')
+                ->where('generated_by','=',$user->id)
+                ->where('pyear','=',$year)
+                ->where('status','=','DRAFT')
+                ->select(DB::raw("sum(conso_13thmonth_headers.gross_pay) as gross_pay,sum(conso_13thmonth_headers.net_pay) as net_pay"))
+                ->first();
+
+        $header_total =  (float) $header->gross_pay;
+
+    
+        foreach($details as $emp)
+        {
+            $total += $emp->basic_pay;
+        }
+       
+        if(round($total,2) == round($header_total,2)){
+            $this->commitPost($year,$details);
+        }else{
+            return array([ 'error' => true, 'message' => 'Discrepancy found.' ]);
+        }
+
+        return array([ 'error' => false, 'message' => 'Posting successfull.' ]);
+    }
+
+    public function commitPost($year,$details)
+    {
+        $user = Auth::user();
+
+        $header = DB::table('conso_13thmonth_headers')
+                ->where('generated_by','=',$user->id)
+                ->where('pyear','=',$year)
+                ->where('status','=','DRAFT')
+                ->select(DB::raw(" pyear, biometric_id, status, generated_by, generated_on, gross_pay, net_pay"))
+                ->get();
+
+        foreach($details as $new_details)
+        {
+            $new_details->status = 'POSTED';
+            $new_details->generated_on = now();
+        }
+
+        $array_details = [];
+
+        foreach($details as $_ddetails)
+        {
+            array_push($array_details,(array) $_ddetails );
+        }
+
+        foreach($header  as $new_header)
+        {
+            $new_header->status = 'POSTED';
+            $new_header->generated_on = now();
+        }
+
+        $array_header = [];
+
+        foreach($header as $_dheader)
+        {
+            array_push($array_header,(array) $_dheader );
+        }
+
+        DB::transaction(function() use ($array_header,$array_details){
+            DB::table('conso_13thmonth_headers')->insert($array_header);
+            DB::table('conso_13thmonth_details')->insert($array_details);
+
+            // DB::table('thirteenth_month_sg')->insert(['user_id' => Auth::user()->id,
+            //         'pyear' => $year, 
+            //         'biometric_id' => $e->getBiometricID(),
+            //         'net_pay' => $e->getNetPay(),
+            //         'stat' => 'POSTED',
+            //         'gross_pay' => $e->getGrossPay(),
+            //         'created_on' => now() ]);
+            
+            $toPost = [];
+
+            foreach($array_header as $header)
+            {
+                array_push($toPost,array(
+                    'pyear' => $header['pyear'],
+                    'biometric_id' => $header['biometric_id'],
+                    'gross_pay' => $header['gross_pay'],
+                    'net_pay' => $header['net_pay'],
+                    'stat' => $header['status'],
+                    'user_id' => $header['generated_by'],
+                    'created_on' => $header['generated_on'],
+                ));
+            }
+
+            DB::table('thirteenth_month_sg')->insert($toPost);
+
+        });
+
+    }
 
     public function post13thMonth($year)
     {

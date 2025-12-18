@@ -99,8 +99,44 @@
                                     });
                                 }
                             });
+                    },
+                    post_conso : function()
+                    {
+                        let selected = $("#pyear2").data("kendoDropDownList");
+                
+                        Swal.fire({
+                                title: 'Finalize and Post 13th Month (Support Group)',
+                                text: "You won't be able to revert this!",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Finalize'
+                            }).then((result) => {
+                                if (result.value) {                       
+                                    $.post('thirteenth-month-weekly/post-conso',{
+                                        cyear : selected.value()
+                                    },function(data,staus){
+                                        if(data.success){
+                                            Swal.fire({
+                                            //position: 'top-end',
+                                            icon: 'success',
+                                            title: data.success,
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                            });	
 
-                      
+                                           
+                                        }
+                                    })
+                                    .fail(function(data){
+                                    swal_error(data);
+                                    }).always(function() {
+                                        //viewModel.maingrid.ds.read();
+                                    });
+                                }
+                            });
+
                     },
                     showPop : function(data)
                     {
@@ -136,6 +172,13 @@
                     conso : function ()
                     {
                         let selected = $("#pyear").data("kendoDropDownList");
+
+                        let url = `thirteenth-month-weekly/download-conso/${selected.value()}`;
+                        window.open(url);
+                    },
+                    conso2 : function ()
+                    {
+                        let selected = $("#pyear2").data("kendoDropDownList");
 
                         let url = `thirteenth-month-weekly/download-conso/${selected.value()}`;
                         window.open(url);
@@ -189,9 +232,9 @@
                     {
                         type : "button",text : "Payslip", icon : 'print',click : viewModel.handler.showPop
                     },
-                    {
-                        type : "button",text : "Consolidated", icon : 'table',click : viewModel.handler.conso
-                    },
+                    // {
+                    //     type : "button",text : "Download Consolidated", icon : 'table',click : viewModel.handler.conso
+                    // },
                     {
                         type : "button",text : "Consolidated Bank Transmittal", icon : 'print',click : viewModel.handler.banktransmittalconso
                     },
@@ -204,7 +247,42 @@
                 ]
             });
 
+            $("#toolbar2").kendoToolBar({
+                items : [
+                    // { type: "button", text: "Button" },
+                    // { id : 'saveBtn', type: "button", text: "Save", icon: 'save', },
+                    {
+                        type : "dropdown",
+                        template : "<input id='pyear2'>",
+                        overflow: "never"
+                    },
+               
+                    {
+                        type : "button",text : "Download", icon : 'table',click : viewModel.handler.conso2
+                    },
+                    {
+                        type : "button",text : "Post", icon : 'save',click : viewModel.handler.post_conso
+                    },
+                   
+                ]
+            });
+
             $("#pyear").kendoDropDownList({
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: years,
+                index: 0,
+                // change: viewModel.handler.setSelectedYear()
+                change: function(e){
+                    //e.sender.dataItem()
+                    // console.log(e.sender.dataItem().value);
+                    let dataItem = e.sender.dataItem();
+
+
+                }
+            });
+
+            $("#pyear2").kendoDropDownList({
                 dataTextField: "text",
                 dataValueField: "value",
                 dataSource: years,
