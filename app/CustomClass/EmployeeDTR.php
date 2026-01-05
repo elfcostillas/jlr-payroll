@@ -233,6 +233,7 @@ class EmployeeDTR
 
     function checkLastWorkingDay($holiday_date)
     {
+       
         $flag = true;
         $ctr = 1;
 
@@ -325,6 +326,7 @@ class EmployeeDTR
 
     public function grantHoliday($logs)
     {
+
         foreach($logs as $log)
         {
             $entitled = false;
@@ -374,7 +376,6 @@ class EmployeeDTR
 
     public function computeHolidays($holidays,$sp_holidays)
     {   
-    
         if($holidays)
         {
             $reg_hol_logs = DB::table('edtr')

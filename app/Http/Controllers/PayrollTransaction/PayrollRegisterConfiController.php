@@ -49,6 +49,7 @@ class PayrollRegisterConfiController extends Controller
         $this->excel = $excel;
         $this->rcbc = $rcbc;
         $this->fin_excel = $fin_excel;
+        
     }
 
     public function index()
@@ -178,6 +179,10 @@ class PayrollRegisterConfiController extends Controller
 
                         case 'SVL' :
                                 $employee->svl += $leave->with_pay;
+                            break;
+
+                        case 'BRV' :
+                                $employee->brv += $leave->with_pay;
                             break;
                         
                         default : 
@@ -392,6 +397,7 @@ class PayrollRegisterConfiController extends Controller
         $period = $payroll->getPeriod($request->period_id);
         
         $data = $payroll->getPayrollData($period);
+
 
         $payroll->getHeaders();
 

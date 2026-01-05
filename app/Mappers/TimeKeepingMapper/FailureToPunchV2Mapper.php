@@ -26,6 +26,7 @@ class FailureToPunchV2Mapper extends AbstractMapper {
 
     public function list($filter)
     {
+        
         $result = $this->model->select(DB::raw("
         case 
             when ftp_type = 'OB' Then 'Official Business'
@@ -35,6 +36,19 @@ class FailureToPunchV2Mapper extends AbstractMapper {
         ,ftp_hr.*,employee_names_vw.employee_name"))
             ->from('ftp_hr')
             ->join('employee_names_vw','ftp_hr.biometric_id','=','employee_names_vw.biometric_id');
+
+        if($filter['filter'])
+        {
+            if(array_key_exists('filters',$filter['filter']))
+            {
+                $filter_arr = $filter['filter']['filters'];
+
+                foreach($filter_arr as $f){
+                   $result->where($f['field'],'like','%'.$f['value'].'%');
+                }
+            }
+        }
+        
 
         $total = $result->count();
 

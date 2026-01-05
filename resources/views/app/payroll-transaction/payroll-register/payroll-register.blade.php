@@ -155,6 +155,9 @@
                         <th style="padding : 0px 4px;min-width:110px;" >BL</th>
                         <th style="padding : 0px 4px;min-width:110px;" >BL Amount</th>
 
+                        <th style="padding : 0px 4px;min-width:110px;" >Bereavement</th>
+                        <th style="padding : 0px 4px;min-width:110px;" >Bereavement Pay</th>
+
                         <th style="padding : 0px 4px;min-width:110px;" >SVL</th>
                         <th style="padding : 0px 4px;min-width:110px;" >SVL Amount</th>
 
@@ -236,6 +239,9 @@
 
                                     <td style="text-align:right;"> {{ ($employee->bl_wpay>0) ? number_format($employee->bl_wpay,2) : ''; }}</td>
                                     <td style="text-align:right;"> {{ ($employee->bl_wpay_amount>0) ? number_format($employee->bl_wpay_amount,2) : ''; }}</td>
+
+                                    <td style="text-align:right;"> {{ ($employee->brv>0) ? number_format($employee->brv,2) : ''; }}</td>
+                                    <td style="text-align:right;"> {{ ($employee->brv_amount>0) ? number_format($employee->brv_amount,2) : ''; }}</td>
 
                                     <td style="text-align:right;"> {{ ($employee->svl>0) ? number_format($employee->svl,2) : ''; }}</td>
                                     <td style="text-align:right;"> {{ ($employee->svl_amount>0) ? number_format($employee->svl_amount,2) : ''; }}</td>

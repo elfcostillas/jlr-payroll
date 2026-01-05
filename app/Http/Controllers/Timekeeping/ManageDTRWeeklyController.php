@@ -146,11 +146,12 @@ class ManageDTRWeeklyController extends Controller
             //$e->biometric_id;
             //dd($request->period_id);
 
-            // $dtr = $this->mapper->getweeklyDTR($e->biometric_id,$request->period_id);
-            // $this->mapper->mapRawLogs2($dtr);
+            $dtr = $this->mapper->getweeklyDTR($e->biometric_id,$request->period_id);
+            $this->mapper->mapRawLogs2($dtr);
 
             $logs = $this->mapper->getWeeklyDTRforComputation($e->biometric_id,$request->period_id);
             if($logs && count($logs) >0){
+                
                 $this->mapper->computeLogs($logs,'weekly');
 
             }

@@ -172,6 +172,8 @@
 
                         <th style="padding : 0px 4px;min-width:110px;" >BL (Hrs)</th>
                         <th style="padding : 0px 4px;min-width:110px;" >BL Amount</th>
+                        
+                        <th style="padding : 0px 4px;min-width:110px;" >Bereavment</th>
 
                         <th style="padding : 0px 4px;min-width:110px;" >Absent</th>
                         <th style="padding : 0px 4px;min-width:110px;" >Absent Amount</th>

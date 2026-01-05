@@ -197,6 +197,7 @@ class WeeklyEmployee
         // $this->payreg['rd_ndot_amount'] = round(($this->rates['hourly_rate'] * 1.3 * 1.1 * 1.3) * $this->payreg['rd_ndot'],2);
 
         // /* Legal Hours */
+     
         $this->payreg['leghol_count_amount'] =  round($this->rates['daily_rate'] * $this->payreg['leghol_count'],2);
         $this->payreg['leghol_hrs_amount'] = round($this->rates['hourly_rate'] * $this->payreg['leghol_hrs'],2);
         // $this->payreg['leghol_ot_amount'] = round($this->rates['hourly_rate'] * 2 * 1.3 * $this->payreg['leghol_ot'],2);
@@ -228,7 +229,6 @@ class WeeklyEmployee
         // $this->payreg['dblhol_rdndot_amount'] = round($this->rates['hourly_rate'] * 3.9 * 1.1 * 1.3 * $this->payreg['dblhol_rdndot'],2);
 
         $this->payreg['basic_pay'] = $this->repo->getBasicPay($this->payreg);
-
         
         if($this->data['daily_allowance']>0){
             $this->payreg['daily_allowance'] = $this->data['daily_allowance'] * $this->payreg['ndays'];
