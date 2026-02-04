@@ -16,6 +16,7 @@ use App\Excel\UnpostedPayrollRegister;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Excel\BankTransmittal;
 use Carbon\CarbonPeriod;
+use Illuminate\Support\Facades\Http;
 
 class PayrollRegisterController extends Controller
 {
@@ -55,173 +56,22 @@ class PayrollRegisterController extends Controller
 
     public function compute(Request $request)
     {
+
         $user = Auth::user();
-
+        $period_id = $request->id;
         $period = $this->unposted->getPeriod($request->id);
-        $phil_rate = $this->unposted->getPhilRate();
-        //dd($phil_rate->rate);
-        $payreg = [];
+        $url = "http://172.17.42.108/payroll-processor/process/non-confi/$period_id/$user->id";
 
-        $employees = $this->unposted->getEmployeeWithDTR($period->id,'non-confi');
-        
-        if($period->period_type==1){
-            /* loans for 15 */
-        }else{
-            /* loans for 30 */ //,$user_id,$emp_level
-        }
+        $response = Http::get($url);
 
-        $gloans = $this->unposted->runGovLoans($period,$employees->pluck('biometric_id'),$user->id,'non-confi');
-        $installments = $this->unposted->runInstallments($period,$employees->pluck('biometric_id'),$user->id,'non-confi');
-        $onetime = $this->unposted->runOneTimeDeduction($period,$employees->pluck('biometric_id'),$user->id,'non-confi');
-        $fixed = $this->unposted->runFixedDeduction($period,$employees->pluck('biometric_id'),$user->id,'non-confi');
-
-        $fixed = $this->unposted->runFixedCompensation($period,$employees->pluck('biometric_id'),$user->id,'non-confi');
-        $other = $this->unposted->runOtherCompensation($period,$employees->pluck('biometric_id'),$user->id,'non-confi');
-
-        foreach($employees as $employee)
-        {
-            
-            if($employee->new_hire == 'Y' && $employee->fixed_rate == 'N' && $employee->pay_type == 1){
-                $employee->absences = $this->count_absent($employee,$period);
-            }
-           
-            $holidays = $this->unposted->getHolidayCounts($employee->biometric_id,$employee->period_id);
-            //dd($employee);
-            
-            $employee->under_time_amount = 0;
-            $employee->vl_wpay = 0;
-            $employee->vl_wpay_amount = 0;
-            $employee->vl_wopay = 0;
-            $employee->vl_wopay_amount = 0;
-            $employee->sl_wopay = 0;
-            $employee->sl_wopay_amount = 0;
-            $employee->sl_wpay = 0;
-            $employee->sl_wpay_amount = 0;
-            $employee->bl_wpay = 0;
-            $employee->bl_wpay_amount = 0;
-            $employee->bl_wopay = 0;
-            $employee->bl_wopay_amount = 0;
-
-            $employee->svl = 0;
-            $employee->svl_amount = 0;
-
-            $employee->actual_reghol = 0;
-            $employee->actual_sphol = 0;
-            $employee->actual_dblhol = 0;
-
-            foreach($holidays as $holiday){
-                if($employee->date_hired < $holiday->holiday_date){
-                    switch($holiday->holiday_type){
-                        case 1 : case '1' :
-                            $employee->actual_reghol += 1;
-                            break;
-                        case 2 : case '2' :
-                            $employee->actual_sphol += 1;
-                            break;
-                        case 3 : case '3' :
-                            $employee->actual_dblhol += 1;
-                            break;
-                    }
-                }
-                // dd($holiday->holiday_date < );
-               
-            }
-
-            $leaves = $this->unposted->getFiledLeaves($employee->biometric_id,$period->id);
-            
-            if($leaves->count()>0){
-                foreach($leaves as $leave){
-                    switch($leave->leave_type){
-                       
-                        case 'VL' :
-                            $employee->vl_wpay += $leave->with_pay;
-                            //$employee->vl_wopay += $leave->without_pay;
-                            $employee->absences += $leave->without_pay;
-                           
-                            break;
-                        case 'SL' :
-                            $employee->sl_wpay += $leave->with_pay;
-                            //$employee->sl_wopay += $leave->without_pay;
-                            $employee->absences += $leave->without_pay;
-                            break;
-                        case 'UT' : case 'EL' :
-                            $employee->under_time  += $leave->without_pay;
-                            break;
-        
-                        case 'BL' :
-                            //dd($employee->date_hired);
-                            if($employee->date_hired==null || $employee->date_hired == ''){
-                                $employee->absences += $leave->without_pay;
-                            }else {
-                                $withPayDate = Carbon::createFromFormat('Y-m-d',$employee->date_hired)->addyear();
-                                if($withPayDate<now()){
-                                    $employee->bl_wpay += $leave->without_pay + $leave->with_pay;
-                                }else {
-                                    $employee->absences += $leave->without_pay + $leave->with_pay;
-                                }
-
-                            }
-                            //$employee->bl_wpay += $leave->with_pay;
-                            //$employee->bl_wopay += $leave->without_pay;
-                            break;
-
-                        case 'SVL' :
-                                $employee->svl += $leave->with_pay;
-                            break;
-                        
-                        default : 
-                            $employee->vl_wpay += $leave->with_pay;
-                            //$employee->vl_wopay += $leave->without_pay;
-                            $employee->absences += $leave->without_pay;
-                        break;
-                    }
-                    
-                }
-            }
-
-            // dd($employee);
-
-            $awol = $this->unposted->getAwolCount($employee->biometric_id,$period);
-
-            if($awol > 0){
-                $employee->absences += $awol;
-            }
-
-            $person = ($employee->pay_type==1) ? new Employee($employee,new SemiMonthly) : new Employee($employee,new Daily);
-            
-            $person->setPhilRate($phil_rate->rate);
-            $person->compute($period);
-            
-            $oe = $this->unposted->otherEarnings($employee->biometric_id,$employee->period_id);
-
-            $person->computeGrossTotal($oe);
-
-            $compd = $this->unposted->getDeductions($employee->biometric_id,$employee->period_id);
-            $govloan = $this->unposted->getGovLoans($employee->biometric_id,$employee->period_id);
-            $person->computeTotalDeduction($compd,$govloan);
-
-            $person->computeNetPay();
-
-            array_push($payreg,$person);
-
-        }
-       
-        $flag = $this->unposted->reInsert($period->id,$payreg,'non-confi');
-
-        if($flag){
-            $noPay = $this->unposted->semiEmployeeNoPayroll($period->id);
-        }else{
-            return false;
-        }
-
-        $collections = $this->unposted->getPprocessed($period,'non-confi');
+       $collections = $this->unposted->getPprocessed($period,'non-confi');
         $headers =  $this->unposted->getHeaders($period)->toArray();
         $colHeaders = $this->unposted->getColHeaders();
 
         $deductions = $this->unposted->getDeductionLabel($period);
         $gov = $this->unposted->getGovLoanLabel($period);
         $compensation = $this->unposted->getUsedCompensation($period);
-        //dd($compensation);
+        $noPay = $this->unposted->semiEmployeeNoPayroll($period->id);
         $label = [];
 
         foreach($headers as $key => $value){
@@ -235,11 +85,6 @@ class PayrollRegisterController extends Controller
             $label[$value->var_name] = $value->col_label;
         }
 
-        // foreach($colHeaders as $colds)
-        // {
-        //     dd($colds->var_name);
-        // }
-        
         return view('app.payroll-transaction.payroll-register.payroll-register',[
             'data' => $collections,
             'no_pay' => $noPay,
@@ -249,6 +94,10 @@ class PayrollRegisterController extends Controller
             'govLoan' => $gov,
             'colHeaders' => $colHeaders,
             'compensation' => $compensation]);
+
+
+
+       
     }
 
     public function downloadExcelUnposted(Request $request)

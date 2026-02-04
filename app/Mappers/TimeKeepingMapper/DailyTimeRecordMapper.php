@@ -2006,6 +2006,58 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
 
     }
 
+    function downloadWeeklyVite($period_id)
+    {
+        $tmp = DB::table('weekly_tmp_locations')->select('biometric_id','loc_id')->where('period_id','=',$period_id);
+
+        // $result = DB::table('employees')->where('exit_status','=',1)->where('pay_type','=',3);
+        $period = DB::table('payroll_period_weekly')->where('id','=',$period_id)->first();
+
+        $locations = DB::table('locations')->get();                
+
+        foreach($locations as $location)
+        {
+            $employees =  DB::table('employees')
+                            ->leftJoinSub($tmp,'tmp',function($join){
+                                $join->on('tmp.biometric_id','=','employees.biometric_id');
+                            })  
+                            ->join('employee_names_vw','employee_names_vw.biometric_id','=','employees.biometric_id')
+                            ->select('employees.biometric_id','employee_names_vw.employee_name')
+                            ->where('employees.exit_status','=',1)
+                            ->where('employees.emp_level','=',6)
+                            ->whereRaw("COALESCE(tmp.loc_id,employees.location_id) = ". $location->id)
+                            ->get();
+
+                foreach($employees as $employee)
+                {
+                    $raw = DB::table('edtr_raw')
+                        ->select(DB::raw("biometric_id,punch_date,GROUP_CONCAT(punch_time ORDER BY punch_time ASC SEPARATOR ' ') AS cincout"))
+                        ->whereBetween('punch_date',[$period->date_from,$period->date_to])
+                        // ->where('punch_time','<>','00:00')
+                        ->where('biometric_id',$employee->biometric_id)
+                        ->groupBy('biometric_id')
+                        ->groupBy('punch_date');
+                    
+                    $dtr = DB::table('edtr_detailed')->select(DB::raw("edtr_detailed.*,cincout"))
+                            ->leftJoinSub($raw, 'rawdtr', function ($join) {
+                                $join->on('rawdtr.biometric_id', '=', 'edtr_detailed.biometric_id');
+                                $join->on('rawdtr.punch_date', '=', 'edtr_detailed.dtr_date');
+                            })
+                            ->whereBetween('edtr_detailed.dtr_date',[$period->date_from,$period->date_to])
+                            ->where('edtr_detailed.biometric_id',$employee->biometric_id)
+                            ->orderBy('dtr_date','ASC')
+                            ->get();
+
+                    $employee->dtr = $dtr;
+                }
+
+            $location->employees = $employees;
+        }
+
+        return $locations;
+
+    }
+
     public function downloadDTRSemi($period_id)
     {
         $employees = DB::table('employees')
@@ -2021,6 +2073,41 @@ WHERE biometric_id = 19 AND payroll_period.id = 1;
         foreach($employees as $employee){
 
             $dtr = DB::select(DB::raw("SELECT edtr.*,date_format(dtr_date,'%a') as day_name FROM edtr LEFT JOIN payroll_period ON dtr_date BETWEEN date_from AND date_to 
+                WHERE biometric_id = $employee->biometric_id AND payroll_period.id = $period_id
+                ORDER BY dtr_date ASC"));
+
+            foreach($dtr as $row)
+            {
+                $punch = DB::table('edtr_raw')->select(DB::raw("GROUP_CONCAT(punch_time ORDER BY punch_time ASC SEPARATOR ' ') AS cincout"))
+                    ->where('biometric_id', $employee->biometric_id)
+                    ->where('punch_date',$row->dtr_date)
+                    ->first();
+                $row->punch = $punch;
+            }
+
+            $employee->dtr = $dtr;
+        }
+
+       
+
+        return $employees;
+    }
+
+    public function downloadViteDTRSemi($period_id)
+    {
+        $employees = DB::table('employees')
+                    ->select(DB::raw("employees.id,CONCAT(lastname,', ', firstname) AS emp_name,emp_pay_types.pay_description,biometric_id,time_in,time_out"))
+                    ->leftJoin('emp_pay_types','emp_pay_types.id','=','pay_type')
+                    ->leftJoin('work_schedules','sched_mtwtf','=','work_schedules.id')
+                    ->where('exit_status',1)
+                    // ->where('pay_type','!=',3)
+                    ->where('employees.emp_level','<',6)
+                    ->where('job_title_id','!=',130)
+                    ->get();
+        //work_schedules ON sched_mtwtf = work_schedules.id
+        foreach($employees as $employee){
+
+            $dtr = DB::select(DB::raw("SELECT edtr_detailed.*,date_format(dtr_date,'%a') as day_name FROM edtr_detailed LEFT JOIN payroll_period ON dtr_date BETWEEN date_from AND date_to 
                 WHERE biometric_id = $employee->biometric_id AND payroll_period.id = $period_id
                 ORDER BY dtr_date ASC"));
 

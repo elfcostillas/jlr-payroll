@@ -824,7 +824,7 @@ class PayrollRegisterFunctions
             '10 Hrs' => 0,
             '20 Hrs' => 0,
             '30 Hrs' => 0,
-            // '40 Hrs' => 0,
+            '40 Hrs' => 0,
             // '50 Hrs' => 0,
             // '60 Hrs' => 0,
             // '70 Hrs' => 0,
@@ -851,9 +851,14 @@ class PayrollRegisterFunctions
                 $data['20 Hrs'] += 1;
             }
 
-            if($employee->reg_ot >= 30)
+            if($employee->reg_ot >= 30 && $employee->reg_ot < 40)
             {
                 $data['30 Hrs'] += 1;
+            }
+
+             if($employee->reg_ot >= 40)
+            {
+                $data['40 Hrs'] += 1;
             }
 
 

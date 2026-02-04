@@ -169,5 +169,15 @@ class ManageDTRWeeklyController extends Controller
         return Excel::download($this->excel,'DTR-Sumamry'.$period_id.'.xlsx');
         // return view('app.timekeeping.manage-dtr-weekly.excel',['data' => $result ]);
     }
+
+    public function downloadVite($period_id)
+    {
+        $result = $this->mapper->downloadWeeklyVite($period_id);
+
+        $this->excel->setValues($result);
+        return Excel::download($this->excel,'DTR-Sumamry'.$period_id.'.xlsx');
+        // return view('app.timekeeping.manage-dtr-weekly.excel',['data' => $result ]);
+    }
+    
     
 }

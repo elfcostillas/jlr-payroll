@@ -60,6 +60,7 @@ class EmployeeDTR
             sum(ifnull(late,0)) as late,
             round(sum(ifnull(late,0))/60,2) as late_eq,
             sum(over_time) as over_time,
+            sum(under_time) as under_time,
             sum(night_diff) as night_diff,
             sum(night_diff_ot) as night_diff_ot,
             sum(restday_ot) as restday_ot,

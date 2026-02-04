@@ -56,10 +56,9 @@ class DTRSummaryController extends Controller
         $employees = $this->mapper->listEmployees($request->period_id,'confi');
 
         $this->excel->setValues($employees);
-        return Excel::download($this->excel,'DTR-Sumamry'.$period_id.'.xlsx');
+        return Excel::download($this->excel,'DTR-Sumamry-Confi'.$period_id.'.xlsx');
         
     }
-    
 
     public function compute(Request $request)
     {   
@@ -93,6 +92,30 @@ class DTRSummaryController extends Controller
         $ctr = $this->mapper->processConfiIDSV2($ids,$period_id);
 
         echo "Processed record : ". $ctr;
+    }
+
+    public function compute_JLRV2(Request $request)
+    {   
+        $period_id = $request->period_id;
+
+        $ids = $this->mapper->employeesToProcessRankAndFile($period_id);
+
+        $ctr = $this->mapper->processRankAndFileIDSV2($ids,$period_id);
+
+        echo "Processed record : ". $ctr;
+    }
+
+    public function download_JLR(Request $request)
+    {
+        $period_id = $request->period_id;
+
+        $list = $this->mapper->deleteAndInsert($request->period_id,'non-confi');
+
+        $employees = $this->mapper->listEmployees($request->period_id,'non-confi');
+
+        $this->excel->setValues($employees);
+        return Excel::download($this->excel,'DTR-Sumamry-RankAndFile'.$period_id.'.xlsx');
+        
     }
 
 

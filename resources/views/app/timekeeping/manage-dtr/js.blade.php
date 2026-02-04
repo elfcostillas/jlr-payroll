@@ -293,6 +293,17 @@
                         window.open(url);
 
                     },
+                    downloadVite : function(e){
+                        let tr = $(e.target).closest("tr");
+                        let data = this.dataItem(tr);
+
+                        let url = `manage-dtr/download-vite/${data.id}`;
+                        window.open(url);
+
+                    },
+                    computeVite : function(e){
+
+                    },
                     computeAll : function(e){
                         let tr = $(e.target).closest("tr");
                         let data = this.dataItem(tr);
@@ -448,30 +459,39 @@
                     {
                         title : "ID",
                         field : "id",
-                        width : 80,    
+                        width : 55,    
                     },
                     {
                         title : "Start Date",
                         field : "date_from",
                         template : "#= (data.date_from) ? kendo.toString(data.date_from,'MM/dd/yyyy') : ''  #",
-                        
+                        width : 100,    
                     },
                     {
                         title : "End Date",
                         field : "date_to",
                         template : "#= (data.date_to) ? kendo.toString(data.date_to,'MM/dd/yyyy') : ''  #",
-                        
+                        width : 100,    
                     },
-                   
                     {
                         command: [
                             { text : 'Prepare',click : viewModel.buttonHandler.prepare , },
                             { text : 'Download',click : viewModel.buttonHandler.download , },
-                            { text : 'Compute All',click : viewModel.buttonHandler.computeAll , }
+                            // { text : 'Compute All',click : viewModel.buttonHandler.computeAll , }
+                        
                         ],
                         attributes : { style : 'font-size:10pt !important;'},
-                        width : 280
+                        width : 140,    
                     },
+                    // {
+                    //     command: [
+                
+                    //         { text : 'Compute Totals',click : viewModel.buttonHandler.computeVite , },
+                    //         { text : 'Download Vite',click : viewModel.buttonHandler.downloadVite , }
+                    //     ],
+                    //     attributes : { style : 'font-size:10pt !important;'},
+                    //     width : 210,    
+                    // },
                   
                 ],
                 change : function(e){

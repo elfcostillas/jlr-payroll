@@ -172,6 +172,7 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::post('compute-all',[ManageDTRWeeklyController::class,'computeAll']);
 
         Route::get('download/{period_id}',[ManageDTRWeeklyController::class,'download']);
+        Route::get('download-vite/{period_id}',[ManageDTRWeeklyController::class,'downloadVite']);
         
     });
 
@@ -212,6 +213,7 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::get('onetimebigtime/{period_id}',[ManageDTRController::class,'onetimebigtime']);
 
         Route::get('download/{period_id}',[ManageDTRController::class,'exportSemiDTR']);
+        Route::get('download-vite/{period_id}',[ManageDTRController::class,'exportViteSemiDTR']);
 
         Route::post('compute-all',[ManageDTRController::class,'onetimebigtime']);
         Route::get('set-sched/{period_id}',[ManageDTRController::class,'scheduleSetter']);
@@ -356,6 +358,8 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
 
         Route::get('compute-confi/{period_id}',[DTRSummaryController::class,'compute_confi']);
         Route::get('compute-confi-v2/{period_id}',[DTRSummaryController::class,'compute_confiV2']);
+        Route::get('compute-jlr-v2/{period_id}',[DTRSummaryController::class,'compute_JLRV2']);
+        Route::get('download-nonconfi-v2/{period_id}',[DTRSummaryController::class,'download_JLR']);
     });
 
     Route::prefix('dtr-summary-uploader')->group(function(){

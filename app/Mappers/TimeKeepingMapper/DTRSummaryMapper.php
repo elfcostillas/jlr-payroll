@@ -164,6 +164,15 @@ class DTRSummaryMapper extends AbstractMapper {
         return $ids;
     }
 
+    public function employeesToProcessRankAndFile($period_id)
+    {   
+        $query = "SELECT DISTINCT employees.biometric_id FROM employees WHERE exit_status = 1 AND emp_level = 5";
+    
+        $ids = DB::select(DB::raw($query));
+
+        return $ids;
+    }
+
     public function processIDS($ids,$period_id)
     {
         $ctr = 0; 
@@ -195,6 +204,21 @@ class DTRSummaryMapper extends AbstractMapper {
     }
 
     public function processConfiIDSV2($ids,$period_id)
+    {
+        $ctr = 0; 
+
+        foreach($ids as $id)
+        {
+            //dd($id->biometric_id);
+            $edtr = new EmployeeDTR2($id,$period_id);
+            $ctr++;
+
+        }
+
+        return $ctr;
+    }
+
+    public function processRankAndFileIDSV2($ids,$period_id)
     {
         $ctr = 0; 
 

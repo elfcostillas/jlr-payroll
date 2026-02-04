@@ -84,7 +84,7 @@
     <div class="">
         <div id="viewModel" >
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-12">
                     <div class="card card-secondary">
                         <div class="card-header"> &nbsp; </div>
                         <div class="card-body"> 

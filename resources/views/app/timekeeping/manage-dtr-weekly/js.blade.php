@@ -352,7 +352,15 @@
                         let url = `manage-dtr-weekly/download/${data.id}`;
 
                         window.open(url);
-                    }
+                    },
+                    dowloadVite: function(e){
+                        let tr = $(e.target).closest("tr");
+                        let data = this.dataItem(tr);
+
+                        let url = `manage-dtr-weekly/download-vite/${data.id}`;
+
+                        window.open(url);
+                    },
                 },
                 functions : {
                     showPop : function(data)
@@ -427,9 +435,12 @@
                         attributes : { style : 'font-size:10pt !important;'},
                         width : 100
                     },
+                    // {
+                    //     command: { text : 'Compute Tardy',click : viewModel.buttonHandler.computeAll , },
+                    //     width : 120
+                    // },
                     {
-                        command: { text : 'Compute Tardy',click : viewModel.buttonHandler.computeAll , },
-                        // attributes : { style : 'font-size:10pt !important;'},
+                        command: { text : 'Download Vite',click : viewModel.buttonHandler.dowloadVite , },
                         width : 120
                     },
                   

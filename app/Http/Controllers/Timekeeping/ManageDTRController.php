@@ -98,6 +98,20 @@ class ManageDTRController extends Controller
         //return response()->json($result);
     }
 
+    public function exportViteSemiDTR(Request $request)
+    {
+        $biometric_id = $request->biometric_id;
+        $period_id = $request->period_id;
+
+        $result = $this->mapper->downloadViteDTRSemi($period_id);
+
+        $this->template->setValues($result);
+        return Excel::download($this->template,'DTR'.$period_id.'.xlsx');
+
+    }
+
+    
+
     public function getSchedules()
     {
         $result = $this->mapper->getSchedules();

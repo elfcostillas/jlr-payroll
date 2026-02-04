@@ -72,6 +72,7 @@ class LeaveCreditsSGController extends Controller
     public function computeToday($date)
     {
       
+        $sample_date = Carbon::createFromFormat('Y-m-d',$date);
         $employees  = DB::table('employees')    
                 ->where('exit_status',1)
                 ->where('emp_level','>',5)
@@ -94,7 +95,7 @@ class LeaveCreditsSGController extends Controller
                 DB::table('leave_credits')
                 ->updateOrInsert(
                     [   
-                        'fy_year' => 2025, 
+                        'fy_year' => $sample_date->format('Y'), 
                         'biometric_id' => $employee->biometric_id,
                     ],
                     ['sil' => $this->customRound($sil)]
@@ -121,7 +122,7 @@ class LeaveCreditsSGController extends Controller
             DB::table('leave_credits')
             ->updateOrInsert(
                 [   
-                    'fy_year' => 2025, 
+                    'fy_year' => $year, 
                     'biometric_id' => $employee->biometric_id,
                 ],
                 ['sil' => 5]

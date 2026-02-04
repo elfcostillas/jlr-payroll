@@ -164,9 +164,23 @@
                         let url = `dtr-summary/compute-confi-v2/${data.id}`;
                         window.open(url);
                     },
+                    compute_jlrV2 : function(e){
+                        let tr = $(e.target).closest("tr");
+                        let data = this.dataItem(tr);
+                        let url = `dtr-summary/compute-jlr-v2/${data.id}`;
+                        window.open(url);
+                    },
+
                     prepareBlank : function(e){
                         alert();
-                    }
+                    },
+
+                    download_nonconfi : function(e){
+                        let tr = $(e.target).closest("tr");
+                        let data = this.dataItem(tr);
+                        let url = `dtr-summary/download-nonconfi-v2/${data.id}`;
+                        window.open(url);
+                    },
                    
                 }
             });
@@ -244,8 +258,16 @@
                             { text : 'Compute - Confi V2',click : viewModel.toolbarHandler.compute_confiV2 , icon : '' },
                         ],
                         attributes : { style : 'font-size:10pt !important;'},
-                        width : 130
+                        width : 150
                     },
+                    {
+                        title : 'Rank and File',
+                        command : [
+                            { text : "Compute - JLR",click : viewModel.toolbarHandler.compute_jlrV2 , icon : 'table' },
+                            { text : "Download - JLR",click : viewModel.toolbarHandler.download_nonconfi , icon : 'download' },
+                        ],
+                        width : 280
+                    }
                   
                 ]
             });
