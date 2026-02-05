@@ -4,6 +4,23 @@
 </script>
     <script>
         $(document).ready(function(){
+            const generateYears = (startYear,endYear) => {
+                const years = [];
+               
+                // for (let i = endYear; i >= startYear; i--) {
+                //     years.push(i);
+                // }
+
+                for(let i = startYear; i <= endYear; i++)
+                {
+                    years.push({ text : i, value : i });
+                }
+
+                return years;
+            };
+            const currentDate = new Date();
+
+            let years = generateYears(2026,new Date().getFullYear()+1)
 
             let monthOptions = [
                 { text: "January", value: "1" },
@@ -48,7 +65,7 @@
                     maingrid : new kendo.data.DataSource({
                         transport : {
                             read : {
-                                url : 'tardiness-to-employee/list',
+                                url : `awol/list/${currentDate.getFullYear()}/${currentDate.getMonth()}`,
                                 type : 'get',
                                 dataType : 'json',
                                 complete : function(e){
@@ -184,16 +201,21 @@
                     {
                         e.preventDefault(); 
 
-                        viewModel.functions.showPOP();
+                        // viewModel.functions.showPOP();
 
                         var tr = $(e.target).closest("tr");
                         var data = this.dataItem(tr);
 
+                        let url  = `awol/print/${data.payroll_year}/${data.payroll_month}/${data.emp_id}/${data.awol_group_no}`;
+
+                        window.open(url);
+                        // console.log(data);
+
                         // // viewModel.set('selected',data);
 
-                        let url  = `tardiness-to-employee/read/${data.id}`;
-                        //await viewModel.functions.prepareForm(data);
-                        read(url,viewModel);
+                        // let url  = `tardiness-to-employee/read/${data.id}`;
+                        // //await viewModel.functions.prepareForm(data);
+                        // read(url,viewModel);
 
                         // let detailUrl = `manual-dtr/details/${data.id}`;
                         // viewModel.ds.dtrgrid.transport.options.read.url = detailUrl;
@@ -221,6 +243,17 @@
                         }).always(function() {
                             //viewModel.maingrid.ds.read();
                         });
+                    },
+
+                    reload : function(e){
+                        let month = $("#memo_month").data('kendoDropDownList').value();
+                        let year = $("#memo_year").data('kendoDropDownList').value();
+
+                        let url = `http://172.17.42.108/memos/awol/list/${year}/${month}`;
+                    },
+
+                    regroup : function(e){
+                        alert('regroup');
                     },
 
                     saveAsNew: async function(e){
@@ -320,8 +353,12 @@
                 dataSource: monthOptions,
                 index: 0,
                 dataBound : function(e){
-                  
-                }
+                    // console.log(e.sender.value);
+                    // form.model.memo_month 
+                    viewModel.form.model.set('memo_month',$("#memo_month").data('kendoDropDownList').value());
+                        
+                },
+ 
                 //change: onChange
             });
 
@@ -329,7 +366,7 @@
                 dataTextField: "dtr_year",
                 dataValueField: "dtr_year",
                 dataSource: viewModel.ds.periods,
-                index: 0,
+                index: 1,
                 dataBound : function(e){
                   
                 },
@@ -339,8 +376,6 @@
                     dtr_year: ""
                 }
             });
-
-            
 
             var activeToolbar = $("#toolbar").kendoToolBar({
                 items : [
@@ -363,39 +398,43 @@
                 height : 450,
                 scrollable: true,
                 toolbar : [
-                    { template: kendo.template($("#template").html()) }
+                    // { template: kendo.template($("#template").html()) }
                 ],
                 editable : false,
                 columns : [
                     {
                         title : "ID",
-                        field : "id",
+                        field : "awol_group_no",
                         width : 80,    
                         
                     },
                     {
                         title : "BIO ID",
-                        field : "biometric_id",
+                        field : "emp_id",
                         width : 80,    
                     },
                     {
                         title : "Employee Name",
-                        field : "memo_to",
+                        field : "employee_name",
                         width : 180,    
                     },
-                   
+                    {
+                        title : "No. of Days",
+                        field : "awol",
+                        width : 135
+                    },
                     {
                         title : "Subject",
-                        field : "memo_subject",
-                           
+                        field : "",
+                        template : " AWOL memo for #= payroll_month_label # #: payroll_year #"
                     },
-                     {
-                        title : "Encoded By",
-                        field : "name",
-                        width : 135,    
-                    },
+                    // {
+                    //     title : "Encoded By",
+                    //     field : "name",
+                    //     width : 135,    
+                    // },
                     {
-                        command: { text : 'View',icon : 'edit' ,click : viewModel.buttonHandler.view },
+                        command: { text : 'View',icon : 'print' ,click : viewModel.buttonHandler.view },
                         attributes : { style : 'font-size:10pt !important;'},
                         width : 85
                     },

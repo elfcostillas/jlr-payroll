@@ -929,7 +929,8 @@ Route::middleware('auth')->prefix('memo')->group(function(){
 
     Route::prefix('awol')->middleware('access:memo/awol')->controller(AWOLMemoController::class)->group(function(){
         Route::get('/','index');
-      
+        Route::get('list/{year}/{month}','list');
+        Route::get('print/{year}/{month}/{awol_grp_no}/{emp_id}','print');
     }); 
 }); 
 
