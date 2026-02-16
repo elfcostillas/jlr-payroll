@@ -17,9 +17,11 @@
 
     $total_vlwpay= 0;
     $total_slwpay= 0;
+    $total_sil = 0;
 
     $vlc = ($leave_credits) ? $leave_credits->vacation_leave : 0;
     $slc = ($leave_credits) ? $leave_credits->sick_leave : 0;
+    $sil = ($leave_credits) ? $leave_credits->sil : 0;
 
 
 @endphp
@@ -47,6 +49,7 @@
             <td colspan=3></td>
             <td>V.L.</td>
             <td>S.L.</td>
+            <td>SIL</td>
             <td></td>
         </tr>
       
@@ -57,6 +60,7 @@
               
                 $total_vlwpay += ($row->leave_type=='VL' || $row->leave_type=='EL') ? $row->with_pay : 0;
                 $total_slwpay += ($row->leave_type=='SL') ? $row->with_pay : 0;
+                $total_sil += ($row->leave_type=='SIL') ? $row->with_pay : 0;
                 
             @endphp
              
@@ -67,6 +71,7 @@
                 $bal_vlwpay = $vlc - $total_vlwpay;
                 $bal_slwpay = $slc - $total_slwpay;
                 $bal_wopay =  0 ;
+                $bal_sil = $sil - $total_sil; ;
                 
             ?>
             
@@ -80,6 +85,7 @@
             <td colspan=3>Balance</td>
             <td><b>{{ number_format($bal_vlwpay,2) }}</b></td>
             <td><b>{{ number_format($bal_slwpay,2) }}</b></td>
+            <td><b>{{ number_format($bal_sil,2) }}</b></td>
             <td></td>
         </tr>
     </table>
