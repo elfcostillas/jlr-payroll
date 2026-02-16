@@ -425,6 +425,7 @@ Route::middleware('auth')->prefix('employee-files')->group(function(){
 
         Route::get('get-emp-rates/{id}',[RatesController::class,'getRates']);
         Route::post('create-emp-rates',[RatesController::class,'createRates']);
+        Route::post('copy-onlinerequest',[EmployeeController::class,'copyToOR']);
     });
 
     Route::prefix('divisions-departments')->group(function(){ 
