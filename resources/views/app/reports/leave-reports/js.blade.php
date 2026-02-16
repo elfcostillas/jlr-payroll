@@ -170,6 +170,18 @@
                             window.open(url);
                         }
                     },
+                    viewKPIVite : function()
+                    {
+                        let from =  kendo.toString($('#date_from2').data('kendoDatePicker').value(),'yyyy-MM-dd');
+                        let to =  kendo.toString($('#date_to2').data('kendoDatePicker').value(),'yyyy-MM-dd');
+                        let url = `leave-reports/view-kpi-vite/${from}/${to}`;
+
+                         if(from==null || to ==null){
+                            custom_error('Please select date from and date to.');
+                        } else {
+                            window.open(url);
+                        }
+                    },
                     dailyMonthly : function()
                     {
                         let from =  kendo.toString($('#date_from').data('kendoDatePicker').value(),'yyyy-MM-dd');

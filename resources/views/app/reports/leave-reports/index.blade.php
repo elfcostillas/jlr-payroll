@@ -145,7 +145,8 @@
                                     <td> <input type="text" name="" id="date_from2"> </td>
                                     <td> <input type="text" name="" id="date_to2"> </td>
                                     <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.viewKPI'><i class="fas fa-table"></i> View Page</button></td>
-                                    <td></td>
+                                    <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.viewKPIVite'><i class="fas fa-table"></i> View Page (Vite)</button></td>
+                                    
                                     <td></td>
                                     <td></td>
                                 </tr>

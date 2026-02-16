@@ -460,6 +460,150 @@ class LeaveReportsMapper extends AbstractMapper {
         return $result;
     }   
 
+    public function getDataVite($start,$end,$from,$to)
+    {
+        // dd($start,$end,$from,$to);
+
+        // dd($to->format('Y-m-d'));
+
+        if($start == '2023-01-01'){
+            $sub_qry = "SELECT employees.biometric_id, tardy_count as late_count,0 as in_minutes FROM employees 
+            INNER JOIN manual_tardy ON employees.biometric_id = manual_tardy.biometric_id
+            WHERE  emp_level >= 3
+            and job_title_id != 12
+            and exit_status = 1
+            and date_hired between '$from' and '$to'";
+        }
+        else{
+           
+
+            $sub_qry = "SELECT employees.biometric_id,COUNT(dtr_date) late_count,SUM((TIME_TO_SEC(edtr_detailed.time_in)- TIME_TO_SEC(work_schedules.time_in))/60) AS in_minutes FROM employees 
+            left JOIN edtr_detailed ON edtr_detailed.biometric_id = employees.biometric_id
+            INNER JOIN work_schedules ON schedule_id = work_schedules.id
+            INNER JOIN employee_names_vw ON employee_names_vw.biometric_id = edtr_detailed.biometric_id
+          
+            LEFT JOIN (select holiday_date,location_id,holiday_type from holidays inner join holiday_location on holidays.id = holiday_location.holiday_id) as holidays on dtr_date = holidays.holiday_date and holidays.location_id = employees.location_id
+            
+            WHERE late > 0
+            AND dtr_date BETWEEN '$start' AND '$end'
+            and employees.emp_level >= 3
+            and job_title_id != 12
+            and holiday_type is null 
+            and employees.exit_status = 1
+            and date_hired is not null
+            GROUP BY employees.biometric_id,lastname,firstname
+            ORDER BY lastname";
+
+           
+        
+        }
+
+        $awol = "SELECT biometric_id,round(sum(ifnull(awol,0))/8,2) AS awol_count FROM edtr_detailed WHERE awol > 0 AND dtr_date BETWEEN '$start' AND '$end' GROUP BY biometric_id";
+
+        $qry = "SELECT employees.biometric_id,IFNULL(sl_count,0) sl_count,IFNULL(vl_count,0) vl_count,IFNULL(sil_count,0) sil_count,IFNULL(el_count,0) el_count,IFNULL(ut_count,0) ut_count,
+        IFNULL(bl_count,0) bl_count,IFNULL(mp_count,0) mp_count,IFNULL(o_count,0) o_count,IFNULL(svl_count,0) svl_count,IFNULL(late_count,0) late_count,IFNULL(in_minutes,0) in_minutes,IFNULL(awol_count,0) awol_count
+        FROM employees LEFT JOIN 
+        (
+        SELECT biometric_id,COUNT(leave_date) AS sl_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
+        WHERE leave_request_header.received_by IS NOT NULL and leave_request_header.acknowledge_status = 'Approved'
+        AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
+        AND leave_type = 'SL'
+        AND leave_date BETWEEN '$start' AND '$end'
+        AND (IFNULL(with_pay,0) + IFNULL(without_pay,0)) > 0
+        GROUP BY biometric_id
+        ) AS sl ON employees.biometric_id = sl.biometric_id
+        LEFT JOIN (
+        SELECT biometric_id,COUNT(leave_date) AS vl_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
+        WHERE leave_request_header.received_by IS NOT NULL and leave_request_header.acknowledge_status = 'Approved'
+        AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
+        AND leave_type = 'VL'
+        AND leave_date BETWEEN '$start' AND '$end'
+        AND (IFNULL(with_pay,0) + IFNULL(without_pay,0)) > 0
+        GROUP BY biometric_id
+        )
+        AS vl ON employees.biometric_id = vl.biometric_id
+        LEFT JOIN (
+        SELECT biometric_id,COUNT(leave_date) AS el_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
+        WHERE leave_request_header.received_by IS NOT NULL and leave_request_header.acknowledge_status = 'Approved'
+        AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
+        AND leave_type = 'EL'
+        AND leave_date BETWEEN '$start' AND '$end'
+        AND (IFNULL(with_pay,0) + IFNULL(without_pay,0)) > 0
+        GROUP BY biometric_id
+        ) AS el ON employees.biometric_id = el.biometric_id
+        LEFT JOIN (
+        SELECT biometric_id,COUNT(leave_date) AS ut_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
+        WHERE leave_request_header.received_by IS NOT NULL and leave_request_header.acknowledge_status = 'Approved'
+        AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
+        AND leave_type = 'UT'
+        AND leave_date BETWEEN '$start' AND '$end'
+        AND (IFNULL(with_pay,0) + IFNULL(without_pay,0)) > 0
+        GROUP BY biometric_id
+        ) AS ut ON employees.biometric_id = ut.biometric_id
+        LEFT JOIN (
+        SELECT biometric_id,COUNT(leave_date) AS bl_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
+        WHERE leave_request_header.received_by IS NOT NULL and leave_request_header.acknowledge_status = 'Approved'
+        AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
+        AND leave_type = 'BL'
+        AND leave_date BETWEEN '$start' AND '$end'
+        AND (IFNULL(with_pay,0) + IFNULL(without_pay,0)) > 0
+        GROUP BY biometric_id
+        ) AS bl ON employees.biometric_id = bl.biometric_id
+        LEFT JOIN (
+        SELECT biometric_id,COUNT(leave_date) AS mp_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
+        WHERE leave_request_header.received_by IS NOT NULL and leave_request_header.acknowledge_status = 'Approved'
+        AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
+        AND leave_type = 'MP'
+        AND leave_date BETWEEN '$start' AND '$end'
+        AND (IFNULL(with_pay,0) + IFNULL(without_pay,0)) > 0
+        GROUP BY biometric_id
+        ) AS mp ON employees.biometric_id = mp.biometric_id
+        LEFT JOIN (
+        SELECT biometric_id,COUNT(leave_date) AS o_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
+        WHERE leave_request_header.received_by IS NOT NULL and leave_request_header.acknowledge_status = 'Approved'
+        AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
+        AND leave_type = 'O'
+        AND leave_date BETWEEN '$start' AND '$end'
+        AND (IFNULL(with_pay,0) + IFNULL(without_pay,0)) > 0
+        GROUP BY biometric_id
+        ) AS o ON employees.biometric_id = o.biometric_id
+        LEFT JOIN (
+        SELECT biometric_id,COUNT(leave_date) AS svl_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
+        WHERE leave_request_header.received_by IS NOT NULL and leave_request_header.acknowledge_status = 'Approved'
+        AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
+        AND leave_type = 'SVL'
+        AND leave_date BETWEEN  '$start' AND '$end'
+        AND (IFNULL(with_pay,0) + IFNULL(without_pay,0)) > 0
+        GROUP BY biometric_id
+        ) AS svl ON employees.biometric_id = svl.biometric_id
+        LEFT JOIN (
+        SELECT biometric_id,COUNT(leave_date) AS sil_count FROM leave_request_header INNER JOIN leave_request_detail ON id = header_id 
+        WHERE leave_request_header.received_by IS NOT NULL and leave_request_header.acknowledge_status = 'Approved'
+        AND (with_pay IS NOT NULL AND without_pay IS NOT NULL)
+        AND leave_type = 'SIL'
+        AND leave_date BETWEEN  '$start' AND '$end'
+        AND (IFNULL(with_pay,0) + IFNULL(without_pay,0)) > 0
+        GROUP BY biometric_id
+        ) AS sil ON employees.biometric_id = sil.biometric_id
+        LEFT JOIN (
+            $sub_qry
+       ) AS tardy ON employees.biometric_id = tardy.biometric_id
+       LEFT JOIN (
+            $awol
+       ) AS awol ON employees.biometric_id = awol.biometric_id
+
+        WHERE pay_type != 3
+        and date_hired < '".$to->format('Y-m-d')."'
+        and employees.exit_status = 1
+        and date_hired is not null";
+
+        $result = DB::select($qry);
+
+        // echo $qry;
+
+        return $result;
+    }  
+
     public function leaveOnDate($date)
     {
         /*

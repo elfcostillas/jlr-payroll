@@ -179,6 +179,70 @@ class LeaveReportsController extends Controller
         return view('app.reports.leave-reports.kpi-web',['divisions' => $divisions,'month' => $month,'tableData' => $tableData,'index'=>$index,'limit'=>$limit,'year'=>$from->year]);
     }
 
+    public function viewKPIVite(Request $request)
+    {
+        $month[1] = 'January';
+        $month[2] = 'February';
+        $month[3] = 'March';
+        $month[4] = 'April';
+        $month[5] = 'May';
+        $month[6] = 'June';
+        $month[7] = 'July';
+        $month[8] = 'August';
+        $month[9] = 'September';
+        $month[10] = 'October';
+        $month[11] = 'November';
+        $month[12] = 'December';
+
+        $tableData = array();
+      
+        if($request->from == 'null' || $request->to == 'null')
+        {
+            
+        }else{
+            $from = Carbon::createFromFormat('Y-m-d',$request->from);
+            $to = Carbon::createFromFormat('Y-m-d',$request->to);
+
+            $index = (int) $from->month;
+            $limit = (int) $to->month;
+
+            $divisions = $this->mapper->getDivisions2($from,$to);
+
+            for($i = $index;$i<=$limit; $i++)
+            {
+                $start = date('Y-m-d',strtotime($from->year.'-'.$i.'-01'));
+                $end = date('Y-m-t',strtotime($start));
+
+                $data = $this->mapper->getDataVite($start,$end,$from,$to);
+
+                foreach($data as $row) {
+                   
+                    $tableData[$row->biometric_id][$i]['sl_count'] = $row->sl_count;
+                    $tableData[$row->biometric_id][$i]['vl_count'] = $row->vl_count;
+                    $tableData[$row->biometric_id][$i]['el_count'] = $row->el_count;
+                    $tableData[$row->biometric_id][$i]['ut_count'] = $row->ut_count;
+                    $tableData[$row->biometric_id][$i]['sil_count'] = $row->sil_count;
+
+                    $tableData[$row->biometric_id][$i]['bl_count'] = $row->bl_count;
+                    $tableData[$row->biometric_id][$i]['mp_count'] = $row->mp_count;
+                    $tableData[$row->biometric_id][$i]['o_count'] = $row->o_count;
+                    $tableData[$row->biometric_id][$i]['svl_count'] = $row->svl_count;
+                    $tableData[$row->biometric_id][$i]['late_count'] = $row->late_count;
+                    $tableData[$row->biometric_id][$i]['in_minutes'] = $row->in_minutes;
+
+                    $tableData[$row->biometric_id][$i]['awol_count'] = $row->awol_count;
+
+                 
+                }
+            }
+
+          
+            
+        }
+
+        return view('app.reports.leave-reports.kpi-web-vite',['divisions' => $divisions,'month' => $month,'tableData' => $tableData,'index'=>$index,'limit'=>$limit,'year'=>$from->year]);
+    }
+
     public function leaveOnDate(Request $request)
     {
         $date = $request->date;
