@@ -189,7 +189,7 @@ class Employee
         // }
 
         $this->payreg['late_eq_amount'] = round($this->rates['hourly_rate'] * $this->payreg['late_eq'],2);
-        $this->payreg['under_time_amount'] = round($this->rates['hourly_rate'] * $this->payreg['under_time'],2);
+        $this->payreg['under_time_amount'] = round($this->rates['minute_rate'] * $this->payreg['under_time'],2);
         $this->payreg['absences_amount'] = round($this->rates['hourly_rate'] * $this->payreg['absences'],2);
 
         $this->payreg['vl_wpay_amount'] = round($this->rates['hourly_rate'] * $this->payreg['vl_wpay'],2);
