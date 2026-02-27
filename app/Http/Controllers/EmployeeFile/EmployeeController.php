@@ -49,7 +49,7 @@ class EmployeeController extends Controller
         //dd($userDept->dept_id);
 
       
-        if($userDept->dept_id==8 || $userLevel->emp_level <= 2){
+        if(($userDept->dept_id==8 && $userLevel->emp_level < 5) || $userLevel->emp_level <= 2){
             $canSeeRates = true;
         }else{
             $canSeeRates = false;
