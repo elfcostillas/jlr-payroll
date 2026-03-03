@@ -482,7 +482,7 @@
                         
                         ],
                         attributes : { style : 'font-size:10pt !important;'},
-                        width : 140,    
+                        width : 180,    
                     },
                     // {
                     //     command: [
