@@ -477,6 +477,7 @@
                         command: [
                             { text : 'Prepare',click : viewModel.buttonHandler.prepare , },
                             { text : 'Download',click : viewModel.buttonHandler.download , },
+                            { text : 'Download Vite',click : viewModel.buttonHandler.downloadVite , }
                             // { text : 'Compute All',click : viewModel.buttonHandler.computeAll , }
                         
                         ],
