@@ -74,7 +74,7 @@
                             },
                             
                         },
-                        pageSize :11,
+                        pageSize :9999,
                         serverPaging : true,
                         serverFiltering : true,
                         schema : {

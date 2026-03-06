@@ -39,7 +39,7 @@ class AWOLMemoController extends Controller
 
         // return $response['data'];
 
-        return response()->json([ 'data' => $response['data'], 'total                ' => $response['total'] ]);
+        return response()->json([ 'data' => $response['data'], 'total' => $response['total'] ]);
     }
 
     public function print(Request $request)
