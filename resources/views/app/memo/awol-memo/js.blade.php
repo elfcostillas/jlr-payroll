@@ -260,7 +260,7 @@
                         let month = $("#memo_month").data('kendoDropDownList').value();
                         let year = $("#memo_year").data('kendoDropDownList').value();
 
-                        let url = `http://172.17.42.108/memos/awol/list/${year}/${month}`;
+                        let url = `http://172.17.42.108/memos/awol/group/${year}/${month}`;
 
                         window.open(url);
                     },
