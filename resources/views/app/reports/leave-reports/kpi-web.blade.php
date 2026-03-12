@@ -160,17 +160,17 @@
                            
                                 // dd(isset($tableData[$emp->biometric_id][$i]['late_count']));
                                 $late_count  +=(isset($tableData[$emp->biometric_id][$i]['late_count'])) ? $tableData[$emp->biometric_id][$i]['late_count'] : 0;
-                                $sl_count  +=(isset($tableData[$emp->biometric_id][$i]['sl_count'])) ? $tableData[$emp->biometric_id][$i]['late_count'] : 0;
-                                $vl_count  +=(isset($tableData[$emp->biometric_id][$i]['vl_count'])) ? $tableData[$emp->biometric_id][$i]['late_count'] : 0;
-                                $el_count  +=(isset($tableData[$emp->biometric_id][$i]['el_count'])) ? $tableData[$emp->biometric_id][$i]['late_count'] : 0;
-                                $ut_count  +=(isset($tableData[$emp->biometric_id][$i]['ut_count'])) ? $tableData[$emp->biometric_id][$i]['late_count'] : 0;
-                                $bl_count  +=(isset($tableData[$emp->biometric_id][$i]['bl_count'])) ? $tableData[$emp->biometric_id][$i]['late_count'] : 0;
-                                $mp_count  +=(isset($tableData[$emp->biometric_id][$i]['mp_count'])) ? $tableData[$emp->biometric_id][$i]['late_count'] : 0;
-                                $svl_count  +=(isset($tableData[$emp->biometric_id][$i]['svl_count'])) ? $tableData[$emp->biometric_id][$i]['late_count']: 0;
-                                $o_count  +=(isset($tableData[$emp->biometric_id][$i]['o_count'])) ? $tableData[$emp->biometric_id][$i]['late_count'] : 0;
-                                $in_minutes +=(isset($tableData[$emp->biometric_id][$i]['in_minutes'])) ?  $tableData[$emp->biometric_id][$i]['late_count'] : 0;
+                                $sl_count  +=(isset($tableData[$emp->biometric_id][$i]['sl_count'])) ? $tableData[$emp->biometric_id][$i]['sl_count'] : 0;
+                                $vl_count  +=(isset($tableData[$emp->biometric_id][$i]['vl_count'])) ? $tableData[$emp->biometric_id][$i]['vl_count'] : 0;
+                                $el_count  +=(isset($tableData[$emp->biometric_id][$i]['el_count'])) ? $tableData[$emp->biometric_id][$i]['el_count'] : 0;
+                                $ut_count  +=(isset($tableData[$emp->biometric_id][$i]['ut_count'])) ? $tableData[$emp->biometric_id][$i]['ut_count'] : 0;
+                                $bl_count  +=(isset($tableData[$emp->biometric_id][$i]['bl_count'])) ? $tableData[$emp->biometric_id][$i]['bl_count'] : 0;
+                                $mp_count  +=(isset($tableData[$emp->biometric_id][$i]['mp_count'])) ? $tableData[$emp->biometric_id][$i]['mp_count'] : 0;
+                                $svl_count  +=(isset($tableData[$emp->biometric_id][$i]['svl_count'])) ? $tableData[$emp->biometric_id][$i]['svl_count']: 0;
+                                $o_count  +=(isset($tableData[$emp->biometric_id][$i]['o_count'])) ? $tableData[$emp->biometric_id][$i]['o_count'] : 0;
+                                $in_minutes +=(isset($tableData[$emp->biometric_id][$i]['in_minutes'])) ?  $tableData[$emp->biometric_id][$i]['in_minutes'] : 0;
     
-                                $awol_count +=(isset($tableData[$emp->biometric_id][$i]['awol_count'])) ? $tableData[$emp->biometric_id][$i]['late_count'] : 0;
+                                $awol_count +=(isset($tableData[$emp->biometric_id][$i]['awol_count'])) ? $tableData[$emp->biometric_id][$i]['awol_count'] : 0;
                            
                             
 
