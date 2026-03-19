@@ -169,7 +169,7 @@
 
         function convert_hrs_to_days($hrs)
         {
-            return ($hrs == '' || $hrs == 0) ? 0 : $hrs / 8;
+            return ($hrs == '' || $hrs == 0) ? 0 : round($hrs / 8,1);
         }
     ?>
 
