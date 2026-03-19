@@ -510,7 +510,7 @@
                         <td class="pr3"  style="text-align:right;"> {{ ($employee->late_eq_amount>0) ? number_format($employee->late_eq_amount,2) : ''; }}</td> 
                         
                         @if($sil_flag->vl_wpay >0)
-                            <td class="pr3"  style="text-align:right;"> {{ ($employee->vl_wpay>0) ? number_format(convert_hrs_to_days($employee->vl_wpay)) : ''; }}</td>
+                            <td class="pr3"  style="text-align:right;"> {{ ($employee->vl_wpay>0) ? number_format(convert_hrs_to_days($employee->vl_wpay),2) : ''; }}</td>
                             <td class="pr3"  style="text-align:right;"> {{ ($employee->vl_wpay_amount>0) ? number_format($employee->vl_wpay_amount,2) : ''; }}</td> 
                         @endif
 
