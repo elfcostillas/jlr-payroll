@@ -109,4 +109,11 @@ class InstallmentDeductionController extends Controller
 
         return view('app.deductions.installment-deductions.installment-summary',['installments' => $result ]); 
     }
+
+    public function ammortization(Request $request)
+    {
+        $result = $this->mapper->get_ammortization($request->id);
+
+        return response()->json($result);
+    }
 }
