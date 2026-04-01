@@ -435,10 +435,10 @@
                         attributes : { style : 'font-size:10pt !important;'},
                         width : 100
                     },
-                    // {
-                    //     command: { text : 'Compute Tardy',click : viewModel.buttonHandler.computeAll , },
-                    //     width : 120
-                    // },
+                    {
+                        command: { text : 'Compute All',click : viewModel.buttonHandler.computeAll , },
+                        width : 120
+                    },
                     {
                         command: { text : 'Download Vite',click : viewModel.buttonHandler.dowloadVite , },
                         width : 120
