@@ -86,7 +86,7 @@
                         <td> {{ nformat($employee->ndays) }}</td>
                         <td> {{ nformat($employee->late_eq) }}</td>
                        
-                        <td> {{ nformat($employee->under_time) }}</td>
+                        <td> {{ nformat(round($employee->under_time/60,2)) }}</td>
                         <td> {{ nformat($employee->night_diff) }}</td>
                        
                         <td> {{ nformat($employee->over_time) }}</td>

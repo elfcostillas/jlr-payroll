@@ -459,26 +459,26 @@
                     {
                         title : "ID",
                         field : "id",
-                        width : 55,    
+                        width : 45,    
                     },
                     {
                         title : "Start Date",
                         field : "date_from",
                         template : "#= (data.date_from) ? kendo.toString(data.date_from,'MM/dd/yyyy') : ''  #",
-                        width : 100,    
+                        width : 60,    
                     },
                     {
                         title : "End Date",
                         field : "date_to",
                         template : "#= (data.date_to) ? kendo.toString(data.date_to,'MM/dd/yyyy') : ''  #",
-                        width : 100,    
+                        width : 60,    
                     },
                     {
                         command: [
                             { text : 'Prepare',click : viewModel.buttonHandler.prepare , },
                             { text : 'Download',click : viewModel.buttonHandler.download , },
-                            { text : 'Download Vite',click : viewModel.buttonHandler.downloadVite , }
-                            // { text : 'Compute All',click : viewModel.buttonHandler.computeAll , }
+                            { text : 'Download Vite',click : viewModel.buttonHandler.downloadVite , },
+                            { text : 'Compute All',click : viewModel.buttonHandler.computeAll , }
                         
                         ],
                         attributes : { style : 'font-size:10pt !important;'},
