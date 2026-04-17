@@ -172,6 +172,7 @@ SELECT biometric_id,ROUND(SUM(with_pay)/8,2)
         AND leave_date BETWEEN '$from' AND '$to'
         and document_status = 'POSTED'  and leave_request_header.acknowledge_status = 'Approved'
         and received_by IS NOT NULL
+        and is_canceled = 'N'
         ORDER BY leave_date;";
         
        $result = DB::select($qry);
