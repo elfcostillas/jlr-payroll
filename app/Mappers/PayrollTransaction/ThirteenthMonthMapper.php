@@ -335,6 +335,7 @@ class ThirteenthMonthMapper extends AbstractMapper
 
     public function buildMonthlyPay($employee,$year,$months)
     {
+       
         $monthly_arr = [];
 
         foreach($months as $key => $value)
@@ -343,6 +344,7 @@ class ThirteenthMonthMapper extends AbstractMapper
             $payroll_periods = $this->getPayrollPeriodsByMonth($year,$key);
             
             $copmensations = DB::table('posted_other_compensations')
+                ->where('compensation_type','=',19)
                 ->whereIn('period_id',$payroll_periods->pluck('id'))
                 ->where('biometric_id',$employee->biometric_id);
                 
@@ -384,6 +386,7 @@ class ThirteenthMonthMapper extends AbstractMapper
         //basicPayQueryJLR
 
         $basic_pays = $this->basicPayQueryJLR($employee,$year,$months);
+       
         $manual_input = $this->getEncodedBasicPay($employee,$year,$months);
         if(is_array($months)){
             $monthly = $this->buildMonthlyPay($employee,$year,$months);
@@ -469,6 +472,12 @@ class ThirteenthMonthMapper extends AbstractMapper
     public function getPayrollPeriodsJLR($year,$months)
     {
         if($months == 1){
+            $m = [12,1,2,3,4];
+        }else{
+            $m = [5,6,7,8,9,10,11];
+        }
+
+        if(is_array($months) && count($months) == 5){
             $m = [12,1,2,3,4];
         }else{
             $m = [5,6,7,8,9,10,11];
@@ -850,6 +859,10 @@ class ThirteenthMonthMapper extends AbstractMapper
 
             // if($e){
             //     // dd($e->getMonthly());
+            // }
+
+            // if($employee->biometric_id == 1){
+            //     dd($employee,$e);
             // }
 
             $employee->thirteenth_month_monthly = $e;

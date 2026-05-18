@@ -13,7 +13,7 @@ class PayrollRegisterFunctions
     public function mainQuery()
     {
 
-        $result = DB::table('employees');
+        $result = DB::table('employees')->where('employees.job_title_id', '!=',130);
 
         if(get_class($this) == 'App\CustomClass\PayrollRegisterConfi'){
             $result->where('employees.emp_level','<',5);
@@ -95,6 +95,7 @@ class PayrollRegisterFunctions
 
     public function getEmployeesByDeptAndDivision($division,$department)
     {
+        
         return $this->mainQuery()
                 ->leftJoin('divisions_sub','divisions_sub.id','=','employees.sub_division')
                 ->leftJoin('job_titles','employees.job_title_id','=','job_titles.id')
@@ -320,7 +321,16 @@ class PayrollRegisterFunctions
             foreach ($data->employees as $emp)
             {
                 if(is_object($key)){
-                    $total += $emp->{$key->var_name};
+                 
+                    // if(property_exists($emp,$key->var_name && property_exists($key,'var_name'))){
+                    if( property_exists($key,'var_name')){
+                        if(property_exists($emp,$key->var_name)){
+                            $total += $emp->{$key->var_name};
+                        }
+                    }else{
+                        $total += 0;
+                    }
+                    // $total += $emp->{$key->var_name};
                 }else{
                     $total += $emp->{$key};
                 }
@@ -671,7 +681,7 @@ class PayrollRegisterFunctions
                 }else{
 
                         if(get_class($this) == 'App\CustomClass\PayrollRegisterConfi'){
-                            $final = $result->union(DB::table($table)->join('deduction_types','deduction_types.id','=',"$table.deduction_type")
+                            $result = $result->union(DB::table($table)->join('deduction_types','deduction_types.id','=',"$table.deduction_type")
                                 ->join('employees','employees.biometric_id','=',"$table.biometric_id")
                                 ->where("$table.period_id",'=',$this->period->id)
                                 ->where('employees.emp_level','<',5)
@@ -691,7 +701,7 @@ class PayrollRegisterFunctions
                
             }
 
-            return $final->get();
+            return $result->get();
         }
     }
 
@@ -724,6 +734,18 @@ class PayrollRegisterFunctions
             ->select(DB::raw("sub_dept.id, sub_dept.dept_label,sum(gross_pay) as gross_pay, sum(gross_total) as gross_total, sum(net_pay) as net_pay"))
             ->groupBy('sub_dept.id')
             ->orderBy('sub_dept.id','asc')
+            ->get();
+
+        return $result;
+    }
+
+    public function total_pay_per_dept_original()
+    {
+        $result = $this->mainQuery()->leftJoin('departments','employees.dept_id','=','departments.id')
+            ->distinct()
+            ->select(DB::raw("departments.id, departments.dept_name as dept_label,sum(gross_pay) as gross_pay, sum(gross_total) as gross_total, sum(net_pay) as net_pay"))
+            ->groupBy('departments.id')
+            ->orderBy('departments.id','asc')
             ->get();
 
         return $result;
@@ -786,6 +808,63 @@ class PayrollRegisterFunctions
         ];
     }
 
+    public function summaryDeptByLocationOriginal()
+    {
+        $locations = $this->mainQuery()->leftJoin('locations','employees.location_id','locations.id')
+            ->select('locations.id','locations.location_altername2')
+            ->distinct()
+            ->orderBy('locations.id','asc')
+            ->get();
+
+        $departments = $this->mainQuery()->leftJoin('departments','employees.dept_id','=','departments.id')
+            ->distinct()
+            ->select(DB::raw("departments.id, departments.dept_name as dept_label"))
+            ->orderBy('departments.id','asc')
+            ->get();
+
+        $totals_by_loc = [];
+        $totals_by_dept = [];
+        $over_all = 0;
+
+        foreach($locations as $loc)
+        {
+            foreach($departments as $dept)
+            {
+                $employee =  $this->mainQuery()
+                    ->where('employees.dept_id','=',$dept->id)
+                    ->where('employees.location_id','=',$loc->id)
+                    ->select(DB::raw("count(employees.id) as pax"))
+                    ->first();
+
+                $data[$dept->id][$loc->id] = $employee->pax;
+
+                if(array_key_exists($loc->id, $totals_by_loc)){
+                    $totals_by_loc[$loc->id] += $employee->pax;
+                }else{
+                    $totals_by_loc[$loc->id] = $employee->pax;
+                }
+
+                if(array_key_exists($dept->id, $totals_by_dept)){
+                    $totals_by_dept[$dept->id] += $employee->pax;
+                }else{
+                    $totals_by_dept[$dept->id] = $employee->pax;
+                }
+
+                $over_all += $employee->pax;
+
+            }
+        }
+
+        return [
+            'x' => $locations,
+            'y' => $departments,
+            'data' => $data,
+            'totals_by_loc' => $totals_by_loc,
+            'totals_by_dept' => $totals_by_dept,
+            'over_all' => $over_all
+        ];
+    }
+
     public function countPerJobTitleLocation()
     {
         $locations = DB::table('locations')->get();
@@ -798,6 +877,35 @@ class PayrollRegisterFunctions
         }
 
         return $locations;
+    }
+
+    public function countPerJobTitleLocationOriginal()
+    {
+        $locations = DB::table('locations')->get();
+
+        foreach($locations as $location)
+        {
+            $data = $this->countPerJobTitleOriginal($location);
+
+            $location->data = $data;
+        }
+
+        return $locations;
+    }
+
+    public function countPerJobTitleOriginal($location)
+    {
+        return $this->mainQuery()
+                ->leftJoin('divisions','divisions.id','=','employees.division_id')
+                ->leftJoin('job_titles','employees.job_title_id','=','job_titles.id')
+                ->leftJoin('departments','departments.id','=','employees.dept_id')
+                ->select(DB::raw("dept_name as dept_label,job_title_name,count(employees.id) as pax"))
+                ->where('employees.location_id','=',$location->id)
+                ->groupBy('dept_label')
+                ->groupBy('job_title_name')
+                ->orderBy('dept_label','asc')
+                ->orderBy('job_title_name','asc')
+                ->get();
     }
 
     public function countPerJobTitle($location)
@@ -904,6 +1012,100 @@ class PayrollRegisterFunctions
         
 
         return $data;
+    }
+
+    public function otByDeptJobtitleOriginal($key)
+    {
+
+            $qry = $this->mainQuery()
+                ->leftJoin('divisions','divisions.id','=','employees.division_id')
+                ->leftJoin('job_titles','employees.job_title_id','=','job_titles.id')
+                ->leftJoin('departments','departments.id','=','employees.dept_id')
+                ->select(DB::raw("divisions.div_code,dept_name as dept_label,job_title_name,count(employees.id) as pax"))
+                ->groupBy('dept_label')
+                ->groupBy('job_title_name')
+                ->groupBy('div_code')
+                ->orderBy('dept_label','asc')
+                ->orderBy('div_code','asc')
+                ->orderBy('job_title_name','asc');
+
+            switch($key){
+                case 'Less than 10 Hrs':
+                    $result = $qry->where(function($query){
+                        $query->where('reg_ot','>',1);
+                        $query->where('reg_ot','<',10);
+                    });
+                    break;
+
+                case '10 Hrs':
+                    $result = $qry->where(function($query){
+                        $query->where('reg_ot','>',10);
+                        $query->where('reg_ot','<',20);
+                    });
+                break;
+
+                case '20 Hrs':
+                    $result = $qry->where(function($query){
+                        $query->where('reg_ot','>',20);
+                        $query->where('reg_ot','<',30);
+                    });
+                break;
+
+                case '30 Hrs':
+                    $result = $qry->where(function($query){
+                        $query->where('reg_ot','>',30);
+                        $query->where('reg_ot','<',40);
+                    });
+                break;
+
+                case '40 Hrs':
+                    $result = $qry->where(function($query){
+                        $query->where('reg_ot','>',40);
+                        $query->where('reg_ot','<',50);
+                    });
+                break;
+
+                case '50 Hrs':
+                    $result = $qry->where(function($query){
+                        $query->where('reg_ot','>',50);
+                        $query->where('reg_ot','<',60);
+                    });
+                break;
+
+                case '60 Hrs':
+                    $result = $qry->where(function($query){
+                        $query->where('reg_ot','>',60);
+                        $query->where('reg_ot','<',70);
+                    });
+                break;
+
+                case '70 Hrs':
+                    $result = $qry->where(function($query){
+                        $query->where('reg_ot','>',70);
+                        $query->where('reg_ot','<',80);
+                    });
+                break;
+
+                case '80 Hrs':
+                    $result = $qry->where(function($query){
+                        $query->where('reg_ot','>',80);
+                        $query->where('reg_ot','<',90);
+                    });
+                break;
+
+                case '90 Hrs':
+                    $result = $qry->where(function($query){
+                        $query->where('reg_ot','>',90);
+                        $query->where('reg_ot','<',100);
+                    });
+                break;
+
+                case '100+ Hrs':
+                    $result = $qry->where('reg_ot','>',100);
+                break;
+            }
+
+            return $result->get();
     }
 
     public function otByDeptJobtitle($key)
@@ -1018,6 +1220,19 @@ class PayrollRegisterFunctions
             ->leftJoin('job_titles','employees.job_title_id','=','job_titles.id')
             ->leftJoin('sub_dept','sub_dept.id','=','employees.sub_dept')
             ->select(DB::raw("divisions_sub.div_code,count(employees.id) as pax"))
+            ->where('reg_ot','>=',50)
+            ->groupBy('div_code');
+        
+        return $qry->get();
+    }
+
+    public function otMoreThan50hrsOriginal()
+    {
+        $qry = $this->mainQuery()
+            ->leftJoin('divisions','divisions.id','=','employees.division_id')
+            ->leftJoin('job_titles','employees.job_title_id','=','job_titles.id')
+            ->leftJoin('departments','departments.id','=','employees.dept_id')
+            ->select(DB::raw("divisions.div_code,count(employees.id) as pax"))
             ->where('reg_ot','>=',50)
             ->groupBy('div_code');
         

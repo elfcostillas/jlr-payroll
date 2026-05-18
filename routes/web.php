@@ -106,6 +106,11 @@ Route::get('dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 */
 Route::get('dashboard', [DashBoardController::class,'index'])->middleware(['auth'])->name('dashboard');
+Route::get('php_info', function(){
+    phpinfo();
+});
+
+
 
 Route::middleware('auth')->prefix('timekeeping')->group(function(){
 
@@ -340,6 +345,7 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
 
         Route::get('year',[LeaveCreditsSGController::class,'yearList']);
         Route::get('employees/{year}',[LeaveCreditsSGController::class,'empList']);
+        Route::post('save',[LeaveCreditsSGController::class,'save']);
 
         Route::get('compute/{year}',[LeaveCreditsSGController::class,'computeLeaveCredits']);
         Route::get('show-leaves/{biometric_id}/{year}',[LeaveCreditsSGController::class,'showLeaves']);
@@ -789,6 +795,8 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::get('download-rcbc-template/{period_id}',[PayrollRegisterController::class,'downloadRCBCTemplate']);
         Route::post('unpost',[PayrollRegisterController::class,'unpost']);
         
+        Route::get('view-pdf-unposted/{period_id}',[PayrollRegisterController::class,'viewPDF']);
+
         
     }); 
     //PayslipController

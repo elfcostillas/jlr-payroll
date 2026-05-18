@@ -30,8 +30,14 @@ class PayrollRegisterService
 
     public function getPayrollData($period)
     {
+        // dd(get_class($this->payroll));
 
-        $this->payroll->processV2($period);
+        if(get_class($this->payroll) == 'App\CustomClass\PayrollRegisterConfi'){ 
+            $this->payroll->processV2($period);
+        }else{
+            $this->payroll->process($period);
+        }
+      
         return $this->payroll;
     }
 

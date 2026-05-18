@@ -175,7 +175,8 @@ class ThirteenthMonthJLRController extends Controller
         }
 
         $semi = $this->mapper->buildSemiMonthlyJLR($months,$month,$year);
-       
+
+
         $this->excel2->setValues($semi,$months);
         return Excel::download($this->excel2,"ThirteenthMonthConfiMonthly{$request->year}.xlsx");
 

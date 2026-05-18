@@ -40,6 +40,7 @@ class ThirteenthMonthJLREmployee
 
     public function setBasicPayArray()
     {
+      
         if($this->manual_input->count() > 0){
             foreach($this->manual_input as $m_input)
             {
@@ -51,6 +52,8 @@ class ThirteenthMonthJLREmployee
         {
             $this->basic_pay_arr[$basic_pay->id] = $basic_pay->basic_pay;// - $basic_pay->late_eq_amount;
         }
+
+      
     }
 
     public function getBasicPay($period_id)
@@ -78,6 +81,8 @@ class ThirteenthMonthJLREmployee
         // dd($this->basic_pay_arr);
 
         $gross_pay = 0;
+
+      
         foreach($this->basic_pays as $basic_pay)
         {
             // $gross_pay += $basic_pay->basic_pay - $basic_pay->late_eq_amount;

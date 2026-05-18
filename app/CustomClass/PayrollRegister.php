@@ -153,6 +153,7 @@ abstract class PayrollRegister extends PayrollRegisterFunctions
             {
                 $employees =  $this->getEmployeesByDeptAndDivision($division,$department);
 
+
                 foreach($employees as $employee)
                 {
                     $other_earning = $this->otherEarnings($employee,$period);

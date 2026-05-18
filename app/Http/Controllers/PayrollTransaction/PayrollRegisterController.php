@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\PayrollTransaction;
 
+use App\CustomClass\PayrollRegisterService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mappers\PayrollTransaction\UnpostedPayrollRegisterMapper;
@@ -17,6 +18,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Excel\BankTransmittal;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Http;
+use App\CustomClass\PayrollRegisterRankAndFile;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PayrollRegisterController extends Controller
 {
@@ -53,6 +56,49 @@ class PayrollRegisterController extends Controller
         }
        
     }
+
+    public function viewPDF(Request $request)
+    {
+        $label = '';
+
+        
+        // $this->getSchema();
+        
+
+        $payroll = new PayrollRegisterService(new PayrollRegisterRankAndFile('payrollregister_unposted_s','unposted'));
+
+        $period = $payroll->getPeriod($request->period_id);
+        
+        $data = $payroll->getPayrollData($period);
+
+        $payroll->getHeaders();
+
+
+        if($period){
+            $date_from = Carbon::createFromFormat('Y-m-d',$period->date_from);
+            $date_to = Carbon::createFromFormat('Y-m-d',$period->date_to);
+
+            $label = $date_from->format('m/d/Y').' - '.$date_to->format('m/d/Y');
+        }
+
+        $pdf = PDF::loadView('app.payroll-transaction.payroll-register.print',[
+            'data' => $data,
+            // 'headers' => $headers,
+            'label' => $label,
+            // 'period' => $periodObject,
+            // 'period_label' => $period_label->drange,
+            // 'perf' => $period_label->perf,
+        ])->setPaper('Folio','landscape');
+       
+        $pdf->output();
+        $dom_pdf = $pdf->getDomPDF();
+    
+        $canvas = $dom_pdf ->get_canvas();
+        $canvas->page_text(850, 590, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+       
+        return $pdf->stream('JLR Semi Monthly Payreg.pdf'); 
+    }
+
 
     public function compute(Request $request)
     {

@@ -32,6 +32,23 @@ class LeaveCreditsSGController extends Controller
         return response()->json($result);
     }
 
+        public function save(Request $request)
+    {
+        $data = $request->models;
+
+        foreach($data as $emp)
+        {
+            //dd($emp['line_id']);
+            if($emp['biometric_id'] && $emp['fy_year']){
+                if($emp['line_id']){
+                    $this->mapper->updateValid($emp);
+                } else {
+                    $this->mapper->insertValid($emp);
+                }
+            }
+        }
+    }
+
     public function empList(Request $request)
     {
         $year = $request->year;
