@@ -471,16 +471,25 @@ class ThirteenthMonthMapper extends AbstractMapper
 
     public function getPayrollPeriodsJLR($year,$months)
     {
+    
         if($months == 1){
             $m = [12,1,2,3,4];
         }else{
             $m = [5,6,7,8,9,10,11];
         }
 
-        if(is_array($months) && count($months) == 5){
-            $m = [12,1,2,3,4];
-        }else{
-            $m = [5,6,7,8,9,10,11];
+        // if(is_array($months) && count($months) == 5){
+        //     $m = [12,1,2,3,4];
+        // }else{
+        //     $m = [5,6,7,8,9,10,11];
+        // }
+
+        if(is_array($months)){
+            if(count($months) == 5){
+                $m = [12,1,2,3,4];
+            }else{
+                $m = [5,6,7,8,9,10,11];
+            }   
         }
 
         $payroll_periods = DB::table('payroll_period')
