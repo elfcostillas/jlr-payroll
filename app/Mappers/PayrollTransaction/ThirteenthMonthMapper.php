@@ -346,7 +346,8 @@ class ThirteenthMonthMapper extends AbstractMapper
             $copmensations = DB::table('posted_other_compensations')
                 ->where('compensation_type','=',19)
                 ->whereIn('period_id',$payroll_periods->pluck('id'))
-                ->where('biometric_id',$employee->biometric_id);
+                ->where('biometric_id',$employee->biometric_id)
+                ->where('period_id','!=',73);
                 
             $payrolls = DB::table('payrollregister_posted_s')
                     ->whereIn('period_id',$payroll_periods->pluck('id'))
@@ -515,7 +516,8 @@ class ThirteenthMonthMapper extends AbstractMapper
         $copmensations = DB::table('posted_other_compensations')
         ->whereIn('period_id',$payroll_periods->pluck('id'))
         ->where('compensation_type','=',19)
-        ->where('biometric_id',$employee->biometric_id);
+        ->where('biometric_id',$employee->biometric_id)
+         ->where('period_id','!=',73);
         
         $payrolls = DB::table('payrollregister_posted_s')
                 ->whereIn('period_id',$payroll_periods->pluck('id'))
