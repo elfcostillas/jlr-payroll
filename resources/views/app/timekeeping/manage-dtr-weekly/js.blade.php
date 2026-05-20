@@ -918,6 +918,21 @@
                         }, 
                     },
                     {
+                        title : 'SP Hol Hrs',
+                        field : 'sphol_hrs',
+                        width:85,
+                        template : "# if(sphol_hrs==0){#  #} else{# #= sphol_hrs #  #}#",
+                        attributes: {
+                            style: "font-size: 9pt;text-align:center",
+                            
+                        },
+                        headerAttributes: {
+                            // style: "font-size: 9pt;text-align:center",
+                            style: "font-size: 9pt;text-align:center;text-wrap: wrap;",
+                            
+                        }, 
+                    },
+                    {
                         title : '-',
                         field : 'cont',
                         template : "# if(cont=='N'){#  #} else{# #= cont #  #}#",
