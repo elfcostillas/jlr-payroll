@@ -589,6 +589,7 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
                                     ->orderBy('job_title_id','ASC')
                                     ->orderBy('employee_names_vw.employee_name','ASC')
                                     ->get();
+                                    
             foreach($employees as $employee)
             {   
                 $employee->otherEarnings = $this->otherEarnings($employee->biometric_id,$period);
@@ -641,7 +642,10 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
                                     
                                     ])
                                     ->whereRaw("COALESCE(weekly_tmp_locations.loc_id,employees.location_id) = $location->id")
-                                    ->orderBy('employees.pay_type','DESC')->orderBy('employee_names_vw.employee_name','ASC')->get();
+                                    ->orderBy('departments.dept_code','DESC')
+                                    ->orderBy('job_title_id','ASC')
+                                    ->orderBy('employee_names_vw.employee_name','ASC')
+                                    ->get();
             foreach($employees as $employee)
             {   
                 $employee->otherEarnings = $this->otherEarnings($employee->biometric_id,$period);
@@ -655,8 +659,8 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
                     ]
                 );
 
-                $employee->installments = $this->getDeductionsInstallments($employee->biometric_id,$period);
-                $employee->govloans = $this->getGovLoans($employee->biometric_id,$period);
+                $employee->installments = $this->getPostedDeductionsInstallments($employee->biometric_id,$period);
+                $employee->govloans = $this->getPostedGovLoans($employee->biometric_id,$period);
             
             }
 
@@ -899,6 +903,39 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         
     }
 
+    public function getPostedDeductionsInstallments($biometric_id,$period_id)
+    {   
+        $ded_array = [];
+
+        //$onetime = DB::table("unposted_onetime_deductions")->select('deduction_type','amount')->where('user_id','=',Auth::user()->id)->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
+        //$fixed = DB::table("unposted_fixed_deductions")->select('deduction_type','amount')->where('user_id','=',Auth::user()->id)->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
+        $install = DB::table("unposted_installments_sg")
+                ->select('deduction_type','amount')
+                // ->where('user_id','=',Auth::user()->id)
+                ->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
+
+        $deductions = DB::table('deduction_types')
+                        ->select('description','deduction_type','amount')
+                        ->joinSub($install,'deductions',function($join){
+                            $join->on('deductions.deduction_type','=','deduction_types.id');
+                        })->orderBy('deduction_type')->get();
+
+        //return $deductions;
+        foreach($deductions as $deduction){
+            //$ded_array[$deduction->deduction_type] 
+            if(array_key_exists($deduction->deduction_type,$ded_array)){
+                $ded_array[$deduction->deduction_type] += $deduction->amount;
+            }else{
+                $ded_array[$deduction->deduction_type] = 0;
+                $ded_array[$deduction->deduction_type] += $deduction->amount;
+            }
+        }
+
+        return $ded_array;
+
+        
+    }
+
     public function getGovLoans($biometric_id,$period_id)
     {
         /*
@@ -910,6 +947,34 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         ->join('loan_types','deduction_type','=','loan_types.id')
         ->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]])
         ->where('user_id','=',Auth::user()->id)
+        ->orderBy('deduction_type')->get();
+
+        foreach($loan as $l)
+        {
+            if(array_key_exists($l->id,$govLoan)){
+                $govLoan[$l->id] += $l->amount;
+            }else{
+                $govLoan[$l->id] = 0;
+                $govLoan[$l->id] += $l->amount;
+            }
+        }
+       
+        return $govLoan;
+        
+        //return $loan;
+    }
+
+    public function getPostedGovLoans($biometric_id,$period_id)
+    {
+        /*
+        SELECT description,amount FROM unposted_loans INNER JOIN loan_types ON deduction_type = loan_types.id
+        WHERE period_id = 1 AND biometric_id = 847
+        */
+        $govLoan = [];
+        $loan = DB::table('unposted_loans_sg')->select('id','description','amount')
+        ->join('loan_types','deduction_type','=','loan_types.id')
+        ->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]])
+        // ->where('user_id','=',Auth::user()->id)
         ->orderBy('deduction_type')->get();
 
         foreach($loan as $l)

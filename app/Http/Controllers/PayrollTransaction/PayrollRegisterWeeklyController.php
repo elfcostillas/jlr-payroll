@@ -206,8 +206,7 @@ class PayrollRegisterWeeklyController extends Controller
 
     public function downloadExcelUnposted(Request $request)
     {
-        
-        
+    
         $sil_flag = false;
         $period = $request->id;
         $headers = $this->mapper->getHeaders($period)->toArray();
