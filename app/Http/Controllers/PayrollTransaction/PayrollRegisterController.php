@@ -73,7 +73,6 @@ class PayrollRegisterController extends Controller
 
         $payroll->getHeaders();
 
-
         if($period){
             $date_from = Carbon::createFromFormat('Y-m-d',$period->date_from);
             $date_to = Carbon::createFromFormat('Y-m-d',$period->date_to);

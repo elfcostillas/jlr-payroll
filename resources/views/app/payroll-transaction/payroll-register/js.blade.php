@@ -121,6 +121,46 @@
                                 }
                             });
                     },
+                    unpost : function () {
+                        let period = $("#posted_period").data("kendoDropDownList");
+
+                        console.log(period.value());
+
+                        Swal.fire({
+                                title: 'Unpost Payroll',
+                                text: "You won't be able to revert this!",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Unpost'
+                            }).then((result) => {
+                                if (result.value) {                       
+                                    $.post('payroll-register/unpost',{
+                                        period_id : period.value()
+                                    },function(data,status,){
+                                        //console.log(status,data);
+                                        //console.log(data.error)
+
+                                        if(data.success){
+                                            Swal.fire({
+                                            //position: 'top-end',
+                                            icon: 'success',
+                                            title: data.success,
+                                            showConfirmButton: false,
+                                            timer: 1000
+                                            });	
+
+                                            viewModel.ds.unposted.read();
+                                            viewModel.ds.posted.read();
+                                        }
+                                        else {
+                                            custom_error(data.error);
+                                        }
+                                    },'json');
+                                }
+                            });
+                    },
                     downloadRCBC : function(e){
                         // alert();
                         let period = $("#posted_period").data("kendoDropDownList");

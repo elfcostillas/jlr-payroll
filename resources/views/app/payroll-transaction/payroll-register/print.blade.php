@@ -166,8 +166,12 @@
                                     @foreach ($data->basic_cols as $bcols)
                                     <td class="r">{{ custom_format($employee->{$bcols->var_name}) }}</td>
                                     @endforeach
+
+                                    @php  
+                                        // @if (in_array($gcols->var_name,['vl_wpay','sl_wpay','absences','bl_wpay','svl']))
+                                    @endphp
                                     @foreach ($data->gross_cols as $gcols)
-                                        @if (in_array($gcols->var_name,['vl_wpay','sl_wpay','absences','bl_wpay','svl']))
+                                        @if (in_array($gcols->var_name,[]))
                                             <td class="r">{{ convert_hrs_to_days($employee->{$gcols->var_name} )}}</td>
                                         @else
                                             <td class="r">{{ custom_format($employee->{$gcols->var_name} )}}</td>
