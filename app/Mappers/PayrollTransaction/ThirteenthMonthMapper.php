@@ -77,6 +77,13 @@ class ThirteenthMonthMapper extends AbstractMapper
         return $result;
     }
 
+    public function getRankNFile()
+    {
+        $result = $this->empQuery()
+            ->where('emp_level','=',5);
+        return $result;
+    }
+
     
     public function getConfiR($year,$months)
     {
@@ -229,6 +236,7 @@ class ThirteenthMonthMapper extends AbstractMapper
             ->where('semi_annual' ,$months)
             ->where('user_id',Auth::user()->id)
             ->where('stat','=','DRAFT')
+            ->where('emp_level','=','confi')
             ->delete();
         
         $employees = $this->getConfi()->get();
@@ -257,6 +265,44 @@ class ThirteenthMonthMapper extends AbstractMapper
             'payroll_periods' => $this->getPayrollPeriodsJLR($year,$months)->get(),
         ];
 
+        
+    }
+
+    public function buildDataJLRRankAndFile($year,$months)
+    {
+        DB::table('thirteenth_month')
+            ->where('pyear' ,$year)
+            ->where('semi_annual' ,$months)
+            ->where('user_id',Auth::user()->id)
+            ->where('stat','=','DRAFT')
+            ->where('emp_level','=','non-confi')
+            ->delete();
+        
+        $employees = $this->getRankNFile()->get();
+        
+        foreach($employees as $employee)
+        {
+            $e = $this->employeeJLRFactory($employee,$year,$months);
+
+            if($e){
+                DB::table('thirteenth_month')->insert([
+                    'user_id' => Auth::user()->id,
+                    'pyear' => $year,
+                    'semi_annual' => $months,
+                    'biometric_id' => $e->getBiometricID(),
+                    'net_pay' => $e->getNetPay(),
+                    'gross_pay' => $e->getGrossPay(),
+                    'created_on' => now(),
+                    'emp_level' => 'non-confi']);
+            }
+
+            $employee->thirteenth_pay = $e;
+        }
+
+        return [
+            'employees' => $employees,
+            'payroll_periods' => $this->getPayrollPeriodsJLR($year,$months)->get(),
+        ];
         
     }
 

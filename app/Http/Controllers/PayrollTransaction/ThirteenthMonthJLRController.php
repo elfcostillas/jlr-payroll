@@ -49,9 +49,25 @@ class ThirteenthMonthJLRController extends Controller
         return view("app.payroll-transaction.thirteenth-month-confi.table",['data' => $result]);
     }
 
+    public function showTableRankAndFile(Request $request)
+    {
+        $result = $this->mapper->buildDataJLRRankAndFile($request->year,$request->month);
+
+        return view("app.payroll-transaction.thirteenth-month-rank.table",['data' => $result]);
+    }
+
     public function index_rankAndFile(Request $request)
     {
-        
+        $years =  $this->mapper->getYears();
+        $months = array(
+            ['label' => 'December - April','value' => 1],
+            ['label' => 'May - November','value' => 2]
+        );
+
+        return view('app.payroll-transaction.thirteenth-month-rank.index',[
+            'years' => $years,
+            'months' => $months,
+        ]);
     }
 
     public function insertOrUpdate(Request $request)

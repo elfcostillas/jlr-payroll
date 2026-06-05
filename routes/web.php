@@ -920,6 +920,20 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::get('download-excel-inactive/{year}/{month}',[ThirteenthMonthJLRController::class,'downloadInactive']);
         Route::get('download-conso/{year}/{month}',[ThirteenthMonthJLRController::class,'conso']);
     });
+
+    Route::prefix('thirteenth-month-jlr')->middleware('access:payroll-transaction/thirteenth-month-confi')->group(function(){
+        Route::get('/',[ThirteenthMonthJLRController::class,'index_rankAndFile']);
+        Route::get('show-table/{year}/{month}',[ThirteenthMonthJLRController::class,'showTableRankAndFile']);
+
+        // Route::post('insert-or-update',[ThirteenthMonthJLRController::class,'insertOrUpdate']);
+        // Route::get('download-excel/{year}/{month}',[ThirteenthMonthJLRController::class,'download']);
+        // Route::get('download-banktransmittal/{year}/{month}',[ThirteenthMonthJLRController::class,'bank_transmittal']);
+        // Route::post('post',[ThirteenthMonthJLRController::class,'post']);
+
+        // Route::get('print-payslip/{year}/{month}',[ThirteenthMonthJLRController::class,'print']);
+        // Route::get('download-excel-inactive/{year}/{month}',[ThirteenthMonthJLRController::class,'downloadInactive']);
+        // Route::get('download-conso/{year}/{month}',[ThirteenthMonthJLRController::class,'conso']);
+    });
 });
 
 

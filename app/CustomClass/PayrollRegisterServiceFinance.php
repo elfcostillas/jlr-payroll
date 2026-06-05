@@ -45,7 +45,7 @@ class PayrollRegisterServiceFinance extends PayrollRegisterService
                 + $employee->vl_wpay_amount
                 + $employee->svl_amount
                 + $employee->bl_wpay_amount
-                + $employee->spol_hrs_amount
+                + $employee->sphol_hrs_amount
                 + $employee->leghol_hrs_amount
                 + $this->getTardyAbsenceUT($employee);
     }
