@@ -142,6 +142,34 @@
                             }
                         }
                     }),
+                    posted_ammortization : new kendo.data.DataSource({ 
+                        transport : {
+                            read : {
+                                url : 'government-loans-sg/posted_ammortization/0',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            }
+                        },
+                        serverPaging : true,
+                        serverFiltering : true,
+                        pageSize : 99,
+                        aggregate: [ { field: "ammortization", aggregate: "sum" },],
+                        schema : {
+                            data : "data",
+                            total : "total",
+                            model : {
+                                // id : "ree",
+                                fields : {
+                                    release_date : { type : 'string' },
+                                    payrollperiod : { type : 'string' },
+                                    ammortization : { type : 'number' },
+                                }
+                            }
+                        }
+                    }),
                     employeecombobox : new kendo.data.DataSource({ 
                         transport : {
                             read : {
@@ -225,6 +253,9 @@
                         var tr = $(e.target).closest("tr");
                         var data = this.dataItem(tr);
 
+                        viewModel.ds.posted_ammortization.transport.options.read.url = `government-loans-sg/posted_ammortization/${data.id}`;
+                        viewModel.ds.posted_ammortization.read();
+
                         let url  = `government-loans-sg/read-header/${data.id}`;
                         read(url,viewModel);
 
@@ -281,7 +312,8 @@
                        
                        myWindow.kendoWindow({
                            width: "810", //1124 - 1152
-                           height: "360",
+                        //    height: "360",
+                            height: "860",
                            title: "Deduction Details - Loans",
                            visible: false,
                            animation: false,
@@ -364,6 +396,49 @@
                         attributes : { style : 'font-size:10pt !important;'},
                         width : 85
                     },
+                  
+                ]
+            });
+
+            $("#ammortizationgrid").kendoGrid({
+                dataSource : viewModel.ds.posted_ammortization,
+                pageable : {
+                    refresh : true,
+                    buttonCount : 5
+                },
+                noRecords: true,
+                filterable : true,
+                sortable : true,
+                height : 450,
+                scrollable: true,
+                //toolbar : [{ name :'create',text:'Add Deduction'}],
+                //editable : "inline",
+              
+                selectable: true,
+                columns : [
+                    {
+                        title : "Payroll Period",
+                        field : "release_date",
+                       
+                        width : 130,    
+                    },
+                    {
+                        title : "Ammortization",
+                        field : "ammortization",
+                        template : "#=kendo.toString(ammortization,'n2')#",
+                        width : 180,    
+                        attributes : {
+                            style : "text-align:right;"
+                        },
+                        footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>",
+                    //        
+                       
+                    },
+                    {
+
+                    }
+
+                 
                   
                 ]
             });

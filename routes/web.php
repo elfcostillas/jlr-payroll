@@ -432,6 +432,8 @@ Route::middleware('auth')->prefix('employee-files')->group(function(){
         Route::get('get-emp-rates/{id}',[RatesController::class,'getRates']);
         Route::post('create-emp-rates',[RatesController::class,'createRates']);
         Route::post('copy-onlinerequest',[EmployeeController::class,'copyToOR']);
+
+        Route::post('upload-photo',[EmployeeConfiController::class,'uploadPhoto']);
     });
 
     Route::prefix('divisions-departments')->group(function(){ 
@@ -615,6 +617,7 @@ Route::middleware('auth')->prefix('deductions')->group(function(){
         Route::get('list-payroll-period',[GovernmentLoanController::class,'getPayrollPeriod']);
         Route::get('list-types',[GovernmentLoanController::class,'getTypes']);
         Route::post('save',[GovernmentLoanController::class,'save']);
+        Route::get('posted_ammortization/{id}',[GovernmentLoanController::class,'ammortization']);
     });
 
     Route::prefix('weekly')->group(function(){
@@ -638,6 +641,9 @@ Route::middleware('auth')->prefix('deductions')->group(function(){
         
         Route::get('list-payroll-period',[GovtLoanSGController::class,'getPayrollPeriod']);
         Route::get('list-types',[GovtLoanSGController::class,'getTypes']);
+
+       Route::get('posted_ammortization/{id}',[GovtLoanSGController::class,'ammortization']);
+        
  
     });
     

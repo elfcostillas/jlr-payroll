@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Mappers\Admin\ActivityLogMapper;
 use App\Mappers\EmployeeFileMapper\OnlineRequestUserMapper;
+use Illuminate\Support\Facades\Storage;
 
 class EmployeeConfiController extends Controller
 {
@@ -258,6 +259,25 @@ class EmployeeConfiController extends Controller
             $result = (object) array('error'=>"Record not found.");
         }
        return response()->json($result);
+
+    }
+
+    public function uploadPhoto(Request $request)
+    {
+      
+        if (!Storage::disk('public')->exists('photos')) {
+            Storage::disk('public')->makeDirectory('photos');
+        }
+
+        $originalName = $request->file('files')->getClientOriginalName();
+        $extension = $request->file('files')->getClientOriginalExtension();
+
+        $path = $request->file('files')->store('photos','public');
+        $filename = basename($path);
+
+        DB::table('employees')->where('id','=',$request->employee_id)->update(['emp_photo'=>$filename]);
+
+        // dd( $filename,$request->employee_id);
 
     }
 

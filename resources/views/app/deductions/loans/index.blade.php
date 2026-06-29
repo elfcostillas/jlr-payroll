@@ -120,6 +120,7 @@
                         </table>
                     </div>
                 </div>
+                <div id="ammortizationgrid"></div>
             </div>
         </div>
     </div>

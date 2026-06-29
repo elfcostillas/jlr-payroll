@@ -136,6 +136,26 @@ class GovernmentLoanMapper extends AbstractMapper {
         return $result->get();
     }
 
+    public function get_ammortization($id)
+    {
+        $result = DB::table('posted_loans')
+                ->join('payroll_period','posted_loans.period_id','=','payroll_period.id')
+                ->select(DB::raw("DATE_FORMAT(DATE_ADD(date_to,INTERVAL 5 DAY) ,'%m/%d/%Y') AS release_date,CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) AS payrollperiod ,amount AS ammortization"))
+                ->where('deduction_id',$id)
+                ->orderBy('payroll_period.id','ASC');
+
+      
+         $total = $result->count();
+
+		//$result->limit($filter['pageSize'])->skip($filter['skip']);
+
+		return [
+			'total' => $total,
+			'data' => $result->get()
+		];
+
+    }
+
 }
 
 
