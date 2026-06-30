@@ -114,7 +114,7 @@ class InstallmentDeductionSGMapper extends AbstractMapper {
         $result = $this->model->select()->from('employee_names_vw')
             ->join('employees','employees.biometric_id','=','employee_names_vw.biometric_id')
             ->select(DB::raw("employee_names_vw.*"))
-            ->where('employees.exit_status',1)
+            // ->where('employees.exit_status',1)
             ->where('employees.emp_level',6);
 
         if($filter['filter']!=null){

@@ -72,7 +72,7 @@ class GovtLoanSGMapper extends AbstractMapper
     public function employeelist($filter)
     {
         $result = $this->model->select()->from('employee_names_vw')
-        ->where('exit_status',1)
+        // ->where('exit_status',1)
         ->where('emp_level',6);
 
         if($filter['filter']!=null){

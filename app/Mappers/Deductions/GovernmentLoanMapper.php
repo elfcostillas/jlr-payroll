@@ -108,7 +108,8 @@ class GovernmentLoanMapper extends AbstractMapper {
 
     public function employeelist($filter)
     {
-        $result = $this->model->select()->from('employee_names_vw')->where('exit_status',1);
+        $result = $this->model->select()->from('employee_names_vw');
+        // ->where('exit_status',1);
 
         if($filter['filter']!=null){
             if(array_key_exists('filters',$filter['filter'])){
