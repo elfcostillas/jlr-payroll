@@ -367,9 +367,9 @@ LEFT JOIN emp_exit_status ON employees.exit_status = emp_exit_status.id
 		$total = $this->model->select(DB::raw("count(*) as total"))->where('exit_status',1)->first();
 		
 
-		$reg = $this->model->select(DB::raw("count(*) as total"))->where('exit_status',1)->where('employee_stat',2)->first();
-		$prob = $this->model->select(DB::raw("count(*) as total"))->where('exit_status',1)->where('employee_stat',1)->first();
-		$support = $this->model->select(DB::raw("count(*) as total"))->where('exit_status',1)->where('employee_stat',3)->first();
+		$reg = $this->model->select(DB::raw("count(*) as total"))->where('exit_status',1)->where('employee_stat',2)->where('job_title_id','<>','130')->first();
+		$prob = $this->model->select(DB::raw("count(*) as total"))->where('exit_status',1)->where('employee_stat',1)->where('job_title_id','<>','130')->first();
+		$support = $this->model->select(DB::raw("count(*) as total"))->where('exit_status',1)->where('employee_stat',3)->where('job_title_id','<>','130')->first();
 		
 		$array['total'] = $total->total;
 		$array['reg'] = $reg->total;
