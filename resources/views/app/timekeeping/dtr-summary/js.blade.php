@@ -220,15 +220,15 @@
                         //width : 320,
                     },
                    
-                    {
-                        command: [
-                            // { text : 'Prepare Blank',click : viewModel.toolbarHandler.prepareBlank , },
-                            { text : 'Download',click : viewModel.toolbarHandler.download , icon : 'download' },
-                            //{ text : 'Download',click : viewModel.buttonHandler.download , }
-                        ],
-                        attributes : { style : 'font-size:10pt !important;'},
-                        width : 120
-                    },
+                    // {
+                    //     command: [
+                    //         // { text : 'Prepare Blank',click : viewModel.toolbarHandler.prepareBlank , },
+                    //         { text : 'Download',click : viewModel.toolbarHandler.download , icon : 'download' },
+                    //         //{ text : 'Download',click : viewModel.buttonHandler.download , }
+                    //     ],
+                    //     attributes : { style : 'font-size:10pt !important;'},
+                    //     width : 120
+                    // },
                     {
                         command: [
                             // { text : 'Prepare Blank',click : viewModel.toolbarHandler.prepareBlank , },
@@ -238,24 +238,24 @@
                         attributes : { style : 'font-size:10pt !important;'},
                         width : 160
                     },
-                    {
-                        command: [
-                            { text : 'Compute',click : viewModel.toolbarHandler.compute , icon : '' },
-                        ],
-                        attributes : { style : 'font-size:10pt !important;'},
-                        width : 110
-                    },
-                    {
-                        command: [
-                            { text : 'Compute - Confi',click : viewModel.toolbarHandler.compute_confi , icon : '' },
-                        ],
-                        attributes : { style : 'font-size:10pt !important;'},
-                        width : 130
-                    },
+                    // {
+                    //     command: [
+                    //         { text : 'Compute',click : viewModel.toolbarHandler.compute , icon : '' },
+                    //     ],
+                    //     attributes : { style : 'font-size:10pt !important;'},
+                    //     width : 110
+                    // },
+                    // {
+                    //     command: [
+                    //         { text : 'Compute - Confi',click : viewModel.toolbarHandler.compute_confi , icon : '' },
+                    //     ],
+                    //     attributes : { style : 'font-size:10pt !important;'},
+                    //     width : 130
+                    // },
 
                     {
                         command: [
-                            { text : 'Compute - Confi V2',click : viewModel.toolbarHandler.compute_confiV2 , icon : '' },
+                            { text : 'Compute - Confi Vite',click : viewModel.toolbarHandler.compute_confiV2 , icon : '' },
                         ],
                         attributes : { style : 'font-size:10pt !important;'},
                         width : 150

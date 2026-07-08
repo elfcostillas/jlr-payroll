@@ -174,8 +174,6 @@ class EmployeeDTR2
             $ndays = $ndays_result->ndays;
         }
 
-
-
         $awol = DB::table('edtr_detailed')->join('payroll_period',function($join){
             $join->whereRaw("edtr_detailed.dtr_date between date_from and date_to");
         })

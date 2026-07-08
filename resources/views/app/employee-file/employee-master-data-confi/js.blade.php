@@ -29,14 +29,19 @@
             let genderOptions = [
                     { text: "Male", value: "M" },
                     { text: "Female", value: "F" },
-                ];
-            
-                let civilStatusOptions = [
-                    { text: "Single", value: 1 },
-                    { text: "Married", value: 2 },
-                    { text: "Divorced", value: 3 },
-                    { text: "Widowed/Widower", value: 4 },
-                ];
+            ];
+        
+            let civilStatusOptions = [
+                { text: "Single", value: 1 },
+                { text: "Married", value: 2 },
+                { text: "Divorced", value: 3 },
+                { text: "Widowed/Widower", value: 4 },
+            ];
+
+            let yes_no = [
+                { text: "Yes", value: 'Y' },
+                { text: "No", value: 'N' },
+            ];
 
             let obj = {
                     id : null,
@@ -530,6 +535,7 @@
                         viewModel.form.model.set('location_id',($('#location_id').data('kendoDropDownList').value()!='') ? $('#location_id').data('kendoDropDownList').value() : 0 );
                         viewModel.form.model.set('sched_mtwtf',($('#sched_mtwtf').data('kendoDropDownList').value()!='') ? $('#sched_mtwtf').data('kendoDropDownList').value() : null );
                         viewModel.form.model.set('sched_sat',($('#sched_sat').data('kendoDropDownList').value()!='') ? $('#sched_sat').data('kendoDropDownList').value() : null );
+                        viewModel.form.model.set('alternate_sat',($('#alternate_sat').data('kendoDropDownList').value()!='') ? $('#alternate_sat').data('kendoDropDownList').value() : null );
                         //viewModel.form.model.set('deduct_sss',(viewModel.form.model.deduct_sss) ? 'Y':'N');
                         
 
@@ -921,6 +927,21 @@
                     },2000);
                     
                 }
+            });
+
+            $("#alternate_sat").kendoDropDownList({
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: yes_no,
+                index: 0,
+                // optionLabel: {
+                //     text: "",
+                //     value: null
+                // },
+                dataBound : function(e){
+                  
+                }
+                //change: onChange
             });
 
             function onUpload(e) {
