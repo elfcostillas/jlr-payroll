@@ -188,7 +188,8 @@ class OneTimeDeductionController extends Controller
                         array_push($logs,[
                             'header_id' => $header_id,
                             'biometric_id' => $data[1],
-                            'amount' => $data[3]
+                            'amount' => $data[3],
+                            'remarks' => $data[4]
                         ]);
                     }
                 }else {

@@ -6,6 +6,8 @@
     <script>
         $(document).ready(function(){
 
+            var token = $('meta[name="_token"]').attr('content');  
+
             var viewModel = kendo.observable({ 
                 selected : null,
                 form : {
@@ -295,6 +297,33 @@
                                 viewModel.buttonHandler.save();
                             }
                         });
+                    },
+                    download : function()
+                    {
+                        // console.log(viewModel.form.model.id);
+                        window.open(`fixed-compensations/download/${viewModel.form.model.id}`);
+                    },
+                    showUploader : function()
+                    {
+                        var myWindow2 = $("#pop2");
+
+                        myWindow2.kendoWindow({
+                           width: "810", //1124 - 1152
+                           height: "330",
+                           title: "Fixed Compensations Uploader",
+                           visible: false,
+                           animation: false,
+                           actions: [
+                               "Pin",
+                               "Minimize",
+                               "Maximize",
+                               "Close"
+                           ],
+                           close: viewModel.buttonHandler.closePop2,
+                           position : {
+                               top : 0
+                           }
+                       }).data("kendoWindow").center().open();
                     }
 
                 },
@@ -606,7 +635,34 @@
             });
 
             $("#remarks").kendoTextBox({ });
+
+            $("#files").kendoUpload({
+                async: {
+                    //chunkSize: 11000,// bytes
+                    saveUrl: "fixed-compensations/upload",
+                    //removeUrl: "remove",
+                    autoUpload: false
+                },
+                validation: {
+                    maxFileSize: 20000000,
+                    allowedExtensions: [".csv"]
+                },
+                upload: onUpload
+            });
             
+            function onUpload(e) {
+                var xhr = e.XMLHttpRequest;
+                if (xhr) {
+                    xhr.addEventListener("readystatechange", function (e) {
+                        if (xhr.readyState == 1 /* OPENED */) {
+                            xhr.setRequestHeader("X-CSRF-TOKEN", token);
+                        }
+                    });
+                }
+                e.data = {
+                    header_id : viewModel.form.model.id
+                };
+            }
 
 
             // $("#emp_level").kendoDropDownList({
@@ -658,6 +714,9 @@
                     { id : 'saveBtn', type: "button", text: "Save", icon: 'save', click : viewModel.buttonHandler.save },
                     { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
                     { id : 'postBtn', type: "button", text: "Post", icon: 'print', click : viewModel.buttonHandler.post },
+                    { id : 'downloadBtn', type: "button", text: "Download", icon: 'download', click : viewModel.buttonHandler.download },
+                    { id : 'uploadBtn', type: "button", text: "Upload", icon: 'upload', click : viewModel.buttonHandler.showUploader },
+               
                 ]
             });
 

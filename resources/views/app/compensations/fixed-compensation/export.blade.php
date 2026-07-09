@@ -4,16 +4,15 @@
         <td>Biometric ID</td>
         <td>Employee</td>
         <td>Amount</td>
-        <td>Remarks</td>
+      
     </tr>
     @foreach($data as $row)
         
         <tr>
             <td> {{ $header_id }}</td>
             <td> {{ $row->biometric_id }}</td>
-            <td> {{ $row->empname }}</td>
-            <td> {{ $row->amount }}</td>
-            <td> {{ $row->remarks }} </td>
+            <td> {{ $row->employee_name }}</td>
+            <td> {{ ($row->total_amount > 0 ) ? $row->total_amount : '' }}</td>
         </tr>
 
     @endforeach

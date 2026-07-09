@@ -60,4 +60,12 @@ class FixedCompensationDetailMapper extends AbstractMapper {
 
     }
 
+    public function uploadCSV($logs,$header_id)
+    {
+        $delete = $this->model->where('header_id',$header_id)->delete();
+        $result = DB::table('compensation_fixed_details')->insertOrIgnore($logs);
+
+        return $result;
+    }
+
 }

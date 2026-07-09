@@ -302,7 +302,35 @@
                                 viewModel.buttonHandler.save();
                             }
                         });
+                    },
+                    download : function()
+                    {
+                        // console.log(viewModel.form.model.id);
+                        window.open(`other-compensations/download/${viewModel.form.model.id}`);
+                    },
+                    showUploader : function()
+                    {
+                        var myWindow2 = $("#pop2");
+
+                        myWindow2.kendoWindow({
+                           width: "810", //1124 - 1152
+                           height: "330",
+                           title: "Other Compensations Uploader",
+                           visible: false,
+                           animation: false,
+                           actions: [
+                               "Pin",
+                               "Minimize",
+                               "Maximize",
+                               "Close"
+                           ],
+                           close: viewModel.buttonHandler.closePop2,
+                           position : {
+                               top : 0
+                           }
+                       }).data("kendoWindow").center().open();
                     }
+
 
                 },
                 functions : {
@@ -670,6 +698,9 @@
                     { id : 'saveBtn', type: "button", text: "Save", icon: 'save', click : viewModel.buttonHandler.save },
                     { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
                     { id : 'postBtn', type: "button", text: "Post", icon: 'print', click : viewModel.buttonHandler.post },
+                    { id : 'downloadBtn', type: "button", text: "Download", icon: 'download', click : viewModel.buttonHandler.download },
+                    { id : 'uploadBtn', type: "button", text: "Upload", icon: 'upload', click : viewModel.buttonHandler.showUploader },
+               
                 ]
             });
 

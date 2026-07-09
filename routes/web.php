@@ -976,6 +976,9 @@ Route::middleware('auth')->prefix('compensations')->group(function(){
 
         Route::post('update-detail',[FixCompensationController::class,'updateDetail']);
 
+        Route::get('download/{id}',[FixCompensationController::class,'download']);
+        Route::post('upload',[FixCompensationController::class,'upload']);
+
     }); 
 
     Route::prefix('other-compensations')->middleware('access:compensations/other-compensations')->group(function(){
