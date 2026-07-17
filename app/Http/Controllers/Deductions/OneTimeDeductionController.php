@@ -128,6 +128,12 @@ class OneTimeDeductionController extends Controller
         $data = $request->models;
         foreach($data as $row)
         {
+            if(!empty($row['bpn'] || !empty($row['bps'] || !empty($row['qad'])))){
+                $row['amount'] = $row['bpn'] + $row['bps'] + $row['qad'];
+            }else{
+                // $row['amount'] = 0;
+            }
+
             if($row['line_id']==''||$row['line_id']==null){
                 $result = $this->detail->insertValid($row);
             }else{

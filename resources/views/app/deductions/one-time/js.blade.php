@@ -177,7 +177,10 @@
                                     biometric_id : { type : 'string' ,editable:false,navigatable:false },
                                     amount : { type : 'number' },
                                     empname  : { type : 'string',editable:false },
-                                    remarks : { type : 'string' }
+                                    remarks : { type : 'string' },
+                                    bps: { type : 'number' },
+                                    bpn: { type : 'number' },
+                                    qad: { type : 'number' },
                                     // date_release: { type : 'date' },
                                     // man_hours: { type : 'number' },
                                 }
@@ -333,7 +336,7 @@
                        var myWindow = $("#pop");
                        
                        myWindow.kendoWindow({
-                           width: "810", //1124 - 1152
+                           width: "1124", //1124 - 1152
                            height: "730",
                            title: "Deduction Details - One Time Deduction",
                            visible: false,
@@ -421,6 +424,36 @@
                                 navigatable:false
                             },
                             {
+                                title : "North",
+                                field : "bpn",
+                                width : 90,  
+                                template: "#= bpn == null ? '' : kendo.toString(bpn, 'n2') #",
+                
+                                attributes : {
+                                    style : 'text-align:right;'
+                                },
+                            },
+                            {
+                                title : "South",
+                                field : "bps",
+                                width : 90,  
+                                // template : "#=kendo.toString(bps,'n2')#",
+                                template: "#= bps == null ? '' : kendo.toString(bps, 'n2') #",
+                                attributes : {
+                                    style : 'text-align:right;'
+                                },
+                            },
+                            {
+                                title : "QAD",
+                                field : "qad",
+                                width : 90,  
+                                template: "#= qad == null ? '' : kendo.toString(qad, 'n2') #",
+                
+                                attributes : {
+                                    style : 'text-align:right;'
+                                },
+                            },
+                            {
                                 title : "Amount",
                                 field : "amount",
                                 width : 130,  
@@ -448,7 +481,15 @@
                             },
                             toolbar : ['save'],
                             noRecords: true,
-                            filterable : true,
+                            // filterable : true,
+                            filterable : {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
                             sortable : true,
                             height : 500,
                             scrollable: true,
@@ -473,6 +514,37 @@
                                     //editor : employeeEditor,
                                 
                                     navigatable:false
+                                },
+                                {
+                                    title : "North",
+                                    field : "bpn",
+                                    width : 90,  
+                                    template: "#= (bpn == null || bpn == 0)  ? '' : kendo.toString(bpn, 'n2') #",
+
+                                    attributes : {
+                                    style : 'text-align:right;'
+                                    },
+                                },
+                                {
+                                    title : "South",
+                                    field : "bps",
+                                    width : 90,  
+                                    // template : "#=kendo.toString(bps,'n2')#",
+                                    // template: "#= bps == null ? '' : kendo.toString(bps, 'n2') #",
+                                    template: "#= (bps == null || bps == 0)  ? '' : kendo.toString(bps, 'n2') #",
+                                    attributes : {
+                                    style : 'text-align:right;'
+                                    },
+                                },
+                                {
+                                    title : "QAD",
+                                    field : "qad",
+                                    width : 90,  
+                                    template: "#= (qad == null || qad == 0)  ? '' : kendo.toString(qad, 'n2') #",
+
+                                    attributes : {
+                                    style : 'text-align:right;'
+                                    },
                                 },
                                 {
                                     title : "Amount",
