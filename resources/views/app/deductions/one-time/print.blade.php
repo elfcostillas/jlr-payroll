@@ -5,19 +5,20 @@
 <style>
     @page {
         /* size: auto;   auto is the initial value */
-        margin: 45 60 45 60;  /* this affects the margin in the printer settings */
+        margin: 45pt 60pt 45pt 60pt; /* this affects the margin in the printer settings */
     }
 
-    * {
-        font-family: "Arial", sans-serif;
+   body {
+        font-family:Verdana, Geneva, Tahoma, sans-serif;
         font-size: 10pt;
     }
+    
 </style>
 </head>
 <body>
     <table border=0 style="width:100%;margin-bottom: 20px;">
         <tr>
-            <td style="text-align: center;"> {{ $header->description }} Deduction </td>
+            <td style="text-align: center;font-weight: bold;"> {{ $header->description }} Deduction </td>
             
         </tr>
         <tr>

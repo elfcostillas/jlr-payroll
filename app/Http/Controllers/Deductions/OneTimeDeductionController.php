@@ -217,17 +217,32 @@ class OneTimeDeductionController extends Controller
         $details = $this->detail->printDetail($id,[5]);
       
         $pdf = Pdf::loadView('app.deductions.one-time.print', ['header' => $header ,'details' => $details ]);
+        
+        $pdf->output();
+        $dom_pdf = $pdf->getDomPDF();
+        $canvas = $dom_pdf->getCanvas();
+        $canvas->page_text(480, 810, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+
         return $pdf->stream('OneTimeDeduction'.$id.'.pdf');
-    }   
+    }  
+
     public function printConfi($id)
     {
         // $result = $this->detail->list($id);
         // return view('app.deductions.one-time.print-confi',['data' => $result,'header_id'=>$id]);
 
         $header = $this->header->printHeader($id);
-        $details = $this->detail->printDetail($id,[3,4]);
+        $details = $this->detail->printDetail($id,[1,2,3,4]);
       
         $pdf = Pdf::loadView('app.deductions.one-time.print', ['header' => $header ,'details' => $details ]);
+
+        $pdf->output();
+        $dom_pdf = $pdf->getDomPDF();
+    
+        $canvas = $dom_pdf ->get_canvas();
+        $canvas->page_text(500, 500, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+       
+
         return $pdf->stream('OneTimeDeduction'.$id.'.pdf');
     }
 }
