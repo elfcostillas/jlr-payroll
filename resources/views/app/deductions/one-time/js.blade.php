@@ -168,7 +168,12 @@
                         },
                         batch: true,
                         pageSize :999,
-                        aggregate: [ { field: "amount", aggregate: "sum" },],
+                        aggregate: [ 
+                            { field: "amount", aggregate: "sum" },
+                            { field: "bpn", aggregate: "sum" },
+                            { field: "bps", aggregate: "sum" },
+                            { field: "qad", aggregate: "sum" },
+                        ],
                         schema : {
                             model : {
                                 id : 'line_id',
@@ -432,6 +437,7 @@
                                 attributes : {
                                     style : 'text-align:right;'
                                 },
+                                footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>",
                             },
                             {
                                 title : "South",
@@ -442,6 +448,7 @@
                                 attributes : {
                                     style : 'text-align:right;'
                                 },
+                                footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>",
                             },
                             {
                                 title : "QAD",
@@ -452,6 +459,7 @@
                                 attributes : {
                                     style : 'text-align:right;'
                                 },
+                                footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>",
                             },
                             {
                                 title : "Amount",
@@ -522,8 +530,9 @@
                                     template: "#= (bpn == null || bpn == 0)  ? '' : kendo.toString(bpn, 'n2') #",
 
                                     attributes : {
-                                    style : 'text-align:right;'
+                                        style : 'text-align:right;'
                                     },
+                                    footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>",
                                 },
                                 {
                                     title : "South",
@@ -533,8 +542,9 @@
                                     // template: "#= bps == null ? '' : kendo.toString(bps, 'n2') #",
                                     template: "#= (bps == null || bps == 0)  ? '' : kendo.toString(bps, 'n2') #",
                                     attributes : {
-                                    style : 'text-align:right;'
+                                        style : 'text-align:right;'
                                     },
+                                    footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>",
                                 },
                                 {
                                     title : "QAD",
@@ -543,8 +553,9 @@
                                     template: "#= (qad == null || qad == 0)  ? '' : kendo.toString(qad, 'n2') #",
 
                                     attributes : {
-                                    style : 'text-align:right;'
+                                        style : 'text-align:right;'
                                     },
+                                    footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>",
                                 },
                                 {
                                     title : "Amount",
