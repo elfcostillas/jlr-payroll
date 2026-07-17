@@ -69,6 +69,19 @@ class OneTimeDeductionDetailMapper extends AbstractMapper {
         return $result;
     }
 
+    public function printDetail($id,$emp_level)
+    {
+        $result = $this->model->select(DB::raw("deduction_onetime_details.*,CONCAT(IFNULL(lastname,''),', ',IFNULL(firstname,''),' ',IFNULL(suffixname,'')) AS employee_name"))
+        ->from('deduction_onetime_details')
+        ->join('employees','deduction_onetime_details.biometric_id','=','employees.biometric_id')
+        ->where('header_id',$id)
+        ->whereIn('employees.emp_level',$emp_level)
+        ->orderBy('employees.lastname')
+        ->orderBy('employees.firstname');
+
+        return $result->get();
+    }
+
    
     /*
     

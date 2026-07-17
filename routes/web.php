@@ -546,6 +546,9 @@ Route::middleware('auth')->prefix('deductions')->group(function(){
         Route::get('list-details/{id}',[OneTimeDeductionController::class,'readDetail']);
 
         Route::get('download/{id}',[OneTimeDeductionController::class,'download']);
+       
+        Route::get('print/non-confi/{id}',[OneTimeDeductionController::class,'printNonConfi']);
+        Route::get('print/confi/{id}',[OneTimeDeductionController::class,'printConfi']);
 
         Route::post('save',[OneTimeDeductionController::class,'save']);
         //Route::post('update',[OneTimeDeductionController::class,'update']);

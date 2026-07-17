@@ -11,6 +11,7 @@ use App\Mappers\TimeKeepingMapper\PayrollPeriodMapper;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Excel\OneTimeDeduction;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class OneTimeDeductionController extends Controller
 {
@@ -208,6 +209,26 @@ class OneTimeDeductionController extends Controller
        $result = $this->detail->uploadCSV($logs,$header_id);
 
        return response()->json($result);
+    }
+
+    public function printNonConfi($id)
+    {
+        $header = $this->header->printHeader($id);
+        $details = $this->detail->printDetail($id,[5]);
+      
+        $pdf = Pdf::loadView('app.deductions.one-time.print', ['header' => $header ,'details' => $details ]);
+        return $pdf->stream('OneTimeDeduction'.$id.'.pdf');
+    }   
+    public function printConfi($id)
+    {
+        // $result = $this->detail->list($id);
+        // return view('app.deductions.one-time.print-confi',['data' => $result,'header_id'=>$id]);
+
+        $header = $this->header->printHeader($id);
+        $details = $this->detail->printDetail($id,[3,4]);
+      
+        $pdf = Pdf::loadView('app.deductions.one-time.print', ['header' => $header ,'details' => $details ]);
+        return $pdf->stream('OneTimeDeduction'.$id.'.pdf');
     }
 }
 

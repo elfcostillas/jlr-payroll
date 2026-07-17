@@ -332,6 +332,13 @@
                                top : 0
                            }
                        }).data("kendoWindow").center().open();
+                    },
+                    printNonConfi : function(){
+                        window.open(`one-time/print/non-confi/${viewModel.form.model.id}`);
+                    },
+                    printConfi : function(){
+                        // Implementation for printing confirmed deductions
+                        window.open(`one-time/print/confi/${viewModel.form.model.id}`);
                     }
 
                 },
@@ -837,6 +844,9 @@
                     { id : 'postBtn', type: "button", text: "Post", icon: 'print', click : viewModel.buttonHandler.post },
                     { id : 'downloadBtn', type: "button", text: "Download", icon: 'download', click : viewModel.buttonHandler.download },
                     { id : 'uploadBtn', type: "button", text: "Upload", icon: 'upload', click : viewModel.buttonHandler.showUploader },
+
+                    { id : 'printNonConfi', type: "button", text: "Print (Non-Confi)", icon: 'print', click : viewModel.buttonHandler.printNonConfi },
+                    { id : 'printConfi', type: "button", text: "Print (Confi)", icon: 'print', click : viewModel.buttonHandler.printConfi },
                 ]
             });
 

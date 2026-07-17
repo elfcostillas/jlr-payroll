@@ -90,6 +90,20 @@ class OneTimeDeductionHeaderMapper extends AbstractMapper {
 		
 	}
 
+    public function printHeader($id)
+    {
+
+
+        $result = $this->model->leftJoin('deduction_types','deduction_type','=','deduction_types.id')
+        ->leftJoin('payroll_period','payroll_period.id','=','deduction_onetime_headers.period_id')
+
+        ->select(DB::raw("deduction_onetime_headers.id,deduction_types.description,concat(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) as deduction_period"))
+        ->where('deduction_onetime_headers.id',$id);
+
+        return $result->first();
+    }
+
+
 
 
 
