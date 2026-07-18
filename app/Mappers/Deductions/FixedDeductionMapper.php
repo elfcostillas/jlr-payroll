@@ -15,7 +15,7 @@ class FixedDeductionMapper extends AbstractMapper {
         'biometric_id' => 'sometimes|required',
         'deduction_type' => 'sometimes|required',
         //'remarks' => 'required|sometimes',
-        'amount' => 'sometimes|required|gt:0',
+        'amount' => 'sometimes|required',
     ];
 
     public function list($type,$filter)
