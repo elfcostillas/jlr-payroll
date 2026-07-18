@@ -158,6 +158,14 @@ class EmployeeDTR2
         $rd_base_qry = clone $result;
         $rd_result = $rd_base_qry->select(DB::raw('sum(ndays) as rd_days'))->whereRaw("dayname(dtr_date) = 'Sunday'")->first();
 
+        $awol = DB::table('edtr_detailed')->join('payroll_period',function($join){
+            $join->whereRaw("edtr_detailed.dtr_date between date_from and date_to");
+        })
+        ->select(DB::raw("ROUND(SUM(IFNULL(awol,0))/8,2) as awol_count"))
+        ->where('biometric_id',$this->biometric_id)
+        ->where('payroll_period.id',$this->period_id)
+        ->first();
+
         if($this->details->pay_type == 1){
             // $ndays = 13 - $this->row['vl_wp'] - $this->row['vl_wop'] - $this->row['sl_wp'] - $this->row['sl_wop'];
             /*
@@ -169,25 +177,25 @@ class EmployeeDTR2
             $ndays = 13 - $this->row['vl_wp'] - $this->row['vl_wop'] - $this->row['sl_wp'] - $this->row['sl_wop'] 
             - $this->leaves['brv'] - $this->leaves['svl'] - $this->leaves['bl'] - $hol_count - $sp_count;
 
+
+            $this->row['ndays'] = (($ndays - $awol->awol_count) >= 0) ? $ndays - $awol->awol_count : 0 ;
+
             // dd($this->row['vl_wp'] , $this->row['vl_wop'] , $this->row['sl_wp'] , $this->row['sl_wop']);
         }else{
             // $ndays_result = $result->select(DB::raw('sum(ndays) as ndays'))->first();
+
+          
             $ndays_result = $result->select(DB::raw('sum(ndays) as ndays'))->whereRaw("dayname(dtr_date) != 'Sunday'")->first();
             // dd($ndays_result->toSql(), $ndays_result->getBindings());
             $ndays = $ndays_result->ndays;
+            $this->row['ndays'] = $ndays;
 
         }
 
-        $awol = DB::table('edtr_detailed')->join('payroll_period',function($join){
-            $join->whereRaw("edtr_detailed.dtr_date between date_from and date_to");
-        })
-        ->select(DB::raw("ROUND(SUM(IFNULL(awol,0))/8,2) as awol_count"))
-        ->where('biometric_id',$this->biometric_id)
-        ->where('payroll_period.id',$this->period_id)
-        ->first();
+        
 
         // set ndays
-        $this->row['ndays'] = (($ndays - $awol->awol_count) >= 0) ? $ndays - $awol->awol_count : 0 ;
+     
         $this->row['restday_hrs'] = ((float) $rd_result->rd_days > 0) ? ((float) $rd_result->rd_days * 8) : 0 ; 
      
     }
