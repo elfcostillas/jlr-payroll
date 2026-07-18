@@ -155,7 +155,8 @@ class EmployeeDTR2
 
         // dd($result->toSql(),$result->getBindings());
 
-        
+        $rd_base_qry = clone $result;
+        $rd_result = $rd_base_qry->select(DB::raw('sum(ndays) as rd_days'))->whereRaw("dayname(dtr_date) = 'Sunday'")->first();
 
         if($this->details->pay_type == 1){
             // $ndays = 13 - $this->row['vl_wp'] - $this->row['vl_wop'] - $this->row['sl_wp'] - $this->row['sl_wop'];
@@ -170,8 +171,11 @@ class EmployeeDTR2
 
             // dd($this->row['vl_wp'] , $this->row['vl_wop'] , $this->row['sl_wp'] , $this->row['sl_wop']);
         }else{
-            $ndays_result = $result->select(DB::raw('sum(ndays) as ndays'))->first();
+            // $ndays_result = $result->select(DB::raw('sum(ndays) as ndays'))->first();
+            $ndays_result = $result->select(DB::raw('sum(ndays) as ndays'))->whereRaw("dayname(dtr_date) != 'Sunday'")->first();
+            // dd($ndays_result->toSql(), $ndays_result->getBindings());
             $ndays = $ndays_result->ndays;
+
         }
 
         $awol = DB::table('edtr_detailed')->join('payroll_period',function($join){
@@ -184,6 +188,7 @@ class EmployeeDTR2
 
         // set ndays
         $this->row['ndays'] = (($ndays - $awol->awol_count) >= 0) ? $ndays - $awol->awol_count : 0 ;
+        $this->row['restday_hrs'] = ((float) $rd_result->rd_days > 0) ? ((float) $rd_result->rd_days * 8) : 0 ; 
      
     }
 
