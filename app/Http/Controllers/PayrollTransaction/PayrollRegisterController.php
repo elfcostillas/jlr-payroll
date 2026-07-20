@@ -13,7 +13,7 @@ use App\Mappers\EmployeeFileMapper\Repository\Daily;
 use App\Mappers\EmployeeFileMapper\EmployeeMapper;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use App\Excel\UnpostedPayrollRegister;
+use App\Excel\UnpostedPayrollRegister3;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Excel\BankTransmittal;
 use Carbon\CarbonPeriod;
@@ -30,7 +30,7 @@ class PayrollRegisterController extends Controller
     private $excel;
     private $rcbc;
 
-    public function __construct(UnpostedPayrollRegister $excel,UnpostedPayrollRegisterMapper $unposted,PostedPayrollRegisterMapper $posted,EmployeeMapper $employee,BankTransmittal $rcbc)
+    public function __construct(UnpostedPayrollRegister3 $excel,UnpostedPayrollRegisterMapper $unposted,PostedPayrollRegisterMapper $posted,EmployeeMapper $employee,BankTransmittal $rcbc)
     {
         $this->unposted = $unposted;
         $this->posted = $posted;
@@ -144,7 +144,7 @@ class PayrollRegisterController extends Controller
 
        
     }
-
+    /*
     public function downloadExcelUnposted(Request $request)
     {
         //dd($request->id);
@@ -182,6 +182,30 @@ class PayrollRegisterController extends Controller
             $this->excel->setValues($collections,$noPay,$headers,$deductions,$gov,$compensation,$label, $payperiod_label,$colHeaders);
             return Excel::download($this->excel,'PayrollRegister'.$period->id.'.xlsx');
         }
+    }
+    */
+
+    public function downloadExcelUnposted(Request $request)
+    {
+        $payroll = new PayrollRegisterService(new PayrollRegisterRankAndFile('payrollregister_unposted_s','unposted'));
+
+        $period = $payroll->getPeriod($request->id);
+
+        $data = $payroll->getPayrollData($period);
+
+        $payroll->getHeaders();
+
+        if($period){
+            $date_from = Carbon::createFromFormat('Y-m-d',$period->date_from);
+            $date_to = Carbon::createFromFormat('Y-m-d',$period->date_to);
+
+            $label = $date_from->format('m/d/Y').' - '.$date_to->format('m/d/Y');
+        
+
+            $this->excel->setValues($data,$label);
+            return Excel::download($this->excel,'PayrollRegister Rank and File - '.$period->id.'.xlsx');
+        }
+
     }
 
     public function postPayroll(Request $request)

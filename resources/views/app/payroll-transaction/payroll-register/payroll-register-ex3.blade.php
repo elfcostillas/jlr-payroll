@@ -3,107 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payroll Register - Rank and File</title>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
 
     <style>
-        @page {
-            margin-top: 160px;
-            margin-left: 8px;
-            margin-right: 8px;
-            margin-bottom: 28px;
-          
-        }
-
-        .r {
-            text-align: right;
-        }
-
-        .l {
-            text-align: left;
-        }
-
-        .c {
-            text-align: center;
-        }
-
-        .pad4 {
-            padding : 0px 2px;
-        }
-
-        .vtop {
-            vertical-align: top;
-          
-        }
-
-        .b {
-            font-weight: bold;
-        }
-
-        table tr > td {
-            padding : 0px 2px;
-            /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
-            font-family:Verdana, Geneva, Tahoma, sans-serif;
-        }
-
-        header {
-            position: fixed;
-            margin-top :-80px;
-        }
-        
-
-        /* header { position: fixed; top: -60px; left: 0px; right: 0px; background-color: lightblue; height: 50px; } */
+            * {
+                font-family: 'Consolas';
+                font-size : 9pt;
+            }
     </style>
 </head>
 <body>
-    <header>
-        <table border=0 style="width:100%;margin-bottom:2px;">
-            <tr>
-                <td><span style="font-size:16;" >JLR Construction and Aggregates Inc. <br>Rank and File Payroll  </span></td>
-                <td style="font-size:12pt;vertical-align:bottom" >Payroll Period :<u style="font-size:12pt;vertical-align:bottom"> {{ $label }} </u></td>
-                <td style="width:24px" ></td>
-                <td style="width:26%;font-size:12pt;padding-left:24px;vertical-align:bottom" >Date / Time  Printed : {{ now()->format('m/d/Y H:i:s') }} </td>
+ 
+    <?php
+        $cols = 0;
+        // $cols = 6 + count($data->basic_cols) + count($data->gross_cols) + count($data->fixed_comp_hcols) 
+        //         + count($data->other_comp_hcols) + count($data->contri) + count($data->deduction_hcols)
+        //         + count($data->govloans_hcols);
+
+        $grandCtr = 0;
+
+        function custom_format($n)
+        {
+            $blank = [0,'',null];
+
+            if(in_array($n,$blank))
+            {
+                return '';
+            }else{
+                return $n;
+            }
+        }
+
+        function convert_hrs_to_days($hrs)
+        {
+            return ($hrs == '' || $hrs == 0) ? '' : $hrs / 8;
+        }
+
+
+    //   <img src="{{ public_path('images/header-logo.jpg') }}" style="height:24px;" class="center" >
+    ?>
+    <div id="" >
+        <div>
+        
+        </div>
+        <table>
+            <tr >
+                <td style="height:92px;"></td>
             </tr>
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td style="font-weight:bold;" >JLR Construction and Aggregates Inc.</td>
+            </tr>
+            <tr>
+                <td> Date / Time Printed : {{ now()->format('m/d/Y H:i:s') }}</td>
+            </tr>
+            <tr>
+                <td> {{ $label }}</td>
             </tr>
         </table>
-    </header>
-
-    <footer>
-
-    </footer>
-
-    <main>
-        
-        <?php
-    
-            $cols = 6 + count($data->basic_cols) + count($data->gross_cols) + count($data->fixed_comp_hcols) 
-                + count($data->other_comp_hcols) + count($data->contri) + count($data->deduction_hcols)
-                + count($data->govloans_hcols);
-
-            function custom_format($n)
-            {
-                $blank = [0,'',null];
-
-                if(in_array($n,$blank))
-                {
-                    return '';
-                }else{
-                    return number_format($n,2);
-                }
-            }
-                    
-            function convert_hrs_to_days($hrs)
-            {
-                return ($hrs == '' || $hrs == 0) ? '' : $hrs / 8;
-            }
-
-
-        
-        ?>
 
         <table id="main" border=1 style="width:100%;border-collapse:collapse;font-size :4pt;">
             <tr>
@@ -343,181 +300,5 @@
                     <td class="r b">  {{ custom_format($data->computeOverAll($data,'net_pay')) }} </td>
                 </tr>
         </table>
-
-        <table style="page-break-before:always;float:left;font-size :6pt;border-collapse:collapse; margin-top : 12px;" border=1>
-            <tr> 
-                <td style="padding : 2px 6px;"> Departments</td>
-                @foreach ($data->summaryDeptByLocationOriginal()['x'] as $cols)
-                    <td style=";padding : 2px 6px;">
-                        {{ $cols->location_altername2 }}
-                    </td>
-                @endforeach
-                <td style="padding : 2px 6px;"> TOTALS</td>
-                @foreach ($data->summaryDeptByLocationOriginal()['y'] as $rows)
-                    <tr> 
-                        <td style="padding : 0px 6px;">
-                            {{ $rows->dept_label }}
-                        </td>
-                   
-                        @foreach ($data->summaryDeptByLocationOriginal()['x'] as $cols)
-                            <td style="text-align: right;padding-right:6px;">
-                               {{  ($data->summaryDeptByLocationOriginal()['data'][$rows->id][$cols->id] > 0) ? $data->summaryDeptByLocationOriginal()['data'][$rows->id][$cols->id] : '' }}
-                            </td>
-                        @endforeach
-                        <td style="text-align: right;padding-right:6px;">
-                           {{ $data->summaryDeptByLocationOriginal()['totals_by_dept'][$rows->id] }}
-                        </td>
-                    </tr> 
-                @endforeach
-                <td style="padding : 2px 6px;"> TOTALS</td>
-                @foreach ($data->summaryDeptByLocationOriginal()['x'] as $cols)
-                    <td style="text-align: right;padding : 2px 6px;">
-                        {{ $data->summaryDeptByLocationOriginal()['totals_by_loc'][$cols->id] }}
-                    </td>
-                @endforeach
-                    <td style="text-align: right;padding : 2px 6px;">
-                        {{ $data->summaryDeptByLocationOriginal()['over_all'] }}
-                    </td>
-            </tr>
-            
-        </table>
-
-        <!-- @foreach ($data->countPerJobTitleLocationOriginal() as $location)
-           
-            @if($location->data->count() > 0)
-            @php $count_total =0;  @endphp
-             <table style="padding-left: 12px;float:left;font-size :6pt;border-collapse:collapse; margin-top : 12px;" border=1>
-                <tr>
-                    <td colspan="3" > {{ $location->location_altername2 }} </td>
-                </tr>
-                @foreach ($location->data as $row)
-                    @php $count_total +=  $row->pax;  @endphp
-                    <tr>
-                        <td> {{ $row->dept_label }}</td>
-                        <td> {{ $row->job_title_name }}</td>
-                        <td style="text-align: right;padding : 2px 6px;"> {{ $row->pax }}</td>
-                    </tr>
-                @endforeach
-                <tr>
-                    <td colspan="2"> TOTAL </td>
-                    <td style="text-align: right;padding : 2px 6px;"> {{ $count_total }} </td>
-                </tr>
-            </table>
-            @endif
-        @endforeach -->
-
-        <table style="float:left ;font-size :6pt;border-collapse:collapse;margin-top:12px;margin-left:12px" border=1>
-        <!-- <table style="font-size :6pt;border-collapse:collapse;margin-top:184px;" border=1> -->
-            <tr> 
-                <td colspan="2" style="text-align: center;padding:2px 6px;" > Payroll / Gross Pay </td> 
-            </tr>
-            @php 
-                $total_gross = 0;
-            @endphp
-            @foreach ( $data->total_pay_per_dept_original() as $gross_dept)
-                @php 
-                    $total_gross += $gross_dept->gross_total;
-                @endphp
-                <tr>
-                    <td style="padding:2px 6px;"> {{  $gross_dept->dept_label }} </td>
-                    <td style="padding:2px 6px;text-align:right;"> {{  number_format($gross_dept->gross_total,2) }} </td>
-                </tr>
-              
-            @endforeach
-                <tr>
-                    <td> TOTAL </td>
-                    <td style="padding:2px 6px;text-align:right;"> {{  number_format($total_gross,2) }} </td>
-                </tr> 
-        </table>
-
-        <!-- <table style="float:left;margin-left:272px;font-size :6pt;border-collapse:collapse;margin-top:284px;clear:left;" border=1> -->
-        <table style="float:left;margin-left:12px;font-size :6pt;border-collapse:collapse;margin-top:12px;" border=1>
-            <tr> 
-                <td colspan=2 style="text-align: center;padding:2px 6px;" > Overtime Summary </td> 
-            </tr>
-
-            @foreach ($data->otSummary() as $key => $value )
-                <tr>
-                    <td style="padding:2px 6px;"> {{ $key }} </td>
-                    <td style="padding:2px 6px;text-align:right;"> {{ ($value > 0) ? (int) $value : ''  }} </td>
-                </tr>
-            @endforeach
-        </table>
-
-        <?php $starting_margin = 12; ?>
-
-        @foreach ($data->otSummary() as $key => $value )
-            @if($value > 0)
-                <?php
-                    $ot_data = $data->otByDeptJobtitleOriginal($key);
-                ?>
-
-                <table style="width:230px;float:left;margin-left:{{ $starting_margin }}px;font-size :6pt;border-collapse:collapse;margin-top:228px;clear:left;" border=1>
-                    <tr>
-                        <td style="text-align:center;" colspan="3"> {{ $key }} </td>
-                    </tr>
-                    @foreach ($ot_data as $row)
-                    <tr>
-                        <td> {{ $row->dept_label }}</td>
-                        <td>{{ $row->job_title_name }} - {{ $row->div_code }}</td>
-                        <td> {{ $row->pax}} </td>
-                    </tr>
-                        
-                    @endforeach
-                </table>
-
-                <?php $starting_margin += 238; ?>
-            @endif
-        @endforeach
-
-        @if ($data->otMoreThan50hrsOriginal()->count()>0)
-            <table style="width:140px;float:left;margin-left:{{ $starting_margin }}px;font-size :6pt;border-collapse:collapse;margin-top:284px;clear:left;" border=1>
-                <tr>
-                    <td style="text-align:center;" colspan="2"> Overtime >= 50++ </td>
-                </tr>
-                @foreach ($data->otMoreThan50hrsOriginal() as $row )
-                    <tr>
-                        <td> {{ $row->div_code }} </td>
-                        <td style="text-align:right;";>{{ $row->pax }}</td>
-                    </tr>
-                @endforeach
-              
-            </table>
-        @endif
-
-        <table style="width:100%;margin-top:488px;font-size:8pt;" border=0>
-            <tr>
-                <td style="width:10%">
-                <td style="width:26%">
-                    Prepared By :
-                </td>
-                <td style="width:26%">
-                    Noted by :
-                </td>
-                <td style="width:26%">
-                    Checked by :
-                </td>
-                <td style="width:10%">
-            </tr>
-            <tr>
-                <td style="height:25px"></td>
-                <td style="text-align:left;vertical-align:bottom" ></td>
-                <td style="text-align:left;vertical-align:bottom" ></td>
-                <td style="text-align:left;vertical-align:bottom" ></td>
-                <td></td>
-                
-            </tr>
-            <tr>
-                <td></td>
-                <td class="l"> {{ Auth::user()->name }}</td>
-                <td class="l">Herbert B. Camasura </td>
-                <td class="l">Gershwin Ralph G. Alvarez </td>
-                <td></td>
-            </tr>
-        </table>
-
-    </main>
 </body>
 </html>
-
-
