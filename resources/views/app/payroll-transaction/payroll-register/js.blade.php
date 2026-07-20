@@ -77,6 +77,13 @@
                         window.open(url)
                     },
 
+                    viewbyDept : function(){
+                        let period = $("#unposted_period").data("kendoDropDownList");
+                       
+                        let url = `payroll-register/view-pdf-unposted-by-dept/${period.value()}`;
+                        window.open(url)
+                    },
+
                     download : function(){
                         let period = $("#unposted_period").data("kendoDropDownList");
                         let url = `payroll-register/download-unposted/${period.value()}`;

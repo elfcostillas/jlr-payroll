@@ -108,6 +108,20 @@ class PayrollRegisterFunctions
                 ->get();
     }
 
+     public function getEmployeesByDept($department)
+    {
+        
+        return $this->mainQuery()
+              
+                ->leftJoin('job_titles','employees.job_title_id','=','job_titles.id')
+                // ->leftJoin('sub_dept','sub_dept.id','=','employees.sub_dept')
+                ->select()
+                ->where('employees.dept_id','=',$department->id)
+                ->orderBy('lastname','asc')
+                ->orderBy('firstname','asc')
+                ->get();
+    }
+
     public function querySum()
     {
         $qry = '';
@@ -328,7 +342,34 @@ class PayrollRegisterFunctions
                             $total += $emp->{$key->var_name};
                         }
                     }else{
-                        $total += 0;
+                        // dd($key,$emp->other_earning,$key->compensation_type);
+                        if(property_exists($key,'compensation_type')){
+                            // dd($key,$emp->other_earning,$key->compensation_type);
+                            $total += $emp->other_earning[$key->compensation_type] ?? 0;
+                        }
+                        
+
+                        if(property_exists($key,'subtype')){
+                            if($key->subtype == "installments"){
+                               
+                                $total += $emp->deductions[$key->id] ?? 0;
+                            }
+                           
+                        }
+                        
+                        if(property_exists($key,'subtype')){
+                            if($key->subtype == "govloan"){
+                              
+                                $total += $emp->gov_loans[$key->id] ?? 0;
+                            }
+                           
+                        }
+
+                        // if(property_exists($key,'gov_loans')){
+                        //     dd($key,$emp->gov_loans,$key->deduction_type);
+                        //     $total += $emp->deduction_type[$key->compensation_type] ?? 0;
+                        // }
+                       
                     }
                     // $total += $emp->{$key->var_name};
                 }else{
@@ -629,14 +670,14 @@ class PayrollRegisterFunctions
                 ->where("$table.period_id",'=',$this->period->id)
                 ->where('employees.emp_level','<',5)
                 ->where('user_id','=',Auth::user()->id)
-                ->select('loan_types.id','loan_types.description')->distinct();
+                ->select(DB::raw("'govloan' as subtype"),'loan_types.id','loan_types.description')->distinct();
         }else{
             $result = DB::table($table)->join('loan_types','loan_types.id','=',"$table.deduction_type")
                 ->join('employees','employees.biometric_id','=',"$table.biometric_id")
                 ->where("$table.period_id",'=',$this->period->id)
                 ->where('employees.emp_level','>=',5)
                 ->where('user_id','=',Auth::user()->id)
-                ->select('loan_types.id','loan_types.description')->distinct();
+                ->select(DB::raw("'govloan' as subtype"),'loan_types.id','loan_types.description')->distinct();
         }
 
         return $result->get();
@@ -668,14 +709,14 @@ class PayrollRegisterFunctions
                                 ->where("$table.period_id",'=',$this->period->id)
                                 ->where('employees.emp_level','<',5)
                                 ->where('user_id','=',Auth::user()->id)
-                                ->select('deduction_types.id','deduction_types.description')->distinct();
+                                ->select(DB::raw("'installments' as subtype"),'deduction_types.id','deduction_types.description')->distinct();
                         }else{
                             $result = DB::table($table)->join('deduction_types','deduction_types.id','=',"$table.deduction_type")
                                 ->join('employees','employees.biometric_id','=',"$table.biometric_id")
                                 ->where("$table.period_id",'=',$this->period->id)
                                 ->where('employees.emp_level','>=',5)
                                 ->where('user_id','=',Auth::user()->id)
-                                ->select('deduction_types.id','deduction_types.description')->distinct();
+                                ->select(DB::raw("'installments' as subtype"),'deduction_types.id','deduction_types.description')->distinct();
                         }
                   
                 }else{
@@ -686,14 +727,14 @@ class PayrollRegisterFunctions
                                 ->where("$table.period_id",'=',$this->period->id)
                                 ->where('employees.emp_level','<',5)
                                 ->where('user_id','=',Auth::user()->id)
-                                ->select('deduction_types.id','deduction_types.description')->distinct());
+                                ->select(DB::raw("'installments' as subtype"),'deduction_types.id','deduction_types.description')->distinct());
                         }else{
                             $result = $result->union(DB::table($table)->join('deduction_types','deduction_types.id','=',"$table.deduction_type")
                                 ->join('employees','employees.biometric_id','=',"$table.biometric_id")
                                 ->where("$table.period_id",'=',$this->period->id)
                                 ->where('employees.emp_level','>=',5)
                                 ->where('user_id','=',Auth::user()->id)
-                                ->select('deduction_types.id','deduction_types.description')->distinct());
+                                ->select(DB::raw("'installments' as subtype"),'deduction_types.id','deduction_types.description')->distinct());
                         }
                    
 
@@ -933,10 +974,10 @@ class PayrollRegisterFunctions
             '20 Hrs' => 0,
             '30 Hrs' => 0,
             '40 Hrs' => 0,
-            // '50 Hrs' => 0,
-            // '60 Hrs' => 0,
-            // '70 Hrs' => 0,
-            // '80 Hrs' => 0,
+            '50 Hrs' => 0,
+            '60 Hrs' => 0,
+            '70 Hrs' => 0,
+            '80 Hrs' => 0,
             // '90 Hrs' => 0,
             // '100+ Hrs' => 0,
         ];
@@ -979,24 +1020,25 @@ class PayrollRegisterFunctions
             //     $data['40 Hrs'] += 1;
             // }
 
+            if($employee->reg_ot >= 50)
             // if($employee->reg_ot >= 50 && $employee->reg_ot < 60)
-            // {
-            //     $data['50 Hrs'] += 1;
-            // }
+            {
+                $data['50 Hrs'] += 1;
+            }
 
-            // if($employee->reg_ot >= 60 && $employee->reg_ot < 70)
-            // {
-            //     $data['60 Hrs'] += 1;
-            // }
+            if($employee->reg_ot >= 60 && $employee->reg_ot < 70)
+            {
+                $data['60 Hrs'] += 1;
+            }
 
-            // if($employee->reg_ot >= 70 && $employee->reg_ot < 80)
-            // {
-            //     $data['70 Hrs'] += 1;
-            // }
-            // if($employee->reg_ot >= 80 && $employee->reg_ot < 90)
-            // {
-            //     $data['80 Hrs'] += 1;
-            // }
+            if($employee->reg_ot >= 70 && $employee->reg_ot < 80)
+            {
+                $data['70 Hrs'] += 1;
+            }
+            if($employee->reg_ot >= 80 && $employee->reg_ot < 90)
+            {
+                $data['80 Hrs'] += 1;
+            }
 
             // if($employee->reg_ot >= 90 && $employee->reg_ot < 100)
             // {
@@ -1032,70 +1074,70 @@ class PayrollRegisterFunctions
             switch($key){
                 case 'Less than 10 Hrs':
                     $result = $qry->where(function($query){
-                        $query->where('reg_ot','>',1);
+                        $query->where('reg_ot','>=',1);
                         $query->where('reg_ot','<',10);
                     });
                     break;
 
                 case '10 Hrs':
                     $result = $qry->where(function($query){
-                        $query->where('reg_ot','>',10);
+                        $query->where('reg_ot','>=',10);
                         $query->where('reg_ot','<',20);
                     });
                 break;
 
                 case '20 Hrs':
                     $result = $qry->where(function($query){
-                        $query->where('reg_ot','>',20);
+                        $query->where('reg_ot','>=',20);
                         $query->where('reg_ot','<',30);
                     });
                 break;
 
                 case '30 Hrs':
                     $result = $qry->where(function($query){
-                        $query->where('reg_ot','>',30);
+                        $query->where('reg_ot','>=',30);
                         $query->where('reg_ot','<',40);
                     });
                 break;
 
                 case '40 Hrs':
                     $result = $qry->where(function($query){
-                        $query->where('reg_ot','>',40);
+                        $query->where('reg_ot','>=',40);
                         $query->where('reg_ot','<',50);
                     });
                 break;
 
                 case '50 Hrs':
                     $result = $qry->where(function($query){
-                        $query->where('reg_ot','>',50);
+                        $query->where('reg_ot','>=',50);
                         $query->where('reg_ot','<',60);
                     });
                 break;
 
                 case '60 Hrs':
                     $result = $qry->where(function($query){
-                        $query->where('reg_ot','>',60);
+                        $query->where('reg_ot','>=',60);
                         $query->where('reg_ot','<',70);
                     });
                 break;
 
                 case '70 Hrs':
                     $result = $qry->where(function($query){
-                        $query->where('reg_ot','>',70);
+                        $query->where('reg_ot','>=',70);
                         $query->where('reg_ot','<',80);
                     });
                 break;
 
                 case '80 Hrs':
                     $result = $qry->where(function($query){
-                        $query->where('reg_ot','>',80);
+                        $query->where('reg_ot','>=',80);
                         $query->where('reg_ot','<',90);
                     });
                 break;
 
                 case '90 Hrs':
                     $result = $qry->where(function($query){
-                        $query->where('reg_ot','>',90);
+                        $query->where('reg_ot','>=',90);
                         $query->where('reg_ot','<',100);
                     });
                 break;
@@ -1137,7 +1179,7 @@ class PayrollRegisterFunctions
             switch($key){
                 case 'Less than 10 Hrs':
                     $result = $qry->where(function($query){
-                        $query->where('reg_ot','>',1);
+                        $query->where('reg_ot','>=',1);
                         $query->where('reg_ot','<',10);
                     });
                     break;
@@ -1151,62 +1193,62 @@ class PayrollRegisterFunctions
 
                 case '20 Hrs':
                     $result = $qry->where(function($query){
-                        $query->where('reg_ot','>',20);
+                        $query->where('reg_ot','>=',20);
                         $query->where('reg_ot','<',30);
                     });
                 break;
 
                 case '30 Hrs':
                     $result = $qry->where(function($query){
-                        $query->where('reg_ot','>',30);
+                        $query->where('reg_ot','>=',30);
                         $query->where('reg_ot','<',40);
                     });
                 break;
 
                 case '40 Hrs':
                     $result = $qry->where(function($query){
-                        $query->where('reg_ot','>',40);
+                        $query->where('reg_ot','>=',40);
                         $query->where('reg_ot','<',50);
                     });
                 break;
 
                 case '50 Hrs':
                     $result = $qry->where(function($query){
-                        $query->where('reg_ot','>',50);
+                        $query->where('reg_ot','>=',50);
                         $query->where('reg_ot','<',60);
                     });
                 break;
 
                 case '60 Hrs':
                     $result = $qry->where(function($query){
-                        $query->where('reg_ot','>',60);
+                        $query->where('reg_ot','>=',60);
                         $query->where('reg_ot','<',70);
                     });
                 break;
 
                 case '70 Hrs':
                     $result = $qry->where(function($query){
-                        $query->where('reg_ot','>',70);
+                        $query->where('reg_ot','>=',70);
                         $query->where('reg_ot','<',80);
                     });
                 break;
 
                 case '80 Hrs':
                     $result = $qry->where(function($query){
-                        $query->where('reg_ot','>',80);
+                        $query->where('reg_ot','>=',80);
                         $query->where('reg_ot','<',90);
                     });
                 break;
 
                 case '90 Hrs':
                     $result = $qry->where(function($query){
-                        $query->where('reg_ot','>',90);
+                        $query->where('reg_ot','>=',90);
                         $query->where('reg_ot','<',100);
                     });
                 break;
 
                 case '100+ Hrs':
-                    $result = $qry->where('reg_ot','>',100);
+                    $result = $qry->where('reg_ot','>=',100);
                 break;
             }
 

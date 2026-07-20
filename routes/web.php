@@ -805,6 +805,7 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         Route::post('unpost',[PayrollRegisterController::class,'unpost']);
         
         Route::get('view-pdf-unposted/{period_id}',[PayrollRegisterController::class,'viewPDF']);
+        Route::get('view-pdf-unposted-by-dept/{period_id}',[PayrollRegisterController::class,'viewPDFByDept']);
 
         
     }); 

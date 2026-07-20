@@ -220,6 +220,7 @@
                                 @foreach ($data->fixed_comp_hcols as $fxcols)
                                     <td class="r b"> {{ custom_format($data->computeTotalByDept($department,$fxcols)) }} </td>
                                 @endforeach
+                                
                                 @foreach ($data->other_comp_hcols as $othcols) 
                                     <td class="r b"> {{ custom_format($data->computeTotalByDept($department,$othcols)) }} </td>
                                 @endforeach
@@ -444,15 +445,52 @@
             @endforeach
         </table>
 
-        <?php $starting_margin = 12; ?>
+         @if ($data->otMoreThan50hrsOriginal()->count()>0)
+            <!-- <table style="width:140px;float:left;margin-left:12px;font-size :6pt;border-collapse:collapse;margin-top:12px;" border=1>
+                <tr>
+                    <td style="text-align:center;" colspan="2"> Overtime >= 50++ </td>
+                </tr>
+                @foreach ($data->otMoreThan50hrsOriginal() as $row )
+                    <tr>
+                        <td> {{ $row->div_code }} </td>
+                        <td style="text-align:right;";>{{ $row->pax }}</td>
+                    </tr>
+                @endforeach
+              
+            </table> -->
+        @endif
+
+        <?php 
+        
+            $starting_margin = 6; 
+            $summaryctr = 1;
+        ?>
 
         @foreach ($data->otSummary() as $key => $value )
             @if($value > 0)
                 <?php
                     $ot_data = $data->otByDeptJobtitleOriginal($key);
+
+                    if($summaryctr == 1){
+                        $starting_margin = 580; 
+                    }
+
+                    if($summaryctr == 4){
+                        $starting_margin = 6; 
+                    }
+
+
                 ?>
 
-                <table style="width:230px;float:left;margin-left:{{ $starting_margin }}px;font-size :6pt;border-collapse:collapse;margin-top:228px;clear:left;" border=1>
+                @if($summaryctr < 4)
+                    <table style="width: 210px;float:left;margin-left:{{ $starting_margin }}px;font-size :6pt;border-collapse:collapse;clear:left;margin-top:12px;" border=1>
+                    <?php $starting_margin += 216; ?>
+                @else
+                    <table style="width: 190px;float:left;margin-left:{{ $starting_margin }}px;font-size :6pt;border-collapse:collapse;margin-top:288px;clear:left;" border=1>
+                    <?php $starting_margin += 204; ?>
+                @endif
+
+               
                     <tr>
                         <td style="text-align:center;" colspan="3"> {{ $key }} </td>
                     </tr>
@@ -466,12 +504,16 @@
                     @endforeach
                 </table>
 
-                <?php $starting_margin += 238; ?>
+                <?php 
+                    // $starting_margin += 204; 
+                    $summaryctr++; 
+                    ?>
             @endif
         @endforeach
 
         @if ($data->otMoreThan50hrsOriginal()->count()>0)
-            <table style="width:140px;float:left;margin-left:{{ $starting_margin }}px;font-size :6pt;border-collapse:collapse;margin-top:284px;clear:left;" border=1>
+           
+            <!-- <table style="width:140px;float:left;margin-left:{{ $starting_margin }}px;font-size :6pt;border-collapse:collapse;margin-top:284px;clear:left;" border=1>
                 <tr>
                     <td style="text-align:center;" colspan="2"> Overtime >= 50++ </td>
                 </tr>
@@ -482,7 +524,8 @@
                     </tr>
                 @endforeach
               
-            </table>
+            </table> -->
+           
         @endif
 
         <table style="width:100%;margin-top:488px;font-size:8pt;" border=0>

@@ -41,5 +41,12 @@ class PayrollRegisterService
         return $this->payroll;
     }
 
+    public function getPayrollDataByDept($period)
+    {
+        
+        $this->payroll->processV3($period);
+        return $this->payroll;
+    }
+
     
 }
