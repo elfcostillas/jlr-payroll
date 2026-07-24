@@ -321,7 +321,7 @@
                 <td colspan="2"> TOTAL </td>
                 <td class="b" style="padding:2px 6px;text-align:right;"> {{ $head_count }} </td>
                 <td class="b" style="padding:2px 6px;text-align:right;"> {{ number_format($over_all_total_gross,2) }} </td>
-                <td></td>
+                <td class="b" style="padding:2px 6px;text-align:right;"> {{ number_format($over_all_total_gross/$head_count,2) }} </td>
                 <td class="b" style="padding:2px 6px;text-align:right;"> {{ number_format($over_all_total_net,2) }} </td>
 
             </tr>
