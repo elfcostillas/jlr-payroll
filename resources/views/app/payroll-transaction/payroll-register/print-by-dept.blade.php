@@ -291,9 +291,9 @@
                 <td style="padding:2px 6px;">Division</td>
                 <td style="padding:2px 6px;">Department</td>
                 <td style="padding:2px 6px;">Count</td>
-                <td style="padding:2px 6px;">Gross Pay By Dept.</td>
+                <!-- <td style="padding:2px 6px;">Gross Pay By Dept.</td>
                 <td style="padding:2px 6px;">Avg. Gross Pay By Dept.</td>
-                <td style="padding:2px 6px;">Net Pay By Dept.</td>
+                <td style="padding:2px 6px;">Net Pay By Dept.</td> -->
             </tr>
             @foreach ($data->getCountsByDiviosionDept() as $division )
             <tr>
@@ -306,6 +306,46 @@
                     @endif
                         <td style="padding:2px 6px;"> {{ $department->dept_code }} </td>    
                         <td style="padding:2px 6px;text-align:right;"> {{ $department->bio_count }} </td>    
+                        <!-- <td style="padding:2px 6px;text-align:right;"> {{ number_format($department->gross_total,2) }} </td>    
+                        <td style="padding:2px 6px;text-align:right;"> {{ number_format(($department->gross_total/$department->bio_count),2) }} </td>    
+                        <td style="padding:2px 6px;text-align:right;"> {{ number_format($department->net_pay,2) }} </td>     -->
+                    </tr>
+                    @php $start = false; 
+                        $head_count += $department->bio_count; 
+                        $over_all_total_gross += $department->gross_total; 
+                        $over_all_total_net += $department->net_pay; 
+                    @endphp
+                @endforeach
+            @endforeach
+            <tr>
+                <td colspan="2"> TOTAL </td>
+                <td class="b" style="padding:2px 6px;text-align:right;"> {{ $head_count }} </td>
+                <!-- <td class="b" style="padding:2px 6px;text-align:right;"> {{ number_format($over_all_total_gross,2) }} </td>
+                <td class="b" style="padding:2px 6px;text-align:right;"> {{ number_format($over_all_total_gross/$head_count,2) }} </td>
+                <td class="b" style="padding:2px 6px;text-align:right;"> {{ number_format($over_all_total_net,2) }} </td> -->
+
+            </tr>
+        </table>
+
+        <table style="float:left;font-size :6pt;border-collapse:collapse;margin-left : 8px; margin-top : 12px;" border=1>
+            <tr>
+                <td style="padding:2px 6px;">Division</td>
+                <td style="padding:2px 6px;">Department</td>
+               
+                <td style="padding:2px 6px;width:50px;" class="c">Gross Pay By Dept.</td>
+                <td style="padding:2px 6px;width:50px;" class="c">Avg. Gross Pay By Dept.</td>
+                <td style="padding:2px 6px;">Net Pay By Dept.</td>
+            </tr>
+            @foreach ($data->getCountsByDiviosionDept() as $division )
+            <tr>
+                <?php $start = true; ?>
+                <td style="padding:2px 6px;" rowspan="{{ $division->departments->count() }}" >{{ $division->div_code }} </td>
+                
+                @foreach ( $division->departments as $department)
+                    @if (!$start)
+                        <tr>
+                    @endif
+                        <td style="padding:2px 6px;"> {{ $department->dept_code }} </td>    
                         <td style="padding:2px 6px;text-align:right;"> {{ number_format($department->gross_total,2) }} </td>    
                         <td style="padding:2px 6px;text-align:right;"> {{ number_format(($department->gross_total/$department->bio_count),2) }} </td>    
                         <td style="padding:2px 6px;text-align:right;"> {{ number_format($department->net_pay,2) }} </td>    
@@ -319,9 +359,8 @@
             @endforeach
             <tr>
                 <td colspan="2"> TOTAL </td>
-                <td class="b" style="padding:2px 6px;text-align:right;"> {{ $head_count }} </td>
                 <td class="b" style="padding:2px 6px;text-align:right;"> {{ number_format($over_all_total_gross,2) }} </td>
-                <td class="b" style="padding:2px 6px;text-align:right;"> {{ number_format($over_all_total_gross/$head_count,2) }} </td>
+                <td class="b" style="padding:2px 6px;text-align:right;"> </td>
                 <td class="b" style="padding:2px 6px;text-align:right;"> {{ number_format($over_all_total_net,2) }} </td>
 
             </tr>
