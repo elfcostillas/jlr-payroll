@@ -19,6 +19,8 @@ use App\Excel\BankTransmittal;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Http;
 use App\CustomClass\PayrollRegisterRankAndFile;
+use App\CustomClass\PayrollRegisterServiceFinanceRF;
+use App\Excel\PayregFinanceTemplateRF;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class PayrollRegisterController extends Controller
@@ -29,14 +31,16 @@ class PayrollRegisterController extends Controller
     private $employee;
     private $excel;
     private $rcbc;
+    private $fin_excel;
 
-    public function __construct(UnpostedPayrollRegister3 $excel,UnpostedPayrollRegisterMapper $unposted,PostedPayrollRegisterMapper $posted,EmployeeMapper $employee,BankTransmittal $rcbc)
+    public function __construct(UnpostedPayrollRegister3 $excel,UnpostedPayrollRegisterMapper $unposted,PostedPayrollRegisterMapper $posted,EmployeeMapper $employee,BankTransmittal $rcbc, PayregFinanceTemplateRF $fin_excel)
     {
         $this->unposted = $unposted;
         $this->posted = $posted;
         $this->employee = $employee;
         $this->excel = $excel;
         $this->rcbc = $rcbc;
+        $this->fin_excel = $fin_excel;
     }
 
     public function index()
@@ -185,6 +189,39 @@ class PayrollRegisterController extends Controller
 
        
     }
+
+    public function downloadFinanceTemplate(Request $request)
+    {
+
+        $payroll = new PayrollRegisterServiceFinanceRF(new PayrollRegisterRankAndFile('payrollregister_posted_s','posted'));       
+
+        $period = $payroll->getPeriod($request->id);
+
+        $data = $payroll->getPayrollData($period);
+
+        $payroll->getHeaders();
+
+        if($period){
+           
+            $date_from = Carbon::createFromFormat('Y-m-d',$period->date_from);
+            $date_to = Carbon::createFromFormat('Y-m-d',$period->date_to);
+
+            $label = $date_from->format('m/d/Y').' - '.$date_to->format('m/d/Y');
+            $label2 = $date_from->format('m/d').'-'.$date_to->format('d/Y');
+
+            // $this->fin_excel->setValues($data,$label,$label2,$payroll);
+            // // return Excel::download($this->fin_excel,'PayrollRegisterFinanceTemplate'.$period->id.'.xlsx');
+
+            // dd($data);
+
+            return view('app.payroll-transaction.payroll-register.payroll-register-finance',['data' => $data,'label' => $label,'label2' => $label2,'payroll' => $payroll]);
+        }
+
+      
+       
+
+    }
+
     /*
     public function downloadExcelUnposted(Request $request)
     {
@@ -333,5 +370,6 @@ class PayrollRegisterController extends Controller
         return response()->json($result);
     }
 
+    
 
 }

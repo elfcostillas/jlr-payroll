@@ -80,6 +80,41 @@ abstract class PayrollRegister extends PayrollRegisterFunctions
 
     }
 
+    public function processed($period)
+    {
+        $this->period = $period;
+        
+        $baseQuery = clone $this->mainQuery()->join('divisions','divisions.id','=','employees.division_id')
+            ->select('divisions.id','div_code');
+
+        $divisions = clone $baseQuery->distinct()->get();
+
+        foreach($divisions as $division)
+        {
+            $deptBaseQuery = clone $baseQuery;
+
+            $deptBaseQuery->join('departments','departments.id','=','employees.dept_id')
+                ->where('divisions.id','=',$division->id);
+
+            $departments = clone $deptBaseQuery->select('departments.id','dept_code')->distinct()->get();
+          
+
+            foreach($departments as $department)
+            {
+                $department->data =  $deptBaseQuery->clone()->select()->where('departments.id','=',$department->id)->get();
+
+                foreach($department->data as $employee)
+                {
+                       
+                }
+            } 
+
+            $division->departments = $departments;
+        }
+
+        $this->data = $divisions;
+    }
+
     public function process($period)
     {
         $this->period = $period;
@@ -193,7 +228,7 @@ abstract class PayrollRegister extends PayrollRegisterFunctions
     {
         $this->period = $period;
        
-        $departments = $this->getDepartments();
+        $departments = $this->getRealDepartments();
 
         foreach($departments as $department)
         {
@@ -270,6 +305,24 @@ abstract class PayrollRegister extends PayrollRegisterFunctions
             ->select('sub_dept.id','sub_dept.dept_label as dept_name')
             ->orderBy('sub_dept.id','asc')
             ->distinct()
+            ->get();
+
+        return $result;
+    }
+
+    public function getRealDepartments()
+    {   
+        $result = DB::table('employees') 
+            ->join('departments','employees.dept_id','=','departments.id')
+            ->where('emp_level','=','5')
+            ->where('exit_status',1)
+            // ->where('sub_division','=',$division->id)
+            ->select('departments.id','departments.dept_name',DB::raw("count(employees.biometric_id) as emp_count"))
+            ->groupBy('departments.id')
+            
+            ->having('emp_count','>',0)
+            ->orderBy('departments.dept_name','asc')
+        
             ->get();
 
         return $result;

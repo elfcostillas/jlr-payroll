@@ -18,7 +18,7 @@ class PayrollRegisterFunctions
         if(get_class($this) == 'App\CustomClass\PayrollRegisterConfi'){
             $result->where('employees.emp_level','<',5);
         }else{
-            $result->where('employees.emp_level','>=',5);
+            $result->where('employees.emp_level','=',5);
         }
 
 
@@ -31,7 +31,7 @@ class PayrollRegisterFunctions
  
     public function getPeriod($id)
     {
-      
+       
         return DB::table('payroll_period')->select()
         ->where('id','=',$id)
         ->first();
@@ -182,11 +182,11 @@ class PayrollRegisterFunctions
     }
 
     public function getCompensationTypeCols($table)
-    {
+    {   //DB::raw("'compensation' as subtype"),
         $result =  DB::table($table)
             ->join('employees',$table.'.biometric_id','=','employees.biometric_id')
             ->join('compensation_types','compensation_types.id','=',$table.'.compensation_type')
-            ->select(DB::raw("$table.compensation_type,compensation_types.description"))
+            ->select(DB::raw("'compensation' as subtype ,$table.compensation_type,compensation_types.description"))
             ->distinct()
             ->where($table.'.period_id','=',$this->period->id)
             ->where('user_id','=',Auth::user()->id);
@@ -757,15 +757,54 @@ class PayrollRegisterFunctions
         return $result->get();
     }
 
-    public function getCountsV2()
-    {
-        $result = $this->mainQuery()
-         ->leftJoin('divisions_sub','divisions_sub.id','=','employees.sub_division')
-        ->select(DB::raw("divisions_sub.id,divisions_sub.div_name,count(employees.biometric_id) as head_count"))
-        ->orderBy('divisions_sub.id','ASC')
-        ->groupBy('divisions_sub.id');
+    // public function getCountsV2()
+    // {
+    //     $result = $this->mainQuery()
+    //      ->leftJoin('divisions_sub','divisions_sub.id','=','employees.sub_division')
+    //     ->select(DB::raw("divisions_sub.id,divisions_sub.div_name,count(employees.biometric_id) as head_count"))
+    //     ->orderBy('divisions_sub.id','ASC')
+    //     ->groupBy('divisions_sub.id');
 
-        return $result->get();
+    //     return $result->get();
+    // }
+
+    public function getCountsByDiviosionDept() // im here
+    {
+        $divisions = $this->mainQuery()
+                ->leftJoin('divisions','divisions.id','=','employees.division_id')
+                ->select('divisions.id','div_code')
+                ->orderBy('divisions.id','ASC')
+                ->groupBy('divisions.id')
+                ->get();
+            
+            foreach($divisions as $division)
+            {
+                $departments = $this->mainQuery()
+                    ->join('departments','employees.dept_id','=','departments.id')
+                    ->where('dept_div_id',$division->id)
+                    ->select(DB::raw("dept_code,COUNT(employees.biometric_id) AS bio_count,sum(gross_total) as gross_total,sum(net_pay) as net_pay"))
+                    ->groupBy('dept_code')
+                    ->get();
+
+                // $departments = DB::table("departments")
+                //                 ->select()
+                //                 ->where('dept_div_id',$division->id)
+                //                 ->get();
+                // foreach($departments as $department)
+                // {
+                //     $employees = $this->mainQuery()
+                //             ->where('dept_id','=',$department->id)
+                //             ->count();
+                    
+                //     if($employees > 0){
+                //         $department->count = $employees;
+                //     }
+                // }
+
+                $division->departments = $departments;
+            }
+        
+        return $divisions;
     }
 
     public function total_pay_per_dept()
@@ -1279,6 +1318,73 @@ class PayrollRegisterFunctions
             ->groupBy('div_code');
         
         return $qry->get();
+    }
+
+    public function getOverAllTotalDepartmentTier($data,$key)
+    {
+        $total = 0;
+
+        // if(is_object($key)){
+           
+        // }else{
+        //     dd($key);
+        // }
+      
+        foreach($data->data as $department)
+        {
+            
+            $total += $this->getValueforThisEmployee($department->employees,$key);
+        }
+
+        return $total;
+    }
+
+    public function getValueforThisEmployee($employees,$key){
+        
+
+        $total = 0;
+
+        if(is_object($key)){
+            foreach($employees as $employee)
+            {
+                if(property_exists($key,'subtype'))
+                {
+                  
+                    switch($key->subtype) {
+                        case 'compensation' :
+                            
+                                $total += (array_key_exists($key->compensation_type,$employee->other_earning)) ? $employee->other_earning[$key->compensation_type] : 0.00;
+                            break;
+
+                        case 'installments' :
+                           
+                                $total += (array_key_exists($key->id,$employee->deductions)) ? $employee->deductions[$key->id] : 0.00;
+                            break;
+                        
+                        case 'govloan' :
+                              
+                                $total += (array_key_exists($key->id,$employee->gov_loans)) ? $employee->gov_loans[$key->id] : 0.00;
+                            break;
+                        
+                        default :
+                                dd($key);
+                            break;
+                    }
+                }else{
+                    $total += isset($key->var_name) ? ($employee->{$key->var_name} ?? 0) : 0;
+                }
+              
+                // dd($employee->{$key->var_name});
+            }
+        }else{
+            foreach($employees as $employee)
+            {
+                $total += isset($employee->{$key}) ? $employee->{$key} : 0.00;
+                // dd($employee->{$key->var_name});
+            }
+        }
+            
+        return $total;
     }
 
 

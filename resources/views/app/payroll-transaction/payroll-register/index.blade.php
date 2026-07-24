@@ -139,7 +139,12 @@
                                 <td style="text-align:center;" > <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base fixwidth" data-bind="click : buttonHandler.downloadRCBC"> RCBC Template</button> </td>
                                 <td style="text-align:center;" > <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base fixwidth" data-bind="click : buttonHandler.showOTBreakdown"> OT Breakdown</button> </td>
                              </tr>
-                            
+                            <tr>
+                                <td style="text-align:center;" ></td>
+                                <td style="text-align:center;" ></td>
+                                <td style="text-align:center;" ></td>
+                                <td style="text-align:center;" > <button class="k-grid-add k-button k-button-md k-rounded-md k-button-solid k-button-solid-base fixwidth" data-bind="click : buttonHandler.financeTemplate"> Finance Template</button> </td>
+                             </tr>
                         </table>
                         </div>
                     </div>

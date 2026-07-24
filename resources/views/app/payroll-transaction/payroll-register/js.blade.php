@@ -169,12 +169,18 @@
                             });
                     },
                     downloadRCBC : function(e){
-                        // alert();
                         let period = $("#posted_period").data("kendoDropDownList");
 
                         let url = `payroll-register/download-rcbc-template/${period.value()}`;
                         window.open(url);
                     },
+
+                     financeTemplate : function(e){
+                        let period = $("#posted_period").data("kendoDropDownList");
+
+                        let url = `payroll-register/download-finance-template/${period.value()}`;
+                        window.open(url);
+                    }
 
                 },
                 functions : {
