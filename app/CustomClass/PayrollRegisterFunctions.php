@@ -1006,13 +1006,13 @@ class PayrollRegisterFunctions
     public function otSummary()
     {
         $result = $this->mainQuery()->get();
-
+        // lala request 07/24/2026 dont show < 50
         $data = [
-            'Less than 10 Hrs' => 0,
-            '10 Hrs' => 0,
-            '20 Hrs' => 0,
-            '30 Hrs' => 0,
-            '40 Hrs' => 0,
+            // 'Less than 10 Hrs' => 0,
+            // '10 Hrs' => 0,
+            // '20 Hrs' => 0,
+            // '30 Hrs' => 0,
+            // '40 Hrs' => 0,
             '50 Hrs' => 0,
             '60 Hrs' => 0,
             '70 Hrs' => 0,
@@ -1024,6 +1024,8 @@ class PayrollRegisterFunctions
         foreach($result as $employee)
         {
             // dd($employee->reg_ot);
+
+            /*
             if($employee->reg_ot > 1 && $employee->reg_ot < 10)
             {
                 $data['Less than 10 Hrs'] += 1;
@@ -1048,6 +1050,7 @@ class PayrollRegisterFunctions
             {
                 $data['40 Hrs'] += 1;
             }
+            */
 
 
             // if($employee->reg_ot >= 30 && $employee->reg_ot < 40)
@@ -1059,8 +1062,8 @@ class PayrollRegisterFunctions
             //     $data['40 Hrs'] += 1;
             // }
 
-            if($employee->reg_ot >= 50)
-            // if($employee->reg_ot >= 50 && $employee->reg_ot < 60)
+            // if($employee->reg_ot >= 50)
+            if($employee->reg_ot >= 50 && $employee->reg_ot < 60)
             {
                 $data['50 Hrs'] += 1;
             }
@@ -1111,6 +1114,7 @@ class PayrollRegisterFunctions
                 ->orderBy('job_title_name','asc');
 
             switch($key){
+                /*
                 case 'Less than 10 Hrs':
                     $result = $qry->where(function($query){
                         $query->where('reg_ot','>=',1);
@@ -1145,7 +1149,7 @@ class PayrollRegisterFunctions
                         $query->where('reg_ot','<',50);
                     });
                 break;
-
+*/
                 case '50 Hrs':
                     $result = $qry->where(function($query){
                         $query->where('reg_ot','>=',50);
