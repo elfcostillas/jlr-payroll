@@ -116,6 +116,11 @@ class PostedPayrollRegisterMapper extends AbstractMapper {
         return array('success'=>'Payroll Period was unposted successfully.');
     }
 
+    public function oTBeakDown($period_id)
+    {
+        return 0;
+    }
+
 }
 
 

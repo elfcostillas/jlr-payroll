@@ -174,8 +174,16 @@
                         let url = `payroll-register/download-rcbc-template/${period.value()}`;
                         window.open(url);
                     },
+                    showOTBreakdown : function(e)
+                    {
+                        let period = $("#posted_period").data("kendoDropDownList");
 
-                     financeTemplate : function(e){
+                        let url = `payroll-register/show-ot-breakdown/${period.value()}`;
+                        
+                        window.open(url);
+
+                    },
+                    financeTemplate : function(e){
                         let period = $("#posted_period").data("kendoDropDownList");
 
                         let url = `payroll-register/download-finance-template/${period.value()}`;

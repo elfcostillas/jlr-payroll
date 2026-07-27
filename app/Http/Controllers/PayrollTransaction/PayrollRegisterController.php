@@ -370,6 +370,22 @@ class PayrollRegisterController extends Controller
         return response()->json($result);
     }
 
+    public function showOTBreakdown(Request $request)
+    {
+        
+        $payroll = new PayrollRegisterService(new PayrollRegisterRankAndFile('payrollregister_posted_s','posted'));
+
+        $period = $payroll->getPeriod($request->period_id);
+        
+        $data = $payroll->getPayrollDataByDept($period);
+
+        // dd($data);
+
+        $payroll->getHeaders();
+
+       return view('app.payroll-transaction.payroll-register.ot-breakdown',['data' => $data,'payroll' => $payroll]);
+    }
+
     
 
 }

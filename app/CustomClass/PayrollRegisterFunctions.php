@@ -807,6 +807,30 @@ class PayrollRegisterFunctions
         return $divisions;
     }
 
+    public function getOTByDivisionDept() // im here
+    {
+        $divisions = $this->mainQuery()
+                ->leftJoin('divisions','divisions.id','=','employees.division_id')
+                ->select('divisions.id','div_code')
+                ->orderBy('divisions.id','ASC')
+                ->groupBy('divisions.id')
+                ->get();
+            
+            foreach($divisions as $division)
+            {
+                $departments = $this->mainQuery()
+                    ->join('departments','employees.dept_id','=','departments.id')
+                    ->where('dept_div_id',$division->id)
+                    ->select(DB::raw("dept_code,SUM(IFNULL(reg_ot,0.00)) AS reg_ot,SUM(IFNULL(rd_ot,0.00)) AS rd_ot , SUM(IFNULL(reg_ot_amount,0.00)) AS reg_ot_amount , SUM(IFNULL(rd_ot_amount,0.00)) AS rd_ot_amount"))
+                    ->groupBy('dept_code')
+                    ->get();
+
+                $division->departments = $departments;
+            }
+        
+        return $divisions;
+    }
+
     public function total_pay_per_dept()
     {
         $result = $this->mainQuery()->leftJoin('sub_dept','employees.sub_dept','=','sub_dept.id')

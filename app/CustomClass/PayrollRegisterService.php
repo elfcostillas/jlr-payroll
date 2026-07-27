@@ -48,5 +48,17 @@ class PayrollRegisterService
         return $this->payroll;
     }
 
+    public function getOTDivision($division){
+        $totals = 0;
+
+        foreach($division->departments as $department)
+        {
+          
+            $totals += ($department->reg_ot + $department->rd_ot);
+        }
+
+        return $totals;
+    }
+
     
 }
