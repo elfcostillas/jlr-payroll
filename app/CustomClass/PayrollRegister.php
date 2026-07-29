@@ -101,7 +101,8 @@ abstract class PayrollRegister extends PayrollRegisterFunctions
 
             foreach($departments as $department)
             {
-                $department->data =  $deptBaseQuery->clone()->select()->where('departments.id','=',$department->id)->get();
+                $department->data =  $deptBaseQuery->clone()->select()->where('departments.id','=',$department->id)
+                ->orderBy('lastname')->orderBy('firstname')->get();
 
                 foreach($department->data as $employee)
                 {

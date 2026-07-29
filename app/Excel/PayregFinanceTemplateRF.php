@@ -65,7 +65,7 @@ class PayregFinanceTemplateRF implements ShouldAutoSize,WithColumnFormatting,Fro
         $cols = [];
         // $cols['B'] = NumberFormat::FORMAT_NUMBER_00;
         $limit = 75;
-        $col = 'E';
+        $col = 'D';
 
         for($x=1;$x<=$limit;$x++){
          

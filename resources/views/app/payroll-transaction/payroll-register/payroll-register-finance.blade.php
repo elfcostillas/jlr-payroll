@@ -25,6 +25,7 @@
         $ctr2 = 1;
         $ctr3 = 1;
 
+        $overall_ee = 0;
   
     ?>
   
@@ -48,6 +49,7 @@
             <tr>
                 <td>Division</td>
                 <td>Department</td>
+                <td>Employee Count</td>
                 <td>Gross Pay</td>
                 
                 @foreach ($data->contri as $contricols)
@@ -67,13 +69,15 @@
 
                 @foreach ($division->departments as $index => $department)
                     <tr>
-
+                        @php
+                            $overall_ee += $department->data->count();
+                        @endphp 
                         @if ($index === 0)
                             <td rowspan="{{ count($division->departments) }}">  {{ $division->div_code }} </td>
                         @endif
 
                         <td> {{ $department->dept_code }} </td>
-
+                        <td> {{ $department->data->count() }} </td>
                         <td> {{ $payroll->getDeptTotal($department->data, 'gross_total') }} </td>
 
                         @foreach ($data->contri as $contricols)
@@ -98,6 +102,7 @@
             @endforeach
             <tr>
                 <td colspan="2"> Over All Total </td>
+                <td> {{ $overall_ee }} </td>
                 <td> {{ $payroll->getDeptTotalOverAll($data->data,'gross_total') }} </td>
 
                 @foreach ($data->contri as $contricols)
@@ -115,6 +120,40 @@
             </tr>
         </table>
 
+        <!-- employees -->
+        <table border="1"> 
+            <tr> 
+                <th>Division</th> 
+                <th>Department</th> 
+                <th>Employees</th> 
+            </tr> @foreach ($data->data as $division) 
+                    @php $divisionRowspan = 0; 
+                        foreach ($division->departments as $department) { 
+                                $divisionRowspan += $department->data->count(); 
+                                $overall_ee += $department->data->count(); 
+                        } 
+                        
+                        $divisionFirstRow = true; 
+
+                    @endphp 
+                    
+                    @foreach ($division->departments as $department) 
+                        @php $departmentRowspan = $department->data->count(); 
+                            $departmentFirstRow = true; 
+                        @endphp 
+                    
+                        @foreach ($department->data as $employee) 
+                            <tr> {{-- Division --}} @if ($divisionFirstRow) 
+                                <td rowspan="{{ $divisionRowspan }}"> {{ $division->div_code }} </td>
+                                @php $divisionFirstRow = false; @endphp @endif {{-- Department --}} 
+                                @if ($departmentFirstRow) 
+                                    <td rowspan="{{ $departmentRowspan }}"> {{ $department->dept_code }} </td> 
+                                @php $departmentFirstRow = false; @endphp 
+                                @endif {{-- Employee --}} 
+                                    <td> {{ $employee->lastname }}, {{ $employee->firstname }} </td> 
+                            </tr> 
+                        @endforeach @endforeach @endforeach 
+        </table>
        
        
 </body>
