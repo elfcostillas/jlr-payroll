@@ -209,12 +209,12 @@ class PayrollRegisterController extends Controller
             $label = $date_from->format('m/d/Y').' - '.$date_to->format('m/d/Y');
             $label2 = $date_from->format('m/d').'-'.$date_to->format('d/Y');
 
-            // $this->fin_excel->setValues($data,$label,$label2,$payroll);
-            // // return Excel::download($this->fin_excel,'PayrollRegisterFinanceTemplate'.$period->id.'.xlsx');
+            $this->fin_excel->setValues($data,$label,$label2,$payroll);
+            return Excel::download($this->fin_excel,'PayrollRegisterFinanceTemplate'.$period->id.'.xlsx');
 
             // dd($data);
 
-            return view('app.payroll-transaction.payroll-register.payroll-register-finance',['data' => $data,'label' => $label,'label2' => $label2,'payroll' => $payroll]);
+            // return view('app.payroll-transaction.payroll-register.payroll-register-finance',['data' => $data,'label' => $label,'label2' => $label2,'payroll' => $payroll]);
         }
 
       

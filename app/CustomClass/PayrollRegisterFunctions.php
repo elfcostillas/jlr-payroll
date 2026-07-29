@@ -228,11 +228,38 @@ class PayrollRegisterFunctions
        
     }
 
-       public function getDeductions($biometric_id,$period_id)
+    public function postedOtherEarnings($employee,$period)
+    {
+      
+        $earning_array = [];
+
+        $others = DB::table('posted_other_compensations')->select('compensation_type','amount')
+        ->where([['biometric_id','=',$employee->biometric_id],['period_id','=',$period->id]])
+        ->where('user_id','=',Auth::user()->id);
+
+        $fixed = DB::table('posted_fixed_compensations')->select('compensation_type','amount')
+        ->where([['biometric_id','=',$employee->biometric_id],['period_id','=',$period->id]])
+        ->where('user_id','=',Auth::user()->id)
+        ->unionAll($others);
+
+        $earnings = DB::table('compensation_types')
+                    ->select('description','compensation_type','amount')
+                    ->joinSub($fixed,'earnings',function($join){
+                        $join->on('earnings.compensation_type','=','compensation_types.id');
+                    })->orderBy('compensation_type')->get();
+        
+        foreach($earnings as $earn){
+            $earning_array[$earn->compensation_type] = $earn->amount;
+        }
+        
+        return $earning_array;
+       
+    }
+
+    public function getDeductions($biometric_id,$period_id)
     {   
         $ded_array = [];
 
-      
         if($this->payroll_status == 'unposted')
         {
             //$table = ['unposted_fixed_deductions','unposted_installments','unposted_onetime_deductions'];
@@ -289,13 +316,23 @@ class PayrollRegisterFunctions
 
     public function getGovLoans($biometric_id,$period_id)
     {
-      
         $govLoan = [];
-        $loan = DB::table('unposted_loans')->select('id','description','amount')
-        ->join('loan_types','deduction_type','=','loan_types.id')
-        ->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]])
-        ->where('user_id','=',Auth::user()->id)
-        ->orderBy('deduction_type')->get();
+
+        if($this->payroll_status == 'posted')
+        {  
+            $loan = DB::table('posted_loans')->select('id','description','amount')
+                ->join('loan_types','deduction_type','=','loan_types.id')
+                ->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]])
+                ->where('user_id','=',Auth::user()->id)
+                ->orderBy('deduction_type')->get();
+
+        }else{
+            $loan = DB::table('unposted_loans')->select('id','description','amount')
+                ->join('loan_types','deduction_type','=','loan_types.id')
+                ->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]])
+                ->where('user_id','=',Auth::user()->id)
+                ->orderBy('deduction_type')->get();
+        }
 
         foreach($loan as $l)
         {

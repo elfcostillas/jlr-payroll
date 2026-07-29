@@ -234,6 +234,22 @@ class PayrollRegisterServiceFinance extends PayrollRegisterService
         return $value;
     }
 
+    // public function getDeptGovLoanRF($col,$department)
+    // {
+    //     dd(123);
+    //     $value = 0;
+    //         foreach($department->employees as $employee)
+    //         {
+    //             if(array_key_exists($col->id,$employee->gov_loans))
+    //             {
+    //                 $value += $employee->gov_loans[$col->id];
+    //             }
+                
+    //         }
+            
+    //     return $value;
+    // }
+
     /* By Division */
     public function getOverAllCountDivision($division)
     {

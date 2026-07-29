@@ -41,21 +41,64 @@ class PayrollRegisterServiceFinanceRF extends PayrollRegisterService
                     if($key->col_type == 'contri')
                     {
                         $totals += $employee->{$key->var_name};
+                    }else{
+                        dd($key,3);
                     }
                 }else{
                     if(property_exists($key,'subtype'))
                     {
                         if($key->subtype == 'installments')
                         {
-                            dd('im here');
+                            if(property_exists($employee,'deductions'))
+                            {
+                                // dd($employee->deductions,$key);
+                                if(array_key_exists($key->id,$employee->deductions))
+                                {
+                                    $totals += $employee->deductions[$key->id];
+                                }
+                               
+                            }
                         }
+
+                        if($key->subtype == 'govloan')
+                        {  
+                            if(property_exists($employee,'gov_loans'))
+                            {
+                                if(array_key_exists($key->id,$employee->gov_loans))
+                                {
+                                    $totals += $employee->gov_loans[$key->id];
+                                }
+                               
+                            }
+                        }
+
+                    }else{
+                        dd($key,2);
                     }
+
+
                 }
             }else{
               
                 $totals += $employee->$key;
             }
         }
+
+        return $totals;
+    }
+
+    public function getDeptTotalOverAll($data,$key)
+    {
+        $totals = 0;
+
+        foreach($data as $division)
+        {
+            foreach($division->departments as $department)
+            {
+                $totals +=  $this->getDeptTotal($department->data,$key);
+            }
+        }
+            
 
         return $totals;
     }

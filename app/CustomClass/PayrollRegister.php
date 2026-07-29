@@ -105,7 +105,24 @@ abstract class PayrollRegister extends PayrollRegisterFunctions
 
                 foreach($department->data as $employee)
                 {
-                       
+                        $other_earning = $this->postedOtherEarnings($employee,$period);
+
+                        $employee->other_earning = $other_earning;
+
+                        /* Deductions for employee */
+                        $deductions = $this->getDeductions($employee->biometric_id,$period->id);
+                     
+                        $employee->deductions = $deductions;
+
+
+                        /* Gov Loan for employee */
+                        $gov_loans = $this->getGovLoans($employee->biometric_id,$period->id);
+                        $employee->gov_loans = $gov_loans;
+
+                        // /*******************************/
+
+                    // } 
+                    
                 }
             } 
 
