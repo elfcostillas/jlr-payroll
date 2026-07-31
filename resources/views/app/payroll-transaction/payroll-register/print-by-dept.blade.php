@@ -49,6 +49,18 @@
             position: fixed;
             margin-top :-80px;
         }
+
+        .highlight_blue {
+            background-color:#00FFFF;
+        }
+
+        .highlight_red {
+            background-color:#ff6666;
+        }
+
+        .highlight_orange {
+            background-color:#ff964f;
+        }
         
 
         /* header { position: fixed; top: -60px; left: 0px; right: 0px; background-color: lightblue; height: 50px; } */
@@ -116,6 +128,39 @@
                 return round($hrs,2);
             }
 
+            function highlight_gross($amount)
+            {
+                if($amount >= 10000)
+                {
+                    return "highlight_blue";
+                }
+
+                return '';
+            }
+
+            function highlight_deduction($amount)
+            {
+                if($amount >= 3000)
+                {
+                    return "highlight_red";
+                }
+
+                return '';
+            }
+
+            function higlight_netpay($amount)
+            {
+                
+                if($amount <= 5000)
+                {
+                    return "highlight_orange";
+                }
+
+                return '';
+            }
+
+
+
 
         
         ?>
@@ -168,8 +213,8 @@
                     @foreach ($department->employees as $employee)
                         <tr>
                             <td class="pad4 r" style="">{{ $ctr++ }}</td>
-                            <td class="pad4"> {{$employee->lastname}}, {{ $employee->firstname }} </td>
-                            <td class="pad4" style="" > {{$employee->job_title_name }} </td>
+                            <td class="pad4 {{ highlight_gross($employee->gross_total) }} "> {{$employee->lastname}}, {{ $employee->firstname }} </td>
+                            <td class="pad4 {{ highlight_gross($employee->gross_total) }}" style="" > {{$employee->job_title_name }} </td>
                             @foreach ($data->basic_cols as $bcols)
                             <td class="r">{{ custom_format($employee->{$bcols->var_name}) }}</td>
                             @endforeach
@@ -194,7 +239,7 @@
                                 <td class="r"> {{ (array_key_exists($othcols->compensation_type,$employee->other_earning) ? custom_format($employee->other_earning[$othcols->compensation_type]) : '') }}
                                     
                             @endforeach
-                                <td class="r"> {{ custom_format($employee->gross_total) }} </td>
+                                <td class="r {{ highlight_gross($employee->gross_total) }}"> {{ custom_format($employee->gross_total) }} </td>
 
                             @foreach ($data->contri as $contri_cols)
                                 <td class="r">{{ custom_format($employee->{$contri_cols->var_name}) }}</td>
@@ -206,8 +251,8 @@
                             @foreach ($data->govloans_hcols as $govloans_hcols)
                                 <td class="r"> {{ (array_key_exists($govloans_hcols->id,$employee->gov_loans) ? custom_format($employee->gov_loans[$govloans_hcols->id]) : '') }}
                             @endforeach
-                            <td class="r"> {{ custom_format($employee->total_deduction) }} </td>
-                            <td class="r"> {{ custom_format($employee->net_pay) }}</td>
+                            <td class="r {{ highlight_deduction($employee->total_deduction) }}"> {{ custom_format($employee->total_deduction) }} </td>
+                            <td class="r {{ higlight_netpay($employee->net_pay) }}"> {{ custom_format($employee->net_pay) }}</td>
 
                         </tr>
                     @endforeach
