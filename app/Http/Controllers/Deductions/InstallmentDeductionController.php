@@ -107,7 +107,14 @@ class InstallmentDeductionController extends Controller
     {
         $result = $this->mapper->dlNonConfi();
 
-        return view('app.deductions.installment-deductions.installment-summary',['installments' => $result ]); 
+        return view('app.deductions.installment-deductions.installment-summary',['installment_types' => $result ]); 
+    }
+
+    public function dlConfi()
+    {
+        $result = $this->mapper->dlConfi();
+
+        return view('app.deductions.installment-deductions.installment-summary',['installment_types' => $result ]); 
     }
 
     public function ammortization(Request $request)

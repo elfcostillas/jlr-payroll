@@ -357,8 +357,8 @@
                     </tr>
                     @php $start = false; 
                         $head_count += $department->bio_count; 
-                        $over_all_total_gross += $department->gross_total; 
-                        $over_all_total_net += $department->net_pay; 
+                        //$over_all_total_gross += $department->gross_total; 
+                        //$over_all_total_net += $department->net_pay; 
                     @endphp
                 @endforeach
             @endforeach
@@ -396,7 +396,7 @@
                         <td style="padding:2px 6px;text-align:right;"> {{ number_format($department->net_pay,2) }} </td>    
                     </tr>
                     @php $start = false; 
-                        $head_count += $department->bio_count; 
+                       
                         $over_all_total_gross += $department->gross_total; 
                         $over_all_total_net += $department->net_pay; 
                     @endphp
@@ -475,20 +475,7 @@
             @endforeach
         </table>
 
-         @if ($data->otMoreThan50hrsOriginal()->count()>0)
-            <!-- <table style="width:140px;float:left;margin-left:12px;font-size :6pt;border-collapse:collapse;margin-top:12px;" border=1>
-                <tr>
-                    <td style="text-align:center;" colspan="2"> Overtime >= 50++ </td>
-                </tr>
-                @foreach ($data->otMoreThan50hrsOriginal() as $row )
-                    <tr>
-                        <td> {{ $row->div_code }} </td>
-                        <td style="text-align:right;";>{{ $row->pax }}</td>
-                    </tr>
-                @endforeach
-              
-            </table> -->
-        @endif
+     
 
         <?php 
         
@@ -516,7 +503,7 @@
                     <table style="width: 210px;float:left;margin-left:{{ $starting_margin }}px;font-size :6pt;border-collapse:collapse;clear:left;margin-top:12px;" border=1>
                     <?php $starting_margin += 216; ?>
                 @else
-                    <table style="width: 190px;float:left;margin-left:{{ $starting_margin }}px;font-size :6pt;border-collapse:collapse;margin-top:288px;clear:left;" border=1>
+                    <table style="width: 190px;float:left;margin-left:{{ $starting_margin }}px;font-size :6pt;border-collapse:collapse;margin-top:268px;clear:left;" border=1>
                     <?php $starting_margin += 204; ?>
                 @endif
 
@@ -541,28 +528,19 @@
             @endif
         @endforeach
 
-        @if ($data->otMoreThan50hrsOriginal()->count()>0)
+        <table style="width: 210px;float:left;font-size :6pt;border-collapse:collapse;clear:left;margin-top:12px;margin-top:448px;" border=1>
+            <tr>
+                <td style="color:red;"></td>  
+            </tr>
            
-            <!-- <table style="width:140px;float:left;margin-left:{{ $starting_margin }}px;font-size :6pt;border-collapse:collapse;margin-top:284px;clear:left;" border=1>
-                <tr>
-                    <td style="text-align:center;" colspan="2"> Overtime >= 50++ </td>
-                </tr>
-                @foreach ($data->otMoreThan50hrsOriginal() as $row )
-                    <tr>
-                        <td> {{ $row->div_code }} </td>
-                        <td style="text-align:right;";>{{ $row->pax }}</td>
-                    </tr>
-                @endforeach
-              
-            </table> -->
-           
-        @endif
+        </table>
+
 
         <table style="width:100%;margin-top:488px;font-size:8pt;" border=0>
             <tr>
                 <td style="width:10%">
                 <td style="width:26%">
-                    Prepared By :
+                    Prepared By:
                 </td>
                 <td style="width:26%">
                     Noted by :
@@ -588,6 +566,7 @@
                 <td></td>
             </tr>
         </table>
+       
 
     </main>
 </body>

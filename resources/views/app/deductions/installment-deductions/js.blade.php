@@ -338,7 +338,8 @@
                         window.open(url);
                     },
                     downloadConfi: function() {
-
+                        let url = 'installments/download-confi';
+                        window.open(url);     
                     },
 
                 },
