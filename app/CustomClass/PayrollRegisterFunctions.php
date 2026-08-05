@@ -1069,11 +1069,14 @@ class PayrollRegisterFunctions
         $result = $this->mainQuery()->get();
         // lala request 07/24/2026 dont show < 50
         $data = [
+            /*
+            remove for testing 08/05/2026
             'Less than 10 Hrs' => 0,
             '10 Hrs' => 0,
             '20 Hrs' => 0,
             '30 Hrs' => 0,
             '40 Hrs' => 0,
+            */
             '50 Hrs' => 0,
             '60 Hrs' => 0,
             '70 Hrs' => 0,
@@ -1086,7 +1089,8 @@ class PayrollRegisterFunctions
         {
             // dd($employee->reg_ot);
 
-            
+              /*
+            remove for testing 08/05/2026
             if($employee->reg_ot > 1 && $employee->reg_ot < 10)
             {
                 $data['Less than 10 Hrs'] += 1;
@@ -1107,22 +1111,12 @@ class PayrollRegisterFunctions
                 $data['30 Hrs'] += 1;
             }
 
-            //  if($employee->reg_ot >= 40)
-            // {
-            //     $data['40 Hrs'] += 1;
-            // }
-            
-
-
-            // if($employee->reg_ot >= 30 && $employee->reg_ot < 40)
-            // {
-            //     $data['30 Hrs'] += 1;
-            // }
+         
              if($employee->reg_ot >= 40 && $employee->reg_ot < 50)
             {
                 $data['40 Hrs'] += 1;
             }
-
+            */
             // if($employee->reg_ot >= 50)
             if($employee->reg_ot >= 50 && $employee->reg_ot < 60)
             {
