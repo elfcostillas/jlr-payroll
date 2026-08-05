@@ -61,7 +61,8 @@
         .highlight_orange {
             background-color:#ff964f;
         }
-        
+
+      
 
         /* header { position: fixed; top: -60px; left: 0px; right: 0px; background-color: lightblue; height: 50px; } */
     </style>
@@ -91,7 +92,57 @@
     <main>
         
         <?php
-    
+
+            function gross_pay_counter($filter,$data)
+            {
+                $count = 0;
+                foreach($data->data as $department)
+                {
+                    foreach($department->employees as $employee)
+                    {
+                        if($employee->gross_total >= $filter)
+                        {
+                            $count++;
+                        }
+                    }
+                }
+                return $count;
+            }
+
+            function net_pay_counter($filter,$data) 
+            {
+                $count = 0;
+                foreach($data->data as $department)
+                {
+                    foreach($department->employees as $employee)
+                    {
+                        if($employee->net_pay <= $filter)
+                        {
+                            $count++;
+                        }
+                    }
+                }
+                return $count;
+            }
+
+            function total_deduction_counter($filter,$data)
+            {
+                $count = 0;
+                foreach($data->data as $department)
+                {
+                    foreach($department->employees as $employee)
+                    {
+                        if($employee->total_deduction >= $filter)
+                        {
+                            $count++;
+                        }
+                    }
+                }
+                return $count;
+            }
+
+            
+
             $cols = 6 + count($data->basic_cols) + count($data->gross_cols) + count($data->fixed_comp_hcols) 
                 + count($data->other_comp_hcols) + count($data->contri) + count($data->deduction_hcols)
                 + count($data->govloans_hcols);
@@ -523,6 +574,35 @@
                     ?>
             @endif
         @endforeach
+
+        @if ( true == true )
+            <table style="width: 140px;float:left;margin-left:6px;font-size :6pt;border-collapse:collapse;margin-top:288px;clear:left;" border=1>
+                <tr>
+                    <td class="highlight_blue" style="text-align:center">Gross Pay P10,000 ++ </td>
+                </tr>
+                <tr>
+                    <td style="text-align:center"> {{ gross_pay_counter(10000,$data) }} </td>
+                </tr>
+            </table>
+
+            <table style="width: 140px;float:left;margin-left:152px;font-size :6pt;border-collapse:collapse;margin-top:288px;clear:left;" border=1>
+                <tr>
+                    <td class="highlight_red" style="text-align:center">Total Deduction P3,000 ++ </td>
+                </tr>
+                <tr>
+                    <td style="text-align:center"> {{ total_deduction_counter(3000,$data) }} </td>
+                </tr>
+            </table>
+
+             <table style="width: 140px;float:left;margin-left:304px;font-size :6pt;border-collapse:collapse;margin-top:288px;clear:left;" border=1>
+                <tr>
+                    <td class="highlight_orange" style="text-align:center">Net Pay less than P5,000 ++ </td>
+                </tr>
+                <tr>
+                    <td style="text-align:center"> {{ net_pay_counter(5000,$data) }} </td>
+                </tr>
+            </table>
+        @endif  
 
 
         <table style="width:100%;margin-top:548px;font-size:8pt;" border=0>
