@@ -59,8 +59,10 @@
         }
 
         .highlight_orange {
-            background-color:#ff964f;
+            background-color: yellow;
         }
+
+        
 
       
 
@@ -208,6 +210,43 @@
                 }
 
                 return '';
+            }
+
+            function department_ot_count($data)
+            {
+                
+                $departments = [];
+
+                foreach($data->data as $department)
+                {
+
+                    $ot_count = 0;
+                    $rd_count = 0;
+
+                    foreach($department->employees as $employee)
+                    {
+                        if($employee->reg_ot > 0)
+                        {
+                            $ot_count++;
+                        }
+
+                        if($employee->rd_hrs > 0)
+                        {
+                            $rd_count++;
+                        }
+                    }
+
+                    if($ot_count > 0 || $rd_count > 0)
+                    {
+                        $departments[] = [
+                            'dept_name' => $department->dept_name,
+                            'ot_count' => $ot_count,
+                            'rd_count' => $rd_count
+                        ];
+                    }
+                }
+
+                return $departments;
             }
         
         ?>
@@ -522,6 +561,30 @@
             @endforeach
         </table>
 
+        <table style="float:left;margin-left:12px;font-size :6pt;border-collapse:collapse;margin-top:12px;" border=1>
+            <tr> 
+                <td colspan=3 style="text-align: center;padding:2px 6px;" > Employee Count (Overtime) </td> 
+            </tr>
+            <tr>
+                <td style="padding:2px 6px;">Department</td>
+                <td style="padding:2px 6px;text-align:right;">OT Count</td>
+                <td style="padding:2px 6px;text-align:right;">RD Count</td>
+            </tr>
+            <?php
+                $department_ot_count = department_ot_count($data);
+            ?>
+
+            @foreach ( $department_ot_count as $department)
+                <tr>
+                    <td style="padding:2px 6px;"> {{ $department['dept_name'] }} </td>
+                    <td style="padding:2px 6px;text-align:right;"> {{ $department['ot_count'] }} </td>
+                    <td style="padding:2px 6px;text-align:right;"> {{ $department['rd_count'] }} </td>
+                </tr>
+                
+            @endforeach
+          
+        </table>
+
      
 
         <?php 
@@ -536,17 +599,17 @@
                     $ot_data = $data->otByDeptJobtitleOriginal($key);
 
                     if($summaryctr == 1){
-                        $starting_margin = 580; 
+                        $starting_margin = 768; 
                     }
 
-                    if($summaryctr == 4){
+                    if($summaryctr == 3){
                         $starting_margin = 6; 
                     }
 
 
                 ?>
 
-                @if($summaryctr < 4)
+                @if($summaryctr < 3)
                     <table style="width: 210px;float:left;margin-left:{{ $starting_margin }}px;font-size :6pt;border-collapse:collapse;clear:left;margin-top:12px;" border=1>
                     <?php $starting_margin += 216; ?>
                 @else
@@ -561,7 +624,7 @@
                     @foreach ($ot_data as $row)
                     <tr>
                         <td> {{ $row->dept_label }}</td>
-                        <td>{{ $row->job_title_name }} - {{ $row->div_code }}</td>
+                        <td> {{ $row->job_title_name }} - {{ $row->div_code }}</td>
                         <td> {{ $row->pax}} </td>
                     </tr>
                         
@@ -576,7 +639,7 @@
         @endforeach
 
         @if ( true == true )
-            <table style="width: 140px;float:left;margin-left:6px;font-size :6pt;border-collapse:collapse;margin-top:288px;clear:left;" border=1>
+            <table style="width: 140px;float:left;margin-left:6px;font-size :6pt;border-collapse:collapse;margin-top:388px;clear:left;" border=1>
                 <tr>
                     <td class="highlight_blue" style="text-align:center">Gross Pay P10,000 ++ </td>
                 </tr>
@@ -585,7 +648,7 @@
                 </tr>
             </table>
 
-            <table style="width: 140px;float:left;margin-left:152px;font-size :6pt;border-collapse:collapse;margin-top:288px;clear:left;" border=1>
+            <table style="width: 140px;float:left;margin-left:152px;font-size :6pt;border-collapse:collapse;margin-top:388px;clear:left;" border=1>
                 <tr>
                     <td class="highlight_red" style="text-align:center">Total Deduction P3,000 ++ </td>
                 </tr>
@@ -594,7 +657,7 @@
                 </tr>
             </table>
 
-             <table style="width: 140px;float:left;margin-left:304px;font-size :6pt;border-collapse:collapse;margin-top:288px;clear:left;" border=1>
+             <table style="width: 140px;float:left;margin-left:304px;font-size :6pt;border-collapse:collapse;margin-top:388px;clear:left;" border=1>
                 <tr>
                     <td class="highlight_orange" style="text-align:center">Net Pay less than P5,000 ++ </td>
                 </tr>
