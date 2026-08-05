@@ -892,13 +892,13 @@
     <table border=1  style="width:100%;border-collapse:collapse;margin-bottom:6px;" class="btable">
         <tr>
             <td style="text-align:right;padding-right:4px;" > <b>GRAND TOTAL </b></td>
-            <td class="pr3" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_basic_pay,2) }}</td> <!-- BASIC -->
-            <td class="pr3" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_late_hrs,2) }}</td>
-            <td class="pr3" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_late_amount,2) }}</td>
+            <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_basic_pay,2) }}</td> <!-- BASIC -->
+            <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_late_hrs,2) }}</td>
+            <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_late_amount,2) }}</td>
             
             @if($sil_flag->vl_wpay >0)
-                <td class="pr3"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($over_all_sil > 0) ? number_format(convert_hrs_to_days($over_all_sil),2) : '' }}</td>
-                <td class="pr3"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($over_all_sil_pay > 0) ? number_format($over_all_sil_pay,2) : '' }}</td>
+                <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($over_all_sil > 0) ? number_format(convert_hrs_to_days($over_all_sil),2) : '' }}</td>
+                <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($over_all_sil_pay > 0) ? number_format($over_all_sil_pay,2) : '' }}</td>
             @endif
 
             @foreach($headers as $key => $val)
@@ -1222,7 +1222,7 @@ departmentalTotalGross -->
                     <td></td>
                 </tr>
                 <tr>
-                    <td style="text-align:center;"> HR Supervisor </td>
+                    <td style="text-align:center;"> HR Staff </td>
                     <td style="text-align:center;"> HR Manager</td>
                     <td style="text-align:center;"> </td>
                     <td style="text-align:center;"> </td>
