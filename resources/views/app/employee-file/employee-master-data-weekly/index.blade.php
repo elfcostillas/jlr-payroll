@@ -58,7 +58,7 @@
     
 </style>
 @section('title')
-    <h4> Employee Data - Weekly<h4>
+    <h4> Employee Data - Support Group <h4>
 @endsection
 @section('content')
     <div class="container">
