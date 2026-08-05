@@ -158,10 +158,6 @@
 
                 return '';
             }
-
-
-
-
         
         ?>
 
@@ -503,7 +499,7 @@
                     <table style="width: 210px;float:left;margin-left:{{ $starting_margin }}px;font-size :6pt;border-collapse:collapse;clear:left;margin-top:12px;" border=1>
                     <?php $starting_margin += 216; ?>
                 @else
-                    <table style="width: 190px;float:left;margin-left:{{ $starting_margin }}px;font-size :6pt;border-collapse:collapse;margin-top:268px;clear:left;" border=1>
+                    <table style="width: 190px;float:left;margin-left:{{ $starting_margin }}px;font-size :6pt;border-collapse:collapse;margin-top:238px;clear:left;" border=1>
                     <?php $starting_margin += 204; ?>
                 @endif
 
@@ -528,15 +524,8 @@
             @endif
         @endforeach
 
-        <table style="width: 210px;float:left;font-size :6pt;border-collapse:collapse;clear:left;margin-top:12px;margin-top:448px;" border=1>
-            <tr>
-                <td style="color:red;"></td>  
-            </tr>
-           
-        </table>
 
-
-        <table style="width:100%;margin-top:488px;font-size:8pt;" border=0>
+        <table style="width:100%;margin-top:548px;font-size:8pt;" border=0>
             <tr>
                 <td style="width:10%">
                 <td style="width:26%">
