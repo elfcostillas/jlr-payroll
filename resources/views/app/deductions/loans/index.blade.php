@@ -95,7 +95,7 @@
                             <tr>
                                 <td colspan=1>Amount</td>
                                 <td colspan=1>Terms</td>
-                                <td colspan=1>Ammortizatoin</td>
+                                <td colspan=1>Ammortization</td>
                                 <td colspan=1>Stop</td>
                                 <td colspan=1></td>
                                 <td colspan=1>Loan Amount</td>
