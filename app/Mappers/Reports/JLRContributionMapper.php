@@ -33,6 +33,7 @@ class JLRContributionMapper
             ->join('locations','employees.location_id','=','locations.id')
             ->whereRaw("payrollregister_posted_s.period_id in (select id from payroll_period where month(date_from) = ".$month." and year(date_from) = ".$year.")")
             ->where('employees.emp_level','<',5)
+            ->where('employees.job_title_id','!=',130)
             ->orderBy('employees.location_id','asc')
             ->get();
 
@@ -44,6 +45,7 @@ class JLRContributionMapper
             ->join('locations','employees.location_id','=','locations.id')
             ->whereRaw("payrollregister_posted_s.period_id in (select id from payroll_period where month(date_from) = ".$month." and year(date_from) = ".$year.")")
             ->where('employees.emp_level','=',5)
+            ->where('employees.job_title_id','!=',130)
             ->orderBy('employees.location_id','asc')
             ->get();
 
