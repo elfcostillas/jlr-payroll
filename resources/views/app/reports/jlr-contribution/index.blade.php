@@ -107,9 +107,18 @@
                                     <td> <input type="text" id= "scripts_months2" /></td>
                                     <td> <input type="text" id= "scripts_year2" /></td>
                                     <td> <input type="text" id= "scripts_type2" /></td>
-                                    <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.download_sorted'><i class="fas fa-table"></i> Download (Sorted)</button></td>
-                                    <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.web_2'><i class="fas fa-table"></i> Generate (Web)</button></td>
-                                    <td><button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download_2'><i class="fas fa-table"></i> Download</button></td>
+                                    <td>
+                                        <button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.download_sorted'><i class="fas fa-table"></i> Download - Confi (Sorted)</button>
+                                        <button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.download_sorted_ranknfile'><i class="fas fa-table"></i> Download - Rank and File (Sorted)</button>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.web_2'><i class="fas fa-table"></i> Generate - Confi (Web) </button>
+                                        <button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.web_ranknfile'><i class="fas fa-table"></i> Generate - Rank and File (Web) </button>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download_2'><i class="fas fa-table"></i> Download</button>
+                                        <button type="button" class="btn btn-block btn-success btn-sm" data-bind='click:buttonHandler.download_ranknfile'><i class="fas fa-table"></i> Download</button>
+                                    </td>
                                   
                                 </tr>
                             </table>

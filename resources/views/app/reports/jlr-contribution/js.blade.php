@@ -140,6 +140,17 @@
                         window.open(url);
                     },
 
+                    download_ranknfile : function()
+                    {   
+                        let m = $("#scripts_months2").data("kendoDropDownList").value();
+                        let y = $("#scripts_year2").data("kendoDropDownList").value();
+                        let t = $("#scripts_type2").data("kendoDropDownList").value();
+
+                        let url = `contributions-jlr/generate-excel-type/non-confi/${y}/${m}/${t}`;
+
+                        window.open(url);
+                    },
+
                     web_2 : function()
                     {
                         let m = $("#scripts_months2").data("kendoDropDownList").value();
@@ -150,6 +161,19 @@
 
                         window.open(url);
                     },
+
+                    web_ranknfile : function()
+                    {
+                        let m = $("#scripts_months2").data("kendoDropDownList").value();
+                        let y = $("#scripts_year2").data("kendoDropDownList").value();
+                        let t = $("#scripts_type2").data("kendoDropDownList").value();
+
+                        let url = `contributions-jlr/generate-web-type/non-confi/${y}/${m}/${t}`;
+
+                        window.open(url);
+                    },
+
+                    
                     
                     download_sorted : function()
                     {   
@@ -162,6 +186,20 @@
                         // console.log(url);
                         window.open(url);
                     },
+
+                    download_sorted_ranknfile : function()
+                    {   
+                        let m = $("#scripts_months2").data("kendoDropDownList").value();
+                        let y = $("#scripts_year2").data("kendoDropDownList").value();
+                        let t = $("#scripts_type2").data("kendoDropDownList").value();
+
+                        let url = `contributions-jlr/generate-excel-type-sorted/non-confi/${y}/${m}/${t}`;
+
+                        // console.log(url);
+                        window.open(url);
+                    },
+
+                    
                    
                     // viewYearly : function(e){
                     //     let year = $("#tardy_year").data("kendoDropDownList").value();
