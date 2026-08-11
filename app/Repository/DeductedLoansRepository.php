@@ -42,7 +42,7 @@ class DeductedLoansRepository
         $data->groupByRaw('lastname,firstname,tin_no,phic_no,hdmf_no,sss_no,loan_types.description')
         ->orderBy('lastname','asc')
         ->orderBy('firstname','asc');
-
+        
         return $data->get();
        
     }

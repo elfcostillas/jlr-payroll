@@ -24,13 +24,15 @@
     ];
 
     switch($array['loan_type']) {
-        case 1 ;
-        case 2 ;
+        case 1 :
+        case 2 :
+        case 6 :
             $label_no = 'HDMF No.';
             break;
 
-        case 3 ;
-        case 4 ;
+        case 3 :
+        case 4 :
+        case 5 :
             $label_no = 'SSS No.';
             break;
     }
@@ -89,13 +91,15 @@
                 <td>
                     <?php
                         switch($array['loan_type']) {
-                            case 1 ;
-                            case 2 ;
+                            case 1 :
+                            case 2 :
+                            case 6 :
                                 echo $row->hdmf_no;
                                 break;
 
-                            case 3 ;
-                            case 4 ;
+                            case 3 :
+                            case 4 :
+                            case 5 :
                                 echo $row->sss_no;
                                 break;
                         }
