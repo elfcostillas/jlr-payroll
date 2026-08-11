@@ -73,6 +73,16 @@ class PayrollPeriodMapper extends AbstractMapper {
 		return $result->get();
 	}
 
+	public function currentPayrollPeriod()
+	{
+		$result = $this->model->select(DB::raw("id,date_from,date_to,CONCAT(DATE_FORMAT(date_from,'%m/%d/%Y'),' - ',DATE_FORMAT(date_to,'%m/%d/%Y')) date_label"))
+								->from('payroll_period')
+								->where('inProgress','=','Y')
+								->orderBy('id','DESC')
+								->limit(1);
+		return $result->first();
+	}
+
 
 }
  

@@ -77,6 +77,7 @@ use App\Http\Controllers\Reports\JLRContributionsController;
 use App\Http\Controllers\Reports\PayrollSupportGroupController;
 use App\Http\Controllers\Timekeeping\LeaveCreditsSGController;
 use App\Http\Controllers\Timekeeping\ManageDTRConfiController;
+use App\Http\Controllers\Timekeeping\ManagerDTRSummaryController;
 use App\Http\Controllers\Timekeeping\WeeklyDTRUploaderController;
 
 
@@ -113,6 +114,13 @@ Route::get('php_info', function(){
 
 
 Route::middleware('auth')->prefix('timekeeping')->group(function(){
+
+    Route::prefix('dtr-summary-manage')->middleware('access:timekeeping/dtr-summary-manage')->group(function(){
+        Route::get('/',[ManagerDTRSummaryController::class,'index']);
+        Route::get('employee-list',[ManagerDTRSummaryController::class,'employeeList']);
+        Route::post('update',[ManagerDTRSummaryController::class,'update']);
+    
+    });
 
     Route::prefix('att')->middleware('access:timekeeping/att')->group(function(){
         Route::get('/',[AttController::class,'index']);

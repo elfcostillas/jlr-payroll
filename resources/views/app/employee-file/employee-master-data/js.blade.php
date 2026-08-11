@@ -536,7 +536,7 @@
                         viewModel.form.model.set('retired',(viewModel.form.mirror.retired) ? 'Y':'N');
                         viewModel.form.model.set('date_hired',kendo.toString($('#date_hired').data('kendoDatePicker').value(),'yyyy-MM-dd'));
                         viewModel.form.model.set('exit_date',kendo.toString($('#exit_date').data('kendoDatePicker').value(),'yyyy-MM-dd'));
-                        viewModel.form.model.set('date_regularized',kendo.toString($('#exit_date').data('kendoDatePicker').value(),'yyyy-MM-dd'));
+                        viewModel.form.model.set('date_regularized',kendo.toString($('#date_regularized').data('kendoDatePicker').value(),'yyyy-MM-dd'));
                         viewModel.form.model.set('location_id',($('#location_id').data('kendoDropDownList').value()!='') ? $('#location_id').data('kendoDropDownList').value() : 0 );
                         viewModel.form.model.set('sched_mtwtf',($('#sched_mtwtf').data('kendoDropDownList').value()!='') ? $('#sched_mtwtf').data('kendoDropDownList').value() : null );
                         viewModel.form.model.set('sched_sat',($('#sched_sat').data('kendoDropDownList').value()!='') ? $('#sched_sat').data('kendoDropDownList').value() : null );

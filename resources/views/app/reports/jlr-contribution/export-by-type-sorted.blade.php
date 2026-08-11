@@ -252,9 +252,8 @@
                 @if ($type==1)
                 <td></td>
                 <td>{{ $over_all['sss_ee'] }}</td>
-                <td>{{ $over_all['sss_er'] }}</td>
-              
                 <td>{{ $over_all['sss_wisp'] }}</td>
+                <td>{{ $over_all['sss_er'] }}</td>
                 <td>{{ $over_all['mpf_er'] }}</td>
                 <td>{{ $over_all['emp_total'] }} </td>
                 <td>{{ $over_all['sss_ec'] }}</td>
