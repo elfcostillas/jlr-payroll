@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Mappers\Reports\ManHoursMapper;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Queue\RedisQueue;
 
 class ManHoursController extends Controller
 {
@@ -96,6 +97,24 @@ class ManHoursController extends Controller
         $canvas = $dom_pdf ->get_canvas();
         $canvas->page_text(510, 800, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
        
+        return $pdf->stream('JLR-DTR-Print.pdf'); 
+    }
+
+    function manHoursJLR(Request $request)
+    {
+        $data = $this->mapper->getDataJLR($request->month,$request->year);
+
+        return view('app.reports.man-hours.print-jlr',['data' => $data]);
+
+
+        $pdf = PDF::loadView('app.reports.man-hours.print-jlr',['data' => $data])->setPaper('letter','portrait');
+
+        $pdf->output();
+        $dom_pdf = $pdf->getDomPDF();
+        
+        $canvas = $dom_pdf ->get_canvas();
+        $canvas->page_text(510, 800, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+
         return $pdf->stream('JLR-DTR-Print.pdf'); 
     }
 

@@ -718,6 +718,8 @@ Route::middleware('auth')->prefix('reports')->group(function(){
 
         Route::get('generate-ot/{from}/{to}/{hr1}/{hr2}',[ManHoursController::class,'generateReportOT']);
         Route::get('pdf-ot/{from}/{to}/{hr1}/{hr2}',[ManHoursController::class,'viewPDFOT']);
+
+        Route::get('jlr-employee/{month}/{year}',[ManHoursController::class,'manHoursJLR']);
        
        
     });

@@ -7,6 +7,7 @@ use App\Libraries\Filters;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\Month;
 
 class ManHoursMapper extends AbstractMapper {
 
@@ -14,6 +15,19 @@ class ManHoursMapper extends AbstractMapper {
     protected $rules = [
       
     ];
+
+    protected $db_table = 'payrollregister_posted_s';
+
+
+    public function mainQuery()
+    {
+
+        $result = DB::table('employees')->where('employees.job_title_id', '!=',130);
+
+        $result->join($this->db_table,'employees.biometric_id','=',$this->db_table.'.biometric_id');
+
+        return $result;
+    }
 
     public function getData($from,$to,$filtered,$h1,$h2){
         $qry2 = "select edtr.biometric_id,employee_names_vw.employee_name,sum(ndays* 8) as hrs ,sum(over_time) ot,sum(ndays* 8)  + sum(over_time) as total 
@@ -84,6 +98,109 @@ class ManHoursMapper extends AbstractMapper {
         $result = DB::select($qry);
 
         return $result;
+    }
+
+    public function getDataJLR($month,$year)
+    {
+        // dd($month,$year);
+
+        $periods = DB::table('payroll_period')->select('id')
+            ->whereRaw("MONTH(date_from) = ? ",[$month])
+            ->whereRaw("YEAR(date_from) = ? ",[$year])
+            ->pluck('id');
+
+        $data = $this->getCountsByDiviosionDept($periods);
+
+        return $data;
+
+    }
+
+    public function getCountsByDiviosionDept($periods)
+    {
+      
+        $divisions = $this->mainQuery()
+                ->leftJoin('divisions','divisions.id','=','employees.division_id')
+                ->select('divisions.id','div_code')
+                ->orderBy('divisions.id','ASC')
+                ->groupBy('divisions.id')
+                ->get();
+            
+            foreach($divisions as $division)
+            {
+                $departments = $this->mainQuery()
+                    ->join('departments','employees.dept_id','=','departments.id')
+                    ->where('dept_div_id',$division->id)
+                    ->select(DB::raw("dept_code,
+
+                        SUM(CASE
+                            WHEN period_id = ".$periods[0]." AND  payrollregister_posted_s.emp_level = 'confi'
+                            THEN (ndays * 8) + reg_ot + rd_hrs + rd_ot + leghol_hrs + sphol_hrs_amount
+                            ELSE 0
+                        END) AS man_hours_1sthalf_confi,
+
+                        SUM(CASE
+                            WHEN period_id = ".$periods[0]." AND  payrollregister_posted_s.emp_level = 'non-confi'
+                            THEN (ndays * 8) + reg_ot + rd_hrs + rd_ot + leghol_hrs + sphol_hrs_amount
+                            ELSE 0
+                        END) AS man_hours_1sthalf_rnf,
+
+                       SUM(
+                            CASE
+                                WHEN payrollregister_posted_s.period_id = ".$periods[0]."
+                                AND employees.gender = 'M'
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS male_1sthalf,
+
+                        SUM(
+                            CASE
+                                WHEN payrollregister_posted_s.period_id = ".$periods[0]."
+                                AND employees.gender = 'F'
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS female_1sthalf,
+                         
+                        SUM(CASE
+                            WHEN period_id = ".$periods[1]." AND  payrollregister_posted_s.emp_level = 'confi'
+                            THEN ndays * 8
+                            ELSE 0
+                        END) AS man_hours_2ndthalf_confi,
+
+                        SUM(CASE
+                            WHEN period_id = ".$periods[1]." AND  payrollregister_posted_s.emp_level = 'non-confi'
+                            THEN ndays * 8
+                            ELSE 0
+                        END) AS man_hours_2ndhalf_rnf,
+
+                       SUM(
+                            CASE
+                                WHEN payrollregister_posted_s.period_id = ".$periods[1]."
+                                AND employees.gender = 'M'
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS male_2ndhalf,
+
+                        SUM(
+                            CASE
+                                WHEN payrollregister_posted_s.period_id = ".$periods[1]."
+                                AND employees.gender = 'F'
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS female_2ndhalf
+                    "))
+                    ->whereIn($this->db_table.'.period_id',$periods->all())
+                    ->groupBy('dept_code')
+                    ->get();
+
+
+                $division->departments = $departments;
+            }
+        
+        return $divisions;
     }
 
 }
