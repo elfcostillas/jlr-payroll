@@ -243,9 +243,15 @@ class EmployeeDTR2
         $this->row['sl_wp'] = round($sl->wp/8,2);
         $this->row['sl_wop'] = round($sl->wop/8,2);
 
+        $this->row['brv'] = round($brv->wp/8,2) + round($brv->wop/8,2);
+        $this->row['svl'] = round($svl->wp/8,2) + round($svl->wop/8,2);
+        $this->row['bl'] = round($bl->wp/8,2) + round($bl->wop/8,2);
+
         $this->leaves['brv'] = round($brv->wp/8,2) + round($brv->wop/8,2);
         $this->leaves['svl'] = round($svl->wp/8,2) + round($svl->wop/8,2);
         $this->leaves['bl'] = round($bl->wp/8,2) + round($bl->wop/8,2);
+
+      
        
     }
 

@@ -63,7 +63,8 @@
                                 reghol_pay: { type : 'number' },
                                 reghol_hrs: { type : 'number' },
                                 sphol_pay: { type : 'number' },
-                                sphol_hrs: { type : 'number' }
+                                sphol_hrs: { type : 'number' },
+                                svl : { type : 'number' }
                             }
                         }
                     }
@@ -172,6 +173,12 @@
                     field : "brv",
                     width : 70,
                     template : "#if(brv==0){#  #}else{# #= brv # #}# ",
+                },
+                {
+                    title : "SVL",
+                    field : "svl",
+                    width : 80,
+                    template : "#if(svl==0){#  #}else{# #= svl # #}# ",
                 },
                 {
                     title : "AWOL",

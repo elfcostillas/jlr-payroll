@@ -137,7 +137,8 @@ class UnpostedPayrollRegisterMapper extends AbstractMapper {
                         employees.sched_sat,
                         employees.pay_type,
                         employees.date_hired,
-                        if(employees.date_hired between payroll_period.date_from and payroll_period.date_to,'Y','N') as new_hire
+                        if(employees.date_hired between payroll_period.date_from and payroll_period.date_to,'Y','N') as new_hire,
+                        svl
                         "))
                     ->from('edtr_totals')
                     ->join('payroll_period',function($join){
