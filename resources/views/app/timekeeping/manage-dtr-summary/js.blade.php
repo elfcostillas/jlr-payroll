@@ -64,7 +64,8 @@
                                 reghol_hrs: { type : 'number' },
                                 sphol_pay: { type : 'number' },
                                 sphol_hrs: { type : 'number' },
-                                svl : { type : 'number' }
+                                svl : { type : 'number' },
+                                mpl : { type : 'number' }
                             }
                         }
                     }
@@ -121,21 +122,21 @@
                     width : 115,
                 },
                 {
-                    title : "Late",
+                    title : "Late *",
                     field : "late_eq", 
-                    width : 70,
+                    width : 80,
                     template : "#if(late_eq==0){#  #}else{# #= late_eq # #}# ",
                 },
                 {
-                    title : "UT",
+                    title : "UT *",
                     field : "under_time",
-                    width : 70,
+                    width : 80,
                     template : "#if(under_time==0){#  #}else{# #= under_time # #}# ",
                 },
                 {
-                    title : "OT",
+                    title : "OT *",
                     field : "over_time",
-                    width : 70,
+                    width : 80,
                     template : "#if(over_time==0){#  #}else{# #= over_time # #}# ",  
                 },
                 {
@@ -181,6 +182,12 @@
                     template : "#if(svl==0){#  #}else{# #= svl # #}# ",
                 },
                 {
+                    title : "Mat / Pat Leave",
+                    field : "mpl",
+                    width : 140,
+                    template : "#if(mpl==0){#  #}else{# #= mpl # #}# ",
+                },
+                {
                     title : "AWOL",
                     field : "awol",
                     width : 80,
@@ -193,27 +200,27 @@
                     template : "#if(restday_hrs==0){#  #}else{# #= restday_hrs # #}# ",
                 },
                 {
-                    title : "Reg Hol",
+                    title : "Reg Hol *",
                     field : "reghol_pay",
-                    width : 90,
+                    width : 100,
                     template : "#if(reghol_pay==0){#  #}else{# #= reghol_pay # #}# ",
                 },
                 {
-                    title : "Reg Hol Hrs",
+                    title : "Reg Hol Hrs *",
                     field : "reghol_hrs",
-                    width : 110,
+                    width : 120,
                     template : "#if(reghol_hrs==0){#  #}else{# #= reghol_hrs # #}# ",
                 },
                 {
-                    title : "Sp Hol",
+                    title : "Sp Hol *",
                     field : "sphol_pay",
-                    width : 80,
+                    width : 90,
                     template : "#if(sphol_pay==0){#  #}else{# #= sphol_pay # #}# ",
                 },
                 {
-                    title : "Sp Hol Hrs",
+                    title : "Sp Hol Hrs *",
                     field : "sphol_hrs",
-                    width : 100,
+                    width : 110,
                     template : "#if(sphol_hrs==0){#  #}else{# #= sphol_hrs # #}# ",
                 }
                 

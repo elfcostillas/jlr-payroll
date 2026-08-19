@@ -14,7 +14,7 @@ class ManagerDTRSummaryMapper extends AbstractMapper
 
     public function employeeList($period_id,$filter)
     {
-        $result = $this->model->select(DB::raw("edtr_totals.*,employee_names_vw.employee_name, (ndays+vl_wp+vl_wop+sl_wp+sl_wop+bl+awol+brv+reghol_pay+sphol_pay+dblhol_pay+dblsphol_pay+svl) as total_ndays"))
+        $result = $this->model->select(DB::raw("edtr_totals.*,employee_names_vw.employee_name, (ndays+vl_wp+vl_wop+sl_wp+sl_wop+bl+awol+brv+reghol_pay+sphol_pay+dblhol_pay+dblsphol_pay+svl+mpl) as total_ndays"))
             ->join('employee_names_vw','employee_names_vw.biometric_id','=','edtr_totals.biometric_id')
             ->join('employees','employees.biometric_id','=','employee_names_vw.biometric_id')
             ->where('edtr_totals.period_id','=',$period_id);

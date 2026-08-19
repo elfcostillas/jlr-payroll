@@ -237,6 +237,11 @@ class EmployeeDTR2
 
         $bl = DB::select($bl_qry)[0];
 
+        $mp_qry = "select ifnull(sum(ifnull(with_pay,0)),0) as wp,ifnull(sum(ifnull(without_pay,0)),0) as wop from filed_leaves_vw 
+                inner join payroll_period on leave_date between payroll_period.date_from and payroll_period.date_to 
+                where payroll_period.id = $this->period_id and filed_leaves_vw.biometric_id = $this->biometric_id and leave_type = 'MP';";
+
+        $mp = DB::select($mp_qry)[0];
 
         $this->row['vl_wp'] = round($vl->wp/8,2);
         $this->row['vl_wop'] = round($vl->wop/8,2);
@@ -246,6 +251,8 @@ class EmployeeDTR2
         $this->row['brv'] = round($brv->wp/8,2) + round($brv->wop/8,2);
         $this->row['svl'] = round($svl->wp/8,2) + round($svl->wop/8,2);
         $this->row['bl'] = round($bl->wp/8,2) + round($bl->wop/8,2);
+
+        $this->row['mpl'] = round($mp->wp/8,2) + round($mp->wop/8,2);
 
         $this->leaves['brv'] = round($brv->wp/8,2) + round($brv->wop/8,2);
         $this->leaves['svl'] = round($svl->wp/8,2) + round($svl->wop/8,2);

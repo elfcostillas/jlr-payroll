@@ -272,7 +272,8 @@ class LeaveReportsMapper extends AbstractMapper {
                     ->where('employees.exit_status',1)
                     ->where('employees.pay_type','!=',3)
                     ->where('employees.dept_id','!=',5)
-                    ->where('employees.date_hired','<',$from)
+                    ->where('employees.date_hired','<',$to)
+                    // ->where('employees.date_hired','<',$to)
                     ->whereNotNull('employees.date_hired')
                     ->orderBy('employees.dept_id','asc')
                     ->orderBy('lastname','asc')
@@ -349,6 +350,7 @@ class LeaveReportsMapper extends AbstractMapper {
             and holiday_type is null 
             and employees.exit_status = 1
             and date_hired is not null
+            and date_hired < '".$to->format('Y-m-d')."'
             GROUP BY employees.biometric_id,lastname,firstname
             ORDER BY lastname";
 
@@ -452,6 +454,9 @@ class LeaveReportsMapper extends AbstractMapper {
         and date_hired < '".$to->format('Y-m-d')."'
         and employees.exit_status = 1
         and date_hired is not null";
+
+       echo $qry;
+       die();
 
         $result = DB::select($qry);
 
