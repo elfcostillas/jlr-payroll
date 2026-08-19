@@ -426,7 +426,7 @@ class EmployeeDTR2
                             $log->sphol_pay = 1;
                         }else{
                             
-                            if($log->ndays == 1){
+                            if($log->sphol_hrs == 1){
                                 $log->sphol_pay = 1;
                             }else{
                                 $log->sphol_pay = 0;
