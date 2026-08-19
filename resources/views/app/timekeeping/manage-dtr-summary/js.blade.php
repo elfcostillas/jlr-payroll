@@ -120,6 +120,7 @@
                     title : "Days Worked",
                     field : "ndays",
                     width : 115,
+                    locked : true,
                 },
                 {
                     title : "Late *",
