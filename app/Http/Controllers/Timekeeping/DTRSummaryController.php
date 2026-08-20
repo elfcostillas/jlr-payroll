@@ -37,7 +37,7 @@ class DTRSummaryController extends Controller
     {
         // dd($request->period_id);
         $period_id = $request->period_id;
-        $list = $this->mapper->deleteAndInsert($request->period_id,'non-confi');
+        // $list = $this->mapper->deleteAndInsert($request->period_id,'non-confi');
 
         $employees = $this->mapper->listEmployees($request->period_id,'non-confi');
 
@@ -51,7 +51,7 @@ class DTRSummaryController extends Controller
         // dd($request->period_id);
         $period_id = $request->period_id;
 
-        $list = $this->mapper->deleteAndInsert($request->period_id,'confi');
+        // $list = $this->mapper->deleteAndInsert($request->period_id,'confi');
 
         $employees = $this->mapper->listEmployees($request->period_id,'confi');
 
@@ -109,7 +109,7 @@ class DTRSummaryController extends Controller
     {
         $period_id = $request->period_id;
 
-        $list = $this->mapper->deleteAndInsert($request->period_id,'non-confi');
+        // $list = $this->mapper->deleteAndInsert($request->period_id,'non-confi');
 
         $employees = $this->mapper->listEmployees($request->period_id,'non-confi');
 

@@ -66,9 +66,23 @@
                                 sphol_hrs: { type : 'number' },
                                 svl : { type : 'number' },
                                 mpl : { type : 'number' }
-                            }
+                            },
+                           
                         }
-                    }
+                    },
+                    aggregate :[
+
+                        { field : "over_time" , aggregate: "sum" },
+                        
+                        { field : "awol" , aggregate: "sum" },
+                        { field : "restday_hrs" , aggregate: "sum" },
+
+                        { field : "reghol_pay" , aggregate: "sum" },
+                        { field : "reghol_hrs" , aggregate: "sum" },
+
+                        { field : "sphol_pay" , aggregate: "sum" },
+                        { field : "sphol_hrs" , aggregate: "sum" },
+                    ]
                 })
             }   
         });
@@ -139,6 +153,9 @@
                     field : "over_time",
                     width : 80,
                     template : "#if(over_time==0){#  #}else{# #= over_time # #}# ",  
+                    aggregates : ['sum'], 
+                    footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+                     
                 },
                 {
                     title : "VL /w Pay",
@@ -193,36 +210,42 @@
                     field : "awol",
                     width : 80,
                     template : "#if(awol==0){#  #}else{# #= awol # #}# ",
+                    aggregates : ['sum'], 
                 },
                 {
                     title : "RD Hrs",
                     field : "restday_hrs",
                     width : 80,
                     template : "#if(restday_hrs==0){#  #}else{# #= restday_hrs # #}# ",
+                    aggregates : ['sum'], 
                 },
                 {
                     title : "Reg Hol *",
                     field : "reghol_pay",
                     width : 100,
                     template : "#if(reghol_pay==0){#  #}else{# #= reghol_pay # #}# ",
+                    aggregates : ['sum'], 
                 },
                 {
                     title : "Reg Hol Hrs *",
                     field : "reghol_hrs",
                     width : 120,
                     template : "#if(reghol_hrs==0){#  #}else{# #= reghol_hrs # #}# ",
+                    aggregates : ['sum'], 
                 },
                 {
                     title : "Sp Hol *",
                     field : "sphol_pay",
                     width : 90,
                     template : "#if(sphol_pay==0){#  #}else{# #= sphol_pay # #}# ",
+                    aggregates : ['sum'], 
                 },
                 {
                     title : "Sp Hol Hrs *",
                     field : "sphol_hrs",
                     width : 110,
                     template : "#if(sphol_hrs==0){#  #}else{# #= sphol_hrs # #}# ",
+                    aggregates : ['sum'], 
                 }
                 
 
