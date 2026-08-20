@@ -1071,12 +1071,13 @@ class PayrollRegisterFunctions
         $data = [
             
             //remove for testing 08/05/2026
+            /*
             'Less than 10 Hrs' => 0,
             '10 Hrs' => 0,
             '20 Hrs' => 0,
             '30 Hrs' => 0,
             '40 Hrs' => 0,
-            
+            */
             '50 Hrs' => 0,
             '60 Hrs' => 0,
             '70 Hrs' => 0,
@@ -1091,7 +1092,7 @@ class PayrollRegisterFunctions
 
               /*
             remove for testing 08/05/2026
-               */
+              
             if($employee->reg_ot > 1 && $employee->reg_ot < 10)
             {
                 $data['Less than 10 Hrs'] += 1;
@@ -1117,7 +1118,7 @@ class PayrollRegisterFunctions
             {
                 $data['40 Hrs'] += 1;
             }
-         
+          */
             // if($employee->reg_ot >= 50)
             if($employee->reg_ot >= 50 && $employee->reg_ot < 60)
             {
