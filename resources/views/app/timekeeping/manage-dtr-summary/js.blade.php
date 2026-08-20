@@ -211,6 +211,8 @@
                     width : 80,
                     template : "#if(awol==0){#  #}else{# #= awol # #}# ",
                     aggregates : ['sum'], 
+                    footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+            
                 },
                 {
                     title : "RD Hrs",
@@ -218,6 +220,8 @@
                     width : 80,
                     template : "#if(restday_hrs==0){#  #}else{# #= restday_hrs # #}# ",
                     aggregates : ['sum'], 
+                    footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+            
                 },
                 {
                     title : "Reg Hol *",
@@ -225,6 +229,8 @@
                     width : 100,
                     template : "#if(reghol_pay==0){#  #}else{# #= reghol_pay # #}# ",
                     aggregates : ['sum'], 
+                    footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+               
                 },
                 {
                     title : "Reg Hol Hrs *",
@@ -232,6 +238,8 @@
                     width : 120,
                     template : "#if(reghol_hrs==0){#  #}else{# #= reghol_hrs # #}# ",
                     aggregates : ['sum'], 
+                    footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+               
                 },
                 {
                     title : "Sp Hol *",
@@ -239,6 +247,8 @@
                     width : 90,
                     template : "#if(sphol_pay==0){#  #}else{# #= sphol_pay # #}# ",
                     aggregates : ['sum'], 
+                    footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+               
                 },
                 {
                     title : "Sp Hol Hrs *",
@@ -246,6 +256,8 @@
                     width : 110,
                     template : "#if(sphol_hrs==0){#  #}else{# #= sphol_hrs # #}# ",
                     aggregates : ['sum'], 
+                    footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+               
                 }
                 
 
