@@ -40,7 +40,7 @@
         }
 
         table tr > td {
-            padding : 0px 2px;
+            padding : 0px 1px;
             /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
             font-family:Verdana, Geneva, Tahoma, sans-serif;
         }
