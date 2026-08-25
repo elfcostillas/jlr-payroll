@@ -39,14 +39,16 @@
             <td style="text-align:center;width:80px;">Amount</td>
         </tr>
         @foreach($details as $detail)
-        <tr>
-            <td style="padding: 2px 5px;text-align:right;">{{ $loop->iteration }}</td>
-            <td style="padding: 2px 5px;text-align:left;">{{ $detail->employee_name }}</td>
-            <td style="padding: 2px 5px;text-align:right;">{{ ($detail->bpn > 0 ? number_format($detail->bpn,2) : '') }}</td>
-            <td style="padding: 2px 5px;text-align:right;">{{ ($detail->bps > 0 ? number_format($detail->bps,2) : '') }}</td>
-            <td style="padding: 2px 5px;text-align:right;">{{ ($detail->qad > 0 ? number_format($detail->qad,2) : '') }}</td>
-            <td style="padding: 2px 5px;text-align:right;">{{ ($detail->amount > 0 ? number_format($detail->amount,2) : '') }}</td>
-        </tr>
+        @if($detail->amount > 0)
+            <tr>
+                <td style="padding: 2px 5px;text-align:right;">{{ $loop->iteration }}</td>
+                <td style="padding: 2px 5px;text-align:left;">{{ $detail->employee_name }}</td>
+                <td style="padding: 2px 5px;text-align:right;">{{ ($detail->bpn > 0 ? number_format($detail->bpn,2) : '') }}</td>
+                <td style="padding: 2px 5px;text-align:right;">{{ ($detail->bps > 0 ? number_format($detail->bps,2) : '') }}</td>
+                <td style="padding: 2px 5px;text-align:right;">{{ ($detail->qad > 0 ? number_format($detail->qad,2) : '') }}</td>
+                <td style="padding: 2px 5px;text-align:right;">{{ ($detail->amount > 0 ? number_format($detail->amount,2) : '') }}</td>
+            </tr>
+        @endif
         @endforeach
         <tr>
             <td colspan="2" style="font-weight: bold; padding: 2px 5px;text-align:right;">TOTAL</td>

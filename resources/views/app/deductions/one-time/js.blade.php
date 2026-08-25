@@ -186,6 +186,7 @@
                                     bps: { type : 'number' },
                                     bpn: { type : 'number' },
                                     qad: { type : 'number' },
+                                    status_desc: { type : 'string' },
                                     // date_release: { type : 'date' },
                                     // man_hours: { type : 'number' },
                                 }
@@ -515,6 +516,12 @@
                             
                             },
                             columns : [
+                                
+                                {
+                                    title : "Status",
+                                    field : "status_desc",
+                                    width : 100,    
+                                },
                                 {
                                     title : "ID",
                                     field : "",

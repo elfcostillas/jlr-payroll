@@ -19,9 +19,10 @@ class FixedCompensationDetailMapper extends AbstractMapper {
         //SELECT * FROM job_titles WHERE ;
         $driver = $this->model->select('id')->from('job_titles')->whereRaw("job_title_name LIKE '%Driver%'")->orWhereRaw("job_title_name LIKE '%Operator%'");
        
-        $result = $this->model->select(DB::raw("employee_names_vw.*,compensation_fixed_details.line_id,IFNULL(compensation_fixed_details.total_amount,0.00) AS total_amount,header_id"))
+        $result = $this->model->select(DB::raw("status_desc,employee_names_vw.*,compensation_fixed_details.line_id,IFNULL(compensation_fixed_details.total_amount,0.00) AS total_amount,header_id"))
         ->from('employee_names_vw')
         ->join('employees','employees.biometric_id','=','employee_names_vw.biometric_id')
+        ->join('emp_exit_status','employees.exit_status','=','emp_exit_statu.id')
         ->leftJoin('compensation_fixed_details','employee_names_vw.biometric_id','=','compensation_fixed_details.biometric_id')
         //->where('job_title_id',26)
         ->whereIn('job_title_id',$driver->pluck('id'))

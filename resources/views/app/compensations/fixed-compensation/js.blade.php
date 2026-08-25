@@ -412,6 +412,13 @@
                                     width : 90,    
                                 },
                                 {
+                                    title : "Exit Status",
+                                    field : "status_desc",
+                                    // editor : employeeEditor,
+                                    template : "#if(biometric_id==0){#  #}else {# #= status_desc #  #}#"
+                                },
+                                
+                                {
                                     title : "Employee",
                                     field : "employee_name",
                                     editor : employeeEditor,
@@ -463,6 +470,13 @@
                                     //template : "#= biometric_id #",
                                     template : "#if(biometric_id==null){# # }else{ # #= biometric_id # # }#",
                                     width : 90,    
+                                },
+                                {
+                                    title : "Exit Status",
+                                    field : "status_desc",
+                                    // editor : employeeEditor,
+                                    template : "#if(biometric_id==0){#  #}else {# #= status_desc #  #}#",
+                                    width : 110,    
                                 },
                                 {
                                     title : "Employee",

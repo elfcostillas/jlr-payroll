@@ -37,7 +37,7 @@ class OneTimeDeductionDetailMapper extends AbstractMapper {
         //             ->orderBy('lastname')
         //             ->orderBy('firstname');
 
-        $result = $this->model->select(DB::raw("employee_names_vw.biometric_id,employee_name as empname,location_name,header_id,ifnull(amount,0.00) as amount,line_id,deduction_onetime_details.remarks,bpn,qad,bps"))
+        $result = $this->model->select(DB::raw("status_desc,employee_names_vw.biometric_id,employee_name as empname,location_name,header_id,ifnull(amount,0.00) as amount,line_id,deduction_onetime_details.remarks,bpn,qad,bps"))
         ->from('employee_names_vw')
         ->join('employees','employee_names_vw.biometric_id','=','employees.biometric_id')
         ->leftJoin('locations','employees.location_id','=','locations.id')
@@ -46,6 +46,7 @@ class OneTimeDeductionDetailMapper extends AbstractMapper {
             $join->on('employees.biometric_id',"=","deduction_onetime_details.biometric_id");
             $join->where("header_id","=",$header_id);
         })
+        ->join('emp_exit_status','employees.exit_status','=','emp_exit_status.id')
         ->where('employee_names_vw.exit_status',1)
         // ->where('pay_type',[1,2])
         ->where('header_id',$header_id)
@@ -53,6 +54,7 @@ class OneTimeDeductionDetailMapper extends AbstractMapper {
             $query->whereNull('header_id');
             $query->where('employee_names_vw.exit_status',1);
         })
+        ->where('employees.exit_status','=',1)
         ->whereIn('pay_type',[1,2])
         ->orderByRaw('trim(employees.lastname) ASC')
         ->orderByRaw('trim(employees.firstname) ASC');

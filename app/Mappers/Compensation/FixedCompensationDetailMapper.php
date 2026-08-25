@@ -29,15 +29,25 @@ class FixedCompensationDetailMapper extends AbstractMapper {
 
         // return $result->get();
 
-        $result = $this->model->select(DB::raw("employee_names_vw.*,compensation_fixed_details.line_id,IFNULL(compensation_fixed_details.total_amount,0.00) AS total_amount,header_id,total_trips"))
+        // $result = $this->model->select(DB::raw("employee_names_vw.*,compensation_fixed_details.line_id,IFNULL(compensation_fixed_details.total_amount,0.00) AS total_amount,header_id,total_trips"))
+        // ->from('employee_names_vw')
+        // ->join('employees','employees.biometric_id','=','employee_names_vw.biometric_id')
+        // ->leftJoin('compensation_fixed_details','employee_names_vw.biometric_id','=','compensation_fixed_details.biometric_id')
+        // //->where('job_title_id',26)
+        // ->where('header_id',$id)
+        // ->whereIn('job_title_id',$driver->pluck('id'))
+        // ->orderBy('employees.lastname','ASC')
+        // ->orderBy('employees.firstname','ASC');
+
+        $result = $this->model->select(DB::raw("status_desc,employee_names_vw.*,compensation_fixed_details.line_id,IFNULL(compensation_fixed_details.total_amount,0.00) AS total_amount,header_id"))
         ->from('employee_names_vw')
         ->join('employees','employees.biometric_id','=','employee_names_vw.biometric_id')
+        ->join('emp_exit_status','employees.exit_status','=','emp_exit_status.id')
         ->leftJoin('compensation_fixed_details','employee_names_vw.biometric_id','=','compensation_fixed_details.biometric_id')
         //->where('job_title_id',26)
-        ->where('header_id',$id)
         ->whereIn('job_title_id',$driver->pluck('id'))
-        ->orderBy('employees.lastname','ASC')
-        ->orderBy('employees.firstname','ASC');
+        ->where('employees.exit_status','=',1)
+        ->where('header_id',$id);
 
         return $result->get();
     
