@@ -16,8 +16,8 @@ class EmployeeWeeklyMapper extends AbstractMapper {
     protected $rules = [
 		'firstname' => 'required|sometimes',
 		'lastname' => 'required|sometimes',
-		'middlename' => 'required|sometimes',
-		'suffixname' => 'required|sometimes',
+		// 'middlename' => 'required|sometimes',
+		// 'suffixname' => 'required|sometimes',
 		'biometric_id' => 'required|sometimes|unique:employees',
 		'bank_acct' => 'required|sometimes|unique:employees',
 
