@@ -327,6 +327,48 @@
             });
 
 
+            $("#location_id_c").kendoDropDownList({
+                dataTextField: "location_name",
+                dataValueField: "id",
+                dataSource: viewModel.ds.location_w,
+                index: 0,
+                optionLabel: {
+                    location_name: "ALL",
+                    id: "0"
+                }
+                //change: onChange
+            });
+
+            $("#division_id_c").kendoDropDownList({
+                dataTextField: "div_name",
+                dataValueField: "id",
+                dataSource: viewModel.ds.division,
+                //index: 1,
+                change: function(e){
+                    let selected = e.sender.dataItem();
+                    let deptUrl = `../employee-files/divisions-departments/department/list-option/${selected.id}`;
+                    viewModel.ds.department.transport.options.read.url = deptUrl;
+                    viewModel.ds.department.read();
+                },
+                optionLabel: {
+                    div_name: "ALL",
+                    id: "0"
+                }
+            });
+
+            $("#dept_id_c").kendoDropDownList({
+                dataTextField: "dept_name",
+                dataValueField: "id",
+                dataSource: viewModel.ds.department,
+                index: 0,
+                //change: onChange
+                optionLabel: {
+                    dept_name: "ALL",
+                    id: "0"
+                }
+            });
+
+
             function process()
             {
                 let loc =  $("#location_id").data("kendoDropDownList").value();

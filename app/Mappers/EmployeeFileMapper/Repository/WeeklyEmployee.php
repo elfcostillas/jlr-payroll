@@ -464,7 +464,7 @@ class WeeklyEmployee
                 // $this->payreg['retro_pay'] = $other_earn['retro_pay'];
                 // $this->payreg['earnings'] = $other_earn['earnings'] ;
                
-                $this->payreg['gross_total'] += $other_earn['earnings'] + $other_earn['retro_pay'];
+                $this->payreg['gross_total'] += $other_earn['earnings'] + $other_earn['retro_pay'] +  $other_earn['retro_pay_nbp'] ;
               
                 $this->payreg['total_deduction'] +=  $other_earn['deductions'] + $other_earn['canteen']   + $other_earn['cash_advance']   + $other_earn['office_account'];
             }

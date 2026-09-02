@@ -152,7 +152,8 @@
                             @php $colspan++; @endphp
                         @endforeach
                         <th style="padding : 0px 4px;min-width:110px;" >Other Earnings</th>
-                        <th style="padding : 0px 4px;min-width:110px;" >Retro Pay</th>
+                        <th style="padding : 0px 4px;min-width:110px;" >Retro Pay (BP)</th>
+                         <th style="padding : 0px 4px;min-width:110px;" >Retro Pay</th>
                         <th style="padding : 0px 4px;min-width:110px;" >Gross Pay</th>
                         @foreach ($deductions_label as $deduction)
                             <th style="text-align:right;"> {{ $deduction->description }} </th>
@@ -209,6 +210,7 @@
                                     @endforeach
                                         <td style="text-align:right;"> {{ ($employee->otherEarnings['earnings']>0) ? number_format($employee->otherEarnings['earnings'],2) : ''; }}</td>
                                         <td style="text-align:right;"> {{ ($employee->otherEarnings['retro_pay']>0) ? number_format($employee->otherEarnings['retro_pay'],2) : ''; }}</td>
+                                        <td style="text-align:right;"> {{ ($employee->otherEarnings['retro_pay_nbp']>0) ? number_format($employee->otherEarnings['retro_pay_nbp'],2) : ''; }}</td>
                                 
                                         <td style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($employee->gross_total > 0) ? number_format($employee->gross_total,2) : '' }}</td>
                                         <!-- Deduction Installment-->

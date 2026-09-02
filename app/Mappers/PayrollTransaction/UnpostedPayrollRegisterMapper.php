@@ -1327,6 +1327,7 @@ WHERE period_id = 1 AND total_amount > 0;*/
         INNER JOIN employees ON employees.location_id = holiday_location.location_id
         INNER JOIN holiday_types ON holiday_types.id = holiday_type
         WHERE payroll_period.id = $period_id
+        AND DAYNAME(holiday_date) != 'Sunday'
         AND biometric_id = $biometric_id";
 
         $result = DB::select($qry);

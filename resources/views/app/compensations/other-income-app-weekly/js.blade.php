@@ -100,6 +100,7 @@
                                     retro_pay : { type: 'number', },
                                     canteen : { type: 'number', },
                                     remarks : { type: 'string', },
+                                    retro_pay_nbp : { type: 'number', },
                                 }
                             }
                         }
@@ -211,7 +212,7 @@
                     {
                         title : "Name",
                         field : "employee_name",
-                        
+                        width : 220,
                     },
                     {
                         title : "Earnings",
@@ -223,14 +224,25 @@
                         template : "# if(earnings==0){#  #} else{# #= kendo.toString(earnings,'n2') #  #}#",
                     },
                     {
-                        title : "Retro Pay",
+                        title : "Retro Pay (Basic Pay)",
                         field : "retro_pay",
-                        width : 130,
+                        width : 180,
                         attributes : {
                             style : "text-align:right"
                         },
                         template : "# if(retro_pay==0){#  #} else{# #= kendo.toString(retro_pay,'n2') #  #}#",
                     },
+                    {
+                        title : "Retro Pay",
+                        field : "retro_pay_nbp",
+                        width : 130,
+                        attributes : {
+                            style : "text-align:right"
+                        },
+                        template : "# if(retro_pay_nbp==0){#  #} else{# #= kendo.toString(retro_pay_nbp,'n2') #  #}#",
+                    },
+
+                    
                     // {
                     //     title : "Deduction",
                     //     field : "deductions",
@@ -252,7 +264,7 @@
                     {
                         title : "Remarks",
                         field : "remarks",
-                        width : 220,
+                       
                         attributes : {
                             // style : "text-align:right"
                         },

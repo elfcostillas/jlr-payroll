@@ -58,7 +58,7 @@
     
 </style>
 @section('title')
-    <h4> Reports<h4>
+    <h4> Employee List<h4>
 @endsection
 @section('content')
     <div class="container">
@@ -66,7 +66,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card card-secondary">
-                        <div class="card-header"> Employee Records </div>
+                        <div class="card-header"> (JLR) Employee Records  - All Columns </div>
                         <div class="card-body"> 
                             <table class="formTable" border=0 style="width:100%">
                                 <tr>
@@ -95,7 +95,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card card-secondary">
-                        <div class="card-header"> Quick Reports </div>
+                        <div class="card-header"> Support Group List </div>
                         <div class="card-body"> 
                             <table class="formTable" border=0 style="width:100%">
                                 <tr>
@@ -124,8 +124,29 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card card-secondary">
-                        <div class="card-header"> Employee List </div>
+                        <div class="card-header"> Employee Records - Custom Columns</div>
                         <div class="card-body"> 
+                            <table class="formTable" border=0 style="width:100%">
+                                <tr>
+                                    <td colspan=1>Location</td>
+                                    <td colspan=1>Division</td>
+                                    <td colspan=1>Department</td>
+                                    <td colspan=1>Employee Level</td>
+                                    <td colspan=1>Pay Type</td>
+                                    <td colspan=1>Exit Status</td>
+                                </tr>
+                                <tr>
+                                    <td colspan=1><input type="text" id="location_id_c" ></td>
+                                    <td colspan=1><input type="text" id="division_id_c" ></td>
+                                    <td colspan=1><input type="text" id="dept_id_c" ></td>
+                                    <td colspan=1><input type="text" id="employee_level_c" ></td>
+                                    <td colspan=1><input type="text" id="pay_type_c" ></td>
+                                    <td colspan=1><input type="text" id="exit_status_c" ></td>
+                            
+                                    
+                                </tr>
+                              
+                            </table>
                             <div style="height : 12rem;" >
                                 @foreach($headers as $header)
                                     <span style="float:left;margin:4px;width :200px;display:block;"> <input type="checkbox" class="include_header" data-bind="checked:included" style="margin-right : 8px;" value="{{ $header->id }}" name="" id=""> {{ $header->header_label }}  </span>
