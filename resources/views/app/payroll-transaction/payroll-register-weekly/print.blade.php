@@ -12,7 +12,7 @@
         .pr4 {
             text-align : right;
             padding-right : 4px;
-            width: 41px; /* 52 34*/
+            width: 40px; /* 52 34*/
         }
 
         .pr3 {
@@ -75,6 +75,7 @@
         $total_ctr = 0;
 
         $starting_count = ($period->cut_off == 1) ? 16 : 17 ;
+        // $starting_count = ($period->cut_off == 1) ? 15 : 16 ;
 
         if($sil_flag->vl_wpay >0){
             $starting_count += 2;
@@ -265,7 +266,7 @@
                         @endforeach
                         <th >Other Earnings</th>
                         <th >Retro Pay (BP)</th>
-                        <th >Retro Pay</th>
+                        <!-- <th >Retro Pay</th> -->
                         <th> Gross Pay</th>
                         @foreach ($deductions_label as $deduction)
                             <?php 
@@ -732,7 +733,7 @@
                         @endforeach
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['earnings']>0) ? number_format($employee->otherEarnings['earnings'],2) : ''; }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['retro_pay']>0) ? number_format($employee->otherEarnings['retro_pay'],2) : ''; }}</td>
-                        <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['retro_pay_nbp']>0) ? number_format($employee->otherEarnings['retro_pay_nbp'],2) : ''; }}</td>
+                        <!--<td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['retro_pay_nbp']>0) ? number_format($employee->otherEarnings['retro_pay_nbp'],2) : ''; }}</td> -->
 
                         <td class="pr4"  style="text-align:right;font-weight:bold;background-color:{{$fourfive}};">{{ ($employee->gross_total > 0) ? number_format($employee->gross_total,2) : '' }}</td>
                         <!-- Installments -->
@@ -836,7 +837,7 @@
                     
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_other_earning > 0) ? number_format($location_other_earning,2) : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_retro_pay > 0) ? number_format($location_retro_pay,2) : '' }}</td>
-                    <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_retro_pay_nbp > 0) ? number_format($location_retro_pay_nbp,2) : '' }}</td>
+                    <!-- <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_retro_pay_nbp > 0) ? number_format($location_retro_pay_nbp,2) : '' }}</td> -->
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_total > 0) ? number_format($location_total,2) : '' }}</td>
                         @foreach ($deductions_label as $deduction)
                         <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;"> {{  number_format($location_deductions[$location->id][$deduction->id],2) }}</td>
@@ -918,7 +919,7 @@
             @endforeach
             <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_other_earning,2) }}</td>
             <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_retro_pay,2) }}</td></td> 
-            <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_retro_pay_nbp,2) }}</td></td> 
+            <!-- <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_retro_pay_nbp,2) }}</td></td>  -->
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ number_format($over_all_gross_total,2) }}</td>
 
             @foreach ($deductions_label as $deduction)
