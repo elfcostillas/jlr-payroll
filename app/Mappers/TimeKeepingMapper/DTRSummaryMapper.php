@@ -154,7 +154,7 @@ class DTRSummaryMapper extends AbstractMapper {
         // and employees.emp_level < 5
         // and employees.biometric_id != 0;";
         
-        $query = "SELECT DISTINCT employees.biometric_id FROM employees WHERE exit_status = 1 AND emp_level < 5";
+        $query = "SELECT DISTINCT employees.biometric_id FROM employees WHERE exit_status = 1 AND emp_level < 5;  ";
 
 
                     // and employees.biometric_id = 830";
@@ -166,7 +166,7 @@ class DTRSummaryMapper extends AbstractMapper {
 
     public function employeesToProcessRankAndFile($period_id)
     {   
-        $query = "SELECT DISTINCT employees.biometric_id FROM employees WHERE exit_status = 1 AND emp_level = 5 and biometric_id = 512  ";
+        $query = "SELECT DISTINCT employees.biometric_id FROM employees WHERE exit_status = 1 AND emp_level = 5; ";
                     // and employees.biometric_id = 830";
     
         $ids = DB::select(DB::raw($query));

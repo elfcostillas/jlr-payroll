@@ -272,7 +272,7 @@ class EmployeeDTR2
         $query = "select holiday_date from holidays inner join holiday_location on holidays.id = holiday_location.holiday_id
                 inner join payroll_period on holidays.holiday_date between payroll_period.date_from and payroll_period.date_to
                 left join employees on employees.location_id = holiday_location.location_id
-                where payroll_period.id = {$this->period_id} and employees.biometric_id = {$this->biometric_id} and holidays.holiday_type = 1";
+                where payroll_period.id = {$this->period_id} and dayname(holiday_date) != 'Sunday' and employees.biometric_id = {$this->biometric_id} and holidays.holiday_type = 1";
         
         
         $result = DB::select(DB::raw($query));
@@ -292,7 +292,7 @@ class EmployeeDTR2
         $query = "select holiday_date from holidays inner join holiday_location on holidays.id = holiday_location.holiday_id
                 inner join payroll_period on holidays.holiday_date between payroll_period.date_from and payroll_period.date_to
                 left join employees on employees.location_id = holiday_location.location_id
-                where payroll_period.id = {$this->period_id} and employees.biometric_id = {$this->biometric_id} and holidays.holiday_type = 2";
+                where payroll_period.id = {$this->period_id} and dayname(holiday_date) != 'Sunday' and employees.biometric_id = {$this->biometric_id} and holidays.holiday_type = 2";
     
         // return DB::select(DB::raw($query));
         $result = DB::select(DB::raw($query));
