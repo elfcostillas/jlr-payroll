@@ -33,6 +33,7 @@ class EmployeeDTR2
         $this->compute_ot();
 
         $holidays = $this->getLegalHolidays();
+        
         $sp_holidays = $this->getSpecialHolidays();
 
         $this->compute_ndays($holidays,$sp_holidays);
@@ -322,9 +323,11 @@ class EmployeeDTR2
                 // echo '['.$holiday->format('m/d/Y').']';
                 //  if(($holiday->format('D')!='Sun') || (!in_array($holiday->format('D'), ['Sun','Sat'])) ){
                 if(($holiday->format('D')!='Sun')){ 
-                   
+                    
                     if($holiday->format('D')=='Sat'){
+                      
                         if($this->details->sched_sat && $this->details->alternate_sat=='N'){
+                           
                             $date = DB::table('holidays')
                             ->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
                             ->select()
@@ -337,11 +340,14 @@ class EmployeeDTR2
                                 ->first();
 
                             if($date->count()<1){ // means it is not a holiday
+                               
                                 $flag = false;
+                               
                                 if($worked->ndays>0){
                                     $isEntitled = true;
                                 }
                             } else {
+                                
                                 if($worked->ndays>0){
                                     $isEntitled = true;
                                 }
@@ -350,6 +356,7 @@ class EmployeeDTR2
                         }
 
                     }else{
+                         
                         $date = DB::table('holidays')
                         ->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
                         ->select()
@@ -392,14 +399,13 @@ class EmployeeDTR2
             }
            
         }while($flag);
-
-        
       
         return $isEntitled;
     }
 
     public function grantHoliday($logs)
     {
+      
         foreach($logs as $log)
         {
             $entitled = false;
@@ -409,6 +415,7 @@ class EmployeeDTR2
                 $entitled = true;
             }else{
                 $entitled = $this->checkLastWorkingDay($log->dtr_date);
+               
             }
 
             // if($entitled){ echo $log->dtr_date.'=grant'; }else{ echo $log->dtr_date.'=dont grant'; }
@@ -441,6 +448,23 @@ class EmployeeDTR2
 
                 DB::table('edtr_detailed')->where('id', $log->id)->update($data);
                     
+            }else {
+                
+                switch($log->holiday_type) {
+                    case 1 :
+                            $log->reghol_pay = 0;
+                        break;
+                    
+                    case 2 :
+                        $log->sphol_pay = 0;
+                        break;
+                }
+
+                $data = (array) $log;
+
+                unset($data['holiday_type']);
+
+                DB::table('edtr_detailed')->where('id', $log->id)->update($data);
             }
           
         }
