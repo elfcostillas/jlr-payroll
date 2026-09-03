@@ -318,14 +318,12 @@ class EmployeeDTR2
        
         do {
             $holiday->subDay();
-                
-
                 // echo '['.$holiday->format('m/d/Y').']';
                 //  if(($holiday->format('D')!='Sun') || (!in_array($holiday->format('D'), ['Sun','Sat'])) ){
                 if(($holiday->format('D')!='Sun')){ 
                     
                     if($holiday->format('D')=='Sat'){
-                      
+                       
                         if($this->details->sched_sat && $this->details->alternate_sat=='N'){
                            
                             $date = DB::table('holidays')
@@ -339,16 +337,21 @@ class EmployeeDTR2
                                 ->where('dtr_date','=',$holiday->format('Y-m-d'))
                                 ->first();
 
+                            $leaves = DB::table('filed_leaves_vw')->where('biometric_id','=',$this->biometric_id)
+                                ->select('with_pay')
+                                ->where('leave_date','=',$holiday->format('Y-m-d'))
+                                ->first();
+
                             if($date->count()<1){ // means it is not a holiday
                                
                                 $flag = false;
                                
-                                if($worked->ndays>0){
+                                if($worked->ndays>0 || $leaves->with_pay>0){
                                     $isEntitled = true;
                                 }
                             } else {
                                 
-                                if($worked->ndays>0){
+                                if($worked->ndays>0 || $leaves->with_pay>0){
                                     $isEntitled = true;
                                 }
                             }
@@ -449,7 +452,7 @@ class EmployeeDTR2
                 DB::table('edtr_detailed')->where('id', $log->id)->update($data);
                     
             }else {
-                
+              
                 switch($log->holiday_type) {
                     case 1 :
                             $log->reghol_pay = 0;
