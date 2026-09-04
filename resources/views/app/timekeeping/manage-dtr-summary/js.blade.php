@@ -137,7 +137,13 @@
                     locked : true,
                 },
                 {
-                    title : "Late *",
+                    title : "Late*",
+                    field : "late", 
+                    width : 80,
+                    template : "#if(late==0){#  #}else{# #= late # #}# ",
+                },
+                {
+                    title : "Late ~*",
                     field : "late_eq", 
                     width : 80,
                     template : "#if(late_eq==0){#  #}else{# #= late_eq # #}# ",
