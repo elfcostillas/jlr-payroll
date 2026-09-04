@@ -81,9 +81,10 @@
                             // }
                         },
                         batch : true,
-                        pageSize :14,
+                        pageSize :999,
                         serverPaging : true,
                         serverFiltering : true,
+                        aggregate: [ { field: "amount", aggregate: "sum" },],
                         schema : {
                             data : "data",
                             total : "total",
@@ -230,7 +231,8 @@
                         width : 110,
                         attributes : {
                             style : 'text-align:right'
-                        }
+                        },
+                        footerTemplate: "<div style='text-align:right;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
 
                     },
                     {
