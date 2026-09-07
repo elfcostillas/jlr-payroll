@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Timekeeping;
 
 use App\Http\Controllers\Controller;
+use App\Mappers\TimeKeepingMapper\DTRSummaryMapper;
 use App\Mappers\TimeKeepingMapper\PayrollPeriodMapper;
 use Illuminate\Http\Request;
 
@@ -12,11 +13,13 @@ class ManagerDTRSummaryController extends Controller
 {
     public $period_obj;
     public $mapper;
+    public $dtrSummaryMapper;
 
-    public function __construct(PayrollPeriodMapper $period,ManagerDTRSummaryMapper $mapper)
+    public function __construct(PayrollPeriodMapper $period,ManagerDTRSummaryMapper $mapper, DTRSummaryMapper $dtrSummaryMapper)
     {
         $this->period_obj = $period->currentPayrollPeriod();
         $this->mapper = $mapper;
+        $this->dtrSummaryMapper = $dtrSummaryMapper;
         // $this->middleware('auth');
     }
 
@@ -54,5 +57,19 @@ class ManagerDTRSummaryController extends Controller
             $result = $this->mapper->updateValid($line);
         }
         return response()->json(true);
+    }
+
+    public function recomputeDTR(Request $request)
+    {
+        // dd($request->biometric_id,$request->period_id);
+        $ids = [];
+
+        $ids = $this->dtrSummaryMapper->employeesToProcessUni($request->biometric_id,$request->period_id);
+      
+        $ctr = $this->dtrSummaryMapper->processConfiIDSV2($ids,$request->period_id);
+
+        // $result = $this->dtrSummaryMapper->processConfiIDSV2($ids,$request->period_id);
+        // return response()->json($result);
+
     }
 }

@@ -84,7 +84,27 @@
                         { field : "sphol_hrs" , aggregate: "sum" },
                     ]
                 })
-            }   
+            }  ,
+            buttonHandler : {
+                recomputeDTR : function(e){
+                    e.preventDefault();
+                    var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                    // console.log(dataItem.biometric_id,dataItem);
+                    let letUrl = `dtr-summary-manage/recompute-dtr`;
+                    $.post(letUrl,{ 
+                            biometric_id : dataItem.biometric_id,
+                            period_id :dataItem.period_id 
+                        },function(data,status){
+
+                            if(status=='error'){
+                                swal_error(data);
+                            }else {
+                                swal_success(data);
+                                viewModel.ds.maingrid.read();
+                            }
+                    });
+                }
+            }
         });
 
         $("#maingrid").kendoGrid({ 
@@ -112,6 +132,12 @@
             ],
             editable : true,
             columns : [
+                {
+                    command: { text : 'Compute',icon : 'refresh' ,click : viewModel.buttonHandler.recomputeDTR },
+                    attributes : { style : 'font-size:10pt !important;'},
+                    width : 100,
+                    locked : true,
+                },
                 {
                     title : "Bio ID",
                     field : "biometric_id",

@@ -103,6 +103,10 @@ class EmployeeDTR2
             // dd($key,$value);
             if($key == 'awol'){
                 $this->row[$key] = round($value/8,2);
+            }elseif($key == 'under_time'){
+                $this->row[$key] = round($value/60,2);
+            }elseif($key == 'late_eq'){
+                $this->row[$key] = round($this->row['late']/60,2);
             }else{
                 $this->row[$key] = $value;
             }
@@ -320,78 +324,52 @@ class EmployeeDTR2
             $holiday->subDay();
                 // echo '['.$holiday->format('m/d/Y').']';
                 //  if(($holiday->format('D')!='Sun') || (!in_array($holiday->format('D'), ['Sun','Sat'])) ){
-                if(($holiday->format('D')!='Sun')){ 
-                    
-                    if($holiday->format('D')=='Sat'){
-                       
-                        if($this->details->sched_sat && $this->details->alternate_sat=='N'){
-                           
-                            $date = DB::table('holidays')
-                            ->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
-                            ->select()
-                            ->where('holidays.holiday_date','=',$holiday->format('Y-m-d'))
-                            ->where('holiday_location.location_id','=',$this->details->location_id);
-    
-                            $worked = DB::table('edtr_detailed')->select('ndays')
-                                ->where('biometric_id','=',$this->biometric_id)
-                                ->where('dtr_date','=',$holiday->format('Y-m-d'))
-                                ->first();
 
-                            $leaves = DB::table('filed_leaves_vw')->where('biometric_id','=',$this->biometric_id)
-                                ->select('with_pay')
-                                ->where('leave_date','=',$holiday->format('Y-m-d'))
-                                ->first();
+            $worked = DB::table('edtr_detailed')->select('schedule_id','ndays')
+                ->where('biometric_id','=',$this->biometric_id)
+                ->where('dtr_date','=',$holiday->format('Y-m-d'))
+                ->first();
 
-                            if($date->count()<1){ // means it is not a holiday
-                               
-                                $flag = false;
-                               
-                                if($worked->ndays>0 || $leaves->with_pay>0){
-                                    $isEntitled = true;
-                                }
-                            } else {
-                                
-                                if($worked->ndays>0 || $leaves->with_pay>0){
-                                    $isEntitled = true;
-                                }
-                            }
-                            
+            if($worked->schedule_id  == null || $worked->schedule_id == 0){
+                continue;
+            }else{
+
+                $date = DB::table('holidays')
+                    ->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
+                    ->select()
+                    ->where('holidays.holiday_date','=',$holiday->format('Y-m-d'))
+                    ->where('holiday_location.location_id','=',$this->details->location_id);
+
+                $leaves = DB::table('filed_leaves_vw')->where('biometric_id','=',$this->biometric_id)
+                    ->select('with_pay')
+                    ->where('leave_date','=',$holiday->format('Y-m-d'))
+                    ->first();
+
+                if($worked){
+                    if($date->count()<1){ // means it is not a holiday
+                        $flag = false;
+                        if($worked->ndays>0 || $leaves->with_pay>0){
+                            $isEntitled = true;
                         }
-
-                    }else{
-                         
-                        $date = DB::table('holidays')
-                        ->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
-                        ->select()
-                        ->where('holidays.holiday_date','=',$holiday->format('Y-m-d'))
-                        ->where('holiday_location.location_id','=',$this->details->location_id);
-
-                        $worked = DB::table('edtr_detailed')->select('ndays')
-                            ->where('biometric_id','=',$this->biometric_id)
-                            ->where('dtr_date','=',$holiday->format('Y-m-d'))
-                            ->first();
-                            
-                        if($worked){
-                            if($date->count()<1){ // means it is not a holiday
-                                $flag = false;
-                                if($worked->ndays>0){
-                                    $isEntitled = true;
-                                }
-                            } else {
-                                if($worked->ndays>0){
-                                    $isEntitled = true;
-                                }
-                            }
-                        }    
-                        
-                       
-                       
+                    } else {
+                        if($worked->ndays>0){
+                            $isEntitled = true;
+                        }
                     }
-            
-                }else{
-                    /* its sunday */
-                   
-                }
+                }  
+            }
+
+            /*
+            $worked = DB::table('edtr_detailed')->select('','ndays')
+                ->where('biometric_id','=',$this->biometric_id)
+                ->where('dtr_date','=',$holiday->format('Y-m-d'))
+                ->first();
+
+            $leaves = DB::table('filed_leaves_vw')->where('biometric_id','=',$this->biometric_id)
+                ->select('with_pay')
+                ->where('leave_date','=',$holiday->format('Y-m-d'))
+                ->first();
+            */     
             
             if($flag){
                 $ctr++;
@@ -551,6 +529,94 @@ class EmployeeDTR2
 }
 
 /*
+
+
+
+if(($holiday->format('D')!='Sun')){ 
+                    
+                    if($holiday->format('D')=='Sat'){
+
+                           
+                       
+                            if($this->details->sched_sat && $this->details->alternate_sat=='N'){
+                            
+                                $date = DB::table('holidays')
+                                ->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
+                                ->select()
+                                ->where('holidays.holiday_date','=',$holiday->format('Y-m-d'))
+                                ->where('holiday_location.location_id','=',$this->details->location_id);
+        
+                                $worked = DB::table('edtr_detailed')->select('ndays')
+                                    ->where('biometric_id','=',$this->biometric_id)
+                                    ->where('dtr_date','=',$holiday->format('Y-m-d'))
+                                    ->first();
+
+                                $leaves = DB::table('filed_leaves_vw')->where('biometric_id','=',$this->biometric_id)
+                                    ->select('with_pay')
+                                    ->where('leave_date','=',$holiday->format('Y-m-d'))
+                                    ->first();
+
+                                if($date->count()<1){ // means it is not a holiday
+                                
+                                    $flag = false;
+                                
+                                    if($worked->ndays>0 || $leaves->with_pay>0){
+                                        $isEntitled = true;
+                                    }
+                                } else {
+                                    
+                                    if($worked->ndays>0 || $leaves->with_pay>0){
+                                        $isEntitled = true;
+                                    }
+                                }
+                                
+                            }else{
+                                dd($this->details , $this->details->alternate_sat);
+                            }
+                           
+
+                    }else{
+                         
+                        $date = DB::table('holidays')
+                        ->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
+                        ->select()
+                        ->where('holidays.holiday_date','=',$holiday->format('Y-m-d'))
+                        ->where('holiday_location.location_id','=',$this->details->location_id);
+
+                        $worked = DB::table('edtr_detailed')->select('ndays')
+                            ->where('biometric_id','=',$this->biometric_id)
+                            ->where('dtr_date','=',$holiday->format('Y-m-d'))
+                            ->first();
+                            
+                        if($worked){
+                            if($date->count()<1){ // means it is not a holiday
+                                $flag = false;
+                                if($worked->ndays>0){
+                                    $isEntitled = true;
+                                }
+                            } else {
+                                if($worked->ndays>0){
+                                    $isEntitled = true;
+                                }
+                            }
+                        }    
+                        
+                       
+                       
+                    }
+            
+                }else{
+                   
+                   
+            }
+
+
+
+
+
+
+
+
   `id` INT AUTO_INCREMENT NOT NULL,
   `biometric_id` INT NOT NULL,
   `period_id` INT NULL DEFAULT NULL ,

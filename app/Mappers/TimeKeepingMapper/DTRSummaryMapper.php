@@ -174,6 +174,16 @@ class DTRSummaryMapper extends AbstractMapper {
         return $ids;
     }
 
+    public function employeesToProcessUni($biometric_id, $period_id)
+    {   
+        $query = "SELECT DISTINCT employees.biometric_id FROM employees WHERE exit_status = 1 AND emp_level = 5 AND biometric_id = $biometric_id; ";
+                    // and employees.biometric_id = 830";
+    
+        $ids = DB::select(DB::raw($query));
+
+        return $ids;
+    }
+
     public function processIDS($ids,$period_id)
     {
         $ctr = 0; 
