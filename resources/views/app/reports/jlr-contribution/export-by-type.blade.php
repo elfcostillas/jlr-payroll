@@ -34,7 +34,7 @@
             <td>
                  
                 @if ($type==2)
-                    PAGIBIG Contribution  
+                    HDMF Contribution  
                 @endif
                 @if ($type==3)
                     PHIL Health Contribution
