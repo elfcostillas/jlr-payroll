@@ -57,7 +57,7 @@ class ContributionSorted implements ShouldAutoSize,WithColumnFormatting,FromView
             break;
 
         case 'non-confi' : 
-                return view('app.reports.jlr-contribution.export-by-type-sorted',['employees' => $this->data, 'label' => $this->label,'type' => $this->type,'src' => $this->src ]);
+                return view('app.reports.jlr-contribution.export-by-type-sorted',['employees' => $this->data, 'label' => $this->label,'type' => $this->type,'src' => 'Rank and File' ]);
             break;
 
         default : 

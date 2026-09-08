@@ -99,6 +99,7 @@ class JLRContributionMapper
                 ->leftJoin('job_titles','job_titles.id','=','employees.job_title_id')
                 ->where('employees.location_id',$location->id)
                 ->where("employees.emp_level",'<','5')
+                ->where("employees.job_title_id",'!=',130)
                 ->orderBy('lastname','asc')
                 ->orderBy('firstname','asc')
                 ->groupBy('biometric_id')
@@ -124,6 +125,7 @@ class JLRContributionMapper
                 ->join('job_titles','job_titles.id','=','employees.job_title_id')
                 ->where('employees.location_id',$location->id)
                 ->where("employees.emp_level",'=','5')
+                ->where("employees.job_title_id",'!=',130)
                 ->orderBy('lastname','asc')
                 ->orderBy('firstname','asc')
                 ->groupBy('biometric_id')
@@ -154,7 +156,7 @@ class JLRContributionMapper
             FROM payrollregister_posted_s 
             INNER JOIN `payroll_period` ON `payrollregister_posted_s`.`period_id` = `payroll_period`.`id` 
             INNER JOIN `employees` on employees.biometric_id = payrollregister_posted_s.biometric_id 
-            WHERE MONTH(date_from) = $month AND YEAR(date_from) = $year ".$emp_level_qry."
+            WHERE MONTH(date_from) = $month AND YEAR(date_from) = $year ".$emp_level_qry." and employees.job_title_id != 130
             GROUP BY `biometric_id`
             ) AS table1
             LEFT JOIN (SELECT DISTINCT ec,er_share,ee_share,mpf_ee,mpf_er FROM hris_sss_table_2025) AS table2 ON `table2`.`ee_share` = table1.sss_prem AND table2.mpf_ee = table1.sss_wisp";

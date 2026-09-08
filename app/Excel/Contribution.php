@@ -44,6 +44,7 @@ class Contribution implements ShouldAutoSize,WithColumnFormatting,FromView,WithE
     	$this->label = $label;
         $this->type = $type;
         $this->src = $src;
+      
     }  
 
     public function view(): View
@@ -55,7 +56,7 @@ class Contribution implements ShouldAutoSize,WithColumnFormatting,FromView,WithE
                 break;
 
             case 'non-confi' : 
-                    return view('app.reports.jlr-contribution.export-by-type',['locations' => $this->data, 'label' => $this->label,'type' => $this->type,'src' => $this->src ]);
+                    return view('app.reports.jlr-contribution.export-by-type',['locations' => $this->data, 'label' => $this->label,'type' => $this->type,'src' => 'Rank and File' ]);
                 break;
 
                  default : 

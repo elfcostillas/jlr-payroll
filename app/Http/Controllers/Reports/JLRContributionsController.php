@@ -80,7 +80,7 @@ class JLRContributionsController extends Controller
         $result = $this->mapper->generateS($request->year,$request->month,$request->emp_level);
         $type = $request->type;
 
-        $this->sorted->setValues($result,$label,$type,'confi');
+        $this->sorted->setValues($result,$label,$type,$request->emp_level);
         return Excel::download($this->sorted,'Contribution '.$request->emp_level.' '.$label.'.xlsx');
     }
 
