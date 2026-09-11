@@ -17,6 +17,7 @@ class ManHoursMapper extends AbstractMapper {
     ];
 
     protected $db_table = 'payrollregister_posted_s';
+    protected $db_table2 = 'payrollregister_posted_weekly';
 
 
     public function mainQuery()
@@ -25,6 +26,16 @@ class ManHoursMapper extends AbstractMapper {
         $result = DB::table('employees')->where('employees.job_title_id', '!=',130);
 
         $result->join($this->db_table,'employees.biometric_id','=',$this->db_table.'.biometric_id');
+
+        return $result;
+    }
+
+    public function mainQuerSG()
+    {
+
+        $result = DB::table('employees')->where('employees.job_title_id', '!=',130);
+
+        $result->join($this->db_table2,'employees.biometric_id','=',$this->db_table2.'.biometric_id');
 
         return $result;
     }
@@ -115,6 +126,26 @@ class ManHoursMapper extends AbstractMapper {
 
     }
 
+    public function getDataSG($month,$year)
+    {
+        // dd($month,$year);
+
+        $periods = DB::table('payroll_period_weekly')->select('id')
+            ->whereRaw("MONTH(date_from) = ? ",[$month])
+            ->whereRaw("YEAR(date_from) = ? ",[$year])
+            ->pluck('id');
+
+
+        // dd($periods);
+
+        $data = $this->getCountsByDiviosionDeptSG($periods);
+
+        return $data;
+
+    }
+
+    
+
     public function getCountsByDiviosionDept($periods)
     {
       
@@ -134,13 +165,13 @@ class ManHoursMapper extends AbstractMapper {
 
                         SUM(CASE
                             WHEN period_id = ".$periods[0]." AND  payrollregister_posted_s.emp_level = 'confi'
-                            THEN (ndays * 8) + reg_ot + rd_hrs + rd_ot + leghol_hrs + sphol_hrs_amount
+                            THEN (ndays * 8) + ifnull(reg_ot,0) + ifnull(rd_hrs,0) + ifnull(rd_ot,0) + ifnull(leghol_hrs,0) + ifnull(sphol_hrs,0)
                             ELSE 0
                         END) AS man_hours_1sthalf_confi,
 
                         SUM(CASE
                             WHEN period_id = ".$periods[0]." AND  payrollregister_posted_s.emp_level = 'non-confi'
-                            THEN (ndays * 8) + reg_ot + rd_hrs + rd_ot + leghol_hrs + sphol_hrs_amount
+                            THEN (ndays * 8) + ifnull(reg_ot,0) + ifnull(rd_hrs,0) + ifnull(rd_ot,0) + ifnull(leghol_hrs,0) + ifnull(sphol_hrs,0)
                             ELSE 0
                         END) AS man_hours_1sthalf_rnf,
 
@@ -193,6 +224,86 @@ class ManHoursMapper extends AbstractMapper {
                         ) AS female_2ndhalf
                     "))
                     ->whereIn($this->db_table.'.period_id',$periods->all())
+                    ->groupBy('dept_code')
+                    ->get();
+
+
+                $division->departments = $departments;
+            }
+        
+        return $divisions;
+    }
+
+    public function getCountsByDiviosionDeptSG($periods)
+    {
+      
+        $divisions = $this->mainQuerSG()
+                ->leftJoin('divisions','divisions.id','=','employees.division_id')
+                ->select('divisions.id','div_code')
+                ->orderBy('divisions.id','ASC')
+                ->groupBy('divisions.id')
+                ->get();
+
+         
+            foreach($divisions as $division)
+            {
+                $departments = $this->mainQuerSG()
+                    ->join('departments','employees.dept_id','=','departments.id')
+                    ->where('dept_div_id',$division->id)
+                    ->select(DB::raw("dept_code,
+
+                      
+                        SUM(CASE
+                            WHEN period_id = ".$periods[0]." AND  payrollregister_posted_weekly.emp_level = 'weekly'
+                            THEN (ndays * 8) + ifnull(reg_ot,0) + ifnull(rd_hrs,0) + ifnull(rd_ot,0) + ifnull(leghol_hrs,0) + ifnull(sphol_hrs,0)
+                            ELSE 0
+                        END) AS man_hours_1sthalf_rnf,
+
+                       SUM(
+                            CASE
+                                WHEN payrollregister_posted_weekly.period_id = ".$periods[0]."
+                                AND employees.gender = 'M'
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS male_1sthalf,
+
+                        SUM(
+                            CASE
+                                WHEN payrollregister_posted_weekly.period_id = ".$periods[0]."
+                                AND employees.gender = 'F'
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS female_1sthalf,
+                         
+                      
+
+                        SUM(CASE
+                            WHEN period_id = ".$periods[1]." AND  payrollregister_posted_weekly.emp_level = 'weekly'
+                            THEN ndays * 8
+                            ELSE 0
+                        END) AS man_hours_2ndhalf_rnf,
+
+                       SUM(
+                            CASE
+                                WHEN payrollregister_posted_weekly.period_id = ".$periods[1]."
+                                AND employees.gender = 'M'
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS male_2ndhalf,
+
+                        SUM(
+                            CASE
+                                WHEN payrollregister_posted_weekly.period_id = ".$periods[1]."
+                                AND employees.gender = 'F'
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS female_2ndhalf
+                    "))
+                    ->whereIn('payrollregister_posted_weekly.period_id',$periods->all())
                     ->groupBy('dept_code')
                     ->get();
 

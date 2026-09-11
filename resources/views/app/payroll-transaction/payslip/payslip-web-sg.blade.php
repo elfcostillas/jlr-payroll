@@ -293,7 +293,7 @@
                             <td class="pad4" width="30%"  style="text-align:right;padding-right:4px;">{{  ($e->hdmf_contri > 0) ? number_format($e->hdmf_contri,2) : '-' }}</td>
                         </tr>
                         <tr>
-                            <td class="pad4" width="70%%" >Withholing Tax</td>
+                            <td class="pad4" width="70%%" >Withholding Tax</td>
                             <td class="pad4" width="30%"  style="text-align:right;padding-right:4px;">{{  ($e->wtax > 0) ? number_format($e->wtax,2) : '-' }}</td>
                         </tr>
                     </table>

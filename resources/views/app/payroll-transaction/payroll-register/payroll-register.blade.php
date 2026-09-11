@@ -182,7 +182,7 @@
                         <th style="padding : 0px 4px;" >SSS MPF</th>
                         <th style="padding : 0px 4px;" >PhilHealt Premium</th>
                         <th style="padding : 0px 4px;" >PAG IBIG Contri</th>
-                        <th style="padding : 0px 4px;" >Withholduing Tax</th>
+                        <th style="padding : 0px 4px;" >Withholding Tax</th>
                           @php $colspan+=5; @endphp
                         @foreach($govLoan as $glabel)
                             <th style="padding : 0px 4px;min-width:100px;" >{{ $glabel->description }}</th>

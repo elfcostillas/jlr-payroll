@@ -21,7 +21,12 @@ class ManHoursController extends Controller
 
     public function index()
     {
-        return view('app.reports.man-hours.index');
+        $payroll_years = array(
+            ['label'=> 2025, 'value' => 2025],
+            ['label'=> 2026, 'value' => 2026],
+        );
+
+        return view('app.reports.man-hours.index',['payroll_years' => $payroll_years]);
     }
 
     public function generateReport(Request $request)
@@ -116,6 +121,13 @@ class ManHoursController extends Controller
         $canvas->page_text(510, 800, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
 
         return $pdf->stream('JLR-DTR-Print.pdf'); 
+    }
+
+    function manHoursSG(Request $request)
+    {
+        $data = $this->mapper->getDataSG($request->month,$request->year);
+
+        return view('app.reports.man-hours.print-sg',['data' => $data]);
     }
 
 }

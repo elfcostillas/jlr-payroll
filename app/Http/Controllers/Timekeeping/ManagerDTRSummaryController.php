@@ -72,4 +72,11 @@ class ManagerDTRSummaryController extends Controller
         // return response()->json($result);
 
     }
+
+    public function downloadTotals(Request $request)
+    {
+        $result = $this->dtrSummaryMapper->totalsByLocation($this->period_obj);
+
+        dd($result);
+    }
 }

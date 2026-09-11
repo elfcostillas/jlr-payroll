@@ -14,6 +14,21 @@
                  
             };
 
+            let monthOptions = [
+                { text : "January", value : 1 },
+                { text : "February", value : 2 },
+                { text : "March", value : 3 },
+                { text : "April", value : 4 },
+                { text : "May", value : 5 },
+                { text : "June", value : 6 },
+                { text : "July", value : 7 },
+                { text : "August", value : 8 },
+                { text : "September", value : 9 },
+                { text : "October", value : 10 },
+                { text : "November", value : 11 },
+                { text : "December", value : 12 },
+            ];
+           
             var viewModel = kendo.observable({ 
                 form : {
                     model : {
@@ -147,6 +162,22 @@
                         } else {
                             window.open(url);
                         }
+                    },
+                    viewJLR : function()
+                    {
+                        let m = $("#month").data("kendoDropDownList").value();
+                        let y = $("#years").data("kendoDropDownList").value();
+
+                        let url = `man-hours/jlr-employee/${m}/${y}`;
+                        window.open(url);
+                    },
+                    viewSG : function()
+                    {
+                        let m = $("#month").data("kendoDropDownList").value();
+                        let y = $("#years").data("kendoDropDownList").value();
+
+                        let url = `man-hours/sg-employee/${m}/${y}`;
+                        window.open(url);
                     }
             
                 },
@@ -182,6 +213,30 @@
 
             $("#range3").kendoNumericTextBox({ decimals :0});
             $("#range4").kendoNumericTextBox({ decimals :0});
+
+            let today = new Date();
+            let currentMonth = today.getMonth(); 
+            let currentYear = today.getFullYear(); 
+
+            console.log(currentYear);
+
+            let years =<?php echo json_encode($payroll_years) ?>;
+
+
+            $("#month").kendoDropDownList({
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: monthOptions,
+                index: currentMonth
+            });
+            
+            $("#years").kendoDropDownList({
+                dataTextField: "label",
+                dataValueField: "value",
+                dataSource: years,
+                // index: currentYear
+            });
+
 
 
             function process()

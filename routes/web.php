@@ -120,6 +120,8 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::get('employee-list',[ManagerDTRSummaryController::class,'employeeList']);
         Route::post('update',[ManagerDTRSummaryController::class,'update']);
         Route::post('recompute-dtr',[ManagerDTRSummaryController::class,'recomputeDTR']);
+
+        Route::get('download-totals',[ManagerDTRSummaryController::class,'downloadTotals']);
     
     });
 
@@ -721,6 +723,7 @@ Route::middleware('auth')->prefix('reports')->group(function(){
         Route::get('pdf-ot/{from}/{to}/{hr1}/{hr2}',[ManHoursController::class,'viewPDFOT']);
 
         Route::get('jlr-employee/{month}/{year}',[ManHoursController::class,'manHoursJLR']);
+        Route::get('sg-employee/{month}/{year}',[ManHoursController::class,'manHoursSG']);
        
        
     });

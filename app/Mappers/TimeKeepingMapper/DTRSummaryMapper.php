@@ -244,9 +244,43 @@ class DTRSummaryMapper extends AbstractMapper {
         return $ctr;
     }
 
+    public function totalsByLocation($period_id)
+    {
+        $base_query = DB::table("employees")
+            ->join('edtr_totals','employees.biometric_id','=','edtr_totals.biometric_id')
+            ->join('divisions','divisions.id','=','employees.division_id')
+            ->join('locations','locations.id','=','employees.location_id')
+            ->join('departments','departments.id','=','employees.dept_id');
+
+        $locations_query = clone $base_query;
+
+        $locations = $locations_query->select('locations.id','locations.location_name')->distinct()->get();
+        
+        foreach($locations as $location)
+        {
+            $locations_result = clone $base_query->where('employees.location_id','=',$location->id)
+                ->select('divisions.id','divisions.div_name')    
+                ->distinct();
+
+                dd($locations_result->get());
+
+            
+        }
+
+        return $locations;
+    }
+
 }
 
 /*
+
+select distinct locations.id, locations.location_name from employees 
+inner join edtr_totals on employees.biometric_id = edtr_totals.biometric_id 
+inner join divisions on divisions.id = employees.division_id
+inner join locations on locations.id = employees.location_id
+inner join departments on departments.id = employees.dept_id
+where period_id = 90;
+
 division_id
 
 dept_id

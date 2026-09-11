@@ -103,8 +103,12 @@
                                 viewModel.ds.maingrid.read();
                             }
                     });
+                },
+                downloadSummary : function(e){
+                    window.open('dtr-summary-manage/download-totals')
                 }
-            }
+            },
+
         });
 
         $("#maingrid").kendoGrid({ 
@@ -128,8 +132,10 @@
             selectable : true,
             navigatable : true,
             toolbar: [
-                { name: "save", text: "Save" }
+                { name : "save", text: "Save" },
+                { name : "Dowload Summary", icon : "download", template : "<button class='k-button k-button-md k-rounded-md k-button-solid k-button-solid-base'  data-bind='events: { click: buttonHandler.downloadSummary }'><span class='k-icon k-i-download'></span>Download Totals</button>" }
             ],
+
             editable : true,
             columns : [
                 {

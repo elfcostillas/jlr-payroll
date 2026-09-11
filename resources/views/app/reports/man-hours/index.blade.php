@@ -136,6 +136,37 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-secondary">
+                        <div class="card-header"> Regular Hours, Overtime, Restday, Regular Holiday, Special Holiday </div>
+                        <div class="card-body"> 
+                            <table class="formTable" border=0 style="width:100%">
+                                <tr>
+                                    <td>Month</td>
+                                    <td>Year</td>
+                                    <!-- <td style="text-align:center;">More than 72 hrs</td> -->
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td> <input type="text" name="" id="month"> </td>
+                                    <td> <input type="text" name="" id="years"> </td>
+                                    <td> </td>
+                                    <td><button type="button" class="btn btn-block btn-danger btn-sm" data-bind='click:buttonHandler.viewJLR'><i class="fas fa-table"></i> View JLR</button></td>
+                                    <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.viewSG'><i class="fas fa-table"></i> View Support Group</button></td>
+                                    <td></td>
+                                   
+                                </tr>
+                              
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
