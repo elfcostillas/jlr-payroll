@@ -93,7 +93,7 @@ class WeeklyDeductionController extends Controller
         $canvas = $dom_pdf->get_canvas();
 
         $canvas->page_text(510, 812, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
-        $canvas->page_text(30, 812,"Date/Time : ".now()->format('m/d/y H:i:s'), null, 10, array(0, 0, 0));
+        $canvas->page_text(510, 812,"Date/Time : ".now()->format('m/d/y H:i:s'), null, 10, array(0, 0, 0));
         // return  $dom_pdf;
         return $pdf->stream('JLR-Canteen-Print.pdf'); 
     }

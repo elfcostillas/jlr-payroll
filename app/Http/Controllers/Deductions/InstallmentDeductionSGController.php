@@ -129,13 +129,15 @@ class InstallmentDeductionSGController extends Controller
     
         $canvas = $dom_pdf->get_canvas();
         $canvas->page_text(510, 762, "Page {PAGE_NUM} of {PAGE_COUNT} ", null, 10, array(0, 0, 0));
+        $canvas->page_text(114, 742, "This is a computer-generated document. No signature is required. ", null, 10, array(0, 0, 0));
+        $canvas->page_text(30, 762,"Date/Time : ".now()->format('m/d/y H:i:s'), null, 10, array(0, 0, 0));
 
         return $pdf->stream('InstallmentLedger.pdf'); 
     }
 }
 
 /*
-
+    602
     "remarks" => "Lost Hard Hat"
     "id" => "11"
     "employee_name" => "Ochong, Jorlan  Jr. Fuerte"
