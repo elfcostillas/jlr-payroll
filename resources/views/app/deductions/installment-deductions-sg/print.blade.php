@@ -2,20 +2,23 @@
 
     function getBalance($amount,$details)
     {
-        $amount = $amount;
+        $amount = (float) $amount;
 
         $amount_paid = 0;
 
 
         foreach($details as $detail)
         {
-            $amount_paid += $detail->ammortization;
+            $amount_paid += (float) $detail->ammortization;
         }
 
-        return $amount - $amount_paid;
+        return round($amount - $amount_paid,2);
     }
 
+
     $isPaid = (getBalance($header->total_amount,$details['data']) == 0);
+
+  
 ?>
 <!DOCTYPE html>
 <html lang="en">
