@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mappers\Deductions\InstallmentDeductionSGMapper;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class InstallmentDeductionSGController extends Controller
 {
@@ -111,5 +112,33 @@ class InstallmentDeductionSGController extends Controller
         $result = $this->mapper->get_ammortization($id);
         return response()->json($result);
     }
+    
+    public function print(Request $request)
+    {
+        $id = $request->id;
 
+        $header = $this->mapper->detailedHeader($id);
+        $details = $this->mapper->get_ammortization($id);
+
+
+        $pdf = PDF::loadView('app.deductions.installment-deductions-sg.print',['header' => $header,'details' => $details ])->setPaper('letter','portrait');
+        
+        $pdf->output();
+
+        $dom_pdf = $pdf->getDomPDF();
+    
+        $canvas = $dom_pdf->get_canvas();
+        $canvas->page_text(510, 762, "Page {PAGE_NUM} of {PAGE_COUNT} ", null, 10, array(0, 0, 0));
+
+        return $pdf->stream('InstallmentLedger.pdf'); 
+    }
 }
+
+/*
+
+    "remarks" => "Lost Hard Hat"
+    "id" => "11"
+    "employee_name" => "Ochong, Jorlan  Jr. Fuerte"
+    "description" => "Hard Hat"
+    "total_amount" => "225.00"
+*/
