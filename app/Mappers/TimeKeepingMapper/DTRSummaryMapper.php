@@ -246,28 +246,89 @@ class DTRSummaryMapper extends AbstractMapper {
 
     public function totalsByLocation($period_id)
     {
+      
         $base_query = DB::table("employees")
             ->join('edtr_totals','employees.biometric_id','=','edtr_totals.biometric_id')
             ->join('divisions','divisions.id','=','employees.division_id')
             ->join('locations','locations.id','=','employees.location_id')
-            ->join('departments','departments.id','=','employees.dept_id');
+            ->join('departments','departments.id','=','employees.dept_id')
+            ->join('employee_names_vw','edtr_totals.biometric_id','=','employee_names_vw.biometric_id')
+            ->where('edtr_totals.period_id','=',$period_id->id);
 
         $locations_query = clone $base_query;
 
-        $locations = $locations_query->select('locations.id','locations.location_name')->distinct()->get();
-        
-        foreach($locations as $location)
-        {
-            $locations_result = clone $base_query->where('employees.location_id','=',$location->id)
-                ->select('divisions.id','divisions.div_name')    
-                ->distinct();
+         $locations_query = clone $base_query;
 
-                dd($locations_result->get());
+    $locations = $locations_query
+        ->select(
+            'locations.id',
+            'locations.location_name'
+        )
+        ->distinct()
+        ->get();
 
-            
+
+    foreach ($locations as $location) {
+
+        // DIVISION
+        $division_query = clone $locations_query;
+
+        $division_array = $division_query
+            ->where(
+                'employees.location_id',
+                $location->id
+            )
+            ->select(
+                'divisions.id',
+                'divisions.div_name'
+            )
+            ->distinct()
+            ->get();
+
+
+        foreach ($division_array as $division) {
+
+            // DEPARTMENT
+            $department_query = clone $division_query;
+
+            $departments_result_array = $department_query
+                ->where(
+                    'employees.division_id',
+                    $division->id
+                )
+                ->select(
+                    'departments.id',
+                    'departments.dept_name'
+                )
+                ->distinct()
+                ->get();
+
+
+            foreach ($departments_result_array as $department) {
+
+                // EMPLOYEES
+                $employee_query = clone $department_query;
+
+                $employees = $employee_query
+                  
+                    ->select(
+                        'employee_names_vw.employee_name2',
+                        'edtr_totals.*'
+                    )
+                    ->get();
+
+                $department->employees = $employees;
+            }
+
+
+            $division->departments = $departments_result_array;
         }
 
-        return $locations;
+
+        $location->divisions = $division_array;
+    }
+
+    return $locations;
     }
 
 }

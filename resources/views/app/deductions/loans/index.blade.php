@@ -114,7 +114,8 @@
                                 <td colspan=6>Remarks</td>
                             </tr>
                             <tr>
-                               <td colspan=6><input type="text" id="remarks" data-bind="value:form.model.remarks"></td>
+                               <!-- <td colspan=6><input type="text" id="remarks" data-bind="value:form.model.remarks"></td> -->
+                            <td colspan=6><textarea type="text" id="remarks" data-bind="value:form.model.remarks"> </textarea></td> 
                             </tr>
                             
                         </table>

@@ -77,6 +77,6 @@ class ManagerDTRSummaryController extends Controller
     {
         $result = $this->dtrSummaryMapper->totalsByLocation($this->period_obj);
 
-        dd($result);
+        return view('app.timekeeping.manage-dtr-summary.export',['result' => $result]);
     }
 }

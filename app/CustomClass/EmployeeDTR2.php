@@ -329,34 +329,35 @@ class EmployeeDTR2
                 ->where('biometric_id','=',$this->biometric_id)
                 ->where('dtr_date','=',$holiday->format('Y-m-d'))
                 ->first();
+            if(is_object($worked)){
+                if($worked->schedule_id  == null || $worked->schedule_id == 0){
+                    continue;
+                }else{
 
-            if($worked->schedule_id  == null || $worked->schedule_id == 0){
-                continue;
-            }else{
+                    $date = DB::table('holidays')
+                        ->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
+                        ->select()
+                        ->where('holidays.holiday_date','=',$holiday->format('Y-m-d'))
+                        ->where('holiday_location.location_id','=',$this->details->location_id);
 
-                $date = DB::table('holidays')
-                    ->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
-                    ->select()
-                    ->where('holidays.holiday_date','=',$holiday->format('Y-m-d'))
-                    ->where('holiday_location.location_id','=',$this->details->location_id);
+                    $leaves = DB::table('filed_leaves_vw')->where('biometric_id','=',$this->biometric_id)
+                        ->select('with_pay')
+                        ->where('leave_date','=',$holiday->format('Y-m-d'))
+                        ->first();
 
-                $leaves = DB::table('filed_leaves_vw')->where('biometric_id','=',$this->biometric_id)
-                    ->select('with_pay')
-                    ->where('leave_date','=',$holiday->format('Y-m-d'))
-                    ->first();
-
-                if($worked){
-                    if($date->count()<1){ // means it is not a holiday
-                        $flag = false;
-                        if($worked->ndays>0 || $leaves->with_pay>0){
-                            $isEntitled = true;
+                    if($worked){
+                        if($date->count()<1){ // means it is not a holiday
+                            $flag = false;
+                            if($worked->ndays>0 ||  ($leaves && $leaves->with_pay > 0)){
+                                $isEntitled = true;
+                            }
+                        } else {
+                            if($worked->ndays>0){
+                                $isEntitled = true;
+                            }
                         }
-                    } else {
-                        if($worked->ndays>0){
-                            $isEntitled = true;
-                        }
-                    }
-                }  
+                    }  
+                }
             }
 
             /*
