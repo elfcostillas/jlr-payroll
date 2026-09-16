@@ -416,7 +416,7 @@ class EmployeeDTR2
                         }else{
                             
                             if($log->sphol_hrs > 0){
-                                $log->sphol_pay = 1;
+                                $log->sphol_pay = 0; // should be 0; cause daily will have 130% rate on special holidays
                             }else{
                                 $log->sphol_pay = 0;
                             }
