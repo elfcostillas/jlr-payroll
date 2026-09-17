@@ -66,7 +66,7 @@ class ManagerDTRSummaryController extends Controller
 
         $ids = $this->dtrSummaryMapper->employeesToProcessUni($request->biometric_id,$request->period_id);
       
-        $ctr = $this->dtrSummaryMapper->processConfiIDSV2($ids,$request->period_id);
+        $ctr = $this->dtrSummaryMapper->processConfiIDSV3($ids,$request->period_id);
 
         // $result = $this->dtrSummaryMapper->processConfiIDSV2($ids,$request->period_id);
         // return response()->json($result);

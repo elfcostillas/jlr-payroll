@@ -4,6 +4,7 @@ namespace App\Mappers\TimeKeepingMapper;
 
 use App\CustomClass\EmployeeDTR;
 use App\CustomClass\EmployeeDTR2;
+use App\CustomClass\EmployeeDTR3;
 use App\Mappers\Mapper as AbstractMapper;
 use App\Libraries\Filters;
 use Carbon\Carbon;
@@ -222,6 +223,21 @@ class DTRSummaryMapper extends AbstractMapper {
         {
             //dd($id->biometric_id);
             $edtr = new EmployeeDTR2($id,$period_id);
+            $ctr++;
+
+        }
+
+        return $ctr;
+    }
+
+    public function processConfiIDSV3($ids,$period_id)
+    {
+        $ctr = 0; 
+
+        foreach($ids as $id)
+        {
+            //dd($id->biometric_id);
+            $edtr = new EmployeeDTR3($id,$period_id);
             $ctr++;
 
         }
