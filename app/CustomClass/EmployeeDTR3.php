@@ -201,7 +201,7 @@ class EmployeeDTR3
 
         // set ndays
      
-        $this->row['restday_hrs'] = ((float) $rd_result->rd_days > 0) ? ((float) $rd_result->rd_days * 8) : 0 ; 
+        // $this->row['restday_hrs'] = ((float) $rd_result->rd_days > 0) ? ((float) $rd_result->rd_days * 8) : 0 ; 
      
     }
 

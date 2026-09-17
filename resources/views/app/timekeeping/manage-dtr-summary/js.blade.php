@@ -187,9 +187,9 @@
                     template : "#if(under_time==0){#  #}else{# #= under_time # #}# ",
                 },
                 {
-                    title : "OT *",
+                    title : "Reg. OT *",
                     field : "over_time",
-                    width : 80,
+                    width : 100,
                     template : "#if(over_time==0){#  #}else{# #= over_time # #}# ",  
                     aggregates : ['sum'], 
                     footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
