@@ -85,7 +85,8 @@ class PostedPayrollRegisterMapper extends AbstractMapper {
         ->leftJoin('employees','payrollregister_posted_s.biometric_id','=','employees.biometric_id')
         ->leftJoin('employee_names_vw','payrollregister_posted_s.biometric_id','=','employee_names_vw.biometric_id')
         ->where('period_id','=',$period_id)
-        ->where('payrollregister_posted_s.emp_level','=',$emp_level);
+        ->where('payrollregister_posted_s.emp_level','=',$emp_level)
+        ->whereNotNull('employees.bank_acct');
 
 
         return $result->get();
