@@ -64,6 +64,9 @@
                                 reghol_hrs: { type : 'number' },
                                 sphol_pay: { type : 'number' },
                                 sphol_hrs: { type : 'number' },
+
+                                night_diff: { type : 'number' },
+                                night_diff_ot: { type : 'number' },
                                 svl : { type : 'number' },
                                 mpl : { type : 'number' }
                             },
@@ -82,6 +85,9 @@
 
                         { field : "sphol_pay" , aggregate: "sum" },
                         { field : "sphol_hrs" , aggregate: "sum" },
+                        { field : "night_diff" , aggregate: "sum" },
+                        { field : "night_diff_ot" , aggregate: "sum" },
+
                     ]
                 })
             }  ,
@@ -195,6 +201,27 @@
                     footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
                      
                 },
+
+                      {
+                    title : "ND",
+                    field : "night_diff",
+                    width : 100,
+                    template : "#if(night_diff==0){#  #}else{# #= night_diff # #}# ",  
+                    aggregates : ['sum'], 
+                    footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+                     
+                },
+
+                {
+                    title : "ND OT",
+                    field : "night_diff_ot",
+                    width : 100,
+                    template : "#if(night_diff_ot==0){#  #}else{# #= night_diff_ot # #}# ",  
+                    aggregates : ['sum'], 
+                    footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+                     
+                },
+
                 {
                     title : "VL /w Pay",
                     field : "vl_wp",
