@@ -171,6 +171,8 @@ class EmployeeDTR3
         ->where('payroll_period.id',$this->period_id)
         ->first();
 
+        
+
         if($this->details->pay_type == 1){
             // $ndays = 13 - $this->row['vl_wp'] - $this->row['vl_wop'] - $this->row['sl_wp'] - $this->row['sl_wop'];
             /*
