@@ -6,7 +6,8 @@ use App\CustomClass\PayrollRegisterFunctionsCopy;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-abstract class PayrollRegister extends PayrollRegisterFunctions
+abstract class PayrollRegister extends PayrollRegisterFunctionsCopy
+// abstract class PayrollRegister extends PayrollRegisterFunctions
 {
     //
     public $db_table;
