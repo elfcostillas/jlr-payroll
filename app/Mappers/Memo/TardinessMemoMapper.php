@@ -121,6 +121,7 @@ class TardinessMemoMapper extends AbstractMapper {
         return $result->get();
     }
 
+    /*
     public function getLates($biometric_id,$filter)
     {
         $holidays = DB::table('holidays')->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
@@ -143,6 +144,33 @@ class TardinessMemoMapper extends AbstractMapper {
             (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm) && TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out) )
             )')
         ->where('edtr.biometric_id',$biometric_id)
+        ->get();
+
+        return $lates;
+    }
+    */
+
+    public function getLates($biometric_id,$filter)
+    {
+        $holidays = DB::table('holidays')->join('holiday_location','holidays.id','=','holiday_location.holiday_id')
+        ->select(DB::raw("holiday_date,location_id,holiday_type"));
+
+        //edtr_detailed
+        $lates = $this->model->select(DB::raw("dtr_date, edtr_detailed.time_in,edtr_detailed.time_out,late as in_minutes"))
+        ->from('edtr_detailed')
+        ->join('employees','edtr_detailed.biometric_id','=','employees.biometric_id')
+        ->leftJoin('work_schedules','schedule_id','=','work_schedules.id')
+        ->leftJoinSub($holidays,'holidays',function($join){
+            $join->on('holidays.location_id','=','employees.location_id');
+            $join->on('edtr_detailed.dtr_date','=','holidays.holiday_date');
+        })
+        // ->whereNull('leave_type')
+        ->whereNull('holiday_type')
+        ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
+        ->where('late','>',0)
+        ///->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)')
+        
+        ->where('edtr_detailed.biometric_id',$biometric_id)
         ->get();
 
         return $lates;
