@@ -299,7 +299,7 @@
                     @foreach ($department->employees as $employee)
                         <tr>
                             <td class="pad4 r" style="">{{ $ctr++ }}</td>
-                            <td class="pad4 {{ highlight_gross($employee->gross_total) }} "> {{$employee->lastname}}, {{ $employee->firstname }} </td>
+                            <td class="pad4 {{ highlight_gross($employee->gross_total) }} "> {{$employee->lastname}}, {{ $employee->firstname }} {{ $employee->middlename }} {{ $employee->suffixname }} </td>
                             <td class="pad4 {{ highlight_gross($employee->gross_total) }}" style="" > {{$employee->job_title_name }} </td>
                             @foreach ($data->basic_cols as $bcols)
                             <td class="r">{{ custom_format($employee->{$bcols->var_name}) }}</td>
