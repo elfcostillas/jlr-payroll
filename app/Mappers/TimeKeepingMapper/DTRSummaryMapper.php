@@ -284,12 +284,14 @@ class DTRSummaryMapper extends AbstractMapper {
         ->get();
 
 
-    foreach ($locations as $location) {
+        foreach ($locations as $location) {
 
-        // DIVISION
-        $division_query = clone $locations_query;
+            $division_query = clone $locations_query;
 
-        $division_array = $division_query
+            // var_dump($division_query->toSql(),$division_query->getBindings());
+            // echo "<hr>";
+
+            $division_array = $division_query
             ->where(
                 'employees.location_id',
                 $location->id
@@ -301,64 +303,51 @@ class DTRSummaryMapper extends AbstractMapper {
             ->distinct()
             ->get();
 
+            foreach ($division_array as $division) {
+                $department_query = clone $division_query;
 
-        foreach ($division_array as $division) {
-
-            // DEPARTMENT
-            $department_query = clone $division_query;
-
-            $departments_result_array = $department_query
-                ->where(
-                    'employees.division_id',
-                    $division->id
-                )
-                ->select(
-                    'departments.id',
-                    'departments.dept_name'
-                )
-                ->distinct()
-                ->get();
-
-
-            foreach ($departments_result_array as $department) {
-
-                // EMPLOYEES
-                $employee_query = clone $department_query;
-
-                $employees = $employee_query
-                  
-                    ->select(
-                        'employee_names_vw.employee_name2',
-                        'edtr_totals.*'
+                $department_array = $department_query
+                    ->where(
+                        'employees.division_id',
+                        $division->id
                     )
+                    ->select(
+                        'departments.id',
+                        'departments.dept_name'
+                    )
+                    ->distinct()
                     ->get();
 
-                $department->employees = $employees;
+                foreach ($department_array as $department) {
+                    $employee_query = clone $department_query;
+
+                    $employee_array = $employee_query
+                        ->where(
+                            'employees.dept_id',
+                            $department->id
+                        )
+                        ->select(
+                            'employees.biometric_id',
+                            // 'employee_names_vw.employee_name',
+                            'employee_names_vw.employee_name2',
+                            'edtr_totals.*'
+                        )
+                        ->get();
+
+                    // var_dump($employee_query->toSql(),$employee_query->getBindings());
+                    // echo "<hr>";
+
+                    $department->employees = $employee_array;
+                }
+
+                $division->departments = $department_array;
+
             }
-
-
-            $division->departments = $departments_result_array;
+            $location->divisions = $division_array;
         }
 
-
-        $location->divisions = $division_array;
-    }
-
-    return $locations;
+        return $locations;
     }
 
 }
 
-/*
-
-select distinct locations.id, locations.location_name from employees 
-inner join edtr_totals on employees.biometric_id = edtr_totals.biometric_id 
-inner join divisions on divisions.id = employees.division_id
-inner join locations on locations.id = employees.location_id
-inner join departments on departments.id = employees.dept_id
-where period_id = 90;
-
-division_id
-
-dept_id
-*/

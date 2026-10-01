@@ -8,18 +8,22 @@ use App\Mappers\TimeKeepingMapper\PayrollPeriodMapper;
 use Illuminate\Http\Request;
 
 use App\Mappers\TimeKeepingMapper\ManagerDTRSummaryMapper;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Excel\ManageDTRSummaryExport;
 
 class ManagerDTRSummaryController extends Controller
 {
     public $period_obj;
     public $mapper;
     public $dtrSummaryMapper;
+    public $excel;
 
-    public function __construct(PayrollPeriodMapper $period,ManagerDTRSummaryMapper $mapper, DTRSummaryMapper $dtrSummaryMapper)
+    public function __construct(PayrollPeriodMapper $period,ManagerDTRSummaryMapper $mapper, DTRSummaryMapper $dtrSummaryMapper,ManageDTRSummaryExport $excel)
     {
         $this->period_obj = $period->currentPayrollPeriod();
         $this->mapper = $mapper;
         $this->dtrSummaryMapper = $dtrSummaryMapper;
+        $this->excel = $excel;
         // $this->middleware('auth');
     }
 
@@ -76,7 +80,8 @@ class ManagerDTRSummaryController extends Controller
     public function downloadTotals(Request $request)
     {
         $result = $this->dtrSummaryMapper->totalsByLocation($this->period_obj);
-
-        return view('app.timekeeping.manage-dtr-summary.export',['result' => $result]);
+        $this->excel->setValues($result);
+        return Excel::download($this->excel,'DTR-Sumamry-Totals-'.$this->period_obj->id.'.xlsx');
+        // return view('app.timekeeping.manage-dtr-summary.export',['result' => $result]);
     }
 }
