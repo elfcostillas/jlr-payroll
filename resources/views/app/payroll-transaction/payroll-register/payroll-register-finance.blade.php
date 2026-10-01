@@ -150,7 +150,7 @@
                                     <td rowspan="{{ $departmentRowspan }}"> {{ $department->dept_code }} </td> 
                                 @php $departmentFirstRow = false; @endphp 
                                 @endif {{-- Employee --}} 
-                                    <td> {{ $employee->lastname }}, {{ $employee->firstname }} </td> 
+                                    <td> {{ $employee->lastname }}, {{ $employee->firstname }} {{ $employee->middlename }} {{ $employee->suffixname }}</td> 
                             </tr> 
                         @endforeach @endforeach @endforeach 
         </table>
