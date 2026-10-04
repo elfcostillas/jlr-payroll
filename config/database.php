@@ -42,12 +42,12 @@ return [
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
-                 /*  
+               
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', '172.24.224.1'),
-            // 'host' => env('DB_HOST', '172.31.64.1'),
+            // 'host' => env('DB_HOST', '172.24.224.1'),
+            'host' => env('DB_HOST', '172.31.64.1'),
             'port' => env('DB_PORT', '3307'),
             'database' => env('DB_DATABASE', 'jlr_hris'),
             'username' => env('DB_USERNAME', 'elmer'),
@@ -64,8 +64,8 @@ return [
                 PDO::ATTR_EMULATE_PREPARES => true,
             ]) : [],
         ],
-        */
-          
+       
+        /*  
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
@@ -91,7 +91,7 @@ return [
                 PDO::ATTR_EMULATE_PREPARES => true,
             ]) : [],
         ],
-       
+        */
          
 
            /*

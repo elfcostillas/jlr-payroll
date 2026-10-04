@@ -110,6 +110,25 @@
                             }
                     });
                 },
+                deleteDTR : function(e){
+                    e.preventDefault();
+                    var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                    // console.log(dataItem.biometric_id,dataItem);
+                    let letUrl = `dtr-summary-manage/delete-dtr`;
+                    $.post(letUrl,{ 
+                            biometric_id : dataItem.biometric_id,
+                            period_id :dataItem.period_id 
+                        },function(data,status){
+
+                            if(status=='error'){
+                                swal_error(data);
+                            }else {
+                                swal_success(data);
+                                viewModel.ds.maingrid.read();
+                            }
+                    });
+                },
+
                 downloadSummary : function(e){
                     window.open('dtr-summary-manage/download-totals')
                 }
@@ -323,7 +342,12 @@
                     aggregates : ['sum'], 
                     footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
                
-                }
+                },
+                {
+                    command: { text : 'Delete',icon : 'delete' ,click : viewModel.buttonHandler.deleteDTR },
+                    attributes : { style : 'font-size:10pt !important;'},
+                    width : 100,
+                },
                 
 
                 /*

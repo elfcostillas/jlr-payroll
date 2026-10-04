@@ -120,6 +120,7 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::get('employee-list',[ManagerDTRSummaryController::class,'employeeList']);
         Route::post('update',[ManagerDTRSummaryController::class,'update']);
         Route::post('recompute-dtr',[ManagerDTRSummaryController::class,'recomputeDTR']);
+        Route::post('delete-dtr',[ManagerDTRSummaryController::class,'deleteDTR']);
 
         Route::get('download-totals',[ManagerDTRSummaryController::class,'downloadTotals']);
     

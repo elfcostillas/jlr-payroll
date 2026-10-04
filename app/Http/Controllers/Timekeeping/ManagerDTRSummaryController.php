@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Mappers\TimeKeepingMapper\ManagerDTRSummaryMapper;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Excel\ManageDTRSummaryExport;
+use Illuminate\Support\Facades\DB;
 
 class ManagerDTRSummaryController extends Controller
 {
@@ -75,6 +76,18 @@ class ManagerDTRSummaryController extends Controller
         // $result = $this->dtrSummaryMapper->processConfiIDSV2($ids,$request->period_id);
         // return response()->json($result);
 
+    }
+
+    
+    public function deleteDTR(Request $request)
+    {
+        // dd($request->biometric_id,$request->period_id);
+        $obj = DB::table('edtr_totals')->where('biometric_id', $request->biometric_id)->where('period_id', $request->period_id)->first();
+        
+        if($obj)
+        {
+            DB::table('edtr_totals')->where('biometric_id', $request->biometric_id)->where('period_id', $request->period_id)->delete();
+        }
     }
 
     public function downloadTotals(Request $request)
