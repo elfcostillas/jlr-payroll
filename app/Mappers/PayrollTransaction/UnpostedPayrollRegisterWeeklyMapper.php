@@ -561,7 +561,8 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         {
             
             $user = Auth::user();
-            $employees = $this->model->select(DB::raw("employees.biometric_id,COALESCE(department_category.description,dept_code) dept_code,division_id,div_code,job_title_name,employee_names_vw.employee_name2 as employee_name ,payrollregister_unposted_weekly.*,employees.pay_type,employees.monthly_allowance as mallowance,
+          
+            $employees = $this->model->select(DB::raw("employees.biometric_id,COALESCE(department_category.description,dept_code) dept_code,division_id,div_code,job_title_name,employee_names_vw.employee_name as employee_name ,payrollregister_unposted_weekly.*,employees.pay_type,employees.monthly_allowance as mallowance,
             employees.daily_allowance as dallowance,IF(employees.pay_type=1,employees.basic_salary/2,employees.basic_salary) AS basicpay,retired"))
                                     ->from("payrollregister_unposted_weekly")        
                                     ->join("employees",'employees.biometric_id','=','payrollregister_unposted_weekly.biometric_id')

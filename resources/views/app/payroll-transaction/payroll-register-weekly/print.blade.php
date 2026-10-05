@@ -304,6 +304,7 @@
                 @foreach($location->employees as $employee)
 
                     <?php
+               
 
                     $total_ctr++;
 
