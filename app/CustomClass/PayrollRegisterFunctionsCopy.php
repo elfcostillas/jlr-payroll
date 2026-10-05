@@ -777,6 +777,8 @@ class PayrollRegisterFunctionsCopy extends PayrollRegisterFunctions
                
             }
 
+            dd($result->toSql());
+
             return $result->get();
         }
     }
