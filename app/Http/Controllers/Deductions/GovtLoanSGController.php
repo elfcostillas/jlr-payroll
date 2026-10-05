@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mappers\Deductions\GovtLoanSGMapper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class GovtLoanSGController extends Controller
 {
@@ -110,6 +111,37 @@ class GovtLoanSGController extends Controller
 
         $result = $this->mapper->get_ammortization($id);
         return response()->json($result);
+    }
+
+    public function print(Request $request)
+    {
+        // $id = $request->id;
+
+        // $result = $this->mapper->print($id);
+        // return response()->json($result);
+
+        $id = $request->id;
+
+        $header = $this->mapper->detailedHeader($id);
+        
+        
+        $details = $this->mapper->get_ammortization($id);
+
+        
+
+        $pdf = PDF::loadView('app.deductions.installment-deductions-sg.print',['header' => $header,'details' => $details ])->setPaper('letter','portrait');
+        
+        $pdf->output();
+
+        $dom_pdf = $pdf->getDomPDF();
+    
+        $canvas = $dom_pdf->get_canvas();
+        $canvas->page_text(510, 762, "Page {PAGE_NUM} of {PAGE_COUNT} ", null, 10, array(0, 0, 0));
+        $canvas->page_text(114, 742, "This is a computer-generated document. No signature is required. ",null, 10, array(0, 0, 0));
+        $canvas->page_text(30, 762,"Date/Time : ".now()->format('m/d/y H:i:s'), null, 10, array(0, 0, 0));
+
+        return $pdf->stream('GovernmentLoanLedger.pdf'); 
+        
     }
 
 

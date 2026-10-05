@@ -302,7 +302,13 @@
                     {
                         viewModel.ds.maingrid.transport.options.read.url = `government-loans-sg/list/0`;
                         viewModel.ds.maingrid.read();
-                    }
+                    },
+                    print : function (e) {
+                    
+                        let url  = `government-loans-sg/print/${viewModel.form.model.id}`;
+
+                        window.open(url);
+                    },
 
                 },
                 functions : {
@@ -605,7 +611,9 @@
                 items : [
                     { id : 'saveBtn', type: "button", text: "Save", icon: 'save', click : viewModel.buttonHandler.save },
                     { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
-                //  { id : 'postBtn', type: "button", text: "Post", icon: 'print', click : viewModel.buttonHandler.post },
+                    { id : 'print', type: "button", text: "Print", icon: 'print', click : viewModel.buttonHandler.print },
+            
+                    //  { id : 'postBtn', type: "button", text: "Post", icon: 'print', click : viewModel.buttonHandler.post },
                 ]
             });
 

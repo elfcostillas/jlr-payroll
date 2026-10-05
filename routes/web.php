@@ -660,7 +660,8 @@ Route::middleware('auth')->prefix('deductions')->group(function(){
         Route::get('list-payroll-period',[GovtLoanSGController::class,'getPayrollPeriod']);
         Route::get('list-types',[GovtLoanSGController::class,'getTypes']);
 
-       Route::get('posted_ammortization/{id}',[GovtLoanSGController::class,'ammortization']);
+        Route::get('posted_ammortization/{id}',[GovtLoanSGController::class,'ammortization']);
+        Route::get('print/{id}',[GovtLoanSGController::class,'print']);
         
  
     });
