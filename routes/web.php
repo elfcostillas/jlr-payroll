@@ -75,6 +75,7 @@ use App\Http\Controllers\Reports\AttendanceReportController;
 use App\Http\Controllers\Reports\DeductedLoanController;
 use App\Http\Controllers\Reports\JLRContributionsController;
 use App\Http\Controllers\Reports\PayrollSupportGroupController;
+use App\Http\Controllers\Reports\QPIPController;
 use App\Http\Controllers\Timekeeping\LeaveCreditsSGController;
 use App\Http\Controllers\Timekeeping\ManageDTRConfiController;
 use App\Http\Controllers\Timekeeping\ManagerDTRSummaryController;
@@ -674,6 +675,10 @@ Route::middleware('auth')->prefix('reports')->group(function(){
     Route::prefix('leave-reports')->group(function(){
 
     });
+
+    Route::prefix('qpip')->group(function(){
+        Route::get('/',[QPIPController::class,'index']);
+    });
     
     Route::prefix('employee-report')->group(function(){
         Route::get('/',[EmployeeReportController::class,'index']);
@@ -911,6 +916,10 @@ Route::middleware('auth')->prefix('payroll-transaction')->group(function(){
         // Route::post('post',[PayrollRegisterController::class,'postPayroll']);
         
     }); 
+
+    // Route::prefix('')->middleware('access:payroll-transaction/payroll-register-weekly')->group(function(){
+
+    // });
 
     //thirteenth-month/weekly
 
