@@ -746,6 +746,7 @@ class PayrollRegisterFunctions
                                 ->where("$table.period_id",'=',$this->period->id)
                                 ->where('employees.emp_level','<',5)
                                 ->where('user_id','=',Auth::user()->id)
+                                  ->where('amount' ,'>',0)
                                 ->select(DB::raw("'installments' as subtype"),'deduction_types.id','deduction_types.description')->distinct();
                         }else{
                             $result = DB::table($table)->join('deduction_types','deduction_types.id','=',"$table.deduction_type")
@@ -753,6 +754,7 @@ class PayrollRegisterFunctions
                                 ->where("$table.period_id",'=',$this->period->id)
                                 ->where('employees.emp_level','>=',5)
                                 ->where('user_id','=',Auth::user()->id)
+                                  ->where('amount' ,'>',0)
                                 ->select(DB::raw("'installments' as subtype"),'deduction_types.id','deduction_types.description')->distinct();
                         }
                   
@@ -764,6 +766,7 @@ class PayrollRegisterFunctions
                                 ->where("$table.period_id",'=',$this->period->id)
                                 ->where('employees.emp_level','<',5)
                                 ->where('user_id','=',Auth::user()->id)
+                                  ->where('amount' ,'>',0)
                                 ->select(DB::raw("'installments' as subtype"),'deduction_types.id','deduction_types.description')->distinct());
                         }else{
                             $result = $result->union(DB::table($table)->join('deduction_types','deduction_types.id','=',"$table.deduction_type")
@@ -771,6 +774,7 @@ class PayrollRegisterFunctions
                                 ->where("$table.period_id",'=',$this->period->id)
                                 ->where('employees.emp_level','>=',5)
                                 ->where('user_id','=',Auth::user()->id)
+                                ->where('amount' ,'>',0)
                                 ->select(DB::raw("'installments' as subtype"),'deduction_types.id','deduction_types.description')->distinct());
                         }
                    
