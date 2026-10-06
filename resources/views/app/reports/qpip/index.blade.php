@@ -23,9 +23,11 @@
         display : block !important;
     }
 
-    /* .card-body {
+    /* 
+    .card-body {
         color : black !important;
-    } */
+    } 
+    */
 
     .formTable {
         font-size: 10pt;
@@ -71,8 +73,8 @@
                         <div class="card-body"> 
                             <table class="formTable" border=0 style="width:100%">
                                 <tr>
-                                    <td>Date From</td>
-                                    <td>Date To</td>
+                                    <td>Quarter</td>
+                                    <td>Year</td>
                                     <!-- <td style="text-align:center;">More than 72 hrs</td> -->
                                     <td style="text-align:center;"></td>
                                     <td></td>
@@ -81,13 +83,13 @@
                                     
                                 </tr>
                                 <tr>
-                                    <td> <input type="text" name="" id="date_from2"  > </td>
-                                    <td> <input type="text" name="" id="date_to2" > </td>
+                                    <td> <input type="text" name="" id="quarter_1"  > </td>
+                                    <td> <input type="text" name="" id="year_1" > </td>
                                     <!-- <td style="text-align:center;" > <input type="checkbox" name="" id="isMoreThan"> </td> -->
                                     <td></td>
                                     <td></td>
                                     
-                                    <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.viewSummary'><i class="fas fa-table"></i> View Page</button></td>
+                                    <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.qpip_sg_web'><i class="fas fa-table"></i> View Page</button></td>
                                     <td></td>
                                    
                                 </tr>
@@ -105,8 +107,8 @@
                         <div class="card-body"> 
                             <table class="formTable" border=0 style="width:100%">
                                 <tr>
-                                    <td>Date From</td>
-                                    <td>Date To</td>
+                                     <td>Quarter</td>
+                                    <td>Year</td>
                                     <!-- <td style="text-align:center;">More than 72 hrs</td> -->
                                     <td style="text-align:center;"></td>
                                     <td></td>
@@ -115,13 +117,13 @@
                                     
                                 </tr>
                                 <tr>
-                                    <td> <input type="text" name="" id="date_from2"  > </td>
-                                    <td> <input type="text" name="" id="date_to2" > </td>
+                                    <td> <input type="text" name="" id="quarter_2"  > </td>
+                                    <td> <input type="text" name="" id="year_2" > </td>
                                     <!-- <td style="text-align:center;" > <input type="checkbox" name="" id="isMoreThan"> </td> -->
                                     <td></td>
                                     <td></td>
                                     
-                                    <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.viewSummary'><i class="fas fa-table"></i> View Page</button></td>
+                                    <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.qpip_ranknfile_web'><i class="fas fa-table"></i> View Page</button></td>
                                    <td></td>
                                    
                                 </tr>
@@ -139,8 +141,8 @@
                         <div class="card-body"> 
                             <table class="formTable" border=0 style="width:100%">
                                 <tr>
-                                    <td>Date From</td>
-                                    <td>Date To</td>
+                                    <td>Quarter</td>
+                                    <td>Year</td>
                                     <!-- <td style="text-align:center;">More than 72 hrs</td> -->
                                     <td style="text-align:center;"></td>
                                     <td></td>
@@ -149,13 +151,13 @@
                                     
                                 </tr>
                                 <tr>
-                                    <td> <input type="text" name="" id="date_from2"  > </td>
-                                    <td> <input type="text" name="" id="date_to2" > </td>
+                                    <td> <input type="text" name="" id="quarter_3"  > </td>
+                                    <td> <input type="text" name="" id="year_3" > </td>
                                     <!-- <td style="text-align:center;" > <input type="checkbox" name="" id="isMoreThan"> </td> -->
                                     <td></td>
                                     
                                     <td></td>
-                                    <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.viewSummary'><i class="fas fa-table"></i> View Page</button></td>
+                                    <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.qpip_confi_web'><i class="fas fa-table"></i> View Page</button></td>
                                     <td></td>
                                    
                                 </tr>

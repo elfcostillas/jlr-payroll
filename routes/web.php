@@ -678,6 +678,10 @@ Route::middleware('auth')->prefix('reports')->group(function(){
 
     Route::prefix('qpip')->group(function(){
         Route::get('/',[QPIPController::class,'index']);
+        Route::get('sg-web',[QPIPController::class,'sgWeb'])->name('qpip_sg_web');
+        Route::get('ranknfile-web',[QPIPController::class,'ranknfileWeb'])->name('qpip_ranknfile_web');
+        Route::get('confi-web',[QPIPController::class,'confiWeb'])->name('qpip_confi_web');
+     
     });
     
     Route::prefix('employee-report')->group(function(){
