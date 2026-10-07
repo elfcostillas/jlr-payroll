@@ -41,6 +41,20 @@ class QPIPController extends Controller
 
     public function sgWeb(Request $request)
     {
-        return view('app.reports.qpip.sg-web');
+       
+        $quarter = $request->input('quarter');
+        $year = $request->input('year');
+        $months = $this->qpipMapper->getMonths($quarter, $year);
+
+        $data = $this->qpipMapper->buildSGData($quarter, $year);
+
+        return view('app.reports.qpip.sg-web', [
+            'data' => $data,
+            'months' => $months,
+            'quarter' => $quarter,
+            'year' => $year
+        ]);
     }
+
+
 }

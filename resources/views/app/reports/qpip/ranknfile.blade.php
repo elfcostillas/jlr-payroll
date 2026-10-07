@@ -7,7 +7,7 @@
     * {
         /* font-family: Arial, Helvetica, sans-serif; */
         font-family: 'Courier New', Courier, monospace ;
-        font-size: 10px;
+        font-size: 12px;
     }
    
     th, td {
@@ -24,52 +24,45 @@
             <td style="width: 44px;">No.</td>
             <td style="width: 220px;">Employee Name</td>
             <td style="width: 180px;">Department</td>
-            @foreach ($months as $month)
-                <td colspan="8" style="width:160px;"> {{ $month }} {{ $year }}</td>
-                
-            @endforeach
+            <td style=""></td>
         </tr>
         <tr>
             <td></td>
             <td></td>
             <td></td>
-            @foreach ($months as $month)
-                <td style="width:160px;">Tardy</td>
-                <td style="width:200px;">S.I.L</td>
-                <td style="width:200px;">Leave w/o Pay</td>
-                <td style="width:160px;">Undert Time</td>
-                <td style="width:160px;">Suspension</td>
-                <td style="width:160px;">AWOL</td>
-              
-            @endforeach
-          
+            <td rowspan=2 style="width:160px;">Tardy</td>
+            <td colspan=2 style="width:200px;">Sick Leave</td>
+            <td colspan=2 style="width:200px;">Vacation Leave</td>
+            <td rowspan=2 style="width:160px;">Undert Time</td>
+            <td rowspan=2 style="width:160px;">Suspension</td>
+            <td rowspan=2 style="width:160px;">AWOL</td>
+            <td rowspan=2 style="width:160px;">Total LWOP</td>
+            <td rowspan=2 style="width:160px;">Total Tardy</td>
             
         </tr>
-       
+        <tr>
+          
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="width:80px;" >L WP</td>
+            <td style="width:80px;" >L WOP</td>
+            <td style="width:80px;" >L WP</td>
+            <td style="width:80px;" >L WOP</td>
+
+            
+        </tr>
         @foreach ($data as $division)
         <tr>
             <td colspan="3">{{ $division->div_name }}</td>
         </tr>
             @foreach ($division->departments as $department)
                 @foreach ($department->employees as $employee)
-               
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td> <!-- {{$employee->biometric_id}} --> {{ $employee->lastname }}, {{ $employee->firstname }} {{ $employee->middlename }} {{ $employee->suffixname }}</td>
+                    <td>{{ $employee->lastname }}, {{ $employee->firstname }} {{ $employee->middlename }} {{ $employee->suffixname }}</td>
                     <td>{{ $department->dept_name }}</td>
-
-                    
-
-                    @foreach ($months as $key => $month)
-                        <td style="width:160px;">{{ $employee->data[$key]['tardy'] }}</td>
-                        <td style="width:160px;">{{ $employee->data[$key]['sil'] }}</td>
-                        <td style="width:160px;">{{ $employee->data[$key]['lwop'] }}</td>
-                        <td style="width:160px;">{{ $employee->data[$key]['ut'] }}</td>
-                        <td style="width:160px;">{{ $employee->data[$key]['sus'] }}</td>
-                        <td style="width:160px;">{{ $employee->data[$key]['awol'] }}</td>
-                       
-                    @endforeach
-                    
+                    <td></td>
                 </tr>
                 @endforeach
             @endforeach
