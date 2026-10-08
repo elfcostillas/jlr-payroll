@@ -56,5 +56,21 @@ class QPIPController extends Controller
         ]);
     }
 
+    public function ranknfileWeb(Request $request)
+    {
+        $quarter = $request->input('quarter');
+        $year = $request->input('year');
+        $months = $this->qpipMapper->getMonths($quarter, $year);
+
+        $data = $this->qpipMapper->buildRankNFileData($quarter, $year); //buildDataForJLREmployee
+
+        return view('app.reports.qpip.ranknfile', [
+            'data' => $data,
+            'months' => $months,
+            'quarter' => $quarter,
+            'year' => $year
+        ]);
+    }
+
 
 }
