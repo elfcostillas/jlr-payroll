@@ -197,6 +197,36 @@ class QPIPMapper
                 'sus' => 0,
                 'awol' => (float) $att->awol,
             );
+            
+            $leaves = DB::table('leave_request_header')
+                ->join('leave_request_detail','leave_request_header.id','=','leave_request_detail.header_id')
+                ->join('employee_names_vw','leave_request_header.biometric_id','=','employee_names_vw.biometric_id')
+                ->where('is_canceled','N')
+                ->where('document_status','POSTED')
+                ->whereNotNull('received_by')
+                ->where('acknowledge_status','Approved')
+                ->whereBetween('leave_date',[$date_from->format('Y-m-d'),$date_to])
+                ->where('leave_request_header.biometric_id',$employee->biometric_id)
+                ->select(DB::raw("leave_type, ROUND(SUM(with_pay)/8,2) wpay, ROUND(SUM(without_pay)/8,2) AS wopay"))
+                ->get();
+
+            foreach($leaves as $leave_type)
+            {
+                switch($leave_type->leave_type)
+                {
+                    case 'SIL' :
+                            $data[$key]['sil'] += (float) $leave_type->wpay;
+                            $data[$key]['lwop'] += (float) $leave_type->wopay;
+                        break;
+                    
+                    default :
+                            $data[$key]['lwop'] += (float) $leave_type->wopay;
+                        break;
+                }
+            }
+            
+                
+
         }
 
         return $data;
