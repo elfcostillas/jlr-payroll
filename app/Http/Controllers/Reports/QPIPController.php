@@ -72,5 +72,23 @@ class QPIPController extends Controller
         ]);
     }
 
+    public function confiWeb(Request $request)
+    {
+        $quarter = $request->input('quarter');
+        $year = $request->input('year');
+        $months = $this->qpipMapper->getMonths($quarter, $year);
+
+        $data = $this->qpipMapper->buildManagersAndSupervisorData($quarter, $year); //buildDataForJLREmployee
+
+        return view('app.reports.qpip.confi', [
+            'data' => $data,
+            'months' => $months,
+            'quarter' => $quarter,
+            'year' => $year
+        ]);
+    }
+
+    
+
 
 }

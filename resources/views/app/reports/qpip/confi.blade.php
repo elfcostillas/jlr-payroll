@@ -17,7 +17,7 @@
 </style>
 
 <body>
-    <h3>Q.P.I.P. - Rank and File</h3>
+    <h3>Q.P.I.P. - Managers and Supervisors</h3>
 
     <table border="1" style="border-collapse: collapse; width: 100%;">
         <tr>
@@ -25,10 +25,10 @@
             <td style="width: 220px;">Employee Name</td>
             <td style="width: 180px;">Department</td>
             @foreach ($months as $month)
-                <td colspan="8" style="width:160px;text-align:center;"> {{ $month }} {{ $year }}</td>
+                <td colspan="9" style="width:160px;text-align:center;"> {{ $month }} {{ $year }}</td>
                 
             @endforeach
-            <td colspan="8" style="width:160px;text-align:center;"> TOTALS</td>
+            <td colspan="9" style="width:160px;text-align:center;"> TOTALS</td>
         </tr>
         <tr>
             <td></td>
@@ -38,6 +38,7 @@
                 <td rowspan=2 style="width:160px;">Tardy</td>
                 <td colspan=2 style="width:200px;">Sick Leave</td>
                 <td colspan=2 style="width:200px;">Vacation Leave</td>
+                <td rowspan=2 style="width:200px;">S.V.L.</td>
                 <td rowspan=2 style="width:160px;">Undert Time</td>
                 <td rowspan=2 style="width:160px;">Suspension</td>
                 <td rowspan=2 style="width:160px;">AWOL</td>
@@ -47,6 +48,7 @@
                 <td rowspan=2 style="width:160px;">Tardy</td>
                 <td colspan=2 style="width:200px;">Sick Leave</td>
                 <td colspan=2 style="width:200px;">Vacation Leave</td>
+                <td rowspan=2 style="width:200px;">S.V.L.</td>
                 <td rowspan=2 style="width:160px;">Undert Time</td>
                 <td rowspan=2 style="width:160px;">Suspension</td>
                 <td rowspan=2 style="width:160px;">AWOL</td>
@@ -93,6 +95,7 @@
                             <td style="width:160px;text-align:center;">{{ nformat($employee->data[$key]['vl_wop']) }}</td>
                             <td style="width:160px;text-align:center;">{{ nformat($employee->data[$key]['sl_wp']) }}</td>
                             <td style="width:160px;text-align:center;">{{ nformat($employee->data[$key]['vl_wop']) }}</td>
+                            <td style="width:160px;text-align:center;">{{ nformat($employee->data[$key]['svl']) }}</td>
                             <td style="width:160px;text-align:center;">{{ nformat($employee->data[$key]['ut']) }}</td>
                             <td style="width:160px;text-align:center;">{{ nformat($employee->data[$key]['sus']) }}</td>
                             <td style="width:160px;text-align:center;">{{ nformat($employee->data[$key]['awol']) }}</td>
@@ -104,6 +107,7 @@
                         <td style="text-align:center;" > {{ nformat(getTotal('vl_wop',$employee->data,$months)) }}</td>
                         <td style="text-align:center;" > {{ nformat(getTotal('sl_wp',$employee->data,$months)) }}</td>
                         <td style="text-align:center;" > {{ nformat(getTotal('vl_wop',$employee->data,$months)) }}</td>
+                        <td style="text-align:center;" > {{ nformat(getTotal('svl',$employee->data,$months)) }}</td>
                         <td style="text-align:center;" > {{ nformat(getTotal('ut',$employee->data,$months)) }}</td>
                         <td style="text-align:center;" > {{ nformat(getTotal('sus',$employee->data,$months)) }}</td>
                         <td style="text-align:center;" > {{ nformat(getTotal('awol',$employee->data,$months)) }}</td>

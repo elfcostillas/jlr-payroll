@@ -126,6 +126,50 @@ class QPIPMapper
         
     }
 
+    public function buildManagersAndSupervisorData($quarter, $year)
+    {
+        $this->quarter_arr = [
+            1 => ['date_from' => $year.'-01-01', 'date_to' => $year.'-03-31'],
+            2 => ['date_from' => $year.'-04-01', 'date_to' => $year.'-06-30'],
+            3 => ['date_from' => $year.'-07-01', 'date_to' => $year.'-09-30'],
+            4 => ['date_from' => $year.'-10-01', 'date_to' => $year.'-12-31']
+        ];
+
+        $quarter_dates = $this->quarter_arr[$quarter];
+
+        $main = $this->mainQuery($quarter_dates, $year,'confi');
+
+        $divisions_collection_qry = $main;
+
+        $divisions_collection = $divisions_collection_qry->clone()->select('divisions.div_name', 'employees.division_id')->distinct()->get();
+
+        foreach ($divisions_collection as $division) {
+          
+            $departments_qry = $divisions_collection_qry->clone()->where('employees.division_id', $division->division_id);
+
+            $departments_collection = $departments_qry->clone()->select('departments.dept_name', 'employees.dept_id')->distinct()->get();
+                    
+                foreach ($departments_collection as $department) {
+                    
+                    $employees_collection = $departments_qry->clone()->where('employees.dept_id', $department->dept_id)->get();
+
+                    /* assigned data here */
+                    foreach($employees_collection as $employee)
+                    {
+                        $employee->data = $this->buildDataForJLREmployee($employee,$quarter,$year); // im here 
+                    }
+
+                    $department->employees = $employees_collection;
+                }
+
+            $division->departments = $departments_collection;
+        }
+
+        return $divisions_collection;
+
+        
+    }
+
     public function buildSGData($quarter, $year)
     {
         $this->quarter_arr = [
@@ -232,7 +276,8 @@ class QPIPMapper
             $att = DB::table('edtr_detailed')
                 ->where('biometric_id',$employee->biometric_id)
                 ->whereBetween('dtr_date',[$date_from->format('Y-m-d'),$date_to])
-                ->select(DB::raw("sum(IF(late>0 ,1,0)) as tardy,sum(round(under_time/60/8,2)) as ut,SUM(ROUND(awol/8,2)) as awol"))
+                // ->select(DB::raw("sum(IF(late>0 ,1,0)) as tardy,sum(round(under_time/60/8,2)) as ut,SUM(ROUND(awol/8,2)) as awol"))
+                ->select(DB::raw("sum(IF(late>0 ,1,0)) as tardy,sum(round(under_time/60/8,2)) as ut,SUM(ROUND(IF(awol < 0,0,awol)/8,2)) as awol"))
                 ->first();
 
             $data[$key] = array(
@@ -293,21 +338,28 @@ class QPIPMapper
 
             // dd($date_from->format('Y-m-d'),$date_to);
 
-            /*
+            
             $att = DB::table('edtr_detailed')
                 ->where('biometric_id',$employee->biometric_id)
                 ->whereBetween('dtr_date',[$date_from->format('Y-m-d'),$date_to])
-                ->select(DB::raw("sum(IF(late>0 ,1,0)) as tardy,sum(round(under_time/60/8,2)) as ut,SUM(ROUND(awol/8,2)) as awol"))
+                // ->select(DB::raw("sum(IF(late>0 ,1,0)) as tardy,sum(round(under_time/60/8,2)) as ut,SUM(ROUND(awol/8,2)) as awol"))
+                ->select(DB::raw("sum(IF(late>0 ,1,0)) as tardy,sum(round(under_time/60/8,2)) as ut,SUM(ROUND(IF(awol < 0,0,awol)/8,2)) as awol"))
                 ->first();
-
+           
             $data[$key] = array(
                 'tardy' => (float) $att->tardy,
-                'sil' => 0,
-                'lwop' => 0,
-                'ut' =>  (float) $att->ut,
+                'vl_wop' => 0,
+                'vl_wp' => 0,
+                'sl_wop' => 0,
+                'sl_wp' => 0,
+                'ut' => (float) $att->ut,
                 'sus' => 0,
                 'awol' => (float) $att->awol,
+                'svl' => 0
             );
+
+
+          
             
             $leaves = DB::table('leave_request_header')
                 ->join('leave_request_detail','leave_request_header.id','=','leave_request_detail.header_id')
@@ -325,18 +377,28 @@ class QPIPMapper
             {
                 switch($leave_type->leave_type)
                 {
-                    case 'SIL' :
-                            $data[$key]['sil'] += (float) $leave_type->wpay;
-                            $data[$key]['lwop'] += (float) $leave_type->wopay;
+                    case 'VL' :
+                            $data[$key]['vl_wp'] += (float) $leave_type->wpay;
+                            $data[$key]['vl_wop'] += (float) $leave_type->wopay;
+                        break;
+
+                    case 'SL' :
+                            $data[$key]['sl_wp'] += (float) $leave_type->wpay;
+                            $data[$key]['sl_wop'] += (float) $leave_type->wopay;
+                        break;
+
+                    case 'SVL' :
+                            $data[$key]['svl'] += (float) $leave_type->wpay;
+                            $data[$key]['svl'] += (float) $leave_type->wopay;
                         break;
                     
                     default :
-                            $data[$key]['lwop'] += (float) $leave_type->wopay;
+                            // $data[$key]['lwop'] += (float) $leave_type->wopay;
                         break;
                 }
             }
 
-            */
+            
             
                 
 
