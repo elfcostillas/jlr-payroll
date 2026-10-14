@@ -35,6 +35,18 @@ class InstallmentDeductionMapper extends AbstractMapper {
         return $result;
     }   
 
+    public function detailedHeader($id)
+    {
+        $result = $this->model->select(DB::raw("ammortization,payroll_period_vw.template,deduction_installments.id,deduction_installments.remarks,employee_names_vw.employee_name,deduction_types.description,total_amount"))
+            ->from('deduction_installments')
+            ->join('employee_names_vw','employee_names_vw.biometric_id','=','deduction_installments.biometric_id')
+            ->join('payroll_period_vw','payroll_period_vw.id','=','deduction_installments.period_id')
+            ->join('deduction_types','deduction_type','=','deduction_types.id')
+            ->where('deduction_installments.id',$id);
+
+        return $result->first();
+    } 
+
     public function list($biometric_id,$filter)
     {
         $result = $this->model->select(DB::raw("deduction_installments.id,deduction_installments.remarks,employee_names_vw.employee_name,deduction_types.description,total_amount"))

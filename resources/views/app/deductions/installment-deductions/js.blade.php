@@ -229,6 +229,14 @@
 
                 },
                 buttonHandler : {
+                    print : function (e) {
+                        // console.log(viewModel.form.model.id);
+
+                        let url  = `installments/print/${viewModel.form.model.id}`;
+
+                        window.open(url);
+                    },
+
                     save : async function(e){
                         await viewModel.functions.reAssignValues();
                         
@@ -644,6 +652,8 @@
                     { id : 'saveBtn', type: "button", text: "Save", icon: 'save', click : viewModel.buttonHandler.save },
                     { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
                     { id : 'saveAsBtn', type: "button", text: "Save as New", icon: 'save', click : viewModel.buttonHandler.saveAS },
+                    { id : 'print', type: "button", text: "Print", icon: 'print', click : viewModel.buttonHandler.print },
+                
                 //  { id : 'postBtn', type: "button", text: "Post", icon: 'print', click : viewModel.buttonHandler.post },
                 ]
             });

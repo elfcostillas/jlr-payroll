@@ -605,6 +605,8 @@ Route::middleware('auth')->prefix('deductions')->group(function(){
         Route::get('posted_ammortization/{id}',[InstallmentDeductionController::class,'ammortization']);
         Route::get('download-non-confi',[InstallmentDeductionController::class,'dlNonConfi']);
         Route::get('download-confi',[InstallmentDeductionController::class,'dlConfi']);
+
+        Route::get('print/{id}',[InstallmentDeductionController::class,'print']);
         //list-payroll-period
     });
 
