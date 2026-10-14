@@ -637,6 +637,8 @@ Route::middleware('auth')->prefix('deductions')->group(function(){
         Route::get('list-types',[GovernmentLoanController::class,'getTypes']);
         Route::post('save',[GovernmentLoanController::class,'save']);
         Route::get('posted_ammortization/{id}',[GovernmentLoanController::class,'ammortization']);
+        Route::get('print/{id}',[GovernmentLoanController::class,'print']);
+
     });
 
     Route::prefix('weekly')->group(function(){
