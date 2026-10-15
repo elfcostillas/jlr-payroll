@@ -15,6 +15,7 @@ class QPIPMapper
         $qry =  DB::table('employees')
             ->join('divisions', 'divisions.id', '=', 'employees.division_id')
             ->join('departments', 'departments.id', '=', 'employees.dept_id')
+            ->leftJoin('emp_emp_stat','employee_stat','=','emp_emp_stat.id')
             ->whereNotNull('employees.date_regularized')
             ->where('employees.date_regularized', '<', $quarter_dates['date_to'])
             ->where(function ($query) use ($quarter_dates) {
@@ -33,7 +34,9 @@ class QPIPMapper
                 'employees.suffixname',
                 'employees.date_regularized',
                 'employees.exit_date',
-                'date_hired'
+                DB::raw("DATE_FORMAT(date_hired,'%m/%d/%Y') as date_hired"),
+                'emp_emp_stat.estatus_desc',
+                DB::raw("TIMESTAMPDIFF(Month,employees.date_hired,'".$quarter_dates['date_to']."') as no_months")
             ]);
 
             switch ($emp_level) {
@@ -41,6 +44,7 @@ class QPIPMapper
                      $qry =  DB::table('employees')
                         ->join('divisions', 'divisions.id', '=', 'employees.division_id')
                         ->join('departments', 'departments.id', '=', 'employees.dept_id')
+                        ->leftJoin('emp_emp_stat','employee_stat','=','emp_emp_stat.id')
                         ->whereNotNull('employees.date_hired')
                         ->whereRaw("DATE_ADD(date_hired,INTERVAL 180 DAY) < ?",[$quarter_dates['date_to'] ])
                         // ->where('employees.date_regularized', '<', $quarter_dates['date_to'])
@@ -61,7 +65,8 @@ class QPIPMapper
                             'employees.suffixname',
                             'employees.date_regularized',
                             'employees.exit_date',
-                            'date_hired',
+                            'date_hired'
+                           
 
                         ]);
 

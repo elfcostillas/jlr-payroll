@@ -29,6 +29,11 @@
                 
             @endforeach
             <td colspan="8" style="width:160px;text-align:center;"> TOTALS</td>
+
+            <td rowspan="3" > Status </td>
+            <td rowspan="3" > Date Hired </td>
+            <td rowspan="3" > No of Months </td>
+            <td rowspan="3" > Reasons </td>
         </tr>
         <tr>
             <td></td>
@@ -50,6 +55,8 @@
                 <td rowspan=2 style="width:160px;">Undert Time</td>
                 <td rowspan=2 style="width:160px;">Suspension</td>
                 <td rowspan=2 style="width:160px;">AWOL</td>
+
+              
             
         </tr>
         <tr>
@@ -70,11 +77,10 @@
                 <td style="width:80px;" >L WP</td>
                 <td style="width:80px;" >L WOP</td>
 
-            
         </tr>
         @foreach ($data as $division)
         <tr>
-            <td colspan="27">{{ $division->div_name }}</td>
+            <td colspan="31">{{ $division->div_name }}</td>
         </tr>
             @foreach ($division->departments as $department)
                 @foreach ($department->employees as $employee)
@@ -107,6 +113,11 @@
                         <td style="text-align:center;" > {{ nformat(getTotal('ut',$employee->data,$months)) }}</td>
                         <td style="text-align:center;" > {{ nformat(getTotal('sus',$employee->data,$months)) }}</td>
                         <td style="text-align:center;" > {{ nformat(getTotal('awol',$employee->data,$months)) }}</td>
+
+                        <td> {{ $employee->estatus_desc }}</td>
+                        <td> {{ $employee->date_hired }}</td>
+                        <td> {{ $employee->no_months }}</td>
+                        <td></td>
                   
                 </tr>
                 @endforeach
