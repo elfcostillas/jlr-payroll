@@ -284,7 +284,7 @@ class QPIPMapper
 
              $att = DB::table('edtr_detailed')
                 ->join('employees','employees.biometric_id','=','edtr_detailed.biometric_id')
-                ->join('suspensions',function($join){
+                ->leftJoin('suspensions',function($join){
                     $join->on('employees.id','=','suspensions.employee_id')
                     ->on('suspension_date','=','edtr_detailed.dtr_date');
                 })
@@ -354,7 +354,7 @@ class QPIPMapper
             
             $att = DB::table('edtr_detailed')
                 ->join('employees','employees.biometric_id','=','edtr_detailed.biometric_id')
-                ->join('suspensions',function($join){
+                ->leftJoin('suspensions',function($join){
                     $join->on('employees.id','=','suspensions.employee_id')
                     ->on('suspension_date','=','edtr_detailed.dtr_date');
                 })
