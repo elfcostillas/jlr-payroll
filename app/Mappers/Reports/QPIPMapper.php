@@ -272,12 +272,25 @@ class QPIPMapper
             $date_to = $date_from->format('Y-m-t');
 
             // dd($date_from->format('Y-m-d'),$date_to);
+            /*
 
             $att = DB::table('edtr_detailed')
                 ->where('biometric_id',$employee->biometric_id)
                 ->whereBetween('dtr_date',[$date_from->format('Y-m-d'),$date_to])
-                // ->select(DB::raw("sum(IF(late>0 ,1,0)) as tardy,sum(round(under_time/60/8,2)) as ut,SUM(ROUND(awol/8,2)) as awol"))
+              
                 ->select(DB::raw("sum(IF(late>0 ,1,0)) as tardy,sum(round(under_time/60/8,2)) as ut,SUM(ROUND(IF(awol < 0,0,awol)/8,2)) as awol"))
+                ->first();
+            */
+
+             $att = DB::table('edtr_detailed')
+                ->join('employees','employees.biometric_id','=','edtr_detailed.biometric_id')
+                ->join('suspensions',function($join){
+                    $join->on('employees.id','=','suspensions.employee_id')
+                    ->on('suspension_date','=','edtr_detailed.dtr_date');
+                })
+                ->where('edtr_detailed.biometric_id',$employee->biometric_id)
+                ->whereBetween('dtr_date',[$date_from->format('Y-m-d'),$date_to])
+                ->select(DB::raw('SUM(IF(late>0 ,1,0)) AS tardy,SUM(ROUND(under_time/60/8,2)) AS ut,SUM(ROUND(IF(suspensions.hrs > 0,0,IF(edtr_detailed.awol < 0, 0, edtr_detailed.awol) / 8),2)) AS awol,ROUND(SUM(IFNULL(suspensions.hrs,0))/8,2) AS sus'))
                 ->first();
 
             $data[$key] = array(
@@ -285,7 +298,7 @@ class QPIPMapper
                 'sil' => 0,
                 'lwop' => 0,
                 'ut' =>  (float) $att->ut,
-                'sus' => 0,
+                'sus' => (float) $att->sus,
                 'awol' => (float) $att->awol,
             );
             
@@ -340,11 +353,19 @@ class QPIPMapper
 
             
             $att = DB::table('edtr_detailed')
-                ->where('biometric_id',$employee->biometric_id)
+                ->join('employees','employees.biometric_id','=','edtr_detailed.biometric_id')
+                ->join('suspensions',function($join){
+                    $join->on('employees.id','=','suspensions.employee_id')
+                    ->on('suspension_date','=','edtr_detailed.dtr_date');
+                })
+                ->where('edtr_detailed.biometric_id',$employee->biometric_id)
                 ->whereBetween('dtr_date',[$date_from->format('Y-m-d'),$date_to])
                 // ->select(DB::raw("sum(IF(late>0 ,1,0)) as tardy,sum(round(under_time/60/8,2)) as ut,SUM(ROUND(awol/8,2)) as awol"))
-                ->select(DB::raw("sum(IF(late>0 ,1,0)) as tardy,sum(round(under_time/60/8,2)) as ut,SUM(ROUND(IF(awol < 0,0,awol)/8,2)) as awol"))
+                // ->select(DB::raw("sum(IF(late>0 ,1,0)) as tardy,sum(round(under_time/60/8,2)) as ut,SUM(ROUND(IF(awol < 0,0,awol)/8,2)) as awol"));
+                ->select(DB::raw('SUM(IF(late>0 ,1,0)) AS tardy,SUM(ROUND(under_time/60/8,2)) AS ut,SUM(ROUND(IF(suspensions.hrs > 0,0,IF(edtr_detailed.awol < 0, 0, edtr_detailed.awol) / 8),2)) AS awol,ROUND(SUM(IFNULL(suspensions.hrs,0))/8,2) AS sus'))
                 ->first();
+
+            // dd($att->toSql());
            
             $data[$key] = array(
                 'tardy' => (float) $att->tardy,
@@ -353,7 +374,7 @@ class QPIPMapper
                 'sl_wop' => 0,
                 'sl_wp' => 0,
                 'ut' => (float) $att->ut,
-                'sus' => 0,
+                'sus' => (float) $att->sus,
                 'awol' => (float) $att->awol,
                 'svl' => 0
             );
