@@ -124,6 +124,8 @@ Route::middleware('auth')->prefix('timekeeping')->group(function(){
         Route::post('delete-dtr',[ManagerDTRSummaryController::class,'deleteDTR']);
 
         Route::get('download-totals',[ManagerDTRSummaryController::class,'downloadTotals']);
+
+        Route::post('clear_nd',[ManagerDTRSummaryController::class,'clear_nd']);
     
     });
 
@@ -1111,6 +1113,33 @@ Route::get('upload-test',function(){
         mkdir($path, 0755, true);
     }
     
+});
+
+Route::get('run-att',function(){
+    $logs = DB::table("att_logs")
+    ->join('employees','employees.biometric_id','=','att_logs.biometric_id')
+    ->whereNotIn('att_logs.biometric_id',[48,209])
+    ->select(Db::raw("att_logs.*,employees.lastname,employees.firstname"))
+    ->get();
+
+    foreach($logs as $log)
+    {
+        $find = DB::table("edtr_raw")
+            ->where("punch_date","=",$log->punch_date)
+            ->where("punch_time","=",$log->punch_time)
+            ->where("biometric_id","=",$log->biometric_id)
+          
+            ->first();
+
+        if(is_null($find))
+        {
+            // var_dump($log);
+            echo $log->lastname.','.$log->firstname. "<br>";
+            echo "insert into edtr_raw (punch_date,punch_time,biometric_id,cstate) values ('".$log->punch_date."','".$log->punch_time."','".$log->biometric_id."','".$log->cstate."');";
+            echo "<hr>";
+          
+        }
+    }
 });
 
 

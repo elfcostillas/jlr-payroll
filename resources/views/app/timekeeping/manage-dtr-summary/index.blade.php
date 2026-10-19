@@ -87,6 +87,7 @@
                 <div class="col-md-12">
                     <div class="card card-secondary">
                         <div class="card-header"><b> Payroll Period : {{ $period_obj->date_label }} </b></div>
+                      
                         <div class="card-body"> 
                             <!-- <div style ="margin-top:0px;margin-bottom:8px">
                                 <input type="text"  id="fy" style="width:120px;">   
@@ -94,6 +95,8 @@
 
                             
                             </div> -->
+
+                            <input id="current_period" type="text" value="{{ $period_obj->id }}" hidden >
                             <div>
                                 <table class="" style="width:30%;font-size:11pt;margin-bottom:8px">
                                     <tr>

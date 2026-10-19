@@ -131,6 +131,25 @@
 
                 downloadSummary : function(e){
                     window.open('dtr-summary-manage/download-totals')
+                },
+                clear_nd : function(e){
+                    e.preventDefault();
+
+                    let period =  $('#current_period').data('kendoTextBox').value();
+
+                    let letUrl = `dtr-summary-manage/clear_nd`;
+
+                    $.post(letUrl,{ 
+                           period_id : period
+                        },function(data,status){
+
+                            if(status=='error'){
+                                swal_error(data);
+                            }else {
+                                swal_success(data);
+                                viewModel.ds.maingrid.read();
+                            }
+                    });
                 }
             },
 
@@ -158,7 +177,8 @@
             navigatable : true,
             toolbar: [
                 { name : "save", text: "Save" },
-                { name : "Dowload Summary", icon : "download", template : "<button class='k-button k-button-md k-rounded-md k-button-solid k-button-solid-base'  data-bind='events: { click: buttonHandler.downloadSummary }'><span class='k-icon k-i-download'></span>Download Totals</button>" }
+                { name : "Dowload Summary", icon : "download", template : "<button class='k-button k-button-md k-rounded-md k-button-solid k-button-solid-base'  data-bind='events: { click: buttonHandler.downloadSummary }'><span class='k-icon k-i-download'></span>Download Totals</button>" },
+                { name : "Clear Night Diff.", icon : "delete", template : "<button class='k-button k-button-md k-rounded-md k-button-solid k-button-solid-base'  data-bind='events: { click: buttonHandler.clear_nd }'><span class='k-icon k-i-download'></span>Clear Night Diff.</button>" }
             ],
 
             editable : true,
@@ -375,6 +395,8 @@
                 { text: "Semi Monthly", value: "semi-monthly" },
                 { text: "Daily", value: "daily" },
         ];
+
+        $("#current_period").kendoTextBox({ });
 
         $("#emp_level").kendoDropDownList({
             dataTextField: "text",

@@ -97,4 +97,19 @@ class ManagerDTRSummaryController extends Controller
         return Excel::download($this->excel,'DTR-Sumamry-Totals-'.$this->period_obj->id.'.xlsx');
         // return view('app.timekeeping.manage-dtr-summary.export',['result' => $result]);
     }
+
+    public function clear_nd(Request $request)
+    {   
+        $db_period = $this->period_obj;
+       
+        if($request->period_id == $db_period->id)
+        {
+            DB::table('edtr_totals')
+                ->where('period_id', $request->period_id)
+                ->update([
+                    'night_diff' => 0,
+                    'night_diff_ot' => 0,
+                ]);
+        }
+    }
 }
