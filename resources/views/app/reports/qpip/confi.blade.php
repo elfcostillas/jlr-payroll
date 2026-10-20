@@ -30,6 +30,11 @@
             @endforeach
             <td colspan="9" style="width:160px;text-align:center;"> TOTALS</td>
 
+            <td rowspan="3" > QPIP Equivalent </td>
+            <td rowspan="3" > TOTAL </td>
+            <td rowspan="3" > Incentives </td>
+
+
             <td rowspan="3" > Status </td>
             <td rowspan="3" > Date Hired </td>
             <td rowspan="3" > No of Months </td>
@@ -118,6 +123,10 @@
                         <td style="text-align:center;" > {{ nformat(getTotal('sus',$employee->data,$months)) }}</td>
                         <td style="text-align:center;" > {{ nformat(getTotal('awol',$employee->data,$months)) }}</td>
 
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        
                         <td> {{ $employee->estatus_desc }}</td>
                         <td> {{ $employee->date_hired }}</td>
                         <td> {{ $employee->no_months }}</td>
