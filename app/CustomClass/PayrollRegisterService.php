@@ -7,7 +7,8 @@ class PayrollRegisterService
 {
     public $payroll;
 
-    public function __construct(PayrollRegister $payroll)
+    // public function __construct(PayrollRegister $payroll)
+    public function __construct($payroll)
     {
         $this->payroll = $payroll;
     }
