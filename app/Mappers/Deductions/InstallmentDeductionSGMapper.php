@@ -96,7 +96,7 @@ class InstallmentDeductionSGMapper extends AbstractMapper {
 
     public function getPayrollPeriod()
     {
-        $result = $this->model->select()->from('payroll_period_vw')->orderBy('id','desc');
+        $result = $this->model->select()->from('payroll_period_sg_vw')->orderBy('id','desc');
 
         return $result->get();
     }
