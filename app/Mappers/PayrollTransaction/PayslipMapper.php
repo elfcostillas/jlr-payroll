@@ -132,7 +132,7 @@ class PayslipMapper extends AbstractMapper {
     {
         //dd($period_id,$division,$department,$biometric_id);
 
-        $result = $this->model->select(DB::raw("payrollregister_posted_s.*,dept_id,division_id,concat(lastname,', ',firstname) as employee_name,suffixname,dept_name"))
+        $result = $this->model->select(DB::raw("payrollregister_posted_s.*,dept_id,division_id,concat(lastname,', ',firstname) as employee_name,suffixname,dept_name,employees.pay_type"))
                     ->from('payrollregister_posted_s')
                     ->join('employees','employees.biometric_id','=','payrollregister_posted_s.biometric_id')
                     ->leftJoin('departments','departments.id','=','dept_id')

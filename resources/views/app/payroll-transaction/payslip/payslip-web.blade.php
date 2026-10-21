@@ -78,7 +78,8 @@
                 <td colspan="1"> 
                     <table border=1 style="border-collapse:collapse;width:100%;">
                         <tr>
-                           @if($e->is_daily=='Y')
+                           
+                           @if($e->pay_type==2)
                             <td class="pad4"> Daily Rate : {{ number_format($e->daily_rate,2)}} </td>
                             @else
                             <td class="pad4">Monthly Rate : {{ number_format($e->basic_salary,2) }} &nbsp;&nbsp;&nbsp;&nbsp; Daily Rate : {{ number_format($e->daily_rate,2)}} </td>
