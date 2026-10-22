@@ -15,6 +15,11 @@
         return round($amount - $amount_paid,2);
     }
 
+    function getLastPayment($details)
+    {
+        return $details->last()->payrollperiod;
+    }
+
 
     $isPaid = (getBalance($header->total_amount,$details['data']) == 0);
 
@@ -51,7 +56,7 @@
     <table border=0 style="border-collapse:collapse;margin-bottom:12px">
       
         <tr>
-            <td> Employee Name </td> 
+            <td style="width:140px;"> Employee Name </td> 
             <td>: {{ $header->employee_name }} </td>
         </tr>
         <tr>
@@ -75,10 +80,13 @@
             <td> Balance </td> 
             <td>: {{ number_format(getBalance($header->total_amount,$details['data']),2) }} </td>
         </tr>
-
         <tr>
-            <td> Payroll Period </td> 
+            <td> Start Deduction </td> 
             <td>: {{ $header->template }} </td>
+        </tr>
+        <tr>
+            <td> End of Deduction </td> 
+            <td>: {{ (getBalance($header->total_amount,$details['data']) == 0) ? getLastPayment($details['data']) : '' }} </td>
         </tr>
 
     </table>
