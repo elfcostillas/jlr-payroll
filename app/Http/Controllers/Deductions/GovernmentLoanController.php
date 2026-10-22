@@ -118,11 +118,8 @@ class GovernmentLoanController extends Controller
         $id = $request->id;
 
         $header = $this->mapper->detailedHeader($id);
-
       
         $details = $this->mapper->get_ammortization($id);
-
-
         $pdf = PDF::loadView('app.deductions.installment-deductions-sg.print',['header' => $header,'details' => $details ])->setPaper('letter','portrait');
         
         $pdf->output();

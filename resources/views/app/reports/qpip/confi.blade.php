@@ -105,7 +105,7 @@
                             <td style="width:160px;text-align:center;">{{ nformat($employee->data[$key]['vl_wp']) }}</td>
                             <td style="width:160px;text-align:center;">{{ nformat($employee->data[$key]['vl_wop']) }}</td>
                             <td style="width:160px;text-align:center;">{{ nformat($employee->data[$key]['sl_wp']) }}</td>
-                            <td style="width:160px;text-align:center;">{{ nformat($employee->data[$key]['vl_wop']) }}</td>
+                            <td style="width:160px;text-align:center;">{{ nformat($employee->data[$key]['sl_wop']) }}</td>
                             <td style="width:160px;text-align:center;">{{ nformat($employee->data[$key]['svl']) }}</td>
                             <td style="width:160px;text-align:center;">{{ nformat($employee->data[$key]['ut']) }}</td>
                             <td style="width:160px;text-align:center;">{{ nformat($employee->data[$key]['sus']) }}</td>
