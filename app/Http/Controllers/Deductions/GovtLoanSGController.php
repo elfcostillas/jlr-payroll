@@ -122,7 +122,7 @@ class GovtLoanSGController extends Controller
 
         $id = $request->id;
 
-        $header = $this->mapper->detailedHeader($id);
+        $header = $this->mapper->detailedHeader2($id);
         
         
         $details = $this->mapper->get_ammortization($id);

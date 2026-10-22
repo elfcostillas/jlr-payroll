@@ -161,4 +161,16 @@ class GovtLoanSGMapper extends AbstractMapper
         return $result->first();
     }
 
+    public function detailedHeader2($id)
+    {
+        $result = $this->model->select(DB::raw("ammortization,payroll_period_sg_vw.template,deduction_gov_loans_sg.id,deduction_gov_loans_sg.remarks,employee_names_vw.employee_name,deduction_types.description,total_amount"))
+            ->from('deduction_gov_loans_sg')
+            ->join('employee_names_vw','employee_names_vw.biometric_id','=','deduction_gov_loans_sg.biometric_id')
+            ->join('payroll_period_sg_vw','payroll_period_sg_vw.id','=','deduction_gov_loans_sg.period_id')
+            ->join('deduction_types','deduction_type','=','deduction_types.id')
+            ->where('deduction_gov_loans_sg.id',$id);
+
+        return $result->first();
+    }
+
 }
