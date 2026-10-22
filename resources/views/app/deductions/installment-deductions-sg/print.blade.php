@@ -87,7 +87,7 @@
             <td> {{ number_format(getBalance($header->total_amount,$details['data']),2) }} </td>
         </tr>
         <tr>
-            <td> Start Deduction </td> 
+            <td> Start of Deduction </td> 
             <td>:</td>
             <td> {{ $header->template }} </td>
         </tr>
