@@ -317,6 +317,7 @@ class QPIPMapper
                 ->whereBetween('leave_date',[$date_from->format('Y-m-d'),$date_to])
                 ->where('leave_request_header.biometric_id',$employee->biometric_id)
                 ->select(DB::raw("leave_type, ROUND(SUM(with_pay)/8,2) wpay, ROUND(SUM(without_pay)/8,2) AS wopay"))
+                ->groupBy('leave_type')
                 ->get();
 
             foreach($leaves as $leave_type)
