@@ -49,7 +49,7 @@ class TardinessReportsController extends Controller
 
        
 
-        $result = $this->mapper->detailedSG($filter);
+        $result = $this->mapper->detailedSGVite($filter);
         
         return view('app.reports.tardiness-reports.detailed',['data'=> $result]);
     
@@ -78,7 +78,7 @@ class TardinessReportsController extends Controller
             'dept_id' => $request->dept,
         ];
 
-        $result = $this->mapper->summarySG($filter);
+        $result = $this->mapper->summarySGVite($filter);
 
         return view('app.reports.tardiness-reports.summary',['data'=> $result]);
     }
