@@ -57,36 +57,44 @@
       
         <tr>
             <td style="width:140px;"> Employee Name </td> 
-            <td>: {{ $header->employee_name }} </td>
+            <td style="width:10px;">:</td>
+            <td> {{ $header->employee_name }} </td>
         </tr>
         <tr>
             <td> Deduction Type </td> 
-            <td>: {{ $header->description }} </td>
+             <td>:</td>
+            <td> {{ $header->description }} </td>
         </tr>
         <tr>
-            <td> Remarks </td> 
-            <td>: {{ $header->remarks }} </td>
+            <td style="vertical-align:top;"> Remarks </td> 
+            <td style="vertical-align:top;">:</td>
+            <td> {{ $header->remarks }} </td>
         </tr>
         <tr>
             <td> Ammortization </td> 
-            <td>: {{ number_format($header->ammortization,2) }} </td>
+            <td>:</td>
+            <td> {{ number_format($header->ammortization,2) }} </td>
         </tr>
         <tr>
             <td> Amount </td> 
-            <td>: {{ number_format($header->total_amount,2) }} </td>
+            <td>:</td>
+            <td> {{ number_format($header->total_amount,2) }} </td>
         </tr>
 
         <tr>
             <td> Balance </td> 
-            <td>: {{ number_format(getBalance($header->total_amount,$details['data']),2) }} </td>
+            <td>:</td>
+            <td> {{ number_format(getBalance($header->total_amount,$details['data']),2) }} </td>
         </tr>
         <tr>
             <td> Start Deduction </td> 
-            <td>: {{ $header->template }} </td>
+            <td>:</td>
+            <td> {{ $header->template }} </td>
         </tr>
         <tr>
             <td> End of Deduction </td> 
-            <td>: {{ (getBalance($header->total_amount,$details['data']) == 0) ? getLastPayment($details['data']) : '' }} </td>
+            <td>:</td>
+            <td> {{ (getBalance($header->total_amount,$details['data']) == 0) ? getLastPayment($details['data']) : '' }} </td>
         </tr>
 
     </table>
