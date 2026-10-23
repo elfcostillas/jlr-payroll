@@ -117,7 +117,7 @@
                         <td style="text-align:center;" > {{ nformat(getTotal('vl_wp',$employee->data,$months)) }}</td>
                         <td style="text-align:center;" > {{ nformat(getTotal('vl_wop',$employee->data,$months)) }}</td>
                         <td style="text-align:center;" > {{ nformat(getTotal('sl_wp',$employee->data,$months)) }}</td>
-                        <td style="text-align:center;" > {{ nformat(getTotal('vl_wop',$employee->data,$months)) }}</td>
+                        <td style="text-align:center;" > {{ nformat(getTotal('sl_wop',$employee->data,$months)) }}</td>
                         <td style="text-align:center;" > {{ nformat(getTotal('svl',$employee->data,$months)) }}</td>
                         <td style="text-align:center;" > {{ nformat(getTotal('ut',$employee->data,$months)) }}</td>
                         <td style="text-align:center;" > {{ nformat(getTotal('sus',$employee->data,$months)) }}</td>
