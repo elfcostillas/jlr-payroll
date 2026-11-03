@@ -25,6 +25,10 @@ class RatesController extends Controller
 
     public function createRates(Request $request)
     {
+        $request->merge([
+            'added_by' => auth()->user()->id,
+        ]);
+        
         $result = $this->mapper->insertValid($request->all());
         
         return response()->json($result); 

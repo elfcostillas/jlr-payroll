@@ -74,6 +74,9 @@
                     </div>
                 </div>
             </div>
+            <div id="ratePop" style="display:none ;background-color:#212529;">
+                <div id="ratesTable"></div>
+            </div>
             <div id="photoPop" style="display:none ;background-color:#212529;">
                 <div style="width:256px;margin : 0 auto;" >
                     <img id="emp_photo" data-bind="attr: { src: img_path }" style="width:256px;">

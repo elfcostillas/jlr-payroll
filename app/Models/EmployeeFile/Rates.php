@@ -15,6 +15,7 @@ class Rates extends Model
     protected $fillable = [
         'emp_id',
         'rates',
-        'date_added'
+        'date_added',
+        'added_by'
     ];
 }

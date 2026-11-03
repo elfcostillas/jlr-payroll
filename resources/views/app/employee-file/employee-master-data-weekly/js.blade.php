@@ -191,6 +191,49 @@
                             }
                         }
                     }),
+                    ratesgrid : new kendo.data.DataSource({
+                        transport : {
+                            read : {
+                                url : 'employee-master-data/get-emp-rates/0',
+                                type : 'get',
+                                dataType : 'json',
+                                complete : function(e){
+                                    
+                                }
+                            },
+                            create : {
+                                url : 'employee-master-data/create-emp-rates',
+                                type : 'post',
+                                dataType : 'json',
+                                complete : function(e){
+                                    let url  = `employee-master-data/get-emp-rates/${viewModel.form.model.id}`;
+                                    viewModel.ds.ratesgrid.transport.options.read.url = url;
+                                    viewModel.ds.ratesgrid.read();
+                                }
+                            },parameterMap: function (data, type) {
+                                if(type=='create'){
+                                    data.emp_id = viewModel.form.model.id;
+                                }
+
+                                return data;
+                            }
+                            
+                        },
+                        // pageSize :11,
+                        // serverPaging : true,
+                        // serverFiltering : true,
+                        schema : {
+                            data : "data",
+                            model : {
+                                id : 'id',
+                                fields : {
+                                    emp_id : { type : 'number' },
+                                    rates : { type : 'number', },
+                                    date_added  : { type : 'datetime' },
+                                }
+                            }
+                        }
+                    }),
                     division : new kendo.data.DataSource({
                         transport : {
                             read : {
@@ -373,6 +416,35 @@
                         viewModel.form.model.set('employee_stat',1);
                         viewModel.form.model.set('exit_status',1);
                         viewModel.form.model.set('pay_type',1);
+                    },
+                    rates : function(e)
+                    {
+                        if(viewModel.form.model.id){
+
+                            let url  = `employee-master-data/get-emp-rates/${viewModel.form.model.id}`;
+                            viewModel.ds.ratesgrid.transport.options.read.url = url;
+                            viewModel.ds.ratesgrid.read();
+
+                            var myWindow2 = $("#ratePop");
+                            
+                            myWindow2.kendoWindow({
+                                width: "520", //1124 - 1152
+                                height: "560",
+                                title: "Rates",
+                                visible: false,
+                                animation: false,
+                                actions: [
+                                    "Pin",
+                                    "Minimize",
+                                    "Maximize",
+                                    "Close"
+                                ],
+                                close: viewModel.buttonHandler.closePop,
+                                position : {
+                                    top : 0
+                                }
+                            }).data("kendoWindow").center().open();
+                        }
                     },
                     photos : function(e)
                     {
@@ -569,6 +641,44 @@
                         width : 85
                     },
                   
+                ]
+            });
+
+            $("#ratesTable").kendoGrid({
+                dataSource : viewModel.ds.ratesgrid,
+                pageable : {
+                    refresh : true,
+                    buttonCount : 5
+                },
+                height : 480,
+                noRecords: true,
+                editable: true,
+                toolbar : ['create','save'],
+                columns : [
+                    {
+                        title : "Rates",
+                        field : "rates",
+                        width : 100,
+                         attributes: {
+                            style: "font-size: 9pt"
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt"
+                        },
+                        template : "#=kendo.toString(rates,'n2')#",
+                    },
+                    {
+                        title : "Added On",
+                        field : "date_added",
+                        width : 80,
+                         attributes: {
+                            style: "font-size: 9pt"
+                        },
+                        headerAttributes: {
+                            style: "font-size: 9pt"
+                        },
+                    },
+                    
                 ]
             });
 
@@ -837,6 +947,8 @@
                 items : [
                     { id : 'saveBtn', type: "button", text: "Save", icon: 'save', click : viewModel.buttonHandler.save },
                     // { id : 'clearBtn', type: "button", text: "Clear", icon: 'delete', click : viewModel.buttonHandler.clear },
+                    { id : 'copy2', type: "button", text: "Manage Rates", icon: 'dollar', click : viewModel.buttonHandler.rates },
+                   
                     { id : 'photos', type: "button", text: "View Photo", icon: 'img', click : viewModel.buttonHandler.photos },
                 ]
             });
