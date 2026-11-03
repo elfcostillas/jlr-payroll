@@ -240,6 +240,33 @@
                     footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
                      
                 },
+                 {
+                    title : "RD Hrs",
+                    field : "restday_hrs",
+                    width : 80,
+                    template : "#if(restday_hrs==0){#  #}else{# #= restday_hrs # #}# ",
+                    aggregates : ['sum'], 
+                    footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+            
+                },
+                {
+                    title : "Reg Hol Hrs *",
+                    field : "reghol_hrs",
+                    width : 120,
+                    template : "#if(reghol_hrs==0){#  #}else{# #= reghol_hrs # #}# ",
+                    aggregates : ['sum'], 
+                    footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+               
+                },
+                 {
+                    title : "Sp Hol Hrs *",
+                    field : "sphol_hrs",
+                    width : 110,
+                    template : "#if(sphol_hrs==0){#  #}else{# #= sphol_hrs # #}# ",
+                    aggregates : ['sum'], 
+                    footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+               
+                },
 
                       {
                     title : "ND",
@@ -318,15 +345,7 @@
                     footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
             
                 },
-                {
-                    title : "RD Hrs",
-                    field : "restday_hrs",
-                    width : 80,
-                    template : "#if(restday_hrs==0){#  #}else{# #= restday_hrs # #}# ",
-                    aggregates : ['sum'], 
-                    footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
-            
-                },
+               
                 {
                     title : "Reg Hol *",
                     field : "reghol_pay",
@@ -336,15 +355,7 @@
                     footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
                
                 },
-                {
-                    title : "Reg Hol Hrs *",
-                    field : "reghol_hrs",
-                    width : 120,
-                    template : "#if(reghol_hrs==0){#  #}else{# #= reghol_hrs # #}# ",
-                    aggregates : ['sum'], 
-                    footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
-               
-                },
+                
                 {
                     title : "Sp Hol *",
                     field : "sphol_pay",
@@ -354,15 +365,7 @@
                     footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
                
                 },
-                {
-                    title : "Sp Hol Hrs *",
-                    field : "sphol_hrs",
-                    width : 110,
-                    template : "#if(sphol_hrs==0){#  #}else{# #= sphol_hrs # #}# ",
-                    aggregates : ['sum'], 
-                    footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
                
-                },
                 {
                     command: { text : 'Delete',icon : 'delete' ,click : viewModel.buttonHandler.deleteDTR },
                     attributes : { style : 'font-size:10pt !important;'},
