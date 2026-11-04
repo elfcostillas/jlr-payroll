@@ -19,6 +19,7 @@ class RatesMapper extends AbstractMapper {
                     ->from('employee_rates')
                     ->where('emp_id','=',$emp_id)
                     ->orderBy('date_added','DESC')
+                    ->orderBy('id','DESC')
                     ->get();
                     
         return ['data' => $result];
