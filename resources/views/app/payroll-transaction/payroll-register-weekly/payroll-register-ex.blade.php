@@ -29,6 +29,7 @@
         $over_all_leg_hol_pay = 0;
         $over_all_other_earning = 0;
         $over_all_retro_pay =0;
+        $over_all_retro_pay_nbp =0;
 
         $over_all_basic_pay =0;
 
@@ -107,6 +108,7 @@
                 $location_leg_hol_pay = 0;
                 $location_other_earning = 0;
                 $location_retro_pay =0;
+                $location_retro_pay_nbp =0;
                 
                 $location_ppe = 0;
                 $location_total_ded =0;
@@ -154,6 +156,7 @@
                             
                         @endforeach
                         <th >Other Earnings</th>
+                        <th >Retro Pay (BP)</th>
                         <th >Retro Pay</th>
                         <th> Gross Pay</th>
                         @foreach ($deductions_label as $deduction)
@@ -219,7 +222,8 @@
                             ?>
                         @endforeach
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['earnings']>0) ? $employee->otherEarnings['earnings'] : ''; }}</td>
-                        <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['retro_pay']>0) ? $employee->otherEarnings['retro_pay'] : ''; }}</td>
+                        <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['retro_pay']>0) ? number_format($employee->otherEarnings['retro_pay'],2) : ''; }}</td>
+                        <td class="pr4"  style="text-align:right;"> {{ ($employee->otherEarnings['retro_pay_nbp']>0) ? number_format($employee->otherEarnings['retro_pay_nbp'],2) : ''; }}</td>
 
                         <td class="pr4"  style="text-align:right;font-weight:bold;">{{ ($employee->gross_total > 0) ? $employee->gross_total : '' }}</td>
 
@@ -279,6 +283,7 @@
                         
                         $location_other_earning += ($employee->otherEarnings['earnings']>0) ?$employee->otherEarnings['earnings']: 0; 
                         $location_retro_pay =($employee->otherEarnings['retro_pay']>0) ? $employee->otherEarnings['retro_pay']: 0;  
+                        $location_retro_pay_nbp +=($employee->otherEarnings['retro_pay_nbp']>0) ? $employee->otherEarnings['retro_pay_nbp']: 0;  
 
                         $location_ppe += $employee->otherEarnings['deductions'];
                         $location_office_account+= $employee->otherEarnings['office_account'];
@@ -317,7 +322,8 @@
                         ?>
                     @endforeach
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_other_earning > 0) ? $location_other_earning : '' }}</td>
-                    <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_retro_pay > 0) ? $location_retro_pay : '' }}</td>
+                    <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_retro_pay > 0) ? number_format($location_retro_pay,2) : '' }}</td>
+                    <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_retro_pay_nbp > 0) ? number_format($location_retro_pay_nbp,2) : '' }}</td>
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_total > 0) ? $location_total : '' }}</td>
 
                        @foreach ($deductions_label as $deduction)
@@ -354,6 +360,7 @@
 
                 $over_all_other_earning += $location_other_earning;
                 $over_all_retro_pay += $location_retro_pay;
+                $over_all_retro_pay_nbp += $location_retro_pay_nbp;
 
                 $over_all_basic_pay += $location_basic;
 
@@ -403,6 +410,7 @@
             @endforeach
             <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_other_earning }}</td> 
             <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_retro_pay }}</td>
+            <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_retro_pay_nbp }}</td>
             <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ $over_all_gross_total }}</td>
 
              @foreach ($deductions_label as $deduction)
