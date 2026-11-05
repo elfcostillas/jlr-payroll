@@ -1179,6 +1179,72 @@ Route::get('salary-increase-2026-monthly',function(){
     foreach($monthly_employees as $e){
         
       
+        // var_dump($e);
+        echo "<br>";
+        $new_basic = $e->basic_salary + 1100;
+
+        $add_1100 = "insert into employee_rates (emp_id,rates,date_added,added_by) values ($e->id, $new_basic, now(), 1);";
+
+        echo $add_1100."<br>";
+
+        if($new_basic + $e->monthly_allowance <= 30000){
+            if($e->monthly_allowance > 0){
+                $basic_plus_allowance = $new_basic + $e->monthly_allowance;
+            
+                $transfer_allowance_to_basic = "update employees set basic_salary = $basic_plus_allowance, monthly_allowance = 0 where id = $e->id;";
+                $transfer_allowance_to_basic_rates = "insert into employee_rates (emp_id,rates,date_added,added_by) values ($e->id, $basic_plus_allowance, now(), 1);";
+                    
+                echo $transfer_allowance_to_basic."<br>";
+                echo $transfer_allowance_to_basic_rates."<br>";
+
+                $activity_log = "INSERT INTO activity_log (log_timestamp,log_module,log_user,log_action,log_data) VALUES (NOW(),'employee_master',1,'update','\'basic_salary\' : \"$e->basic_salary\"=>\"$basic_plus_allowance\",\'monthly_allowance\' : \"$e->monthly_allowance\"=>0'); ";
+                echo $activity_log;
+
+            }else{
+                $update_rates = "update employees set basic_salary = $new_basic  where id = $e->id;";
+                echo $update_rates."<br>";
+
+                $activity_log = "INSERT INTO activity_log (log_timestamp,log_module,log_user,log_action,log_data) VALUES (NOW(),'employee_master',1,'update','\'basic_salary\' : \"$e->basic_salary\"=>\"$new_basic\"'); ";
+                echo $activity_log;
+             
+            
+            }
+       
+        }else{
+
+            
+            $update_rates = "update employees set basic_salary = $new_basic  where id = $e->id;";
+            echo $update_rates."<br>";
+
+            $activity_log = "INSERT INTO activity_log (log_timestamp,log_module,log_user,log_action,log_data) VALUES (NOW(),'employee_master',1,'update','\'basic_salary\' : \"$e->basic_salary\"=>\"$new_basic\"'); ";
+            echo $activity_log;
+
+            
+        }
+        echo "<hr>";
+    
+    }
+
+});
+
+Route::get('salary-increase-2026-sup',function(){
+    /*Daily*/
+
+    $monthly_employees = DB::table('employees')
+        ->where('exit_status',1)
+        ->whereIn('emp_level', [4,3])
+        ->where('job_title_id','!=',130)
+        ->where('pay_type','=',1)
+        // ->where('basic_salary','=', 540)
+      
+        ->select(DB::raw("employees.id,biometric_id,lastname,firstname,basic_salary,ifnull(monthly_allowance, 0) as monthly_allowance,date_hired"))
+        
+        ->get();
+
+            
+    foreach($monthly_employees as $e){
+        
+      
         var_dump($e);
         echo "<br>";
         $new_basic = $e->basic_salary + 1100;
@@ -1196,15 +1262,30 @@ Route::get('salary-increase-2026-monthly',function(){
                     
                 echo $transfer_allowance_to_basic."<br>";
                 echo $transfer_allowance_to_basic_rates."<br>";
+
+                $activity_log = "INSERT INTO activity_log (log_timestamp,log_module,log_user,log_action,log_data) VALUES (NOW(),'employee_master',1,'update','\'basic_salary\' : \"$e->basic_salary\"=>\"$basic_plus_allowance\",\'monthly_allowance\' : \"$e->monthly_allowance\"=>0'); ";
+                echo $activity_log;
+
             }else{
-                  $update_rates = "update employees set basic_salary = $new_basic  where id = $e->id;";
-                  echo $update_rates."<br>";
+                $update_rates = "update employees set basic_salary = $new_basic  where id = $e->id;";
+                echo $update_rates."<br>";
+
+                $activity_log = "INSERT INTO activity_log (log_timestamp,log_module,log_user,log_action,log_data) VALUES (NOW(),'employee_master',1,'update','\'basic_salary\' : \"$e->basic_salary\"=>\"$new_basic\"'); ";
+                echo $activity_log;
+             
+            
             }
        
         }else{
+
             
             $update_rates = "update employees set basic_salary = $new_basic  where id = $e->id;";
             echo $update_rates."<br>";
+
+            $activity_log = "INSERT INTO activity_log (log_timestamp,log_module,log_user,log_action,log_data) VALUES (NOW(),'employee_master',1,'update','\'basic_salary\' : \"$e->basic_salary\"=>\"$new_basic\"'); ";
+            echo $activity_log;
+
+            
         }
         echo "<hr>";
     
@@ -1268,9 +1349,15 @@ Route::get('salary-increase-2026-daily',function(){
                     
                 echo $transfer_allowance_to_basic."<br>";
                 echo $transfer_allowance_to_basic_rates."<br>";
+
+                $activity_log = "INSERT INTO activity_log (log_timestamp,log_module,log_user,log_action,log_data) VALUES (NOW(),'employee_master',1,'update','\'basic_salary\' : \"$e->basic_salary\"=>\"$basic_plus_allowance\",'\'daily_allowance\' : \"$e->daily_allowance\"=>0'); ";
+                echo $activity_log;
             }else{
                   $update_rates = "update employees set basic_salary = $new_basic where id = $e->id;";
                   echo $update_rates."<br>";
+
+                $activity_log = "INSERT INTO activity_log (log_timestamp,log_module,log_user,log_action,log_data) VALUES (NOW(),'employee_master',1,'update','\'basic_salary\' : \"$e->basic_salary\"=>\"$new_basic\"'); ";
+                echo $activity_log;
             }
          
 
