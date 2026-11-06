@@ -54,70 +54,56 @@ class TardinessReportMapper extends AbstractMapper {
         foreach($div as $d){
 
             if($d->id != 101){
-                $result = $this->model->select(DB::raw("employees.biometric_id,employee_name,COUNT(dtr_date) late_count,SUM((TIME_TO_SEC(edtr.time_in)- TIME_TO_SEC(work_schedules.time_in))/60) AS in_minutes"))
-                ->from('edtr')
-                ->join('employees','edtr.biometric_id','=','employees.biometric_id')
+                $result = $this->model->select(DB::raw("employees.biometric_id,employee_name,COUNT(dtr_date) late_count,SUM(ifnull(late,0)) AS in_minutes"))
+                ->from('edtr_detailed')
+                ->join('employees','edtr_detailed.biometric_id','=','employees.biometric_id')
                 ->join('work_schedules','schedule_id','=','work_schedules.id')
-                ->join('employee_names_vw','employee_names_vw.biometric_id','=','edtr.biometric_id')
+                ->join('employee_names_vw','employee_names_vw.biometric_id','=','edtr_detailed.biometric_id')
                 // ->leftJoinSub($leaves,'leaves',function($join){
-                //         $join->on('leaves.biometric_id', '=', 'edtr.biometric_id');
-                //         $join->on('leaves.leave_date', '=', 'edtr.dtr_date');
+                //         $join->on('leaves.biometric_id', '=', 'edtr_detailed.biometric_id');
+                //         $join->on('leaves.leave_date', '=', 'edtr_detailed.dtr_date');
                 // })
                 ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
-                //->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)');
+                //->whereRaw('TIME_TO_SEC(edtr_detailed.time_in) > TIME_TO_SEC(work_schedules.time_in)');
                 ->where('employees.emp_level','>',2) 
                 ->where('pay_type','!=',3) 
                 ->where('job_title_id','!=',12)
                 ->where('employees.dept_id','!=',5)
                 ->leftJoinSub($holidays,'holidays',function($join){
                     $join->on('holidays.location_id','=','employees.location_id');
-                    $join->on('edtr.dtr_date','=','holidays.holiday_date');
+                    $join->on('edtr_detailed.dtr_date','=','holidays.holiday_date');
                 })
                 // ->whereNull('leave_type')
                 ->whereNull('holiday_type')
                 ->whereRaw('(
-                    (
-                    TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)
-                    AND TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am) - 900
-                    )
-                    OR (
-                    TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm)
-                    AND TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out)
-                    )
+                    late > 0
                 )')
                 ->where('division_id',$d->id);
             } else {
-                $result = $this->model->select(DB::raw("employees.biometric_id,employee_name,COUNT(dtr_date) late_count,SUM((TIME_TO_SEC(edtr.time_in)- TIME_TO_SEC(work_schedules.time_in))/60) AS in_minutes"))
-                ->from('edtr')
-                ->join('employees','edtr.biometric_id','=','employees.biometric_id')
+                $result = $this->model->select(DB::raw("employees.biometric_id,employee_name,COUNT(dtr_date) late_count,SUM(ifnull(late,0)) AS in_minutes"))
+                ->from('edtr_detailed')
+                ->join('employees','edtr_detailed.biometric_id','=','employees.biometric_id')
                 ->join('work_schedules','schedule_id','=','work_schedules.id')
-                ->join('employee_names_vw','employee_names_vw.biometric_id','=','edtr.biometric_id')
+                ->join('employee_names_vw','employee_names_vw.biometric_id','=','edtr_detailed.biometric_id')
                 // ->leftJoinSub($leaves,'leaves',function($join){
-                //     $join->on('leaves.biometric_id', '=', 'edtr.biometric_id');
-                //     $join->on('leaves.leave_date', '=', 'edtr.dtr_date');
+                //     $join->on('leaves.biometric_id', '=', 'edtr_detailed.biometric_id');
+                //     $join->on('leaves.leave_date', '=', 'edtr_detailed.dtr_date');
                 // })
                 ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
-                //->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)');
+                //->whereRaw('TIME_TO_SEC(edtr_detailed.time_in) > TIME_TO_SEC(work_schedules.time_in)');
                 ->where('pay_type','!=',3)
                 ->where('employees.emp_level','>',2) 
                 ->where('job_title_id','!=',12)
                 ->where('employees.dept_id','=',5)
                 ->leftJoinSub($holidays,'holidays',function($join){
                     $join->on('holidays.location_id','=','employees.location_id');
-                    $join->on('edtr.dtr_date','=','holidays.holiday_date');
+                    $join->on('edtr_detailed.dtr_date','=','holidays.holiday_date');
                 })
                 // ->whereNull('leave_type')
                 ->whereNull('holiday_type')
                 // ->whereNull('leave_type')
                 ->whereRaw('(
-                    (
-                    TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)
-                    AND TIME_TO_SEC(edtr.time_in) < TIME_TO_SEC(work_schedules.out_am) - 900
-                    )
-                    OR (
-                    TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm)
-                    AND TIME_TO_SEC(work_schedules.time_in) < TIME_TO_SEC(work_schedules.time_out)
-                    )
+                    late > 0
                 )')
                 ->where('division_id',2);
             }
@@ -135,15 +121,15 @@ class TardinessReportMapper extends AbstractMapper {
 
 
         // $result = $this->model->select(DB::raw("employees.biometric_id,employee_name,COUNT(dtr_date) late_count"))
-        // ->from('edtr')
-        // ->join('employees','edtr.biometric_id','=','employees.biometric_id')
+        // ->from('edtr_detailed')
+        // ->join('employees','edtr_detailed.biometric_id','=','employees.biometric_id')
         // ->join('work_schedules','schedule_id','=','work_schedules.id')
-        // ->join('employee_names_vw','employee_names_vw.biometric_id','=','edtr.biometric_id')
+        // ->join('employee_names_vw','employee_names_vw.biometric_id','=','edtr_detailed.biometric_id')
         // ->whereBetween('dtr_date',[$filter['from'],$filter['to']])
-        // //->whereRaw('TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in)');
+        // //->whereRaw('TIME_TO_SEC(edtr_detailed.time_in) > TIME_TO_SEC(work_schedules.time_in)');
         // ->whereRaw('(
-        //     (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr.time_in) <= TIME_TO_SEC(work_schedules.out_am)) OR
-        //     (TIME_TO_SEC(edtr.time_in) > TIME_TO_SEC(work_schedules.in_pm))
+        //     (TIME_TO_SEC(edtr_detailed.time_in) > TIME_TO_SEC(work_schedules.time_in) && TIME_TO_SEC(edtr_detailed.time_in) <= TIME_TO_SEC(work_schedules.out_am)) OR
+        //     (TIME_TO_SEC(edtr_detailed.time_in) > TIME_TO_SEC(work_schedules.in_pm))
         //     )');
 
         // if($filter['div_id']!=0)
