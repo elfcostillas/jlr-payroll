@@ -215,7 +215,8 @@ class OneTimeDeductionController extends Controller
     {
         $header = $this->header->printHeader($id);
         $details = $this->detail->printDetail($id,[5]);
-      
+
+       
         $pdf = Pdf::loadView('app.deductions.one-time.print', ['header' => $header ,'details' => $details ]);
         
         $pdf->output();
