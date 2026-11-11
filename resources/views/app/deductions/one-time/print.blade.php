@@ -104,9 +104,9 @@
             </tr>
             <tr>
                 <td style="font-weight: bold;">Average :</td>
-                <td style="text-align: center;"> {{ ($bpn_count>0) ? number_format($bpn_total/$bpn_count,2) :0 }} </td>
-                <td style="text-align: center;"> {{ ($bps_count>0) ? number_format($bps_total/$bps_count,2) : 0 }} </td>
-                <td style="text-align: center;"> {{ ($qad_count>0 )? number_format($qad_total/$qad_count,2) : 0 }} </td>
+                <td style="text-align: center;">P {{ ($bpn_count>0) ? number_format($bpn_total/$bpn_count,2) :0 }} </td>
+                <td style="text-align: center;">P {{ ($bps_count>0) ? number_format($bps_total/$bps_count,2) : 0 }} </td>
+                <td style="text-align: center;">P {{ ($qad_count>0 )? number_format($qad_total/$qad_count,2) : 0 }} </td>
             </tr>
         </table>
         

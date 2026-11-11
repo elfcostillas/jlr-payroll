@@ -58,6 +58,15 @@
         $total_agg = 0;
         $total_all = 0;
 
+        $bpn_count = 0;
+        $bpn_total = 0;
+
+        $bps_count = 0;
+        $bps_total = 0;
+       
+        $qad_count = 0;
+        $qad_total = 0;
+
     ?>
     <main>
         <div style="margin-bottom : 12px;font-size:12pt" class="b">Canteen Deduction ({{$label}})</div>
@@ -82,12 +91,26 @@
                     </tr>
 
                     <?php
-                    $total_bpn += $row->canteen_bpn;
-                    $total_bps += $row->canteen_bps;
-                    $total_agg += $row->canteen_agg;
-                    $total_all += $row->canteen;
-                    
-                    ?>
+                        $total_bpn += $row->canteen_bpn;
+                        $total_bps += $row->canteen_bps;
+                        $total_agg += $row->canteen_agg;
+                        $total_all += $row->canteen;
+                   
+                        if($row->canteen_bpn > 0) { 
+                            $bpn_count++; 
+                            $bpn_total += $row->canteen_bpn;
+                        }
+
+                        if($row->canteen_bps > 0) { 
+                            $bps_count++; 
+                            $bps_total += $row->canteen_bps;
+                        }
+
+                        if($row->canteen_agg > 0) { 
+                            $qad_count++; 
+                            $qad_total += $row->canteen_agg;
+                        }
+                ?>
                 @endforeach
                 <tr>
                     <td class="b">TOTALS :</td>
@@ -97,6 +120,27 @@
                     <td class="b r"style="width:84px;"> {{ formatNum($total_all) }}</td>
                 </tr>
             </tbody>
+        </table>
+
+        <table border="1" style="margin-top : 12px;border-collapse:collapse;width : 440px">
+            <tr>
+                <td rowspan="2"></td>
+                <td style="font-weight: bold;text-align: center;">BPN Head Count</td>
+                <td style="font-weight: bold;text-align: center;">BPS Head Count</td>
+                <td style="font-weight: bold;text-align: center;">QAD Head Count</td>
+            </tr>
+            <tr>
+               
+                <td style="text-align: center;"> {{ $bpn_count }} </td>
+                <td style="text-align: center;"> {{ $bps_count }} </td>
+                <td style="text-align: center;"> {{ $qad_count }} </td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold;">Average :</td>
+                <td style="text-align: center;">P {{ ($bpn_count>0) ? number_format($bpn_total/$bpn_count,2) :0 }} </td>
+                <td style="text-align: center;">P {{ ($bps_count>0) ? number_format($bps_total/$bps_count,2) : 0 }} </td>
+                <td style="text-align: center;">P {{ ($qad_count>0 )? number_format($qad_total/$qad_count,2) : 0 }} </td>
+            </tr>
         </table>
         
     </main>
