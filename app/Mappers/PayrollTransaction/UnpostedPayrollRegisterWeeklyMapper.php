@@ -931,7 +931,6 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         }
 
         return $ded_array;
-
         
     }
 

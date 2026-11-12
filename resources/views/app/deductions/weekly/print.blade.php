@@ -67,6 +67,21 @@
         $qad_count = 0;
         $qad_total = 0;
 
+        $highest_BPN = [
+            'name' => '',
+            'amount' => 0
+        ];
+
+        $highest_BPS = [
+            'name' => '',
+            'amount' => 0
+        ];
+
+        $highest_QAD = [
+            'name' => '',
+            'amount' => 0
+        ];
+
     ?>
     <main>
         <div style="margin-bottom : 12px;font-size:12pt" class="b">Canteen Deduction ({{$label}})</div>
@@ -110,6 +125,25 @@
                             $qad_count++; 
                             $qad_total += $row->canteen_agg;
                         }
+
+                        if($row->canteen_bpn > $highest_BPN['amount'])
+                        {
+                            $highest_BPN['name'] = $row->employee_name;
+                            $highest_BPN['amount'] = $row->canteen_bpn;
+                        }
+
+                        if($row->canteen_bps > $highest_BPS['amount'])
+                        {
+                            $highest_BPS['name'] = $row->employee_name;
+                            $highest_BPS['amount'] = $row->canteen_bps;
+                        }
+
+                        if($row->canteen_agg > $highest_QAD['amount'])
+                        {
+                            $highest_QAD['name'] = $row->employee_name;
+                            $highest_QAD['amount'] = $row->canteen_agg;
+                        }
+
                 ?>
                 @endforeach
                 <tr>
@@ -140,6 +174,24 @@
                 <td style="text-align: center;">P {{ ($bpn_count>0) ? number_format($bpn_total/$bpn_count,2) :0 }} </td>
                 <td style="text-align: center;">P {{ ($bps_count>0) ? number_format($bps_total/$bps_count,2) : 0 }} </td>
                 <td style="text-align: center;">P {{ ($qad_count>0 )? number_format($qad_total/$qad_count,2) : 0 }} </td>
+            </tr>
+        </table>
+
+        <table border="1" style="margin-top : 12px;border-collapse:collapse;width : 440px">
+            <tr>
+                <td style="width:33%;font-weight: bold;text-align: center;">BPN</td>
+                <td style="width:33%;font-weight: bold;text-align: center;">BPS</td>
+                <td style="width:33%;font-weight: bold;text-align: center;">QAD</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;"> {{ $highest_BPN['name'] }}</td>
+                <td style="text-align: center;"> {{ $highest_BPS['name'] }}</td>
+                <td style="text-align: center;"> {{ $highest_QAD['name'] }}</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;"> {{ number_format($highest_BPN['amount'],2) }}</td>
+                <td style="text-align: center;"> {{ number_format($highest_BPS['amount'],2) }}</td>
+                <td style="text-align: center;"> {{ number_format($highest_QAD['amount'],2) }}</td>
             </tr>
         </table>
         
