@@ -84,7 +84,8 @@ class WeeklyDeductionController extends Controller
 
         $result = $this->mapper->empList($request->period_id);
 
-        $pdf = PDF::loadView('app.deductions.weekly.print',['data' => $result,'label' => $label])->setPaper('A4','portrait');
+        $pdf = PDF::loadView('app.deductions.weekly.print',['data' => $result,'label' => $label])
+            ->setPaper('A4','portrait');
         
         $pdf->output();
 

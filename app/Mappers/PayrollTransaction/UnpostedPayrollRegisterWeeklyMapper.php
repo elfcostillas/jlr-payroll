@@ -771,7 +771,6 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
     {
         $empInPayroll = $this->model->select('biometric_id')->from('payrollregister_unposted_weekly')->where('period_id',$period_id);
 
-
         $result = $this->model->select('employees.biometric_id','employee_name','div_code','dept_code','job_title_name')
                                 ->from('employees')
                                 ->join('employee_names_vw','employees.biometric_id','=','employee_names_vw.biometric_id')
@@ -909,7 +908,7 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
 
         //$onetime = DB::table("unposted_onetime_deductions")->select('deduction_type','amount')->where('user_id','=',Auth::user()->id)->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
         //$fixed = DB::table("unposted_fixed_deductions")->select('deduction_type','amount')->where('user_id','=',Auth::user()->id)->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
-        $install = DB::table("unposted_installments_sg")
+        $install = DB::table("posted_installments_sg")
                 ->select('deduction_type','amount')
                 // ->where('user_id','=',Auth::user()->id)
                 ->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]]);
@@ -971,7 +970,7 @@ class UnpostedPayrollRegisterWeeklyMapper extends AbstractMapper {
         WHERE period_id = 1 AND biometric_id = 847
         */
         $govLoan = [];
-        $loan = DB::table('unposted_loans_sg')->select('id','description','amount')
+        $loan = DB::table('posted_loans_sg')->select('id','description','amount')
         ->join('loan_types','deduction_type','=','loan_types.id')
         ->where([['biometric_id','=',$biometric_id],['period_id','=',$period_id]])
         // ->where('user_id','=',Auth::user()->id)
