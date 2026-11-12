@@ -53,6 +53,11 @@
             'name' => '',
             'amount' => 0
         ];
+
+        $highest_overall = [
+            'name' => '',
+            'amount' => 0
+        ];
     ?>
 
     <table border=1 style="width:100%;border:1px solid black;border-collapse: collapse;">
@@ -95,6 +100,11 @@
                     $highest_QAD['amount'] = $detail->qad;
                 }
 
+                if(($detail->bpn + $detail->bps + $detail->qad) > $highest_overall['amount']){
+                    $highest_overall['name'] = $detail->employee_name;
+                    $highest_overall['amount'] = $detail->bpn + $detail->bps + $detail->qad;
+                }
+
                 if($detail->bpn > 0) { 
                     $bpn_count++; 
                     $bpn_total += $detail->bpn;
@@ -109,6 +119,8 @@
                     $qad_count++; 
                     $qad_total += $detail->bpn;
                 }
+
+               
             ?>
         @endif
         @endforeach
@@ -159,6 +171,18 @@
                 <td style="text-align: center;"> {{ number_format($highest_BPN['amount'],2) }}</td>
                 <td style="text-align: center;"> {{ number_format($highest_BPS['amount'],2) }}</td>
                 <td style="text-align: center;"> {{ number_format($highest_QAD['amount'],2) }}</td>
+            </tr>
+        </table>
+
+        <table border="1" style="margin-top : 12px;border-collapse:collapse;width : 146px">
+            <tr>
+                <td style="width:33%;font-weight: bold;text-align: center;">Highest All Location</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;"> {{ $highest_overall['name'] }}</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;"> {{ number_format($highest_overall['amount'],2) }}</td>
             </tr>
         </table>
         

@@ -82,6 +82,11 @@
             'amount' => 0
         ];
 
+        $highest_overall = [
+            'name' => '',
+            'amount' => 0
+        ];
+
     ?>
     <main>
         <div style="margin-bottom : 12px;font-size:12pt" class="b">Canteen Deduction ({{$label}})</div>
@@ -144,6 +149,11 @@
                             $highest_QAD['amount'] = $row->canteen_agg;
                         }
 
+                        if(($row->canteen_bpn + $row->canteen_bps + $row->canteen_agg) > $highest_overall['amount']){
+                            $highest_overall['name'] = $row->employee_name;
+                            $highest_overall['amount'] = $row->canteen_bpn + $row->canteen_bps + $row->canteen_agg;
+                        }
+
                 ?>
                 @endforeach
                 <tr>
@@ -192,6 +202,18 @@
                 <td style="text-align: center;"> {{ number_format($highest_BPN['amount'],2) }}</td>
                 <td style="text-align: center;"> {{ number_format($highest_BPS['amount'],2) }}</td>
                 <td style="text-align: center;"> {{ number_format($highest_QAD['amount'],2) }}</td>
+            </tr>
+        </table>
+
+        <table border="1" style="margin-top : 12px;border-collapse:collapse;width : 146px">
+            <tr>
+                <td style="width:33%;font-weight: bold;text-align: center;">Highest All Location</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;"> {{ $highest_overall['name'] }}</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;"> {{ number_format($highest_overall['amount'],2) }}</td>
             </tr>
         </table>
         
