@@ -394,6 +394,11 @@
                         attributes : { style : 'text-align:right;' },
                     },
                     {
+                        title : "Stopped",
+                        field : "is_stopped",
+                        width : 80,  
+                    },
+                    {
                         title : "Ammortization",
                         field : "ammortization",
                         width : 140,    

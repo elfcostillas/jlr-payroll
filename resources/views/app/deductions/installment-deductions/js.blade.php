@@ -439,6 +439,11 @@
                         }
                     },
                     {
+                        title : "Stopped",
+                        field : "is_stopped",
+                        width : 80,  
+                    },
+                    {
                         command: { text : 'View',icon : 'edit' ,click : viewModel.buttonHandler.view },
                         attributes : { style : 'font-size:10pt !important;'},
                         width : 85
