@@ -340,7 +340,10 @@
                     printConfi : function(){
                         // Implementation for printing confirmed deductions
                         window.open(`one-time/print/confi/${viewModel.form.model.id}`);
-                    }
+                    },
+                    printBlank : function(){
+                        window.open(`one-time/print/blank/${viewModel.form.model.id}`);
+                    },
 
                 },
                 functions : {
@@ -854,6 +857,7 @@
 
                     { id : 'printNonConfi', type: "button", text: "Print (Non-Confi)", icon: 'print', click : viewModel.buttonHandler.printNonConfi },
                     { id : 'printConfi', type: "button", text: "Print (Confi)", icon: 'print', click : viewModel.buttonHandler.printConfi },
+                    { id : 'printBlank', type: "button", text: "Print Blank", icon: 'print', click : viewModel.buttonHandler.printBlank },
                 ]
             });
 
