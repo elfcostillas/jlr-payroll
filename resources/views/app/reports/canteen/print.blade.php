@@ -6,11 +6,18 @@
     <title>Document</title>
     <style>
         * {
-            font-size: 9pt;
+            font-size: 10pt;
         }
     </style>
 
     <?php
+
+        // dd($payroll_periods);
+
+use Carbon\Carbon;
+
+        $date_from = Carbon::createFromFormat('Y-m-d',$payroll_periods->date_from);
+        $date_to = Carbon::createFromFormat('Y-m-d',$payroll_periods->date_to);
 
         $confi_total = array(
             'bpn' => 0,
@@ -70,26 +77,36 @@
     ?>
 </head>
 <body>
-    <table border="1" style="border-collapse: collapse;width:540px" >
+    <table style="width:100%">
         <tr>
-            <td style="width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
-            <td style="width:17%;text-align: center;font-weight:bold;">North <br> (Suico) </td>
-            <td style="width:17%;text-align: center;font-weight:bold;">South <br> (Villarino) </td>
-            <td style="width:17%;text-align: center;font-weight:bold;">QAD </td>
-            <td style="width:17%;text-align: center;font-weight:bold;">Total </td>
-            <td style="width:17%;text-align: center;font-weight:bold;">(%)</td>
+            <td style="text-align: center;font-weight:bold;">
+                Canteen Summary 
+                <br>
+                {{ $date_from->format('M d, Y') }} -  {{ $date_to->format('M d, Y') }}
+
+            </td>
+        </tr>
+    </table>
+    <table border="1" style="margin-top:8px;border-collapse: collapse;width:620px;" >
+        <tr>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">North <br> (Suico) </td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">South <br> (Villarino) </td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">QAD </td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">Total </td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">(%)</td>
            
         </tr>
         <tr>
-            <td>Confi</td>
-            <td style="text-align:right;padding-right:4px;"> {{ number_format($confi_total['bpn'],2) }}</td>
-            <td style="text-align:right;padding-right:4px;"> {{ number_format($confi_total['bps'],2) }}</td>
-            <td style="text-align:right;padding-right:4px;"> {{ number_format($confi_total['qad'],2) }}</td>
-            <td style="text-align:right;padding-right:4px;"> {{ number_format($confi_total['bpn'] + $confi_total['bps'] + $confi_total['qad'],2) }}</td>
-            <td style="text-align:center;"> {{ compute_percentage($confi_total['bpn'] + $confi_total['bps'] + $confi_total['qad'],$over_all_total) }}% </td>
+            <td style="padding: 4px;">Confi</td>
+            <td style="padding: 4px;text-align:right;padding-right:4px;"> {{ number_format($confi_total['bpn'],2) }}</td>
+            <td style="padding: 4px;text-align:right;padding-right:4px;"> {{ number_format($confi_total['bps'],2) }}</td>
+            <td style="padding: 4px;text-align:right;padding-right:4px;"> {{ number_format($confi_total['qad'],2) }}</td>
+            <td style="padding: 4px;text-align:right;padding-right:4px;"> {{ number_format($confi_total['bpn'] + $confi_total['bps'] + $confi_total['qad'],2) }}</td>
+            <td style="padding: 4px;text-align:center;"> {{ compute_percentage($confi_total['bpn'] + $confi_total['bps'] + $confi_total['qad'],$over_all_total) }}% </td>
         </tr>
         <tr>
-            <td>Rank and File</td>
+            <td style="padding: 4px;">Rank and File</td>
             <td style="text-align:right;padding-right:4px;"> {{ number_format($ranknfile['bpn'],2) }}</td>
             <td style="text-align:right;padding-right:4px;"> {{ number_format($ranknfile['bps'],2) }}</td>
             <td style="text-align:right;padding-right:4px;"> {{ number_format($ranknfile['qad'],2) }}</td>
@@ -97,22 +114,69 @@
             <td style="text-align:center;"> {{ compute_percentage($ranknfile['bpn'] + $ranknfile['bps'] + $ranknfile['qad'],$over_all_total) }}% </td>
         </tr>
         <tr>
-            <td>Support Group</td>
-            <td style="text-align:right;padding-right:4px;"> {{ number_format($sg_total['bpn'],2) }}</td>
-            <td style="text-align:right;padding-right:4px;"> {{ number_format($sg_total['bps'],2) }}</td>
-            <td style="text-align:right;padding-right:4px;"> {{ number_format($sg_total['qad'],2) }}</td>
-            <td style="text-align:right;padding-right:4px;"> {{ number_format($sg_total['bpn'] + $sg_total['bps'] + $sg_total['qad'],2) }}</td>
-            <td style="text-align:center;"> {{ compute_percentage($sg_total['bpn'] + $sg_total['bps'] + $sg_total['qad'],$over_all_total) }}% </td>
+            <td style="padding: 4px;">Support Group</td>
+            <td style="padding: 4px;text-align:right;padding-right:4px;"> {{ number_format($sg_total['bpn'],2) }}</td>
+            <td style="padding: 4px;text-align:right;padding-right:4px;"> {{ number_format($sg_total['bps'],2) }}</td>
+            <td style="padding: 4px;text-align:right;padding-right:4px;"> {{ number_format($sg_total['qad'],2) }}</td>
+            <td style="padding: 4px;text-align:right;padding-right:4px;"> {{ number_format($sg_total['bpn'] + $sg_total['bps'] + $sg_total['qad'],2) }}</td>
+            <td style="padding: 4px;text-align:center;"> {{ compute_percentage($sg_total['bpn'] + $sg_total['bps'] + $sg_total['qad'],$over_all_total) }}% </td>
        
         </tr>
         <tr>
-            <td>Total</td>
-            <td style="text-align:right;padding-right:4px;"> {{ number_format($confi_total['bpn'] + $ranknfile['bpn'] + $sg_total['bpn'],2) }} </td>
-            <td style="text-align:right;padding-right:4px;"> {{ number_format($confi_total['bps'] + $ranknfile['bps'] + $sg_total['bps'],2) }} </td>
-            <td style="text-align:right;padding-right:4px;"> {{ number_format($confi_total['qad'] + $ranknfile['qad'] + $sg_total['qad'],2) }} </td>
-            <td style="text-align:right;padding-right:4px;"> {{ number_format($over_all_total,2) }}</td>
+            <td style="padding: 4px;">Total</td>
+            <td style="padding: 4px;text-align:right;padding-right:4px;"> {{ number_format($confi_total['bpn'] + $ranknfile['bpn'] + $sg_total['bpn'],2) }} </td>
+            <td style="padding: 4px;text-align:right;padding-right:4px;"> {{ number_format($confi_total['bps'] + $ranknfile['bps'] + $sg_total['bps'],2) }} </td>
+            <td style="padding: 4px;text-align:right;padding-right:4px;"> {{ number_format($confi_total['qad'] + $ranknfile['qad'] + $sg_total['qad'],2) }} </td>
+            <td style="padding: 4px;text-align:right;padding-right:4px;"> {{ number_format($over_all_total,2) }}</td>
             <td></td>
         </tr>
+    </table>
+
+    <table border="1" style="margin-top:8px;border-collapse: collapse;width:620px;" >
+       
+        <tr>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">Last Pay <br> &nbsp;</td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
+           
+        </tr>
+        <tr>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">Total</td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
+           
+        </tr>
+        
+    </table>
+
+      <table border="1" style="margin-top:8px;border-collapse: collapse;width:620px;" >
+        
+        <tr>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;"></td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;O.P. No.</td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;O.P. No.</td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
+ 
+           
+        </tr>
+        <tr>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
+            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
+           
+        </tr>
+        
     </table>
 </body>
 </html>

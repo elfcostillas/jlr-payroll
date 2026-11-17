@@ -39,8 +39,9 @@ class CanteenController extends Controller
         
         //SELECT jlr_payroll_period,sg_payroll_period FROM payroll_period_link WHERE jlr_payroll_period = 94;
         $payroll_periods = DB::table('payroll_period_link')
+            ->join('payroll_period','payroll_period_link.jlr_payroll_period','=','payroll_period.id')
             ->where('jlr_payroll_period',$id)
-            ->select('jlr_payroll_period','sg_payroll_period')
+            ->select('jlr_payroll_period','sg_payroll_period','date_from','date_to')
             ->first();
 
         $confi = $this->query($id,[1,2,3,4]);
@@ -51,6 +52,7 @@ class CanteenController extends Controller
             'confi' => $confi,
             'rank_n_file' => $rank_n_file,
             'sg' => $sg,
+            'payroll_periods' => $payroll_periods
         ])->setPaper('letter','portrait');
         $pdf->output();
 
