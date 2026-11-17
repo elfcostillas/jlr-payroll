@@ -64,8 +64,8 @@
         <tr>
             <td style="text-align:center;width:50px;"> No. </td>
             <td style="text-align:center;">Employee Name</td>
-            <td style="text-align:center;width:80px;">BPN</td>
-            <td style="text-align:center;width:80px;">BPS</td>
+            <td style="text-align:center;width:80px;">North<br> (Suico)</td>
+            <td style="text-align:center;width:80px;">South <br> (Villarino) </td>
             <td style="text-align:center;width:80px;">QAD</td>
             <td style="text-align:center;width:80px;">Amount</td>
         </tr>
@@ -137,10 +137,10 @@
 
         <table border="1" style="margin-top : 12px;border-collapse:collapse;width : 440px">
             <tr>
-                <td rowspan="2"></td>
-                <td style="font-weight: bold;text-align: center;">BPN Head Count</td>
-                <td style="font-weight: bold;text-align: center;">BPS Head Count</td>
-                <td style="font-weight: bold;text-align: center;">QAD Head Count</td>
+                <td style="font-weight: bold;text-align: center;" rowspan="2">Head Count</td>
+                <td style="font-weight: bold;text-align: center;">BPN </td>
+                <td style="font-weight: bold;text-align: center;">BPS </td>
+                <td style="font-weight: bold;text-align: center;">QAD </td>
             </tr>
             <tr>
                

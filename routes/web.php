@@ -72,6 +72,7 @@ use App\Http\Controllers\PayrollTransaction\PayslipConfiController;
 use App\Http\Controllers\PayrollTransaction\ThirteenthMonthController;
 use App\Http\Controllers\PayrollTransaction\ThirteenthMonthJLRController;
 use App\Http\Controllers\Reports\AttendanceReportController;
+use App\Http\Controllers\Reports\CanteenController;
 use App\Http\Controllers\Reports\DeductedLoanController;
 use App\Http\Controllers\Reports\JLRContributionsController;
 use App\Http\Controllers\Reports\PayrollSupportGroupController;
@@ -682,6 +683,11 @@ Route::middleware('auth')->prefix('reports')->group(function(){
 
     Route::prefix('leave-reports')->group(function(){
 
+    });
+
+    Route::prefix('canteen')->group(function(){
+        Route::get('/',[CanteenController::class,'index']);
+        Route::get('print/{id}',[CanteenController::class,'print']);
     });
 
     Route::prefix('qpip')->group(function(){

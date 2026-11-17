@@ -558,7 +558,7 @@
 
             $("#biometric_id").kendoComboBox({
                 dataSource : viewModel.ds.employeecombobox,
-                dataTextField: "employee_name",
+                dataTextField: "textlabel",
                 dataValueField: "biometric_id",
                 filter : "contains",
                 autoWidth : true,
