@@ -251,7 +251,6 @@ class OneTimeDeductionController extends Controller
     {
         $header = $this->header->printHeader($id);
         $details = $this->detail->printBlankDetail($id,[1,2,3,4,5]);
-
       
         $pdf = Pdf::loadView('app.deductions.one-time.blank', ['header' => $header ,'details' => $details ]);
 
@@ -260,7 +259,6 @@ class OneTimeDeductionController extends Controller
     
         $canvas = $dom_pdf ->get_canvas();
         $canvas->page_text(500, 812, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
-       
 
         return $pdf->stream('OneTimeDeduction'.$id.'.pdf');
     }

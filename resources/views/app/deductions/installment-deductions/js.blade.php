@@ -441,7 +441,7 @@
                     {
                         title : "Stopped",
                         field : "is_stopped",
-                        width : 80,  
+                        width : 90,  
                     },
                     {
                         command: { text : 'View',icon : 'edit' ,click : viewModel.buttonHandler.view },
@@ -525,7 +525,7 @@
                     {
                         title : "Description",
                         field : "employee_name",
-                        // template : "#= (data.date_release) ? kendo.toString(data.date_release,'MM/dd/yyyy') : ''  #",
+                        template : "#= data.employee_name  # (#= estatus #)",
                         // width : 120,    
                     },
                 ],change : function(e){   
