@@ -146,7 +146,7 @@
                         <th >Late (Hrs)</th>
                         <th >Late Amount</th>
 
-                        @if($sil_flag)
+                        @if($sil_flag->vl_wpay >0)
                             <th style="padding : 0px 4px;min-width:110px;" >SIL</th>
                             <th style="padding : 0px 4px;min-width:110px;" >SIL Pay</th>
                         @endif
@@ -209,7 +209,7 @@
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->late_eq>0) ? $employee->late_eq : ''; }}</td>
                         <td class="pr4"  style="text-align:right;"> {{ ($employee->late_eq_amount>0) ? $employee->late_eq_amount : ''; }}</td>
                        
-                        @if($sil_flag)
+                        @if($sil_flag->vl_wpay >0)
                             <td style="text-align:right;" >{{ ($employee->vl_wpay>0) ? number_format($employee->vl_wpay,2) : ''; }}</td>
                             <td style="text-align:right;" >{{ ($employee->vl_wpay_amount>0) ? number_format($employee->vl_wpay_amount,2) : ''; }}</td>
                         @endif
@@ -304,7 +304,7 @@
                     <td class="pr4"></td>
                     <td class="pr4"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($location_late_amount > 0) ? $location_late_amount : '' }}</td>
                     
-                    @if($sil_flag)
+                    @if($sil_flag->vl_wpay >0)
                         <td style="text-align:right;" >{{ ($employee->vl_wpay>0) ? $employee->vl_wpay : ''; }}</td>
                         <td style="text-align:right;" >{{ ($employee->vl_wpay_amount>0) ? $employee->vl_wpay_amount : ''; }}</td>
                     @endif
@@ -399,7 +399,7 @@
             @if($sil_flag->vl_wpay >0)
             <td class="pr3"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($over_all_sil > 0) ? number_format(convert_hrs_to_days($over_all_sil),2) : '' }}</td>
             <td class="pr3"  style="text-align:right;font-weight:bold;border-bottom:1px solid;">{{ ($over_all_sil_pay > 0) ? number_format($over_all_sil_pay,2) : '' }}</td>
-        @endif
+            @endif
             @foreach($headers as $key => $val)
                 @if(str_contains($key,'amount'))
                     <td class="pr4" style="text-align:right;font-weight:bold;border-bottom:1px solid;"> {{ $over_all_dynamicCol[$key]  }}</td>

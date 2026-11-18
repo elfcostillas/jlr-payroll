@@ -230,7 +230,6 @@ class PayrollRegisterWeeklyController extends Controller
 
         $sil_flag = $this->mapper->sil_total($period,'unposted');
 
-
         $period_label = $this->period->makeRange($period);
         foreach($colHeaders  as  $value ){
             //dd($value->var_name,$vaue->col_label);

@@ -77,12 +77,29 @@ class CanteenController extends Controller
         $rank_n_file = $this->query($id,[5]);
         $sg = $this->mapper->empList($payroll_periods->sg_payroll_period);
 
+        $total_counts_jlr = DB::table('payrollregister_posted_s')
+            ->where('period_id', $payroll_periods->jlr_payroll_period)
+            ->selectRaw("
+                COUNT(CASE WHEN emp_level = 'confi' THEN 1 END) AS confi,
+                COUNT(CASE WHEN emp_level = 'non-confi' THEN 1 END) AS non_confi,
+                COUNT(*) AS total
+            ")
+            ->first();
+
+        $total_counts_sg = DB::table('payrollregister_posted_weekly')
+            ->where('period_id', $payroll_periods->sg_payroll_period)
+            ->selectRaw("COUNT(*) AS total")
+            ->first();
+
         $pdf = PDF::loadView('app.reports.canteen.print-cover',[
             'confi' => $confi,
             'rank_n_file' => $rank_n_file,
             'sg' => $sg,
-            'payroll_periods' => $payroll_periods
+            'payroll_periods' => $payroll_periods,
+            'total_counts_jlr' => $total_counts_jlr,
+            'total_counts_sg' => $total_counts_sg,
         ])->setPaper('letter','portrait');
+        
         $pdf->output();
 
         $dom_pdf = $pdf->getDomPDF();
