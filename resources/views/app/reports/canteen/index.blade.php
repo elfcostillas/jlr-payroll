@@ -89,8 +89,8 @@
                                     <td></td>
                                     <td></td>
                                     
-                                    <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.canteenReport'><i class="fas fa-table"></i> View Page</button></td>
-                                    <td></td>
+                                    <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.canteenReport'><i class="fas fa-table"></i> Finance</button></td>
+                                    <td><button type="button" class="btn btn-block btn-primary btn-sm" data-bind='click:buttonHandler.canteenReportHR'><i class="fas fa-table"></i> Cover</button></td>
                                    
                                 </tr>
                               

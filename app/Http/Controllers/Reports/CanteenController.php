@@ -65,6 +65,35 @@ class CanteenController extends Controller
         return $pdf->stream('DTR.pdf'); 
     }
 
+    public function printCover($id)
+    {
+        $payroll_periods = DB::table('payroll_period_link')
+            ->join('payroll_period','payroll_period_link.jlr_payroll_period','=','payroll_period.id')
+            ->where('jlr_payroll_period',$id)
+            ->select('jlr_payroll_period','sg_payroll_period','date_from','date_to')
+            ->first();
+
+        $confi = $this->query($id,[1,2,3,4]);
+        $rank_n_file = $this->query($id,[5]);
+        $sg = $this->mapper->empList($payroll_periods->sg_payroll_period);
+
+        $pdf = PDF::loadView('app.reports.canteen.print-cover',[
+            'confi' => $confi,
+            'rank_n_file' => $rank_n_file,
+            'sg' => $sg,
+            'payroll_periods' => $payroll_periods
+        ])->setPaper('letter','portrait');
+        $pdf->output();
+
+        $dom_pdf = $pdf->getDomPDF();
+    
+        $canvas = $dom_pdf->get_canvas();
+        $canvas->page_text(40, 772, date_format(now(),"m/d/Y H:i:s"), null, 10, array(0, 0, 0));
+        $canvas->page_text(510, 772, "Page {PAGE_NUM} of {PAGE_COUNT} ", null, 10, array(0, 0, 0));
+
+        return $pdf->stream('DTR.pdf'); 
+    }
+
     public function query($period_id,$emp_level)
     {
     

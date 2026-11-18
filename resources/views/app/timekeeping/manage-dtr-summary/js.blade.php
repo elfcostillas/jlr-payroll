@@ -232,6 +232,16 @@
                     template : "#if(under_time==0){#  #}else{# #= under_time # #}# ",
                 },
                 {
+                    title : "AWOL",
+                    field : "awol",
+                    width : 80,
+                    template : "#if(awol==0){#  #}else{# #= awol # #}# ",
+                    aggregates : ['sum'], 
+                    footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
+            
+                },
+               
+                {
                     title : "Reg. OT *",
                     field : "over_time",
                     width : 100,
@@ -336,16 +346,7 @@
                     width : 140,
                     template : "#if(mpl==0){#  #}else{# #= mpl # #}# ",
                 },
-                {
-                    title : "AWOL",
-                    field : "awol",
-                    width : 80,
-                    template : "#if(awol==0){#  #}else{# #= awol # #}# ",
-                    aggregates : ['sum'], 
-                    footerTemplate: "<div style='text-align:center;font-size:10pt !important;font-weight : normal !important;'>#=kendo.toString(sum,'n2')#</div>" 
-            
-                },
-               
+                
                 {
                     title : "Reg Hol *",
                     field : "reghol_pay",

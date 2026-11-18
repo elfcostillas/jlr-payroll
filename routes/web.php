@@ -688,6 +688,7 @@ Route::middleware('auth')->prefix('reports')->group(function(){
     Route::prefix('canteen')->group(function(){
         Route::get('/',[CanteenController::class,'index']);
         Route::get('print/{id}',[CanteenController::class,'print']);
+        Route::get('print-cover/{id}',[CanteenController::class,'printCover']);
     });
 
     Route::prefix('qpip')->group(function(){

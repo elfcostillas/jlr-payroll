@@ -94,7 +94,7 @@ use Carbon\Carbon;
             <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">South <br> (Villarino) </td>
             <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">QAD </td>
             <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">Total </td>
-            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">(%)</td>
+            <!-- <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">(%)</td> -->
            
         </tr>
         <tr>
@@ -103,7 +103,7 @@ use Carbon\Carbon;
             <td style="padding: 4px;text-align:right;padding-right:4px;"> {{ number_format($confi_total['bps'],2) }}</td>
             <td style="padding: 4px;text-align:right;padding-right:4px;"> {{ number_format($confi_total['qad'],2) }}</td>
             <td style="padding: 4px;text-align:right;padding-right:4px;"> {{ number_format($confi_total['bpn'] + $confi_total['bps'] + $confi_total['qad'],2) }}</td>
-            <td style="padding: 4px;text-align:center;"> {{ compute_percentage($confi_total['bpn'] + $confi_total['bps'] + $confi_total['qad'],$over_all_total) }}% </td>
+            <!-- <td style="padding: 4px;text-align:center;"> {{ compute_percentage($confi_total['bpn'] + $confi_total['bps'] + $confi_total['qad'],$over_all_total) }}% </td> -->
         </tr>
         <tr>
             <td style="padding: 4px;">Rank and File</td>
@@ -111,7 +111,7 @@ use Carbon\Carbon;
             <td style="text-align:right;padding-right:4px;"> {{ number_format($ranknfile['bps'],2) }}</td>
             <td style="text-align:right;padding-right:4px;"> {{ number_format($ranknfile['qad'],2) }}</td>
             <td style="text-align:right;padding-right:4px;"> {{ number_format($ranknfile['bpn'] + $ranknfile['bps'] + $ranknfile['qad'],2) }}</td>
-            <td style="text-align:center;"> {{ compute_percentage($ranknfile['bpn'] + $ranknfile['bps'] + $ranknfile['qad'],$over_all_total) }}% </td>
+            <!-- <td style="text-align:center;"> {{ compute_percentage($ranknfile['bpn'] + $ranknfile['bps'] + $ranknfile['qad'],$over_all_total) }}% </td> -->
         </tr>
         <tr>
             <td style="padding: 4px;">Support Group</td>
@@ -119,7 +119,7 @@ use Carbon\Carbon;
             <td style="padding: 4px;text-align:right;padding-right:4px;"> {{ number_format($sg_total['bps'],2) }}</td>
             <td style="padding: 4px;text-align:right;padding-right:4px;"> {{ number_format($sg_total['qad'],2) }}</td>
             <td style="padding: 4px;text-align:right;padding-right:4px;"> {{ number_format($sg_total['bpn'] + $sg_total['bps'] + $sg_total['qad'],2) }}</td>
-            <td style="padding: 4px;text-align:center;"> {{ compute_percentage($sg_total['bpn'] + $sg_total['bps'] + $sg_total['qad'],$over_all_total) }}% </td>
+            <!-- <td style="padding: 4px;text-align:center;"> {{ compute_percentage($sg_total['bpn'] + $sg_total['bps'] + $sg_total['qad'],$over_all_total) }}% </td> -->
        
         </tr>
         <tr>
@@ -128,7 +128,7 @@ use Carbon\Carbon;
             <td style="padding: 4px;text-align:right;padding-right:4px;"> {{ number_format($confi_total['bps'] + $ranknfile['bps'] + $sg_total['bps'],2) }} </td>
             <td style="padding: 4px;text-align:right;padding-right:4px;"> {{ number_format($confi_total['qad'] + $ranknfile['qad'] + $sg_total['qad'],2) }} </td>
             <td style="padding: 4px;text-align:right;padding-right:4px;"> {{ number_format($over_all_total,2) }}</td>
-            <td></td>
+            <!-- <td></td> -->
         </tr>
     </table>
 
@@ -140,7 +140,7 @@ use Carbon\Carbon;
             <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
             <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
             <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
-            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
+            <!-- <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td> -->
            
         </tr>
         <tr>
@@ -149,7 +149,7 @@ use Carbon\Carbon;
             <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
             <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
             <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
-            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
+            <!-- <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td> -->
            
         </tr>
         
@@ -163,7 +163,7 @@ use Carbon\Carbon;
             <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;O.P. No.</td>
             <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
             <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
-            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
+            <!-- <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td> -->
  
            
         </tr>
@@ -173,7 +173,7 @@ use Carbon\Carbon;
             <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
             <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
             <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
-            <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td>
+            <!-- <td style="padding: 4px;width:17%;text-align: center;font-weight:bold;">&nbsp;</td> -->
            
         </tr>
         

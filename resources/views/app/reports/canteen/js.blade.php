@@ -14,7 +14,13 @@
                         let period =  $("#payroll_period").data("kendoDropDownList").value();
                         let url = `canteen/print/${period}`;
                         window.open(url);
-                    }
+                    },
+                    canteenReportHR : function()
+                    {
+                        let period =  $("#payroll_period").data("kendoDropDownList").value();
+                        let url = `canteen/print-cover/${period}`;
+                        window.open(url);
+                    },
                 }
 
             });
